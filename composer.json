@@ -1,0 +1,16 @@
+{
+  "name": "pizzamindedlabs/slice",
+  "license": "MIT",
+  "description": "A short description of what your package does",
+  "require": {
+    "php": "7.0",
+    "twig/twig": "^2.0",
+    "symfony/yaml": "^3.3",
+    "digitalnature/php-ref": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Slice": "src"
+    }
+  }
+}
