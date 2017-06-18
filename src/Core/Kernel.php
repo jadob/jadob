@@ -14,8 +14,7 @@ use Slice\Router\ServiceProvider\RouterServiceProvider;
 
 class Kernel implements ContainerAwareInterface
 {
-//    use RootDirTrait;
-//    use PublicDirTrait;
+
     use ContainerTrait;
 
     const VERSION = '0.0.0';
@@ -97,9 +96,7 @@ class Kernel implements ContainerAwareInterface
             ->registerProvider(RouterServiceProvider::class, [
                 'routes' => $this->configuration['routes'],
                 'request' => $this->container->get('request')
-            ])
-            ->registerProvider(pizzaORMServiceProvider::class, $this->configuration['pizzaorm']);
-
+            ]);
 
         if (isset($this->configuration['app']['services'])) {
             foreach ((array) $this->configuration['app']['services'] as $key => $service) {
