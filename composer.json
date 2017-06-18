@@ -1,7 +1,7 @@
 {
   "name": "pizzamindedlabs/slice",
   "license": "MIT",
-  "description": "A short description of what your package does",
+  "description": "PHP Application boilerplate.",
   "require": {
     "php": "7.0.8",
     "twig/twig": "^2.0",

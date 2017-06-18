@@ -31,7 +31,7 @@
 </main>
 
 <footer>
-    <a href="https://github.com/pizzamindedlabs">Slice Framework <?= Kernel::VERSION?> </a>
+    <a target="_blank" href="https://github.com/pizzamindedlabs/slice">Slice Framework <?= Kernel::VERSION?> </a>
 </footer>
 </body>
 </html>
