@@ -1,7 +1,6 @@
 <?php
 namespace Slice\Core;
 
-
 use Slice\Core\Traits\PublicDirTrait;
 use Slice\Core\Traits\RootDirTrait;
 
