@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title><?= get_class($exception); ?> | Slice Debugger</title>
+    <meta name="robots" content="noindex, nofollow">
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
@@ -197,7 +198,6 @@
 
                     </div>
                     <div class="error-wrapper__content_stack-trace_element-body">
-
 
                         <?php
                         $fullFunctionCall = $element['function'];
