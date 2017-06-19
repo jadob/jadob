@@ -1,6 +1,7 @@
 <?php
 namespace Slice\Debug\Handler;
 
+use Slice\Debug\ExceptionView;
 use Slice\Debug\Interfaces\PageNotFoundExceptionInterface;
 use Throwable;
 use ErrorException;
@@ -64,11 +65,15 @@ class ExceptionHandler
             return;
         }
         http_response_code(503);
-        require_once __DIR__.'/../Resources/templates/prod/service-temporarily-unavailable.php';
+        ExceptionView::showErrorPage('service-temporarily-unavailable','prod');
     }
 
     protected function showDevelopmentErrorPage(Throwable $exception)
     {
-        r($exception, $exception->getTrace());
+
+        ExceptionView::showErrorPage('error','dev', [
+            'exception' => $exception
+        ]);
+
     }
 }
