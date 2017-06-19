@@ -206,9 +206,7 @@
                         }
                         ?>
                         <p class="error-wrapper__content_stack-trace_element-body-function-call">
-                            <?= $fullFunctionCall ?>
-                            <strong>(</strong><?= \Slice\Debug\ExceptionView::parseParams($element['args']) ?>
-                            <strong>)</strong>
+                            <?= $fullFunctionCall ?>(<?= \Slice\Debug\ExceptionView::parseParams($element['args']) ?>)
                         </p>
                         <p class="error-wrapper__content_stack-trace_element-body-info">
                             <?= $element['file'] ?>:<?= $element['line'] ?></p>
