@@ -59,21 +59,22 @@ class ExceptionHandler
 
     protected function showProductionErrorPage(Throwable $exception)
     {
+        $template = 'service-temporarily-unavailable';
+        $code = 503;
+
         if (in_array(PageNotFoundExceptionInterface::class, class_implements($exception), true)) {
-            http_response_code(404);
-            echo '404';
-            return;
+            $template = 'not-found';
+            $code = 404;
         }
-        http_response_code(503);
-        ExceptionView::showErrorPage('service-temporarily-unavailable','prod');
+
+        http_response_code($code);
+        ExceptionView::showErrorPage($template, 'prod');
     }
 
     protected function showDevelopmentErrorPage(Throwable $exception)
     {
-
-        ExceptionView::showErrorPage('error','dev', [
+        ExceptionView::showErrorPage('error', 'dev', [
             'exception' => $exception
         ]);
-
     }
 }
