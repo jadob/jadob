@@ -34,7 +34,7 @@ class Container
             return $this->container[$name];
         }
 
-        throw new ContainerException('Service '.$name.' is not defined.');
+        throw new ContainerException('Service "'.$name.'" is not defined.');
     }
 
 }
