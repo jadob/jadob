@@ -6,6 +6,7 @@ use Slice\Config\ConfigReader;
 use Slice\Container\Container;
 use Slice\Container\ContainerAwareInterface;
 use Slice\Container\ContainerTrait;
+use Slice\Core\HTTP\Request;
 use Slice\Core\ServiceProvider\AppVariablesServiceProvider;
 use Slice\Core\ServiceProvider\TopLevelDepedenciesServiceProvider;
 use pizzaORM\ServiceProvider\pizzaORMServiceProvider;
@@ -36,6 +37,7 @@ class Kernel implements ContainerAwareInterface
             ->setPublicDir($publicDir)
             ->setEnvironment(new Environment($env));
 
+        $this->getContainer()->add('request', Request::createFromGlobals());
         $this->getContainer()->add('app',$appVariables);
                 $this->configReader = new ConfigReader($this->getContainer()->get('app'));
     }
@@ -76,7 +78,7 @@ class Kernel implements ContainerAwareInterface
         }
 
         $this->configuration = $this->configReader
-            ->setConfigDir($this->getRootDir() . '/App/config')
+            ->setConfigDir($this->getRootDir() . '/config')
             ->addPlaceholder('app.rootDir', $this->getRootDir())
             ->addPlaceholder('app.publicDir', $this->getPublicDir())
             ->parseApplicationConfiguration();
@@ -88,32 +90,30 @@ class Kernel implements ContainerAwareInterface
     {
         $this->container
             ->registerProvider(TopLevelDepedenciesServiceProvider::class)
-            ->registerProvider(AppVariablesServiceProvider::class, [
-                'rootDir' => $this->getRootDir(),
-                'publicDir' => $this->getPublicDir(),
-                'environment' => $this->environment
-            ])
+//            ->registerProvider(AppVariablesServiceProvider::class, [
+//                'rootDir' => $this->getRootDir(),
+//                'publicDir' => $this->getPublicDir(),
+//                'environment' => $this->environment
+//            ])
             ->registerProvider(RouterServiceProvider::class, [
                 'routes' => $this->configuration['routes'],
-                'request' => $this->container->get('request')
+//                'request' => $this->container->get('request')
             ]);
 
         if (isset($this->configuration['app']['services'])) {
             foreach ((array) $this->configuration['app']['services'] as $key => $service) {
-                r($key, $service);
+//                r($key, $service);
             }
         }
 
         return $this;
     }
 
-    public function dispatchRequest(): Dispatcher
+    public function getDispatcher(): Dispatcher
     {
         $dispatcher = new Dispatcher();
-        $dispatcher->setContainer($this->container)
-            ->setRootDir($this->getRootDir())
-            ->setPublicDir($this->getRootDir());
+        $dispatcher->setContainer($this->container);
 
-        return $dispatcher->dispatch();
+        return $dispatcher;
     }
 }
