@@ -2,6 +2,11 @@
 namespace Slice\Core;
 
 
+/**
+ * Class Environment
+ * @deprecated
+ * @package Slice\Core
+ */
 class Environment
 {
     const ENV_PRODUCTION = 'prod';
