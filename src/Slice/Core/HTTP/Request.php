@@ -55,9 +55,9 @@ class Request
 
     public function __construct(array $params = [])
     {
-        $superglobals = ['get', 'post', 'cookie', 'request', 'server', 'environment'];
+        $superGlobals = ['get', 'post', 'cookie', 'request', 'server', 'environment'];
 
-        foreach ($superglobals as $key) {
+        foreach ($superGlobals as $key) {
             if (isset($params[$key])) {
                 $this->{$key} = $params[$key];
             }

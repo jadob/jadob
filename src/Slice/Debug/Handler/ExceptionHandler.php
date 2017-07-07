@@ -1,11 +1,11 @@
 <?php
+
 namespace Slice\Debug\Handler;
 
-use Slice\Debug\ExceptionView;
-use Slice\Debug\Interfaces\PageNotFoundExceptionInterface;
 use Throwable;
 use ErrorException;
-use Slice\Core\Environment;
+use Slice\Debug\ExceptionView;
+use Slice\Debug\Interfaces\PageNotFoundExceptionInterface;
 
 /**
  * Class ExceptionHandler
@@ -14,15 +14,15 @@ use Slice\Core\Environment;
 class ExceptionHandler
 {
     /**
-     * @var Environment
+     * @var string
      */
     protected $environment;
 
     /**
      * ExceptionHandler constructor.
-     * @param Environment $environment
+     * @param string $environment
      */
-    public function __construct(Environment $environment)
+    public function __construct($environment)
     {
         $this->environment = $environment;
     }
@@ -48,7 +48,7 @@ class ExceptionHandler
 
     public function exceptionHandler(Throwable $exception)
     {
-        if ($this->environment->isProduction()) {
+        if ($this->environment === 'prod') {
             $this->showProductionErrorPage($exception);
             return;
         }

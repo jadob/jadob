@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mikolajczajkowsky
- * Date: 18.06.2017
- * Time: 00:42
- */
 
 namespace Slice\Router;
 
@@ -16,25 +10,17 @@ class Router
 {
 
     /**
-     * @var array
+     * @var RouteCollection
      */
-    protected $routes;
+    protected $routeCollection;
 
     /**
-     * @return array
-     */
-    public function getRoutes(): array
-    {
-        return $this->routes;
-    }
-
-    /**
-     * @param array $routes
+     * @param RouteCollection $routeCollection
      * @return Router
      */
-    public function setRoutes(array $routes): Router
+    public function setRouteCollection(RouteCollection $routeCollection): Router
     {
-        $this->routes = $routes;
+        $this->routeCollection = $routeCollection;
         return $this;
     }
 

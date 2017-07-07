@@ -1,4 +1,5 @@
 <?php
+
 namespace Slice\Config;
 
 use RuntimeException;
@@ -10,7 +11,6 @@ class Configuration
      * mergePlaceholder will throw an exception if it will loop for over this count to prevent unlimited looping.
      */
     const LOOP_LIMIT = 150;
-
 
     public $placeholders = [];
 
@@ -125,5 +125,9 @@ class Configuration
 
     }
 
+    public function getSection($name): array
+    {
+        return [];
+    }
 
 }

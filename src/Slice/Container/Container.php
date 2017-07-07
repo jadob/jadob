@@ -1,4 +1,5 @@
 <?php
+
 namespace Slice\Container;
 use Slice\Container\Exception\ContainerException;
 

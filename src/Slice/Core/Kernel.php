@@ -1,119 +1,124 @@
 <?php
 namespace Slice\Core;
 
-use RuntimeException;
 use Slice\Config\ConfigReader;
 use Slice\Container\Container;
 use Slice\Container\ContainerAwareInterface;
 use Slice\Container\ContainerTrait;
-use Slice\Core\HTTP\Request;
-use Slice\Core\ServiceProvider\AppVariablesServiceProvider;
-use Slice\Core\ServiceProvider\TopLevelDepedenciesServiceProvider;
-use pizzaORM\ServiceProvider\pizzaORMServiceProvider;
 use Slice\Debug\Handler\ExceptionHandler;
-use Slice\Router\ServiceProvider\RouterServiceProvider;
 
+/**
+ * Class Kernel
+ * @package Slice\Core
+ */
 class Kernel implements ContainerAwareInterface
 {
 
     use ContainerTrait;
 
-    const VERSION = '0.0.0';
+    /**
+     * Current framework version.
+     * @var string
+     */
+    const VERSION = '0.0.1';
 
-    protected $environment;
-    protected $configReader;
+    /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @var ConfigReader
+     */
+    private $configReader;
+
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * @var string
+     */
+    private $publicDir;
 
     /**
      * @var array
      */
-    protected $configuration = [];
+    private $configuration;
 
+    /**
+     * Kernel constructor.
+     * @param string $env
+     * @param string $rootDir
+     * @param string $publicDir
+     * @throws \RuntimeException
+     */
     public function __construct($env, $rootDir, $publicDir)
     {
+        $this->rootDir = $rootDir;
+        $this->publicDir = $publicDir;
+        $this->environment = $env;
+
         $this->container = new Container();
-        $appVariables = new AppVariables();
-        $appVariables
-            ->setRootDir($rootDir)
-            ->setPublicDir($publicDir)
-            ->setEnvironment(new Environment($env));
 
-        $this->getContainer()->add('request', Request::createFromGlobals());
-        $this->getContainer()->add('app',$appVariables);
-                $this->configReader = new ConfigReader($this->getContainer()->get('app'));
-    }
+        $this->configReader = new ConfigReader();
+        $this->configReader
+            ->setConfigDir($rootDir.'/config')
+            ->setEnvironment($env)
+            ->addPlaceholder('app.rootDir', $this->getRootDir())
+            ->addPlaceholder('app.publicDir', $this->getPublicDir());
 
-    private function getRootDir(): string
-    {
-        /** @var AppVariables $app */
-        $app = $this->getContainer()->get('app');
-        return $app->getRootDir();
-    }
 
-    private function getPublicDir(): string
-    {
-        /** @var AppVariables $app */
-        $app = $this->getContainer()->get('app');
-        return $app->getPublicDir();
+        $this->configuration = $this->configReader->parseApplicationConfiguration();
+        $this->registerExceptionHandler();
 
     }
 
-    public function registerExceptionHandler()
+    /**
+     * Sets framework exception and error handlers as default
+     * @return $this
+     */
+    private function registerExceptionHandler()
     {
-        /** @var Environment $environment */
-        $environment = $this->getContainer()->get('app')->getEnvironment();
-
-        $handler = new ExceptionHandler($environment);
+        $handler = new ExceptionHandler($this->environment);
         $handler
             ->registerErrorHandler()
             ->registerExceptionHandler();
 
-
         return $this;
     }
 
-    public function loadFullConfiguration(): Kernel
+    public function registerDepedencies()
     {
-        if ($this->getRootDir() === null) {
-            throw new RuntimeException('Root directory is undefined, could not parse configuration');
-        }
 
-        $this->configuration = $this->configReader
-            ->setConfigDir($this->getRootDir() . '/config')
-            ->addPlaceholder('app.rootDir', $this->getRootDir())
-            ->addPlaceholder('app.publicDir', $this->getPublicDir())
-            ->parseApplicationConfiguration();
-
-        return $this;
     }
 
-    public function registerDepedencies(): Kernel
-    {
-        $this->container
-            ->registerProvider(TopLevelDepedenciesServiceProvider::class)
-//            ->registerProvider(AppVariablesServiceProvider::class, [
-//                'rootDir' => $this->getRootDir(),
-//                'publicDir' => $this->getPublicDir(),
-//                'environment' => $this->environment
-//            ])
-            ->registerProvider(RouterServiceProvider::class, [
-                'routes' => $this->configuration['routes'],
-//                'request' => $this->container->get('request')
-            ]);
-
-        if (isset($this->configuration['app']['services'])) {
-            foreach ((array) $this->configuration['app']['services'] as $key => $service) {
-//                r($key, $service);
-            }
-        }
-
-        return $this;
-    }
-
+    /**
+     * @return Dispatcher
+     */
     public function getDispatcher(): Dispatcher
     {
         $dispatcher = new Dispatcher();
         $dispatcher->setContainer($this->container);
 
         return $dispatcher;
+    }
+
+    /**
+     * @return string
+     */
+    private function getRootDir(): string
+    {
+        return $this->rootDir;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPublicDir(): string
+    {
+        return $this->publicDir;
+
     }
 }

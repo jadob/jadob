@@ -1,13 +1,13 @@
 <?php
+
 namespace Slice\Config;
 
 use RuntimeException;
-use Slice\Core\AppVariables;
-use Slice\Core\Environment;
 
 /**
- * Class ConfigReader
+ * Class responsible for find and parse configuration.
  * @package Slice\Config
+ * @author pizzaminded <github.com/pizzaminded>
  */
 class ConfigReader
 {
@@ -17,9 +17,9 @@ class ConfigReader
     protected $configDir;
 
     /**
-     * @var AppVariables
+     * @var string
      */
-    protected $app;
+    private $environment;
 
     /**
      * @var array
@@ -41,29 +41,37 @@ class ConfigReader
      */
     protected $mainConfigFileExtension;
 
-    public function __construct(AppVariables $app)
+    /**
+     * ConfigReader constructor.
+     */
+    public function __construct()
     {
-        $this->extensionsPriority = ['yml', 'ini', 'php'];
-        $this->app = $app;
+        $this->extensionsPriority = ['yml', 'php'];
         $this->configuration = new Configuration();
-
     }
 
+    /**
+     * @param string $dir
+     * @return ConfigReader
+     */
     public function setConfigDir($dir): ConfigReader
     {
         $this->configDir = $dir;
         return $this;
     }
 
-    public function loadConfiguration(): array
-    {
-        return [];
-    }
 
+    /**
+     * @return array
+     * @throws \RuntimeException
+     */
     public function parseApplicationConfiguration(): array
     {
         $configFile = $this->findConfigFileByPriority();
 
+        /**
+         * @TODO: define way to parse php configuration files.
+         */
         if ($this->getMainConfigFileExtension() === 'php') {
 
             return [];
@@ -75,7 +83,7 @@ class ConfigReader
             ->join(
                 $configurationParser->parse(
                     $this->getEnvironmentParamsPath(
-                        $this->app->getEnvironment()
+                        $this->getEnvironment()
                     )
                 )
             )
@@ -86,6 +94,13 @@ class ConfigReader
         return $this->configuration->getFullConfiguration();
     }
 
+    /**
+     * At first, it will try to find config/config.yml. If found, method sets yml as default config file extension.
+     * Otherwise it will find config/config.php [TBD].
+     * Otherwise, method will throw an Exception.
+     * @return string
+     * @throws \RuntimeException
+     */
     private function findConfigFileByPriority(): string
     {
         foreach ($this->extensionsPriority as $ext) {
@@ -119,27 +134,42 @@ class ConfigReader
     }
 
 
-    public function addPlaceholder($name, $value)
+    /**
+     * @param string $name
+     * @param string $value
+     * @return ConfigReader
+     */
+    public function addPlaceholder($name, $value): ConfigReader
     {
         $this->configuration->addPlaceholder($name, trim($value));
 
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getPlaceholders(): array
     {
         return $this->placeholders;
     }
 
-    protected function getEnvironmentParamsPath(Environment $environment): string
+    /**
+     * @param string $environment
+     * @return string
+     */
+    protected function getEnvironmentParamsPath($environment): string
     {
         return $this->configDir .
         '/env/' .
-        $environment->getEnvironment() .
+        $environment .
         '.' .
         $this->getMainConfigFileExtension();
     }
 
+    /**
+     * @return string
+     */
     protected function getRoutesPath(): string
     {
         return $this->configDir .
@@ -147,4 +177,21 @@ class ConfigReader
         $this->getMainConfigFileExtension();
     }
 
+    /**
+     * @return string
+     */
+    public function getEnvironment(): string
+    {
+        return $this->environment;
+    }
+
+    /**
+     * @param mixed $environment
+     * @return ConfigReader
+     */
+    public function setEnvironment($environment): ConfigReader
+    {
+        $this->environment = $environment;
+        return $this;
+    }
 }

@@ -209,7 +209,7 @@
                             <?= $fullFunctionCall ?>(<?= \Slice\Debug\ExceptionView::parseParams($element['args']) ?>)
                         </p>
                         <p class="error-wrapper__content_stack-trace_element-body-info">
-                            <?= $element['file'] ?>:<?= $element['line'] ?></p>
+<!--                            --><?//= $element['file'] ?><!--:--><?//= $element['line'] ?><!--</p>-->
                     </div>
                 </div>
             <?php } ?>
@@ -218,7 +218,7 @@
     <footer class="error-wrapper__footer">
         <a target="_blank"
            class="error-wrapper__footer-link"
-           href="https://github.com/pizzamindedlabs/slice">Slice Framework <?= Kernel::VERSION ?> </a>
+           href="https://github.com/pizzaminded/slice">Slice Framework <?= Kernel::VERSION ?> </a>
     </footer>
 </main>
 

@@ -29,13 +29,13 @@ class Dispatcher
 
     public function dispatch()
     {
-        $router = $this->getContainer()->get('router');
+//        $router = $this->getContainer()->get('router');
 
 
         return $this;
     }
 
-    public function send() {
+    public function sendOutput() {
 
     }
 

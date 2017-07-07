@@ -12,7 +12,7 @@ trait ContainerTrait
     /**
      * @var Container
      */
-    protected $container;
+    private $container;
 
     /**
      * @return Container

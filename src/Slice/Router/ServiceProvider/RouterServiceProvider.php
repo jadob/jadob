@@ -1,32 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mikolajczajkowsky
- * Date: 18.06.2017
- * Time: 00:42
- */
 
 namespace Slice\Router\ServiceProvider;
 
-
+use Slice\Config\Configuration;
 use Slice\Container\Container;
 use Slice\Container\ServiceProvider\ServiceProviderInterface;
+use Slice\Router\RouteCollection;
 use Slice\Router\Router;
 
+/**
+ * Class RouterServiceProvider
+ * @package Slice\Router\ServiceProvider
+ */
 class RouterServiceProvider implements ServiceProviderInterface
 {
 
-    protected $params;
-
-    public function __construct(array $params)
+    /**
+     * @param Container $container
+     * @param Configuration $configuration
+     */
+    public function register(Container $container, Configuration $configuration)
     {
-        $this->params = $params;
-    }
 
-
-    public function register(Container $container)
-    {
+        $routeCollection = new RouteCollection($configuration->getSection('routes'));
         $router = new Router();
+        $router->setRouteCollection($routeCollection);
+
+        $container->add('router', $router);
 
     }
+
 }
