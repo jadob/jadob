@@ -7,6 +7,7 @@ use Slice\Core\Traits\RootDirTrait;
 /**
  * Class AppVariables
  * @package Slice\Core
+ * @deprecated
  */
 class AppVariables
 {
