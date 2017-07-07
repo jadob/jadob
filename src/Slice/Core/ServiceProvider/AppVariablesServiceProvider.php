@@ -1,18 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mikolajczajkowsky
- * Date: 17.06.2017
- * Time: 16:39
- */
 
 namespace Slice\Core\ServiceProvider;
-
 
 use Slice\Container\Container;
 use Slice\Container\ServiceProvider\ServiceProviderInterface;
 use Slice\Core\AppVariables;
 
+/**
+ * Class AppVariablesServiceProvider
+ * @package Slice\Core\ServiceProvider
+ * @deprecated
+ */
 class AppVariablesServiceProvider implements ServiceProviderInterface
 {
 
@@ -23,7 +21,7 @@ class AppVariablesServiceProvider implements ServiceProviderInterface
         $this->params = $params;
     }
 
-    public function register(Container $container)
+    public function register(Container $container, array $configuration)
     {
         $appVariables = new AppVariables();
         $appVariables
