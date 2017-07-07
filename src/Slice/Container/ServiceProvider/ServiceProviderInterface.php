@@ -13,7 +13,7 @@ interface ServiceProviderInterface {
 
     /**
      * @param Container $container
-     * @param Configuration $configuration
+     * @param array $configuration
      */
-    public function register(Container $container, Configuration $configuration);
+    public function register(Container $container, array $configuration);
 }

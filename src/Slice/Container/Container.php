@@ -30,20 +30,27 @@ class Container
     }
 
     /**
-     * @param ServiceProviderInterface $providerClass
-     * @param array $configuration
+     * @param string $providerClass FQCN of service provider
+     * @param array $configuration framework configuration
      * @return $this
+     * @throws \Slice\Container\Exception\ContainerException
      */
-    public function registerProvider(ServiceProviderInterface $providerClass, array $configuration = [])
+    public function registerProvider($providerClass, array $configuration = [])
     {
-        /**
-         * @TODO: implement registerProvider function
-         */
+        if(!in_array(ServiceProviderInterface::class, class_implements($providerClass), true)) {
+            throw new ContainerException(
+                'Class '.$providerClass.' should implement '.ServiceProviderInterface::class.'.');
+        }
+
+        /** @var ServiceProviderInterface $provider */
+        $provider = new $providerClass;
+        $provider->register($this, $configuration);
+
         return $this;
     }
 
     /**
-     * @param string $name
+     * @param string $name service name
      * @return mixed
      * @throws ContainerException
      */
