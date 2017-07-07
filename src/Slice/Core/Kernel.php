@@ -5,7 +5,9 @@ use Slice\Config\ConfigReader;
 use Slice\Container\Container;
 use Slice\Container\ContainerAwareInterface;
 use Slice\Container\ContainerTrait;
+use Slice\Core\ServiceProvider\TopLevelDepedenciesServiceProvider;
 use Slice\Debug\Handler\ExceptionHandler;
+use Slice\Router\ServiceProvider\RouterServiceProvider;
 
 /**
  * Class Kernel
@@ -72,6 +74,7 @@ class Kernel implements ContainerAwareInterface
 
         $this->configuration = $this->configReader->parseApplicationConfiguration();
         $this->registerExceptionHandler();
+        $this->registerDepedencies();
 
     }
 
@@ -91,7 +94,16 @@ class Kernel implements ContainerAwareInterface
 
     public function registerDepedencies()
     {
+        $serviceProviders = [
+            TopLevelDepedenciesServiceProvider::class,
+            RouterServiceProvider::class
+        ];
 
+        foreach ($serviceProviders as $serviceProvider) {
+            $this->container->registerProvider($serviceProvider, $this->configuration);
+        }
+
+        return $this;
     }
 
     /**
