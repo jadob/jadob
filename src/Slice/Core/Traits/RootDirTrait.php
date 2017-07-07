@@ -1,14 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mikolajczajkowsky
- * Date: 13.06.2017
- * Time: 23:08
- */
 
 namespace Slice\Core\Traits;
 
 
+/**
+ * Trait RootDirTrait
+ * @package Slice\Core\Traits
+ * @deprecated
+ */
 trait RootDirTrait
 {
 

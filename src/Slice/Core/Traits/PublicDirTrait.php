@@ -1,7 +1,12 @@
 <?php
+
 namespace Slice\Core\Traits;
 
-
+/**
+ * Trait PublicDirTrait
+ * @package Slice\Core\Traits
+ * @deprecated
+ */
 trait PublicDirTrait
 {
 
