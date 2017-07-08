@@ -1,10 +1,9 @@
 <?php
+
 namespace Slice\Core;
 
 use Slice\Container\ContainerTrait;
 use Slice\Core\HTTP\ResponseInterface;
-use Slice\Core\Traits\PublicDirTrait;
-use Slice\Core\Traits\RootDirTrait;
 
 /**
  * Class Dispatcher
@@ -13,8 +12,6 @@ use Slice\Core\Traits\RootDirTrait;
 class Dispatcher
 {
 
-    use PublicDirTrait;
-    use RootDirTrait;
     use ContainerTrait;
 
     /**
@@ -22,22 +19,21 @@ class Dispatcher
      */
     protected $response;
 
-    public function __construct()
-    {
-
-    }
-
+    /**
+     * @return $this
+     * @throws \Slice\Container\Exception\ContainerException
+     */
     public function dispatch()
     {
-//        $router = $this->getContainer()->get('router');
-
+        $router = $this->getContainer()->get('router');
+        $router->matchRoute();
 
         return $this;
     }
 
-    public function sendOutput() {
-
+    public function sendOutput()
+    {
+        echo $this->response->getContent();
     }
-
 
 }

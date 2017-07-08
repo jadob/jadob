@@ -1,4 +1,5 @@
 <?php
+
 namespace Slice\Core;
 
 use Slice\Config\ConfigReader;
@@ -22,7 +23,7 @@ class Kernel implements ContainerAwareInterface
      * Current framework version.
      * @var string
      */
-    const VERSION = '0.0.1';
+    const VERSION = '0.1.1';
 
     /**
      * @var string
