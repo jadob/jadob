@@ -2,9 +2,9 @@
 
 namespace Slice\Router\ServiceProvider;
 
-use Slice\Config\Configuration;
 use Slice\Container\Container;
 use Slice\Container\ServiceProvider\ServiceProviderInterface;
+use Slice\Core\HTTP\Request;
 use Slice\Router\RouteCollection;
 use Slice\Router\Router;
 
@@ -14,20 +14,21 @@ use Slice\Router\Router;
  */
 class RouterServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * @param Container $container
-     * @param Configuration $configuration
+     * @param array $configuration
+     * @throws \Slice\Container\Exception\ContainerException
      */
-    public function register(Container $container, Configuration $configuration)
+    public function register(Container $container, array $configuration)
     {
+        /** @var Request $request */
+        $request = $container->get('request');
 
-        $routeCollection = new RouteCollection($configuration->getSection('routes'));
-        $router = new Router();
-        $router->setRouteCollection($routeCollection);
+        $router = new Router($configuration['router']);
+        $router
+            ->setRouteCollection(new RouteCollection($configuration['routes']))
+            ->setRequest($request);
 
         $container->add('router', $router);
-
     }
-
 }
