@@ -132,30 +132,6 @@
             margin-bottom: 10px;
         }
 
-        .error-wrapper__content_stack-trace_element-body-function-call {
-            color: #424242;
-            font-size: 16px;
-        }
-
-        .error-wrapper__content_stack-trace_element-body-info {
-            color: #95A5A6;
-            font-size: 16px;
-        }
-
-        .error-wrapper__content_stack-trace_element {
-            padding-bottom: 10px;
-        }
-
-        .error-wrapper__content_stack-trace_element-key {
-            width: 5%;
-            float: left;
-        }
-
-        .error-wrapper__content_stack-trace_element-body {
-            width: 95%;
-            float: left;
-        }
-
         .error-wrapper__footer {
             padding-top: 10px;
             border-top: 1px solid #D2D7D3;
@@ -165,6 +141,22 @@
             font-size: 12px;
             color: #95A5A6;
             text-decoration: none;
+        }
+
+        .stack-trace {
+            width: 100%;
+        }
+        .stack-trace tr {
+            border-bottom: 1px solid #212121;
+        }
+        .stack-trace thead {
+            font-weight: 700;
+        }
+        .stack-trace td {
+            padding: 5px;
+        }
+        .stack-trace .key {
+            border-right: 1px dotted #95A5A6;
         }
     </style>
 </head>
@@ -181,7 +173,7 @@
                 <strong><?= $exception->getCode(); ?></strong></p>
         </div>
         <section class="error-wrapper__sad-emoticon">
-            <span class="error-wrapper__sad-emoticon_wrapper">:(</span>
+            <span class="error-wrapper__sad-emoticon_wrapper">ಠ_ಠ</span>
         </section>
     </section>
     <section class="error-wrapper__content">
@@ -190,29 +182,36 @@
             <h2 class="error-wrapper__content_stack-trace-header">
                 Stack Trace:
             </h2>
-            <?php $stackTrace = $exception->getTrace();
-            foreach ($stackTrace as $key => $element) { ?>
-                <div class="error-wrapper__content_stack-trace_element">
-                    <div class="error-wrapper__content_stack-trace_element-key">
-                        <?= $key; ?>
+            <table class="stack-trace">
+                <thead>
+                <tr>
+                    <td class="key">No.</td>
+                    <td class="function">Method:</td>
+                </tr>
+                </thead>
+                <tbody>
+                <?php $stackTrace = $exception->getTrace();
+                $stepsCount = count($stackTrace);
+                foreach ($stackTrace as $element) { ?>
+                    <tr>
+                        <td class="key"><?= $stepsCount--; ?></td>
+                        <td class="function">
+                            <?php
+                            $fullFunctionCall = $element['function'];
+                            if (isset($element['class'])) {
+                                $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
+                            }
+                            ?>
 
-                    </div>
-                    <div class="error-wrapper__content_stack-trace_element-body">
-
-                        <?php
-                        $fullFunctionCall = $element['function'];
-                        if (isset($element['class'])) {
-                            $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
-                        }
-                        ?>
-                        <p class="error-wrapper__content_stack-trace_element-body-function-call">
                             <?= $fullFunctionCall ?>(<?= \Slice\Debug\ExceptionView::parseParams($element['args']) ?>)
-                        </p>
-                        <p class="error-wrapper__content_stack-trace_element-body-info">
-<!--                            --><?//= $element['file'] ?><!--:--><?//= $element['line'] ?><!--</p>-->
-                    </div>
-                </div>
-            <?php } ?>
+
+                            <!--                            --><!--:-->
+                            <? //= $element['line'] ?><!--</p>-->
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
         </section>
     </section>
     <footer class="error-wrapper__footer">

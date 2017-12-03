@@ -6,15 +6,13 @@
  * and open the template in the editor.
  */
 
-namespace Slice\Container;
-
+namespace Slice\Core\Exception;
 
 /**
- * Class ContainerAwareInterface
- * @package Slice\Container
+ * Description of DispatcherException
+ *
  * @author pizzaminded <miki@appvende.net>
- * @license MIT
  */
-class ContainerAwareInterface {
+class DispatcherException extends \Exception {
     //put your code here
 }

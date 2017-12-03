@@ -2,136 +2,139 @@
 
 namespace Slice\Core;
 
-use Slice\Config\ConfigReader;
-use Slice\Container\Container;
-use Slice\Container\ContainerAwareInterface;
-use Slice\Container\ContainerTrait;
-use Slice\Core\ServiceProvider\TopLevelDepedenciesServiceProvider;
+use Bootstrap;
 use Slice\Debug\Handler\ExceptionHandler;
-use Slice\Router\ServiceProvider\RouterServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Zend\Config\Config;
+use Zend\Config\Processor\Token;
+
 
 /**
  * Class Kernel
  * @package Slice\Core
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
  */
-class Kernel implements ContainerAwareInterface
+class Kernel
 {
 
-    use ContainerTrait;
+    const VERSION = '0.27.0';
 
     /**
-     * Current framework version.
-     * @var string
+     * @var Config[]
      */
-    const VERSION = '0.1.1';
+    private $config;
 
     /**
-     * @var string
+     * @var string (dev/prod)
      */
-    private $environment;
+    private $env;
 
     /**
-     * @var ConfigReader
+     * @var \Slice\Container\Container
      */
-    private $configReader;
+    private $container;
 
     /**
-     * @var string
+     * @var Dispatcher
      */
-    private $rootDir;
+    private $dispatcher;
 
     /**
-     * @var string
+     * @var ExceptionHandler
      */
-    private $publicDir;
+    private $exceptionHandler;
 
     /**
-     * @var array
+     * @var Bootstrap
      */
-    private $configuration;
+    private $bootstrap;
 
     /**
-     * Kernel constructor.
+     * @var Response
+     */
+    private $response;
+
+    /**
      * @param string $env
-     * @param string $rootDir
-     * @param string $publicDir
-     * @throws \RuntimeException
+     * @param Bootstrap $bootstrap
      */
-    public function __construct($env, $rootDir, $publicDir)
+    public function __construct($env, $bootstrap)
     {
-        $this->rootDir = $rootDir;
-        $this->publicDir = $publicDir;
-        $this->environment = $env;
+        $this->env = $env;
+        $this->bootstrap = $bootstrap;
 
-        $this->container = new Container();
+        //Enable error handling
 
-        $this->configReader = new ConfigReader();
-        $this->configReader
-            ->setConfigDir($rootDir.'/config')
-            ->setEnvironment($env)
-            ->addPlaceholder('app.rootDir', $this->getRootDir())
-            ->addPlaceholder('app.publicDir', $this->getPublicDir());
+        $this->exceptionHandler = new ExceptionHandler($env);
+        $this->exceptionHandler
+            ->registerExceptionHandler()
+            ->registerErrorHandler();
+
+        $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
+        $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');
+
+        $processor = new Token($parameters, '%{', '}');
+        $processor->process($config);
+
+        $this->config = $config;
+
+        $this->container = $this->createContainer();
+
+        $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
 
 
-        $this->configuration = $this->configReader->parseApplicationConfiguration();
-        $this->registerExceptionHandler();
-        $this->registerDepedencies();
 
     }
 
     /**
-     * Sets framework exception and error handlers as default
-     * @return $this
+     * @return \Slice\Container\Container
      */
-    private function registerExceptionHandler()
+    private function createContainer()
     {
-        $handler = new ExceptionHandler($this->environment);
-        $handler
-            ->registerErrorHandler()
-            ->registerExceptionHandler();
+        $serviceProviders = include __DIR__ . '/Resources/data/framework_service_providers.php';
+        $userDefinedProviders = $this->bootstrap->getServiceProviders();
 
-        return $this;
-    }
+        $services = array_merge($serviceProviders, $userDefinedProviders);
 
-    public function registerDepedencies()
-    {
-        $serviceProviders = [
-            TopLevelDepedenciesServiceProvider::class,
-            RouterServiceProvider::class
-        ];
+        $container = new \Slice\Container\Container();
 
-        foreach ($serviceProviders as $serviceProvider) {
-            $this->container->registerProvider($serviceProvider, $this->configuration);
+        //register all singular core objects here
+        $container->add('app.bootstrap', $this->bootstrap);
+        $container->add('app.kernel', $this);
+        $container->add('app.request', Request::createFromGlobals());
+
+        foreach ($services as $service) {
+            /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */
+            $provider = new $service;
+
+            $configNode = $provider->getConfigNode();
+            $config = [];
+
+            if ($configNode !== null) {
+                $config = $this->config[$configNode]->toArray();
+            }
+
+            $provider->register($container, $config);
         }
 
-        return $this;
+        return $container;
+    }
+
+    public function execute()
+    {
+       $this->response = $this->dispatcher->execute($this->container->get('app.request'));
+
+       return $this;
     }
 
     /**
-     * @return Dispatcher
+     * Sends all output (response headers, cookies, content) to browser.
      */
-    public function getDispatcher(): Dispatcher
+    public function send()
     {
-        $dispatcher = new Dispatcher();
-        $dispatcher->setContainer($this->container);
-
-        return $dispatcher;
+        $this->response->send();
     }
 
-    /**
-     * @return string
-     */
-    private function getRootDir(): string
-    {
-        return $this->rootDir;
-    }
-
-    /**
-     * @return string
-     */
-    private function getPublicDir(): string
-    {
-        return $this->publicDir;
-
-    }
 }

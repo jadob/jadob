@@ -6,15 +6,15 @@
  * and open the template in the editor.
  */
 
-namespace Slice\Container;
-
+namespace Slice\Router\Exception;
 
 /**
- * Class ContainerAwareInterface
- * @package Slice\Container
+ * Class RouteNotFoundException
+ * @package Slice\Router\Exception
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class ContainerAwareInterface {
+class RouteNotFoundException extends \Exception
+{
     //put your code here
 }

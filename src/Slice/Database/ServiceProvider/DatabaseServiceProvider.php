@@ -1,18 +1,19 @@
 <?php
 
-namespace Slice\Router\ServiceProvider;
+namespace Slice\Database\ServiceProvider;
+
 
 use Slice\Container\Container;
-use Slice\Router\Router;
 use Slice\Container\ServiceProvider\ServiceProviderInterface;
+use Slice\Database\Database;
 
 /**
- * Class RouterServiceProvider
- * @package Slice\Router\ServiceProvider
+ * Class DatabaseServiceProvider
+ * @package Slice\Database\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class RouterServiceProvider implements ServiceProviderInterface
+class DatabaseServiceProvider implements ServiceProviderInterface
 {
 
     /**
@@ -20,18 +21,18 @@ class RouterServiceProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'router';
+        return 'database';
     }
 
     /**
      * @param Container $container
      * @param $config
+     * @throws \Doctrine\DBAL\DBALException
      * @throws \Slice\Container\Exception\ContainerException
      */
     public function register(Container $container, $config)
     {
-        $container->add('router', new Router($config, $container->get('app.request')));
-
+        $container->add('database', new Database($container->get('doctrine.dbal'), $config));
     }
 
 }

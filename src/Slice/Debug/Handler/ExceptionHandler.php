@@ -25,6 +25,9 @@ class ExceptionHandler
     public function __construct($environment)
     {
         $this->environment = $environment;
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
     }
 
     public function registerErrorHandler(): ExceptionHandler

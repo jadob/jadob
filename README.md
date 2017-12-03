@@ -1,6 +1,14 @@
 # pizzaminded/slice
 
-`Slice` is a PHP7 framework wannabe. 
+## DISCLAIMER
+
+This is development version. Use it at your own risk. 
+
+## Introduction
+
+Slice is a PHP5 application framework, based on Symfony and Zend Framework components. It comes with the most important stuff needed to start developing your PHP project. 
+Slice uses Twig for templating and Doctrine DBAL to work with databases. 
+There is no Doctrine ORM Support available, but you can easily add it using Service providers. 
 
 ## Things that need to be done before `1.0.0` release
 * `Slice\Core`
@@ -11,13 +19,3 @@
 * `Slice\Config` 
 * `Slice\Router`
 * Documentation
-
-## Things that need to be done before `2.0.0` release
-* `Slice\i18n`
-* `Slice\Form`
-* `Slice\Validator`
-* `Slice\Cache`
-* `Slice\Console`
-* `Slice\Annotation`
-* `Slice\Asset` 
-* PSR-4

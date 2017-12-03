@@ -2,62 +2,230 @@
 
 namespace Slice\Router;
 
-use Slice\Core\HTTP\Request;
+use Slice\Router\Exception\RouteNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Router
+ * Service name: router
  * @package Slice\Router
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
  */
 class Router
 {
+
     /**
-     * @var RouteCollection
+     * @var array
      */
-    protected $routeCollection;
+    private $config;
+
+    /**
+     * @var Route[]
+     */
+    private $routes;
+
+    /**
+     * @var Route
+     */
+    private $currentRoute;
+
+    /**
+     * @var array
+     */
+    private $globalParams = [];
 
     /**
      * @var Request
      */
-    protected $request;
+    private $request;
 
     /**
-     * @param RouteCollection $routeCollection
-     * @return Router
+     * @param array $config
      */
-    public function setRouteCollection(RouteCollection $routeCollection): Router
+    public function __construct(array $config, Request $request)
     {
-        $this->routeCollection = $routeCollection;
-        return $this;
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param mixed $request
-     * @return Router
-     */
-    public function setRequest(Request $request): Router
-    {
+        $this->config = $config;
         $this->request = $request;
-        return $this;
+        $this->routes = $this->registerRoutes();
+
     }
 
-
-    public function matchRoute()
+    private function registerRoutes()
     {
-        $outputRoute = new Route();
+        $output = [];
 
+        foreach ($this->config['routes'] as $key => $data) {
+            $route = new Route($key);
+            $route
+                ->setController($data['controller'])
+                ->setPath($data['path'])
+                ->setAction($data['action']);
 
-        foreach ($this->routeCollection as $key => $route) {
-           $outputRoute->setRouteName($key);
+            if (isset($data['ignore_locale_prefix'])) {
+                $route->setIgnoreLocalePrefix($data['ignore_locale_prefix']);
+            }
+
+            $output[$key] = $route;
         }
 
+        return $output;
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return Route
+     * @throws RouteNotFoundException
+     */
+    public function matchRoute(Request $request)
+    {
+        $uri = $request->server->get('REQUEST_URI');
+        $explodedURI = explode('?', $uri);
+
+
+        $uri = $explodedURI[0];
+
+        foreach ($this->routes as $route) {
+
+            /** @var Route $route * */
+            if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
+                $path = $this->getRegex($this->config['locale_prefix'] . $route->getPath());
+            } else {
+                $path = $this->getRegex($route->getPath());
+            }
+
+            $matches = [];
+            if ($path !== false && preg_match($path, $uri, $matches)) {
+                $params = array_intersect_key(
+                    $matches, array_flip(array_filter(array_keys($matches), 'is_string'))
+                );
+
+                if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
+                    $this->globalParams['_locale'] = $params['_locale'];
+                }
+
+                $route->setParams($params);
+                $this->currentRoute = $route;
+                return $route;
+            }
+        }
+        throw new RouteNotFoundException('No route matched.');
+    }
+
+    public function getRegex($pattern)
+    {
+
+        if (preg_match('/[^-:.\/_{}()a-zA-Z\d]/', $pattern)) {
+            return false; // Invalid pattern
+        }
+
+        $allowedParamChars = '[a-zA-Z0-9\.\_\-]+';
+        // Create capture group for '{parameter}'
+        $parsedPattern = preg_replace(
+            '/{(' . $allowedParamChars . ')}/', # Replace "{parameter}"
+            '(?<$1>' . $allowedParamChars . ')', # with "(?<parameter>[a-zA-Z0-9\_\-]+)"
+            $pattern
+        );
+
+        // Add start and end matching
+        $patternAsRegex = '%^' . $parsedPattern . '$%D';
+
+        if (!$this->config['case_sensitive']) {
+            $patternAsRegex .= 'i';
+        }
+
+        return $patternAsRegex;
+    }
+
+    public function generateRoute($name, $params, $full = false)
+    {
+
+        if($params === null) {
+            $params = [];
+        }
+
+        if(!isset($this->routes[$name])) {
+            throw new \Exception('Route "'.$name.'" is not defined');
+        }
+
+        $route = $this->routes[$name];
+
+        if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
+            $path = $this->config['locale_prefix'] . $route->getPath();
+            $params = array_merge($params, $this->globalParams);
+
+        } else {
+            $path = $route->getPath();
+        }
+
+        $paramsToGET = [];
+
+        $convertedPath = $path;
+        foreach ($params as $key => $param) {
+            $isFound = 0;
+            $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
+
+            if ($isFound === 0) {
+                $paramsToGET[$key] = $param;
+            }
+        }
+
+        if(count($paramsToGET) !== 0) {
+            $convertedPath .= '?';
+            $convertedPath .= http_build_query($paramsToGET);
+        }
+
+        if ($full) {
+            return $this->request->getSchemeAndHttpHost() . $convertedPath;
+        }
+        return $convertedPath;
 
     }
+
+    /**
+     * @return Route
+     */
+    public function getCurrentRoute(): Route
+    {
+        return $this->currentRoute;
+    }
+
+    /**
+     * @param Route $currentRoute
+     * @return Router
+     */
+    public function setCurrentRoute(Route $currentRoute): Router
+    {
+        $this->currentRoute = $currentRoute;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobalParams(): array
+    {
+        return $this->globalParams;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGlobalParam($key)
+    {
+        return $this->globalParams[$key];
+    }
+
+    /**
+     * @param array $globalParams
+     * @return Router
+     */
+    public function setGlobalParams(array $globalParams): Router
+    {
+        $this->globalParams = $globalParams;
+        return $this;
+    }
+
+
 }
