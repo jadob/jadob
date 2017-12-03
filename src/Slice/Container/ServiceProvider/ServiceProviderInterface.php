@@ -4,10 +4,22 @@ namespace Slice\Container\ServiceProvider;
 
 use Slice\Container\Container;
 
-interface ServiceProviderInterface {
+/**
+ * Interface ServiceProviderInterface
+ * @package Slice\Container\ServiceProvider
+ */
+interface ServiceProviderInterface
+{
 
-	
-	public function getConfigNode();
+    /**
+     * @return mixed
+     */
+    public function getConfigNode();
 
-	public function register(Container $container, $config);
+    /**
+     * @param Container $container
+     * @param $config
+     * @return mixed
+     */
+    public function register(Container $container, $config);
 }

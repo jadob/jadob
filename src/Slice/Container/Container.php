@@ -1,16 +1,19 @@
 <?php
 
 namespace Slice\Container;
-use Slice\Container\Exception\ContainerException;
 
+use Psr\Container\ContainerInterface;
+use Slice\Container\Exception\ServiceNotFoundException;
 
 /**
  * Class Container
  * @package Slice\Container
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
+ * @see http://www.php-fig.org/psr/psr-11/
  */
-class Container {
+class Container implements ContainerInterface
+{
 
     /**
      * @var array
@@ -20,32 +23,41 @@ class Container {
     /**
      * Container constructor.
      */
-    public function __construct() {
-        
+    public function __construct()
+    {
+
     }
 
     /**
-     * @param $key
+     * @param $id
      * @param $object
      * @return $this
+     * @internal param $key
      */
-    public function add($key, $object) {
-        $this->container[$key] = $object;
+    public function add($id, $object)
+    {
+        $this->container[$id] = $object;
 
         return $this;
     }
 
     /**
-     * @param $key
-     * @return mixed
-     * @throws ContainerException
+     * @inheritdoc
      */
-    public function get($key) {
-        if (isset($this->container[$key])) {
-            return $this->container[$key];
+    public function get($id)
+    {
+        if (isset($this->container[$id])) {
+            return $this->container[$id];
         }
-        
-        throw new ContainerException('Service "'.$key.'" is not registered.');
+
+        throw new ServiceNotFoundException('Service "' . $id . '" is not registered.');
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function has($id)
+    {
+        return isset($this->container[$id]);
+    }
 }
