@@ -85,7 +85,6 @@ class Kernel
         $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
 
 
-
     }
 
     /**
@@ -101,9 +100,9 @@ class Kernel
         $container = new \Slice\Container\Container();
 
         //register all singular core objects here
-        $container->add('app.bootstrap', $this->bootstrap);
-        $container->add('app.kernel', $this);
-        $container->add('app.request', Request::createFromGlobals());
+        $container->add('bootstrap', $this->bootstrap);
+        $container->add('kernel', $this);
+        $container->add('request', Request::createFromGlobals());
 
         foreach ($services as $service) {
             /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */
@@ -124,9 +123,9 @@ class Kernel
 
     public function execute()
     {
-       $this->response = $this->dispatcher->execute($this->container->get('app.request'));
+        $this->response = $this->dispatcher->execute($this->container->get('request'));
 
-       return $this;
+        return $this;
     }
 
     /**

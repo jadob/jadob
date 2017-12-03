@@ -26,11 +26,14 @@ class RouterServiceProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      * @param $config
+     * @return mixed|void
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Slice\Container\Exception\ContainerException
      */
     public function register(Container $container, $config)
     {
-        $container->add('router', new Router($config, $container->get('app.request')));
+        $container->add('router', new Router($config, $container->get('request')));
 
     }
 
