@@ -108,7 +108,7 @@ class Table
     /**
      * @var array
      */
-    protected $primaryKey;
+    protected $primaryKeys;
 
     /**
      * Table constructor.
@@ -124,10 +124,13 @@ class Table
      */
     public function getPrimaryKeys()
     {
-        if (isset($this->definition['primary_keys'])) {
-            $this->primaryKey = $this->definition['primary_keys'];
+        foreach ($this->definition['fields'] as $fieldName => $fieldBitmask) {
+            if($fieldBitmask & Table::PRIMARY_KEY) {
+                $this->primaryKeys[] = $fieldName;
+            }
         }
-        return $this->primaryKey;
+
+        return $this->primaryKeys;
     }
 
 
