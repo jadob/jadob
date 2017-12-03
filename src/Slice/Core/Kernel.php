@@ -3,6 +3,7 @@
 namespace Slice\Core;
 
 use Bootstrap;
+use Slice\Container\Container;
 use Slice\Debug\Handler\ExceptionHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,7 @@ class Kernel
     private $env;
 
     /**
-     * @var \Slice\Container\Container
+     * @var Container
      */
     private $container;
 
@@ -88,7 +89,7 @@ class Kernel
     }
 
     /**
-     * @return \Slice\Container\Container
+     * @return Container
      */
     private function createContainer()
     {
@@ -97,7 +98,7 @@ class Kernel
 
         $services = array_merge($serviceProviders, $userDefinedProviders);
 
-        $container = new \Slice\Container\Container();
+        $container = new Container();
 
         //register all singular core objects here
         $container->add('bootstrap', $this->bootstrap);
