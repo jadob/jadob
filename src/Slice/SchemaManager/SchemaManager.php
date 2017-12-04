@@ -75,10 +75,13 @@ class SchemaManager
                 $table->addUniqueIndex($uniqueColumns);
             }
 
-            if(($primaryKeys = $tableObject->getPrimaryKeys()) !== null) {
+            if (($primaryKeys = $tableObject->getPrimaryKeys()) !== null) {
                 $table->setPrimaryKey($primaryKeys);
             }
 
+            if (($indexes = $tableObject->getIndexes()) !== null) {
+                $table->addIndex($indexes);
+            }
         }
 
         //and compare everything with current database schema
