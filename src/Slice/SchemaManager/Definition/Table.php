@@ -111,6 +111,12 @@ class Table
     protected $primaryKeys;
 
     /**
+     * @var array
+     *
+     */
+    protected $indexes;
+
+    /**
      * Table constructor.
      * @param array $definition
      */
@@ -125,7 +131,7 @@ class Table
     public function getPrimaryKeys()
     {
         foreach ($this->definition['fields'] as $fieldName => $fieldBitmask) {
-            if($fieldBitmask & Table::PRIMARY_KEY) {
+            if ($fieldBitmask & Table::PRIMARY_KEY) {
                 $this->primaryKeys[] = $fieldName;
             }
         }
@@ -168,4 +174,18 @@ class Table
         return $output;
     }
 
+    /**
+     * @return array|null
+     */
+    public function getIndexes()
+    {
+        foreach ($this->definition['fields'] as $fieldName => $fieldBitmask) {
+            if ($fieldBitmask & Table::INDEX) {
+                $this->indexes[] = $fieldName;
+            }
+        }
+
+        return $this->indexes;
+
+    }
 }
