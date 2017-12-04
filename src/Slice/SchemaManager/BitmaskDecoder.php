@@ -39,6 +39,10 @@ class BitmaskDecoder
             return 'bigint';
         }
 
+        if($bitmask & Table::TYPE_FLOAT) {
+            return 'float';
+        }
+
     }
 
     /**
