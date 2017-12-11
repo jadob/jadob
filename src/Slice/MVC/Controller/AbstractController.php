@@ -40,12 +40,13 @@ abstract class AbstractController
     /**
      * @param $service
      * @return mixed
-     * @throws \Slice\Container\Exception\ContainerException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function get($service)
     {
         return $this->getContainer()->get($service);
     }
+
 
     /**
      * @param $templateName
@@ -54,6 +55,7 @@ abstract class AbstractController
      * @param array $headers
      * @return Response
      * @throws \InvalidArgumentException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function renderTemplateResponse($templateName, $data = [], $status = 200, $headers = [])
     {
@@ -67,6 +69,7 @@ abstract class AbstractController
      * @param bool $full
      * @return RedirectResponse
      * @throws \InvalidArgumentException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function redirectToRoute($name, $params, $full = false)
     {

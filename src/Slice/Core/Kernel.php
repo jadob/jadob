@@ -70,8 +70,9 @@ class Kernel
 
         $this->exceptionHandler = new ExceptionHandler($env);
         $this->exceptionHandler
-            ->registerExceptionHandler()
-            ->registerErrorHandler();
+
+            ->registerErrorHandler()
+        ->registerExceptionHandler();
 
         $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
         $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');

@@ -7,6 +7,7 @@ namespace Slice\Form\Exception;
  *
  * @author pizzaminded <miki@appvende.net>
  */
-class FormException extends \Exception {
+class FormException extends \Exception
+{
     //put your code here
 }
