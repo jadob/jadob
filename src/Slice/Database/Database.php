@@ -37,7 +37,7 @@ class Database
     /**
      * @return Connection
      */
-    public function getDbal(): Connection
+    public function getDbal()
     {
         return $this->dbal;
     }

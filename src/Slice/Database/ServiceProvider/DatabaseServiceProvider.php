@@ -27,8 +27,7 @@ class DatabaseServiceProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      * @param $config
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Slice\Container\Exception\ContainerException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function register(Container $container, $config)
     {

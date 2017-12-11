@@ -142,7 +142,7 @@ class Route
     /**
      * @return bool
      */
-    public function isIgnoreLocalePrefix(): bool
+    public function isIgnoreLocalePrefix()
     {
         return $this->ignoreLocalePrefix;
     }
@@ -151,7 +151,7 @@ class Route
      * @param bool $ignoreLocalePrefix
      * @return Route
      */
-    public function setIgnoreLocalePrefix(bool $ignoreLocalePrefix): Route
+    public function setIgnoreLocalePrefix($ignoreLocalePrefix)
     {
         $this->ignoreLocalePrefix = $ignoreLocalePrefix;
         return $this;

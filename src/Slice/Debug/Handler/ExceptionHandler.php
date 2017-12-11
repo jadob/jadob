@@ -30,26 +30,33 @@ class ExceptionHandler
 
     }
 
-    public function registerErrorHandler(): ExceptionHandler
+    public function registerErrorHandler()
     {
         set_error_handler([$this, 'errorHandler']);
 
         return $this;
     }
 
-    public function registerExceptionHandler(): ExceptionHandler
+    public function registerExceptionHandler()
     {
         set_exception_handler([$this, 'exceptionHandler']);
 
         return $this;
     }
 
+    /**
+     * @param $severity
+     * @param $message
+     * @param $file
+     * @param $line
+     * @throws ErrorException
+     */
     public function errorHandler($severity, $message, $file, $line)
     {
         throw new ErrorException($message, 0, $severity, $file, $line);
     }
 
-    public function exceptionHandler(Throwable $exception)
+    public function exceptionHandler($exception)
     {
         if ($this->environment === 'prod') {
             $this->showProductionErrorPage($exception);
@@ -60,12 +67,12 @@ class ExceptionHandler
 
     }
 
-    protected function showProductionErrorPage(Throwable $exception)
+    protected function showProductionErrorPage( $exception)
     {
         $template = 'service-temporarily-unavailable';
         $code = 503;
 
-        if (in_array(PageNotFoundExceptionInterface::class, class_implements($exception), true)) {
+        if (\in_array(PageNotFoundExceptionInterface::class, class_implements($exception), true)) {
             $template = 'not-found';
             $code = 404;
         }
@@ -74,7 +81,7 @@ class ExceptionHandler
         ExceptionView::showErrorPage($template, 'prod');
     }
 
-    protected function showDevelopmentErrorPage(Throwable $exception)
+    protected function showDevelopmentErrorPage( $exception)
     {
         ExceptionView::showErrorPage('error', 'dev', [
             'exception' => $exception

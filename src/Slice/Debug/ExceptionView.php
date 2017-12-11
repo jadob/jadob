@@ -13,7 +13,7 @@ class ExceptionView
 
     }
 
-    public static function getVariableType($variable): string
+    public static function getVariableType($variable)
     {
 
         if(is_scalar($variable)) {
@@ -35,7 +35,7 @@ class ExceptionView
         return 'unknown';
     }
 
-    public static function parseParams(array  $params = []): string
+    public static function parseParams(array  $params = [])
     {
         $output = [];
         foreach ($params as $param) {

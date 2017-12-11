@@ -186,7 +186,7 @@ class Router
     /**
      * @return Route
      */
-    public function getCurrentRoute(): Route
+    public function getCurrentRoute()
     {
         return $this->currentRoute;
     }
@@ -195,7 +195,7 @@ class Router
      * @param Route $currentRoute
      * @return Router
      */
-    public function setCurrentRoute(Route $currentRoute): Router
+    public function setCurrentRoute(Route $currentRoute)
     {
         $this->currentRoute = $currentRoute;
         return $this;
@@ -204,7 +204,7 @@ class Router
     /**
      * @return array
      */
-    public function getGlobalParams(): array
+    public function getGlobalParams()
     {
         return $this->globalParams;
     }
@@ -221,7 +221,7 @@ class Router
      * @param array $globalParams
      * @return Router
      */
-    public function setGlobalParams(array $globalParams): Router
+    public function setGlobalParams(array $globalParams)
     {
         $this->globalParams = $globalParams;
         return $this;
