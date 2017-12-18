@@ -3,6 +3,7 @@
 namespace Slice\Database\Model;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * Class AbstractModel
@@ -71,5 +72,38 @@ abstract class AbstractModel
         return $this->dbal->createQueryBuilder();
     }
 
+    /**
+     * Fetches single object from querybuilder. If nothing found, returns NULL.
+     * Warning: Query Builder could not be executed before.
+     * @param QueryBuilder $qb
+     * @param bool $asArray
+     * @return \stdClass|array|null
+     */
+    public function getSingleResult(QueryBuilder $qb, $asArray = false)
+    {
+
+    }
+
+    /**
+     * Fetches all objects from querybuilder. If nothing found, returns NULL.
+     * Warning: Query Builder could not be executed before.
+     * @param QueryBuilder $qb
+     * @param bool $asArray
+     * @return \stdClass|array|null
+     */
+    public function getResults(QueryBuilder $qb, $asArray = false)
+    {
+        $result = $qb->execute();
+
+        if($result->rowCount() === 0) {
+            return null;
+        }
+
+        if($asArray) {
+            return $result->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        return $result->fetchAll(\PDO::FETCH_OBJ);
+    }
 
 }

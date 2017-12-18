@@ -3,6 +3,7 @@
 namespace Slice\MVC\Controller;
 
 use Slice\Container\Container;
+use Slice\Database\Database;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -75,5 +76,26 @@ abstract class AbstractController
     {
         return new RedirectResponse($this->get('router')->generateRoute($name, $params, $full));
     }
+
+    /**
+     * @return Database
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    public function getDatabase()
+    {
+        return $this->get('database');
+    }
+
+    /**
+     * @param string $modelName Model name to be returned
+     * @return \Slice\Database\Model\AbstractModel
+     * @throws \Exception
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    public function getModel($modelName)
+    {
+        return $this->getDatabase()->getModel($modelName);
+    }
+
 
 }

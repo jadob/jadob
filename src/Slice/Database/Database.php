@@ -2,8 +2,7 @@
 
 namespace Slice\Database;
 
-
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Slice\Database\Model\AbstractModel;
 
 /**
@@ -18,6 +17,12 @@ class Database
      * @var Connection
      */
     private $dbal;
+
+    /**
+     * Instantiated models pool
+     * @var AbstractModel[]
+     */
+    protected $pool;
 
     /**
      * @var array
@@ -57,13 +62,22 @@ class Database
      */
     public function getModel($modelName)
     {
-        if(!isset($this->config['models'][$modelName])) {
-            throw new \Exception('model '.$modelName. 'does not exists.');
+        if (!isset($this->config['models'][$modelName])) {
+            throw new \Exception('model ' . $modelName . 'does not exists.');
         }
 
-        $modelClass = $this->config['models'][$modelName];
+        if (!isset($this->pool[$modelName])) {
+            $modelClass = $this->config['models'][$modelName];
+            $this->pool[$modelName] = new $modelClass($this->getDbal());
+        }
 
-        return new $modelClass($this->getDbal());
+        return $this->pool[$modelName];
     }
+
+    public function bulkInsert($tableName, $values)
+    {
+//        $sql = $this->dbal->
+    }
+
 
 }
