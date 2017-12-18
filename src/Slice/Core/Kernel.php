@@ -20,7 +20,7 @@ use Zend\Config\Processor\Token;
 class Kernel
 {
 
-    const VERSION = '0.27.0';
+    const VERSION = '0.28.1';
 
     /**
      * @var Config[]
@@ -70,9 +70,8 @@ class Kernel
 
         $this->exceptionHandler = new ExceptionHandler($env);
         $this->exceptionHandler
-
             ->registerErrorHandler()
-        ->registerExceptionHandler();
+            ->registerExceptionHandler();
 
         $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
         $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');
@@ -123,6 +122,15 @@ class Kernel
         return $container;
     }
 
+    /**
+     * @return $this
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws Exception\DispatcherException
+     * @throws \ReflectionException
+     * @throws \Slice\Container\Exception\ContainerException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
     public function execute()
     {
         $this->response = $this->dispatcher->execute($this->container->get('request'));
