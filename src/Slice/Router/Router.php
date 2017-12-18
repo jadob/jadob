@@ -51,6 +51,9 @@ class Router
 
     }
 
+    /**
+     * @return array
+     */
     private function registerRoutes()
     {
         $output = [];
@@ -113,6 +116,10 @@ class Router
         throw new RouteNotFoundException('No route matched.');
     }
 
+    /**
+     * @param $pattern
+     * @return bool|string
+     */
     public function getRegex($pattern)
     {
 
@@ -138,6 +145,13 @@ class Router
         return $patternAsRegex;
     }
 
+    /**
+     * @param $name
+     * @param $params
+     * @param bool $full
+     * @return mixed|string
+     * @throws RouteNotFoundException
+     */
     public function generateRoute($name, $params, $full = false)
     {
 
@@ -146,7 +160,7 @@ class Router
         }
 
         if(!isset($this->routes[$name])) {
-            throw new \Exception('Route "'.$name.'" is not defined');
+            throw new RouteNotFoundException('Route "'.$name.'" is not defined');
         }
 
         $route = $this->routes[$name];

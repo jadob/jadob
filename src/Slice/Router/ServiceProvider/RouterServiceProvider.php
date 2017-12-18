@@ -29,7 +29,6 @@ class RouterServiceProvider implements ServiceProviderInterface
      * @return mixed|void
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Slice\Container\Exception\ContainerException
      */
     public function register(Container $container, $config)
     {
