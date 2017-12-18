@@ -74,9 +74,48 @@ class Database
         return $this->pool[$modelName];
     }
 
+    /**
+     * @param string $tableName
+     * @param array $values
+     * @TODO validate table name
+     * @throws \Doctrine\DBAL\DBALException
+     */
     public function bulkInsert($tableName, $values)
     {
-//        $sql = $this->dbal->
+        $parameters = [];
+        $sql = 'INSERT INTO __TABLE__ (__FIELDS__) VALUES __VALUES__';
+
+        $fields = array_keys(reset($values));
+        $valuesString = [];
+        $fieldsImploded = implode(',', $fields);
+
+        foreach ($values as $key => $params) {
+            $row = [];
+            foreach ($fields as $fieldValue) {
+                $parameter = $fieldValue . '_' . $key;
+                $parameters[$parameter] = $params[$fieldValue];
+                $row[] = ':' . $parameter;
+            }
+
+            $valuesString[] = '(' . implode(',', $row) . ') ';
+        }
+
+        $sql = str_replace(
+            [
+                '__TABLE__',
+                '__FIELDS__',
+                '__VALUES__'
+            ],
+            [
+                $tableName,
+                $fieldsImploded,
+                implode(',', $valuesString)
+            ]
+            , $sql);
+
+        $statement = $this->dbal->prepare($sql);
+        $statement->execute($parameters);
+
     }
 
 
