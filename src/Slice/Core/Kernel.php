@@ -5,11 +5,11 @@ namespace Slice\Core;
 use Bootstrap;
 use Slice\Container\Container;
 use Slice\Debug\Handler\ExceptionHandler;
+use Slice\EventListener\EventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zend\Config\Config;
 use Zend\Config\Processor\Token;
-
 
 /**
  * Class Kernel
@@ -60,6 +60,7 @@ class Kernel
     /**
      * @param string $env
      * @param Bootstrap $bootstrap
+     * @throws \InvalidArgumentException
      */
     public function __construct($env, $bootstrap)
     {
@@ -81,7 +82,10 @@ class Kernel
 
         $this->config = $config;
 
+        $this->response = new Response();
         $this->container = $this->createContainer();
+        #event.after.container
+
 
         $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
 
@@ -104,6 +108,7 @@ class Kernel
         $container->add('bootstrap', $this->bootstrap);
         $container->add('kernel', $this);
         $container->add('request', Request::createFromGlobals());
+        $container->add('event.dispatcher', new EventListener());
 
         foreach ($services as $service) {
             /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */
@@ -133,7 +138,9 @@ class Kernel
      */
     public function execute()
     {
+        #kernel.before.execute
         $this->response = $this->dispatcher->execute($this->container->get('request'));
+        #kernel.after.execute
 
         return $this;
     }

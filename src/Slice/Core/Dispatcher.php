@@ -54,21 +54,27 @@ class Dispatcher
      * @throws \ReflectionException
      * @throws \Slice\Container\Exception\ContainerException
      * @throws DispatcherException
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function execute(Request $request)
     {
-        #event.before.router
+
+        $this->container->get('event.dispatcher')->dispatchEvent('event.before.router');
+
         /** @var Route $route */
         $route = $this->container->get('router')->matchRoute($request);
 
+        $this->container->get('event.dispatcher')->dispatchEvent('event.after.router');
 
-        #event.after.router
+
         $controllerClassName = $route->getController();
 
         if (!class_exists($controllerClassName)) {
             throw new DispatcherException('Class "' . $controllerClassName . '" '
                 . 'does not exists or it cannot be used as a controller.');
         }
+
+        $this->container->get('event.dispatcher')->dispatchEvent('event.before.controller');
 
         /** @var AbstractController $controller */
         $controller = new $controllerClassName($this->container);
@@ -83,6 +89,13 @@ class Dispatcher
         /** @var Response $response */
         $response = call_user_func_array([$controller, $action], $params);
 
+        $afterControllerListener = $this->container->get('event.dispatcher')->dispatchEvent('event.after.controller');
+
+        if ($afterControllerListener !== null) {
+            $response = $afterControllerListener;
+        }
+
+        //TODO: Response validation
 //        if (!in_array(Response::class, class_parents($response), true)) {
 //            throw new DispatcherException('Invalid response type');
 //        }
