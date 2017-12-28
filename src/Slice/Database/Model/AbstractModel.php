@@ -82,6 +82,19 @@ abstract class AbstractModel
     public function getSingleResult(QueryBuilder $qb, $asArray = false)
     {
 
+
+        $result = $qb->execute();
+
+        if($result->rowCount() === 0) {
+            return null;
+        }
+
+        if($asArray) {
+            return $result->fetch(\PDO::FETCH_ASSOC);
+        }
+
+        return $result->fetch(\PDO::FETCH_OBJ);
+
     }
 
     /**
