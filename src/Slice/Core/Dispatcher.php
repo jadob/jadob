@@ -5,6 +5,7 @@ namespace Slice\Core;
 use ReflectionMethod;
 use Slice\Container\Container;
 use Slice\Core\Exception\DispatcherException;
+use Slice\EventListener\EventListener;
 use Slice\MVC\Controller\AbstractController;
 use Slice\Router\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,15 @@ class Dispatcher
     }
 
     /**
+     * @return EventListener
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    protected function getEventDispatcher()
+    {
+        return $this->container->get('event.listener');
+    }
+
+    /**
      * @param Request $request
      * @return Response
      * @throws \ReflectionException
@@ -58,14 +68,16 @@ class Dispatcher
      */
     public function execute(Request $request)
     {
-
-        $this->container->get('event.dispatcher')->dispatchEvent('event.before.router');
+        // TODO: what we should do before finding a route and what we should pass?
+        //$this->getEventDispatcher()->dispatchEvent('event.before.router');
 
         /** @var Route $route */
         $route = $this->container->get('router')->matchRoute($request);
 
-        $this->container->get('event.dispatcher')->dispatchEvent('event.after.router');
 
+        if (($afterRouteEvent = $this->getEventDispatcher()->dispatchAfterRouterAction($route)) !== null) {
+            $route = $afterRouteEvent;
+        }
 
         $controllerClassName = $route->getController();
 
@@ -74,7 +86,7 @@ class Dispatcher
                 . 'does not exists or it cannot be used as a controller.');
         }
 
-        $this->container->get('event.dispatcher')->dispatchEvent('event.before.controller');
+        $this->getEventDispatcher()->dispatchEvent('event.before.controller');
 
         /** @var AbstractController $controller */
         $controller = new $controllerClassName($this->container);
@@ -89,7 +101,8 @@ class Dispatcher
         /** @var Response $response */
         $response = call_user_func_array([$controller, $action], $params);
 
-        $afterControllerListener = $this->container->get('event.dispatcher')->dispatchEvent('event.after.controller');
+        $afterControllerListener = $this->getEventDispatcher()->dispatchAfterControllerAction($response);
+
 
         if ($afterControllerListener !== null) {
             $response = $afterControllerListener;

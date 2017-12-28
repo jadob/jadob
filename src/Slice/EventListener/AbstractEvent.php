@@ -2,15 +2,13 @@
 
 namespace Slice\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
+use Slice\Router\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractEvent
+abstract class AbstractEvent implements EventInterface
 {
 
     protected $stopPropagation = false;
-
-    abstract public function dispatch(Request $request, Response $response);
 
     /**
      * @return bool
@@ -30,5 +28,24 @@ abstract class AbstractEvent
         return $this;
     }
 
+    public function onBeforeRouterAction()
+    {
+        return null;
+    }
+
+    public function onAfterRouterAction(Route $route)
+    {
+        return null;
+    }
+
+    public function onBeforeControllerAction()
+    {
+        return null;
+    }
+
+    public function onAfterControllerAction(Response $response)
+    {
+        return null;
+    }
 
 }

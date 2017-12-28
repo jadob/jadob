@@ -70,9 +70,9 @@ class Kernel
         //Enable error handling
 
         $this->exceptionHandler = new ExceptionHandler($env);
-        $this->exceptionHandler
-            ->registerErrorHandler()
-            ->registerExceptionHandler();
+//        $this->exceptionHandler
+//            ->registerErrorHandler()
+//            ->registerExceptionHandler();
 
         $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
         $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');
@@ -108,7 +108,7 @@ class Kernel
         $container->add('bootstrap', $this->bootstrap);
         $container->add('kernel', $this);
         $container->add('request', Request::createFromGlobals());
-        $container->add('event.dispatcher', new EventListener());
+        $container->add('event.listener', new EventListener());
 
         foreach ($services as $service) {
             /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */

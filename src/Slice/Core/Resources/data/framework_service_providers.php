@@ -8,5 +8,6 @@ return [
     Slice\Router\ServiceProvider\RouterServiceProvider::class,
     Slice\TwigBridge\ServiceProvider\TwigServiceProvider::class,
     Slice\DoctrineDBALBridge\ServiceProvider\DoctrineDBALServiceProvider::class,
-    Slice\Database\ServiceProvider\DatabaseServiceProvider::class
+    Slice\Database\ServiceProvider\DatabaseServiceProvider::class,
+   \Slice\Debug\ServiceProvider\DebugServiceProvider::class
 ];
