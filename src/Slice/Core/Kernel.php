@@ -4,6 +4,7 @@ namespace Slice\Core;
 
 use Bootstrap;
 use Slice\Container\Container;
+use Slice\Core\Exception\KernelException;
 use Slice\Debug\Handler\ExceptionHandler;
 use Slice\EventListener\EventListener;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,9 +71,9 @@ class Kernel
         //Enable error handling
 
         $this->exceptionHandler = new ExceptionHandler($env);
-//        $this->exceptionHandler
-//            ->registerErrorHandler()
-//            ->registerExceptionHandler();
+        $this->exceptionHandler
+            ->registerErrorHandler()
+            ->registerExceptionHandler();
 
         $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
         $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');
@@ -94,6 +95,7 @@ class Kernel
 
     /**
      * @return Container
+     * @throws KernelException
      */
     private function createContainer()
     {
@@ -116,6 +118,10 @@ class Kernel
 
             $configNode = $provider->getConfigNode();
             $config = [];
+
+            if($configNode !== null && !$this->config->offsetExists($configNode)) {
+                throw new KernelException('Config node "'.$configNode.'" does not exists.');
+            }
 
             if ($configNode !== null) {
                 $config = $this->config[$configNode]->toArray();
