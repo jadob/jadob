@@ -120,7 +120,7 @@ class Kernel
             $config = [];
 
             if($configNode !== null && !$this->config->offsetExists($configNode)) {
-                throw new KernelException('Config node "'.$configNode.'" does not exists.');
+                throw new KernelException('Config node "'.$configNode.'" requested by '.$service.' does not exists.');
             }
 
             if ($configNode !== null) {
