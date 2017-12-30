@@ -73,7 +73,7 @@ abstract class AbstractController
      * @throws \InvalidArgumentException
      * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
-    public function redirectToRoute($name, $params, $full = false)
+    public function redirectToRoute($name, $params = [], $full = false)
     {
         return new RedirectResponse($this->get('router')->generateRoute($name, $params, $full));
     }
