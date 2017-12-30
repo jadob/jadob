@@ -49,7 +49,6 @@ abstract class AbstractController
         return $this->getContainer()->get($service);
     }
 
-
     /**
      * @param $templateName
      * @param array $data
@@ -108,7 +107,7 @@ abstract class AbstractController
     }
 
     /**
-     * @param string $name global variable name (defined in config.php, 'globals' section
+     * @param string $name global variable name (defined in config.php, 'globals' section)
      * @return mixed
      * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
