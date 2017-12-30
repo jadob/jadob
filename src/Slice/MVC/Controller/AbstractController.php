@@ -5,6 +5,7 @@ namespace Slice\MVC\Controller;
 use Slice\Container\Container;
 use Slice\Database\Database;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -97,5 +98,22 @@ abstract class AbstractController
         return $this->getDatabase()->getModel($modelName);
     }
 
+    /**
+     * @return Request
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    public function getRequest()
+    {
+        return $this->get('request');
+    }
 
+    /**
+     * @param string $name global variable name (defined in config.php, 'globals' section
+     * @return mixed
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    protected function getGlobal($name) {
+
+        return $this->get('globals')->get($name);
+    }
 }
