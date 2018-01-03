@@ -61,8 +61,8 @@ class Dispatcher
     /**
      * @param Request $request
      * @return Response
+     * @throws \RuntimeException
      * @throws \ReflectionException
-     * @throws \Slice\Container\Exception\ContainerException
      * @throws DispatcherException
      * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
@@ -88,9 +88,14 @@ class Dispatcher
 
         $this->getEventDispatcher()->dispatchEvent('event.before.controller');
 
-        /** @var AbstractController $controller */
-        $controller = new $controllerClassName($this->container);
-        $action = $route->getAction() . 'Action';
+        $controllerConstructorArgs = $this->getControllerConstructorArguments($controllerClassName);
+        $controller = new $controllerClassName(...$controllerConstructorArgs);
+
+        $action = $route->getAction();
+
+        if($action !== '__invoke') {
+            $action .= 'Action';
+        }
 
         if (!method_exists($controller, $action)) {
             throw new DispatcherException('Action "' . $action . '" does not exists in ' . get_class($controller));
@@ -99,10 +104,9 @@ class Dispatcher
         $params = $this->getOrderedParamsForAction($controller, $action, $route);
 
         /** @var Response $response */
-        $response = call_user_func_array([$controller, $action], $params);
+        $response = \call_user_func_array([$controller, $action], $params);
 
         $afterControllerListener = $this->getEventDispatcher()->dispatchAfterControllerAction($response);
-
 
         if ($afterControllerListener !== null) {
             $response = $afterControllerListener;
@@ -139,4 +143,37 @@ class Dispatcher
         return $output;
     }
 
+    /**
+     * @param $className
+     * @return array
+     * @throws \RuntimeException
+     * @throws \ReflectionException
+     */
+    private function getControllerConstructorArguments($className) {
+
+        $reflection = new \ReflectionClass($className);
+
+        $controllerParameters = $reflection->getConstructor()->getParameters();
+
+        $controllerConstructorArgs = [];
+
+        foreach ($controllerParameters as $parameter) {
+
+            if($parameter->getType() === null) {
+                throw new \RuntimeException('Constructor argument "'.$parameter->getName().'" has no type.');
+            }
+
+            $argumentType = $parameter->getType()->getName();
+
+            if($argumentType === Container::class) {
+                $controllerConstructorArgs[] = $this->container;
+                break;
+            }
+
+            $controllerConstructorArgs[] = $this->container->findServiceByClassName($argumentType);
+        }
+
+        return $controllerConstructorArgs;
+
+    }
 }
