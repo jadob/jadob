@@ -3,7 +3,9 @@
 namespace Slice\Container;
 
 use Psr\Container\ContainerInterface;
+use Slice\Container\Exception\ContainerException;
 use Slice\Container\Exception\ServiceNotFoundException;
+use Zend\Config\Config;
 
 /**
  * Class Container
@@ -59,5 +61,47 @@ class Container implements ContainerInterface
     public function has($id)
     {
         return isset($this->container[$id]);
+    }
+
+    /**
+     * Search for class defined in $className and returns it. otherwise null returned.
+     * @param $className
+     * @return null|mixed
+     */
+    public function findServiceByClassName($className)
+    {
+        foreach ($this->container as $key => $service) {
+            if(get_class($service) === $className) {
+                return $service;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $providers
+     * @param Config $configuration
+     * @throws ContainerException
+     */
+    public function registerProviders(array $providers, Config $configuration)
+    {
+        foreach ($providers as $service) {
+            /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */
+            $provider = new $service;
+
+            $configNode = $provider->getConfigNode();
+            $config = [];
+
+            if($configNode !== null && !$configuration->offsetExists($configNode)) {
+                throw new ContainerException('Config node "'.$configNode.'" requested by '.$service.' does not exists.');
+            }
+
+            if ($configNode !== null) {
+                $config = $configuration[$configNode]->toArray();
+            }
+
+            $provider->register($this, $config);
+        }
     }
 }

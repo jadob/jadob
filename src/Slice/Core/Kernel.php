@@ -21,7 +21,7 @@ use Zend\Config\Processor\Token;
 class Kernel
 {
 
-    const VERSION = '0.28.1';
+    const VERSION = '0.29.0';
 
     /**
      * @var Config[]
@@ -95,7 +95,7 @@ class Kernel
 
     /**
      * @return Container
-     * @throws KernelException
+     * @throws \Slice\Container\Exception\ContainerException
      */
     private function createContainer()
     {
@@ -112,23 +112,7 @@ class Kernel
         $container->add('request', Request::createFromGlobals());
         $container->add('event.listener', new EventListener());
 
-        foreach ($services as $service) {
-            /** @var \Slice\Container\ServiceProvider\ServiceProviderInterface $provider * */
-            $provider = new $service;
-
-            $configNode = $provider->getConfigNode();
-            $config = [];
-
-            if($configNode !== null && !$this->config->offsetExists($configNode)) {
-                throw new KernelException('Config node "'.$configNode.'" requested by '.$service.' does not exists.');
-            }
-
-            if ($configNode !== null) {
-                $config = $this->config[$configNode]->toArray();
-            }
-
-            $provider->register($container, $config);
-        }
+        $container->registerProviders($services, $this->config);
 
         return $container;
     }
