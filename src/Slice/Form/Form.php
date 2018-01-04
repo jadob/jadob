@@ -75,6 +75,7 @@ class Form
         return $this->renderer->renderForm($this);
     }
 
+
     public function handle(Request $request)
     {
 
@@ -140,6 +141,20 @@ class Form
 
     }
 
+    public function getData()
+    {
+        $output = [];
+        foreach ($this->fields as $field) {
+
+            /** @var AbstractInput $field */
+            if ($field->getName() !== null) {
+                $output[$field->getName()] = $field->getValue();
+            }
+        }
+
+        return $output;
+    }
+
     public function getMethod()
     {
         return $this->method;
@@ -182,5 +197,22 @@ class Form
     {
         $this->fields = $fields;
         return $this;
+    }
+
+    public function isSubmitted()
+    {
+        return $this->isSubmitted;
+    }
+
+    public function isValid()
+    {
+        foreach ($this->fields as $field) {
+            /** @var AbstractInput $field */
+            if (!FormUtils::isButton($field) && !$field->isValid()) {
+               return false;
+            }
+        }
+
+        return true;
     }
 }

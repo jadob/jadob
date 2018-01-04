@@ -4,12 +4,14 @@ namespace Slice\Form;
 
 use Slice\Form\Field\AbstractInput;
 use Slice\Form\Field\InputCollection;
+use Slice\Form\Validator\FormValidatorInterface;
 
 /**
  * Description of FormValidator
  * @author pizzaminded <miki@appvende.net>
  */
-class FormValidator {
+class FormValidator
+{
 
     /**
      * We cannot use all Validators for some reasons. Let's omit them.
@@ -26,7 +28,8 @@ class FormValidator {
      * @param object $object
      * @return bool
      */
-    private function isSupportedZendValidatorObject($object) {
+    private function isSupportedZendValidatorObject($object)
+    {
 
         return true;
     }
@@ -34,9 +37,9 @@ class FormValidator {
     /**
      * @param AbstractInput|InputCollection $input
      */
-    public function validateInput($input) {
+    public function validateInput($input)
+    {
 
-        r($input);
         //if input is collection we need to validate all stuff inside them
         if (FormUtils::isInputCollection($input)) {
             /** @var InputCollection $input */
@@ -53,19 +56,23 @@ class FormValidator {
         if (FormUtils::isButton($input) || count($input->getValidators()) === 0) {
             return;
         }
-        
+
         $errors = [];
 
         //let the show begin
         foreach ($input->getValidators() as $validator) {
 
             if (FormUtils::isZendValidatorObject($validator) && !$validator->isValid($input->getValue())) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
+
                 $errors = array_merge($errors, $validator->getMessages());
             }
 
-
-
-           //if(FormUtils::isSliceValidatorObject($validator))
+            /** @var FormValidatorInterface $validator */
+            if (FormUtils::isSliceValidatorObject($validator) && !$validator->isValid($input->getValue())) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
+                $errors = array_merge($errors, $validator->getMessages());
+            }
         }
 
         $input->setErrors($errors);
