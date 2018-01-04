@@ -8,6 +8,7 @@ use Slice\Form\Field\InputCollection;
 
 /**
  * Description of FormUtils
+ * @internal
  * @author pizzaminded <miki@appvende.net>
  */
 class FormUtils {
@@ -38,4 +39,19 @@ class FormUtils {
     public static function isZendValidatorObject($object) {
         return in_array('Zend\Validator\ValidatorInterface', class_implements($object), true);
     }
+
+    public static function camelize($word) {
+        return preg_replace('/(^|_)([a-z])/e', 'strtoupper("\\2")', $word);
+    }
+
+    /**
+     * @param $word
+     * @return null|string|string[]
+     */
+    public static function decamelize($word) {
+        return strtolower(ltrim(preg_replace('/[A-Z]/', '_$0', $word), '_'));
+    }
+
+
+
 }
