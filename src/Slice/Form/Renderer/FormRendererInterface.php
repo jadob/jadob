@@ -17,4 +17,6 @@ interface FormRendererInterface {
     public function renderField(FormFieldInterface $input);
     
     public function renderForm(\Slice\Form\Form $form);
+
+    public function setCustomFieldTemplate($field, $templatePath);
 }
