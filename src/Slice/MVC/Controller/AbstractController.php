@@ -3,7 +3,10 @@
 namespace Slice\MVC\Controller;
 
 use Slice\Container\Container;
+use Slice\Container\ContainerAwareTrait;
 use Slice\Database\Database;
+use Slice\Form\FormFactory;
+use Slice\MVC\ResponseMethodsTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractController
 {
 
-    /**
-     * @var Container
-     */
-    private $container;
+    use ContainerAwareTrait;
+    use ResponseMethodsTrait;
 
     /**
      * AbstractController constructor.
@@ -29,52 +30,6 @@ abstract class AbstractController
     public function __construct(Container $container)
     {
         $this->container = $container;
-    }
-
-    /**
-     * @return Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @param $service
-     * @return mixed
-     * @throws \Slice\Container\Exception\ServiceNotFoundException
-     */
-    public function get($service)
-    {
-        return $this->getContainer()->get($service);
-    }
-
-    /**
-     * @param $templateName
-     * @param array $data
-     * @param int $status
-     * @param array $headers
-     * @return Response
-     * @throws \InvalidArgumentException
-     * @throws \Slice\Container\Exception\ServiceNotFoundException
-     */
-    public function renderTemplateResponse($templateName, $data = [], $status = 200, $headers = [])
-    {
-        $output = $this->get('twig')->render($templateName, $data);
-        return new Response($output, $status, $headers);
-    }
-
-    /**
-     * @param $name
-     * @param $params
-     * @param bool $full
-     * @return RedirectResponse
-     * @throws \InvalidArgumentException
-     * @throws \Slice\Container\Exception\ServiceNotFoundException
-     */
-    public function redirectToRoute($name, $params = [], $full = false)
-    {
-        return new RedirectResponse($this->get('router')->generateRoute($name, $params, $full));
     }
 
     /**
@@ -111,8 +66,19 @@ abstract class AbstractController
      * @return mixed
      * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
-    protected function getGlobal($name) {
+    protected function getGlobal($name)
+    {
 
         return $this->get('globals')->get($name);
+    }
+
+    /**
+     * @return FormFactory
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    protected function getFormFactory()
+    {
+
+        return $this->get('form.factory');
     }
 }
