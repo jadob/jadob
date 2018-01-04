@@ -1,8 +1,9 @@
 <?php
 
 namespace Slice\Form;
-use Slice\Form\Extension\FormExtensionInterface;
+
 use Slice\Form\Field\SubmitButton;
+use Slice\Form\Field\TextareaInput;
 use Slice\Form\Field\TextInput;
 use Slice\Form\Renderer\Bootstrap3HorizontalFormRenderer;
 use Slice\Form\Renderer\FormRendererInterface;
@@ -43,11 +44,11 @@ class FormFactory
     {
         $this->fieldsContainer = [
             'text' => TextInput::class,
-            'submit' => SubmitButton::class
+            'submit' => SubmitButton::class,
+            'textarea' => TextareaInput::class
         ];
 
         $this->renderer = new Bootstrap3HorizontalFormRenderer();
-
     }
 
     /**
@@ -79,11 +80,6 @@ class FormFactory
     public function getFieldClassName($name)
     {
         return $this->fieldsContainer[trim($name)];
-    }
-
-    public function createFormFromArray($name, $form, $data = [])
-    {
-
     }
 
     public function addInput($shortName, $className)
