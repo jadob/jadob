@@ -3,10 +3,12 @@
 
 namespace Slice\Form\Field;
 
+
 /**
- * Description of AbstractInput
- * @TODO add fromArray static method
+ * Class AbstractInput
+ * @package Slice\Form\Field
  * @author pizzaminded <miki@appvende.net>
+ * @license MIT
  */
 abstract class AbstractInput implements FormFieldInterface
 {
