@@ -6,7 +6,6 @@ use ReflectionMethod;
 use Slice\Container\Container;
 use Slice\Core\Exception\DispatcherException;
 use Slice\EventListener\EventListener;
-use Slice\MVC\Controller\AbstractController;
 use Slice\Router\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

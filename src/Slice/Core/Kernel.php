@@ -87,9 +87,7 @@ class Kernel
         $this->container = $this->createContainer();
         #event.after.container
 
-
         $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
-
 
     }
 
