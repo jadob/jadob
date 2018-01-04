@@ -25,6 +25,10 @@
             <li>1</li>
         </ol>
     </div>
-    Route name: __ROUTE__
+    <div>Profiler data:
+    <ul>
+        <li>Route name: __ROUTE__</li>
+        <li></li>
+    </ul></div>
 
 </div>
