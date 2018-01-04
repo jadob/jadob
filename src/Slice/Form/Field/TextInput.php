@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 namespace Slice\Form\Field;
 
@@ -14,5 +9,14 @@ namespace Slice\Form\Field;
  * @author pizzaminded <miki@appvende.net>
  */
 class TextInput extends AbstractInput {
-    //put your code here
+
+    public static function fromArray($data)
+    {
+        return (new self())
+            ->setLabel($data['label'])
+            ->setName($data['name'])
+            ->setRequired($data['required'])
+            ->setPlaceholder($data['placeholder'])
+            ->setValue($data['placeholder']);
+    }
 }
