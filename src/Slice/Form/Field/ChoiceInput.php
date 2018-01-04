@@ -6,7 +6,8 @@ namespace Slice\Form\Field;
  * Allows you to generate radiobuttons, checkboxes and select tags in your form.
  * @author pizzaminded <miki@appvende.net>
  */
-class ChoiceInput extends AbstractInput {
+class ChoiceInput extends AbstractInput
+{
 
     /**
      * @var string
@@ -29,71 +30,82 @@ class ChoiceInput extends AbstractInput {
      * otherwise - as select
      * @var bool
      */
-    protected $expanded  = false;
+    protected $expanded = false;
     protected $checkedOption;
     private $orientation;
     private $values;
-    
+
 
     /**
-     * 
+     *
      * @param string $value option value
      * @param string $label option label
      * @param bool $checked
      * @return $this
      * @TODO: allow to set multiple checked fields
      */
-    public function addOption($value, $label, $checked = false) {
+    public function addOption($value, $label, $checked = false)
+    {
         $this->values[$value] = $label;
-        
-        if($checked) {
+
+        if ($checked) {
             $this->checkedOption = $value;
         }
-        
+
         return $this;
     }
 
-    public function getOrientation() {
+    public function getOrientation()
+    {
         return $this->orientation;
     }
 
-    public function setOrientation($orientation) {
+    public function setOrientation($orientation)
+    {
         $this->orientation = $orientation;
         return $this;
     }
 
-    public function getMultiple() {
+    public function getMultiple()
+    {
         return $this->multiple;
     }
 
-    public function getExpanded() {
+    public function getExpanded()
+    {
         return $this->expanded;
     }
 
-    public function getCheckedOption() {
+    public function getCheckedOption()
+    {
         return $this->checkedOption;
     }
 
-    public function getValues() {
+    public function getValues()
+    {
         return $this->values;
     }
 
-    public function setMultiple($multiple) {
+    public function setMultiple($multiple)
+    {
         $this->multiple = $multiple;
         return $this;
     }
 
-    public function setExpanded($expanded) {
+    public function setExpanded($expanded)
+    {
         $this->expanded = $expanded;
         return $this;
     }
 
-    public function setCheckedOption($checkedOption) {
+    public function setCheckedOption($checkedOption)
+    {
         $this->checkedOption = $checkedOption;
         return $this;
     }
 
-    public function setValues($values) {
+    public function setValues($values)
+    {
         $this->values = $values;
         return $this;
     }

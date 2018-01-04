@@ -5,6 +5,7 @@ namespace Slice\Form\Renderer;
 use Slice\Form\Field\AbstractInput;
 use Slice\Form\Field\FormFieldInterface;
 use Slice\Form\Form;
+use Slice\Form\FormUtils;
 
 
 /**
@@ -27,7 +28,7 @@ class DefaultFormRenderer implements FormRendererInterface {
     
     private function getInputType(FormFieldInterface $input) {
         $explodedClassName = explode('\\', get_class($input));
-        return decamelize(end($explodedClassName));
+        return FormUtils::decamelize(end($explodedClassName));
     }
 
     public function renderForm(Form $form) {

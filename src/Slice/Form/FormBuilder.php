@@ -3,6 +3,8 @@
 
 namespace Slice\Form;
 
+use Slice\Form\Field\AbstractInput;
+
 
 /**
  * Description of FormBuilder
@@ -16,6 +18,12 @@ class FormBuilder
 
     protected $name;
     protected $fields;
+    protected $formFactory;
+
+    public function __construct(FormFactory $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
 
     public function getFields()
     {
@@ -46,14 +54,18 @@ class FormBuilder
         return $this;
     }
 
-    /**
-     * @deprecated
-     */
-    public function create()
+    public function addField($fieldName, $params = [])
     {
-        $object = new Form($this->name);
+        $fieldClass = $this
+            ->formFactory
+            ->getFieldClassName($fieldName);
 
-        //TODO 
+        /** @var AbstractInput $field */
+        $field = $fieldClass::fromArray($params);
+
+        $this->add($field);
+
+        return $this;
     }
 
 }

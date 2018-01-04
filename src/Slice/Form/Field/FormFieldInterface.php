@@ -14,4 +14,6 @@ namespace Slice\Form\Field;
  */
 interface FormFieldInterface {
     //put your code here
+
+    public static function fromArray($data);
 }

@@ -1,13 +1,19 @@
 <?php
 
 namespace Slice\Form;
+use Slice\Form\Extension\FormExtensionInterface;
+use Slice\Form\Field\SubmitButton;
+use Slice\Form\Field\TextInput;
+use Slice\Form\Renderer\Bootstrap3HorizontalFormRenderer;
+use Slice\Form\Renderer\FormRendererInterface;
 
 /**
  * Class responsible for creating Forms
  * Service name: form.factory
  * @author pizzaminded <miki@appvende.net>
  */
-class FormFactory {
+class FormFactory
+{
 
     /**
      * Extensions that can be used during form creating
@@ -21,38 +27,87 @@ class FormFactory {
     protected $builder;
 
     /**
+     * @var array
+     */
+    protected $fieldsContainer = [];
+
+    /**
+     * @var FormRendererInterface
+     */
+    private $renderer;
+
+    /**
      * Class constructor
      */
-    public function __construct() {
-        $this->builder = new FormBuilder();
+    public function __construct()
+    {
+        $this->fieldsContainer = [
+            'text' => TextInput::class,
+            'submit' => SubmitButton::class
+        ];
+
+        $this->renderer = new Bootstrap3HorizontalFormRenderer();
+
     }
 
     /**
-     * @param \Slice\Form\FormTypeInterface $formType
-     * @param array $data 
-     * @return Form Description
+     * @param string $formType FQCN of class implementing FormTypeInterface
+     * @param array $data
+     * @return Form
      */
-    public function createFormType($formType, $data = []) {
-        $builder = new FormBuilder();
+    public function createFormType($formType, $data = [])
+    {
+        $builder = new FormBuilder($this);
 
         /** @var FormTypeInterface $form */
         $form = new $formType();
-        
+
         $form->buildForm($builder);
-                        
-        $formObject = new Form($this->generateFormName($formType));
+
+        $formObject = new Form($this->generateFormName($formType), $this->renderer);
         $formObject->setFields($builder->getFields());
-        
+
         return $formObject;
     }
 
-    private function generateFormName($formType) {
+    private function generateFormName($formType)
+    {
         $name = str_replace('\\', '_', $formType);
-        return strtolower(decamelize($name));
+        return strtolower(FormUtils::decamelize($name));
     }
-    
-    public function createFormFromArray($name, $form, $data = []) {
-        
+
+    public function getFieldClassName($name)
+    {
+        return $this->fieldsContainer[trim($name)];
+    }
+
+    public function createFormFromArray($name, $form, $data = [])
+    {
+
+    }
+
+    public function addInput($shortName, $className)
+    {
+        $this->fieldsContainer[$shortName] = $className;
+        return $this;
+    }
+
+    /**
+     * @return FormRendererInterface
+     */
+    public function getRenderer()
+    {
+        return $this->renderer;
+    }
+
+    /**
+     * @param FormRendererInterface $renderer
+     * @return FormFactory
+     */
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+        return $this;
     }
 
 }

@@ -11,8 +11,6 @@ use Slice\Form\Exception\FormException;
  */
 class CheckboxInput extends AbstractInput {
 
-   
-    
     public function setPlaceholder() {
         throw new FormException('You cannot set placeholder text on checkbox input.');
     }

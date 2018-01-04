@@ -1,15 +1,19 @@
 <?php
 
-
 namespace Slice\Form\Field;
 
 /**
- * Description of TextInput
- *
+ * Class TextInput
+ * @package Slice\Form\Field
  * @author pizzaminded <miki@appvende.net>
+ * @license MIT
  */
 class TextInput extends AbstractInput {
 
+    /**
+     * @param $data
+     * @return $this
+     */
     public static function fromArray($data)
     {
         return (new self())
@@ -17,6 +21,6 @@ class TextInput extends AbstractInput {
             ->setName($data['name'])
             ->setRequired($data['required'])
             ->setPlaceholder($data['placeholder'])
-            ->setValue($data['placeholder']);
+            ->setValue($data['value']);
     }
 }

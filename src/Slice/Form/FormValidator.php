@@ -1,6 +1,7 @@
 <?php
 
 namespace Slice\Form;
+
 use Slice\Form\Field\AbstractInput;
 use Slice\Form\Field\InputCollection;
 
@@ -35,10 +36,12 @@ class FormValidator {
      */
     public function validateInput($input) {
 
-
+        r($input);
         //if input is collection we need to validate all stuff inside them
         if (FormUtils::isInputCollection($input)) {
+            /** @var InputCollection $input */
             foreach ($input as $singleCollectionInput) {
+
                 $this->validateInput($singleCollectionInput);
             }
 
@@ -59,6 +62,10 @@ class FormValidator {
             if (FormUtils::isZendValidatorObject($validator) && !$validator->isValid($input->getValue())) {
                 $errors = array_merge($errors, $validator->getMessages());
             }
+
+
+
+           //if(FormUtils::isSliceValidatorObject($validator))
         }
 
         $input->setErrors($errors);
