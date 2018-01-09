@@ -5,6 +5,7 @@ namespace Slice\Core;
 use ReflectionMethod;
 use Slice\Container\Container;
 use Slice\Core\Exception\DispatcherException;
+use Slice\EventListener\Event\AfterRouterEvent;
 use Slice\EventListener\EventListener;
 use Slice\Router\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,10 +74,17 @@ class Dispatcher
         /** @var Route $route */
         $route = $this->container->get('router')->matchRoute($request);
 
+        $afterRouterObject = new AfterRouterEvent($route, null);
 
-        if (($afterRouteEvent = $this->getEventDispatcher()->dispatchAfterRouterAction($route)) !== null) {
-            $route = $afterRouteEvent;
+
+        $this->getEventDispatcher()->dispatchAfterRouterAction($afterRouterObject);
+
+        $route = $afterRouterObject->getRoute();
+
+        if (($afterRouterResponse = $afterRouterObject->getResponse()) !== null) {
+            return $afterRouterResponse;
         }
+
 
         $controllerClassName = $route->getController();
 
@@ -92,7 +100,7 @@ class Dispatcher
 
         $action = $route->getAction();
 
-        if($action !== '__invoke') {
+        if ($action !== '__invoke') {
             $action .= 'Action';
         }
 
@@ -148,7 +156,8 @@ class Dispatcher
      * @throws \RuntimeException
      * @throws \ReflectionException
      */
-    private function getControllerConstructorArguments($className) {
+    private function getControllerConstructorArguments($className)
+    {
 
         $reflection = new \ReflectionClass($className);
 
@@ -158,13 +167,12 @@ class Dispatcher
 
         foreach ($controllerParameters as $parameter) {
 
-            if($parameter->getType() === null) {
-                throw new \RuntimeException('Constructor argument "'.$parameter->getName().'" has no type.');
+            if ($parameter->getType() === null) {
+                throw new \RuntimeException('Constructor argument "' . $parameter->getName() . '" has no type.');
             }
 
             $argumentType = $parameter->getType()->getName();
-
-            if($argumentType === Container::class) {
+            if ($argumentType === Container::class) {
                 $controllerConstructorArgs[] = $this->container;
                 break;
             }
