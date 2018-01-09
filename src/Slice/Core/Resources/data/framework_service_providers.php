@@ -11,5 +11,6 @@ return [
     \Slice\Database\ServiceProvider\DatabaseServiceProvider::class,
     \Slice\Debug\ServiceProvider\DebugServiceProvider::class,
     \Slice\Core\ServiceProvider\GlobalVariablesProvider::class,
-    \Slice\Form\ServiceProvider\FormProvider::class
+    \Slice\Form\ServiceProvider\FormProvider::class,
+    \Slice\Security\ServiceProvider\SecurityProvider::class
 ];
