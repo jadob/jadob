@@ -20,15 +20,15 @@ class ExceptionView
             return $variable;
         }
 
-        if(is_object($variable)) {
-            return get_class($variable);
+        if(\is_object($variable)) {
+            return \get_class($variable);
         }
 
-        if(is_array($variable)) {
+        if(\is_array($variable)) {
             return 'array';
         }
 
-        if(is_resource($variable)) {
+        if(\is_resource($variable)) {
             return 'resource';
         }
 
@@ -39,7 +39,7 @@ class ExceptionView
     {
         $output = [];
         foreach ($params as $param) {
-            $output[] = self::getVariableType($param);
+            $output[] = htmlspecialchars(self::getVariableType($param));
         }
 
         return implode(',', $output);
