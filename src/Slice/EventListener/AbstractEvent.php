@@ -2,7 +2,7 @@
 
 namespace Slice\EventListener;
 
-use Slice\Router\Route;
+use Slice\EventListener\Event\AfterRouterEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractEvent implements EventInterface
@@ -33,7 +33,7 @@ abstract class AbstractEvent implements EventInterface
         return null;
     }
 
-    public function onAfterRouterAction(Route $route)
+    public function onAfterRouterAction(AfterRouterEvent $route)
     {
         return null;
     }
