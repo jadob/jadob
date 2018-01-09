@@ -12,5 +12,6 @@ return [
     \Slice\Debug\ServiceProvider\DebugServiceProvider::class,
     \Slice\Core\ServiceProvider\GlobalVariablesProvider::class,
     \Slice\Form\ServiceProvider\FormProvider::class,
-    \Slice\Security\ServiceProvider\SecurityProvider::class
+    \Slice\Security\ServiceProvider\SecurityProvider::class,
+    \Slice\Cache\ServiceProvider\CacheProvider::class
 ];
