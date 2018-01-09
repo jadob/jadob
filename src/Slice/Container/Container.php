@@ -67,6 +67,7 @@ class Container implements ContainerInterface
      * Search for class defined in $className and returns it. otherwise null returned.
      * @param $className
      * @return null|mixed
+     * @throws \RuntimeException
      */
     public function findServiceByClassName($className)
     {
@@ -76,7 +77,7 @@ class Container implements ContainerInterface
             }
         }
 
-        return null;
+        throw new \RuntimeException('Class '.$className.' is not registered in container');
     }
 
     /**

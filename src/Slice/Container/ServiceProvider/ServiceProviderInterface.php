@@ -19,7 +19,6 @@ interface ServiceProviderInterface
     /**
      * @param Container $container
      * @param $config
-     * @return mixed
      */
     public function register(Container $container, $config);
 }
