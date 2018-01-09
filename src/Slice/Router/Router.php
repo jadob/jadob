@@ -152,12 +152,8 @@ class Router
      * @return mixed|string
      * @throws RouteNotFoundException
      */
-    public function generateRoute($name, $params, $full = false)
+    public function generateRoute($name, $params = [], $full = false)
     {
-
-        if($params === null) {
-            $params = [];
-        }
 
         if(!isset($this->routes[$name])) {
             throw new RouteNotFoundException('Route "'.$name.'" is not defined');
