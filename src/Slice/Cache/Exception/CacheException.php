@@ -2,7 +2,16 @@
 
 namespace Slice\Cache\Exception;
 
-class CacheException extends \Exception implements \Psr\SimpleCache\CacheException
+use Exception;
+use Psr\SimpleCache\CacheException as CacheExceptionInterface;
+
+/**
+ * Class CacheException
+ * @package Slice\Cache\Exception
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
+class CacheException extends Exception implements CacheExceptionInterface
 {
 
 }
