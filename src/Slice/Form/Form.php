@@ -102,6 +102,10 @@ class Form
 
     public function fillValuesFromArray($data)
     {
+        if (\count($data) === 0) {
+            return $this;
+        }
+
         foreach ($this->fields as $field) {
 
 
@@ -212,7 +216,7 @@ class Form
         foreach ($this->fields as $field) {
             /** @var AbstractInput $field */
             if (!FormUtils::isButton($field) && !$field->isValid()) {
-               return false;
+                return false;
             }
         }
 
