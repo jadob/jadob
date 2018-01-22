@@ -27,7 +27,7 @@ class DefaultFormRenderer implements FormRendererInterface {
 
     
     private function getInputType(FormFieldInterface $input) {
-        $explodedClassName = explode('\\', get_class($input));
+        $explodedClassName = explode('\\', \get_class($input));
         return FormUtils::decamelize(end($explodedClassName));
     }
 
@@ -47,4 +47,8 @@ class DefaultFormRenderer implements FormRendererInterface {
         
     }
 
+    public function setCustomFieldTemplate($field, $templatePath)
+    {
+        // TODO: Implement setCustomFieldTemplate() method.
+    }
 }

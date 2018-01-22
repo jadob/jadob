@@ -3,7 +3,6 @@
 namespace Slice\Form;
 
 /**
- *
  * @author pizzaminded <miki@appvende.net>
  */
 interface FormTypeInterface {

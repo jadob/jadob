@@ -90,7 +90,7 @@ class Form
         }
 
         //check in array if any variable with form name as key exists
-        if (!isset($data[$this->name]) || !is_array($data[$this->name])) {
+        if (!isset($data[$this->name]) || !\is_array($data[$this->name])) {
             return;
         }
 
@@ -100,15 +100,18 @@ class Form
         $this->validate();
     }
 
-    private function fillValuesFromArray($data)
+    public function fillValuesFromArray($data)
     {
         foreach ($this->fields as $field) {
 
+
             /** @var AbstractInput $field */
-            if ($field->getName() !== null) {
+            if ($field->getName() !== null && !FormUtils::isButton($field)) {
                 $field->setValue($data[$field->getName()]);
             }
         }
+
+        return $this;
     }
 
     public function validate()
