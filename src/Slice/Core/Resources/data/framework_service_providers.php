@@ -8,6 +8,7 @@ return [
     \Slice\Router\ServiceProvider\RouterServiceProvider::class,
     \Slice\TwigBridge\ServiceProvider\TwigServiceProvider::class,
     \Slice\DoctrineDBALBridge\ServiceProvider\DoctrineDBALServiceProvider::class,
+    \Slice\SymfonyTranslationBridge\ServiceProvider\TranslationServiceProvider::class,
     \Slice\Database\ServiceProvider\DatabaseServiceProvider::class,
     \Slice\Debug\ServiceProvider\DebugServiceProvider::class,
     \Slice\Core\ServiceProvider\GlobalVariablesProvider::class,
