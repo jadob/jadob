@@ -5,6 +5,7 @@ namespace Slice\Core;
 use ReflectionMethod;
 use Slice\Container\Container;
 use Slice\Core\Exception\DispatcherException;
+use Slice\EventListener\Event\AfterControllerEvent;
 use Slice\EventListener\Event\AfterRouterEvent;
 use Slice\EventListener\EventListener;
 use Slice\Router\Route;
@@ -113,7 +114,9 @@ class Dispatcher
         /** @var Response $response */
         $response = \call_user_func_array([$controller, $action], $params);
 
-        $afterControllerListener = $this->getEventDispatcher()->dispatchAfterControllerAction($response);
+        $afterControllerEvent = new AfterControllerEvent($response);
+
+        $afterControllerListener = $this->getEventDispatcher()->dispatchAfterControllerAction($afterControllerEvent);
 
         if ($afterControllerListener !== null) {
             $response = $afterControllerListener;
@@ -161,7 +164,13 @@ class Dispatcher
 
         $reflection = new \ReflectionClass($className);
 
-        $controllerParameters = $reflection->getConstructor()->getParameters();
+        $controllerConstructor = $reflection->getConstructor();
+
+        if($controllerConstructor === null) {
+            return [];
+        }
+
+        $controllerParameters = $controllerConstructor->getParameters();
 
         $controllerConstructorArgs = [];
 
