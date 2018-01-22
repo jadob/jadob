@@ -5,10 +5,8 @@ namespace Slice\Form;
 
 use Slice\Form\Field\AbstractInput;
 
-
 /**
  * Description of FormBuilder
- * This one probably will be deprecated soon
  * @package Slice\Form
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -16,7 +14,10 @@ use Slice\Form\Field\AbstractInput;
 class FormBuilder
 {
 
-    protected $name;
+    /**
+     * @var string
+     */
+    protected $formName;
     protected $fields;
     protected $formFactory;
 
@@ -36,14 +37,21 @@ class FormBuilder
         return $this;
     }
 
-    public function getName()
+    /**
+     * @return string
+     */
+    public function getFormName()
     {
-        return $this->name;
+        return $this->formName;
     }
 
-    public function setName($name)
+    /**
+     * @param string $formName
+     * @return FormBuilder
+     */
+    public function setFormName($formName)
     {
-        $this->name = $name;
+        $this->formName = $formName;
         return $this;
     }
 

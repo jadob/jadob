@@ -62,10 +62,14 @@ class FormFactory
 
         /** @var FormTypeInterface $form */
         $form = new $formType();
-
         $form->buildForm($builder);
 
-        $formObject = new Form($this->generateFormName($formType), $this->renderer);
+        $formName = $builder->getFormName();
+        if($formName === null) {
+            $formName = $this->generateFormName($formType);
+        }
+
+        $formObject = new Form($formName, $this->renderer);
         $formObject->setFields($builder->getFields());
 
         return $formObject->fillValuesFromArray($data);

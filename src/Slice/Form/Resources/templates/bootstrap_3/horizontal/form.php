@@ -1,3 +1,3 @@
-<form class="form-horizontal" method="<?= $form->getMethod() ?>">
+<form class="form" method="<?= $form->getMethod() ?>">
     <?= $content; ?>
 </form>
