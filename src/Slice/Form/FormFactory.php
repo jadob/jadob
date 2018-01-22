@@ -68,7 +68,7 @@ class FormFactory
         $formObject = new Form($this->generateFormName($formType), $this->renderer);
         $formObject->setFields($builder->getFields());
 
-        return $formObject;
+        return $formObject->fillValuesFromArray($data);
     }
 
     private function generateFormName($formType)
