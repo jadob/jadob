@@ -34,7 +34,7 @@ class PathExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('path', [$this, 'path'], ['is_safe' => ['html'],]),
-            new \Twig_SimpleFunction('url', [$this, 'path'], ['is_safe' => ['html'],]),
+            new \Twig_SimpleFunction('url', [$this, 'url'], ['is_safe' => ['html'],]),
         ];
     }
 
@@ -42,6 +42,7 @@ class PathExtension extends \Twig_Extension
      * @param $path
      * @param $params
      * @return string
+     * @throws \Slice\Router\Exception\RouteNotFoundException
      */
     public function path($path, $params = [])
     {
@@ -52,6 +53,7 @@ class PathExtension extends \Twig_Extension
      * @param $path
      * @param $params
      * @return string
+     * @throws \Slice\Router\Exception\RouteNotFoundException
      */
     public function url($path, $params = [])
     {

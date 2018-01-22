@@ -23,6 +23,6 @@ class DebugExtension extends \Twig_Extension
 
     public function debug()
     {
-        return @r(func_get_args());
+        return @r(\func_get_args());
     }
 }

@@ -27,7 +27,7 @@ class AssetExtension extends \Twig_Extension
 
     public function asset($path, $fullURI = false)
     {
-        $path = sprintf('/%s', ltrim($path, '/'));
+        $path = \sprintf('/%s', ltrim($path, '/'));
 
         if($fullURI) {
             return $this->request->getSchemeAndHttpHost().'/'.$path;
