@@ -32,6 +32,7 @@ class TwigServiceProvider implements ServiceProviderInterface
      * @throws \Slice\Container\Exception\ContainerException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Twig_Error_Loader
      */
     public function register(Container $container, $config)
     {
@@ -52,7 +53,6 @@ class TwigServiceProvider implements ServiceProviderInterface
             'cache' => $cache,
             'strict_variables' => $config['strict_variables']
         ]);
-
 
         $appVariables = [
             'router' => $container->get('router'),

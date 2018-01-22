@@ -2,7 +2,11 @@
 
 namespace Slice\Container;
 
-
+/**
+ * Trait ContainerAwareTrait
+ * @package Slice\Container
+ * @author pizzaminded <miki@appvende.net>
+ */
 trait ContainerAwareTrait
 {
     /**
