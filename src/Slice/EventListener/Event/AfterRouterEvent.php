@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Slice\EventListener\Event;
 
 use Slice\Router\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class AfterRouterEvent
+class AfterRouterEvent implements EventParameterInterface
 {
     /**
      * @var Route

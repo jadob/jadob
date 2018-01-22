@@ -2,7 +2,9 @@
 
 namespace Slice\EventListener;
 
+use Slice\EventListener\Event\AfterControllerEvent;
 use Slice\EventListener\Event\AfterRouterEvent;
+use Slice\EventListener\Event\EventParameterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -64,12 +66,14 @@ class EventListener
      * @param null $parameter
      * @return null
      */
-    protected function dispatch($eventName, $parameter = null)
+    protected function dispatch($eventName, EventParameterInterface $parameter)
     {
 
         if(!isset($this->events[$eventName])) {
-            return $parameter;
+            return $parameter->getResponse();
         }
+
+        $responseBeforeDispatch = $parameter->getResponse();
 
         /** @var array[] $eventsList */
         $eventsList = $this->events[$eventName];
@@ -88,8 +92,7 @@ class EventListener
                     $response = $event->onAfterControllerAction($parameter);
                 }
 
-
-                if ($event->isEventStoppingPropagation()) {
+                if ($event->isEventStoppingPropagation() && $parameter->getResponse() !== $responseBeforeDispatch) {
                     return $response;
                 }
             }
@@ -102,10 +105,10 @@ class EventListener
      * @param Response $response
      * @return Response
      */
-    public function dispatchAfterControllerAction(Response $response)
+    public function dispatchAfterControllerAction(AfterControllerEvent $event)
     {
 
-       return $this->dispatch(self::EVENT_AFTER_CONTROLLER, $response);
+       return $this->dispatch(self::EVENT_AFTER_CONTROLLER, $event);
     }
 
     public function dispatchEvent($eventName)
