@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class AuthListener
+ * Class LogoutListener
  * @package Slice\Security\Auth\Event
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class AuthListener extends AbstractEvent
+class LogoutListener extends AbstractEvent
 {
 
     /**
@@ -68,23 +68,16 @@ class AuthListener extends AbstractEvent
      */
     public function onAfterRouterAction(AfterRouterEvent $event)
     {
-
         $route = $event->getRoute();
 
-        if(
-            $this->request->getMethod() !== 'POST' //not POST request
-            || $route->getName() !== $this->config['login_path'] //route does not match
-            || $this->manager->getUserStorage()->getUser() !== null //user is logged in
+        if (
+            $route->getName() !== $this->config['logout_path'] //route does not match
+            || $this->manager->getUserStorage()->getUser() === null //user is logged in
         ) {
-
             return;
         }
 
-        $isLogged = $this->manager->handleRequest($this->request);
-
-        if($isLogged) {
-            $redirectUri = $this->router->generateRoute($this->config['redirect_path']);
-            $event->setResponse(new RedirectResponse($redirectUri));
-        }
+        $this->manager->logout();
+        $event->setResponse(new RedirectResponse($this->router->generateRoute($this->config['logout_redirect'])));
     }
 }

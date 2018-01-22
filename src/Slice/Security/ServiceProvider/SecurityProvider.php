@@ -7,6 +7,7 @@ use Slice\Container\ServiceProvider\ServiceProviderInterface;
 use Slice\EventListener\EventListener;
 use Slice\Security\Auth\AuthenticationManager;
 use Slice\Security\Auth\Event\AuthListener;
+use Slice\Security\Auth\Event\LogoutListener;
 use Slice\Security\Auth\Provider\DatabaseUserProvider;
 use Slice\Security\Auth\UserStorage;
 
@@ -45,7 +46,6 @@ class SecurityProvider implements ServiceProviderInterface
             );
         }
 
-
         $container->add(
             'auth.user.storage',
             new UserStorage($container->get('session'))
@@ -59,19 +59,24 @@ class SecurityProvider implements ServiceProviderInterface
             )
         );
 
-        $authListener = new AuthListener(
-            $container->get('request'),
-            $container->get('auth.authentication.manager'),
-            $authConfig,
-            $container->get('router')
+        $container->get('event.listener')->register(
+            EventListener::EVENT_AFTER_ROUTER,
+            new AuthListener(
+                $container->get('request'),
+                $container->get('auth.authentication.manager'),
+                $authConfig,
+                $container->get('router')
+            )
         );
-
 
         $container->get('event.listener')->register(
             EventListener::EVENT_AFTER_ROUTER,
-            $authListener
+            new LogoutListener(
+                $container->get('request'),
+                $container->get('auth.authentication.manager'),
+                $authConfig,
+                $container->get('router')
+            )
         );
-
-
     }
 }
