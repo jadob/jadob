@@ -20,7 +20,7 @@ class FormUtils {
      * @return bool
      */
     public static function isInputCollection(FormFieldInterface $input) {
-        return is_subclass_of($input, InputCollection::class) || get_class($input) === InputCollection::class;
+        return \is_subclass_of($input, InputCollection::class) || get_class($input) === InputCollection::class;
     }
     
     /**
@@ -29,7 +29,7 @@ class FormUtils {
      * @return bool
      */
     public static function isButton(FormFieldInterface $input) {
-        return is_subclass_of($input, AbstractButton::class);
+        return \is_subclass_of($input, AbstractButton::class);
     }
 
     /**
@@ -38,7 +38,7 @@ class FormUtils {
      * @return bool
      */
     public static function isZendValidatorObject($object) {
-        return in_array('Zend\Validator\ValidatorInterface', class_implements($object), true);
+        return \in_array('Zend\Validator\ValidatorInterface', class_implements($object), true);
     }
 
     /**
@@ -47,7 +47,7 @@ class FormUtils {
      */
     public static function isSliceValidatorObject($object)
     {
-        return in_array(FormValidatorInterface::class, class_implements($object), true);
+        return \in_array(FormValidatorInterface::class, class_implements($object), true);
     }
 
 
