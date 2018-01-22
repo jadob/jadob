@@ -40,7 +40,7 @@ class AuthenticationManager
 
     public function handleRequest(Request $request)
     {
-        if(
+        if (
             $request->getMethod() !== 'POST' // is not post request
             || !$request->request->has('_username') //has not username field
             || !$request->request->has('_password') //has not password field
@@ -51,14 +51,14 @@ class AuthenticationManager
 
         $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_username'));
 
-        if($userFromProvider === null || count($userFromProvider) === 0) {
+        if ($userFromProvider === null || count($userFromProvider) === 0) {
             $this->error = 'auth.user.not.found';
             return;
         }
 
         $plainPassword = $request->request->get('_password');
 
-        if(password_verify($plainPassword, $userFromProvider['password'])) {
+        if (password_verify($plainPassword, $userFromProvider['password'])) {
             $this->userStorage->setUserState($userFromProvider);
             return;
         }
@@ -68,6 +68,12 @@ class AuthenticationManager
         return;
     }
 
+    public function updateUserFromStorage()
+    {
+        $username = $this->getUserStorage()->getUser()['username'];
+        $data = $this->provider->loadUserByUsername($username);
+        $this->getUserStorage()->setUserState((array)$data);
+    }
 
 
     /**
