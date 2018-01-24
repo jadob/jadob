@@ -42,30 +42,30 @@ class AuthenticationManager
     {
         if (
             $request->getMethod() !== 'POST' // is not post request
-            || !$request->request->has('_username') //has not username field
-            || !$request->request->has('_password') //has not password field
+            || !$request->request->has('_auth') //has no _auth array passed
             || $this->userStorage->getUser() !== null //user is logged in
         ) {
-            return;
+
+            return false;
         }
 
-        $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_username'));
+        $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_auth')['_username']);
 
         if ($userFromProvider === null || count($userFromProvider) === 0) {
             $this->error = 'auth.user.not.found';
-            return;
+            return false;
         }
 
-        $plainPassword = $request->request->get('_password');
+        $plainPassword = $request->request->get('_auth')['_password'];
 
         if (password_verify($plainPassword, $userFromProvider['password'])) {
             $this->userStorage->setUserState($userFromProvider);
-            return;
+            return true;
         }
 
         $this->lastUsername = $request->request->get('_username');
         $this->error = 'auth.invalid.password';
-        return;
+        return false;
     }
 
     public function updateUserFromStorage()
@@ -75,6 +75,13 @@ class AuthenticationManager
         $this->getUserStorage()->setUserState((array)$data);
     }
 
+    /**
+     * Logout user and removes storage keys.
+     */
+    public function logout()
+    {
+        $this->getUserStorage()->removeUserFromStorage();
+    }
 
     /**
      * @return UserStorage
