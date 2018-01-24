@@ -56,7 +56,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $appVariables = [
             'router' => $container->get('router'),
-            'request' => $container->get('request')
+            'request' => $container->get('request'),
+            'user' => $container->get('auth.user.storage')->getUser()
         ];
 
         $twig->addGlobal('app', $appVariables);
