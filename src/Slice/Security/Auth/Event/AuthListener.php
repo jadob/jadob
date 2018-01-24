@@ -4,7 +4,6 @@ namespace Slice\Security\Auth\Event;
 
 use Slice\EventListener\AbstractEvent;
 use Slice\EventListener\Event\AfterRouterEvent;
-use Slice\Router\Route;
 use Slice\Router\Router;
 use Slice\Security\Auth\AuthenticationManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -61,7 +60,7 @@ class AuthListener extends AbstractEvent
     }
 
     /**
-     * @param Route $route
+     * @param AfterRouterEvent $event
      * @return null|void
      * @throws \InvalidArgumentException
      * @throws \Slice\Router\Exception\RouteNotFoundException
@@ -71,7 +70,7 @@ class AuthListener extends AbstractEvent
 
         $route = $event->getRoute();
 
-        if(
+        if (
             $this->request->getMethod() !== 'POST' //not POST request
             || $route->getName() !== $this->config['login_path'] //route does not match
             || $this->manager->getUserStorage()->getUser() !== null //user is logged in
@@ -82,8 +81,27 @@ class AuthListener extends AbstractEvent
 
         $isLogged = $this->manager->handleRequest($this->request);
 
-        if($isLogged) {
-            $redirectUri = $this->router->generateRoute($this->config['redirect_path']);
+        $redirectPath = $this->config['redirect_path'];
+
+        $redirectUri = $this
+            ->router
+            ->generateRoute(
+                $redirectPath
+            );
+
+        if ($this->request->query->has('redirect_path')) {
+            $redirectUri = $this
+                ->router
+                ->generateRoute(
+                    $this->request->query->get('redirect_path')
+                );
+        }
+
+        if ($this->request->query->has('redirect_uri')) {
+            $redirectUri = $this->request->query->get('redirect_uri');
+        }
+
+        if ($isLogged) {
             $event->setResponse(new RedirectResponse($redirectUri));
         }
     }
