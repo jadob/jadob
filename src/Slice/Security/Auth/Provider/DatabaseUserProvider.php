@@ -5,6 +5,12 @@ namespace Slice\Security\Auth\Provider;
 use Slice\Database\Database;
 use Slice\Security\Auth\User;
 
+/**
+ * Class DatabaseUserProvider
+ * @package Slice\Security\Auth\Provider
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class DatabaseUserProvider implements UserProviderInterface
 {
 
@@ -13,8 +19,16 @@ class DatabaseUserProvider implements UserProviderInterface
      */
     protected $db;
 
+    /**
+     * @var array[]
+     */
     protected $config;
 
+    /**
+     * DatabaseUserProvider constructor.
+     * @param Database $db
+     * @param $config
+     */
     public function __construct(Database $db, $config)
     {
         $this->db = $db;
@@ -30,8 +44,9 @@ class DatabaseUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         /**
-         * @var UserProviderInterface $userProviderModel;
+         * @var UserProviderInterface $userProviderModel
          */
+        /** @noinspection PhpParamsInspection */
         $userProviderModel = $this->db->getModel($this->config['model']);
         return $userProviderModel->loadUserByUsername($username);
     }
