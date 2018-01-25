@@ -2,6 +2,7 @@
 
 namespace Slice\Form;
 
+use Doctrine\DBAL\Connection;
 use Slice\Form\Field\AbstractInput;
 use Slice\Form\Renderer\Bootstrap3HorizontalFormRenderer;
 use Slice\Form\Renderer\FormRendererInterface;
@@ -59,15 +60,21 @@ class Form
     protected $submittedFields = [];
 
     /**
+     * @var Connection
+     */
+    protected $dbal;
+
+    /**
      * @param string $name Form name
      * @param $renderer
      * @param int $method Form method attribute
      */
-    public function __construct($name, $renderer, $method = self::METHOD_POST)
+    public function __construct($name, $renderer, $method = self::METHOD_POST, Connection $dbal)
     {
         $this->name = $name;
         $this->renderer = $renderer;
         $this->method = $method;
+        $this->dbal = $dbal;
     }
 
     public function generateView()
@@ -107,8 +114,6 @@ class Form
         }
 
         foreach ($this->fields as $field) {
-
-
             /** @var AbstractInput $field */
             if ($field->getName() !== null && !FormUtils::isButton($field)) {
                 $field->setValue($data[$field->getName()]);
@@ -126,7 +131,7 @@ class Form
             return;
         }
 
-        $validator = new FormValidator();
+        $validator = new FormValidator($this->dbal);
 
         foreach ($this->fields as $field) {
 

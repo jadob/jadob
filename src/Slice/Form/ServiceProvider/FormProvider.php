@@ -28,9 +28,12 @@ class FormProvider implements ServiceProviderInterface
      * @param Container $container
      * @param $config
      * @return mixed
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
      */
     public function register(Container $container, $config)
     {
-        $container->add('form.factory', new FormFactory());
+        $container->add('form.factory', new FormFactory(
+            $container->get('doctrine.dbal')
+        ));
     }
 }

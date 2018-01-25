@@ -2,8 +2,10 @@
 
 namespace Slice\Form;
 
+use Doctrine\DBAL\Connection;
 use Slice\Form\Field\AbstractInput;
 use Slice\Form\Field\InputCollection;
+use Slice\Form\Validator\DatabaseAwareValidatorInterface;
 use Slice\Form\Validator\FormValidatorInterface;
 
 /**
@@ -12,6 +14,20 @@ use Slice\Form\Validator\FormValidatorInterface;
  */
 class FormValidator
 {
+
+    /**
+     * @var Connection
+     */
+    protected $dbal;
+
+    /**
+     * FormValidator constructor.
+     * @param Connection $dbal
+     */
+    public function __construct(Connection $dbal)
+    {
+        $this->dbal = $dbal;
+    }
 
     /**
      * We cannot use all Validators for some reasons. Let's omit them.
@@ -69,9 +85,17 @@ class FormValidator
             }
 
             /** @var FormValidatorInterface $validator */
-            if (FormUtils::isSliceValidatorObject($validator) && !$validator->isValid($input->getValue())) {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $errors = array_merge($errors, $validator->getMessages());
+            if (FormUtils::isSliceValidatorObject($validator)) {
+
+                if (FormUtils::validatorNeedsDatabaseAccess($validator)) {
+                    /** @var DatabaseAwareValidatorInterface $validator */
+                    $validator->setDbal($this->dbal);
+                }
+
+                if (!$validator->isValid($input->getValue())) {
+                    /** @noinspection SlowArrayOperationsInLoopInspection */
+                    $errors = array_merge($errors, $validator->getMessages());
+                }
             }
         }
 

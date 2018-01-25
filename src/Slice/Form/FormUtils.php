@@ -5,6 +5,7 @@ namespace Slice\Form;
 use Slice\Form\Field\AbstractButton;
 use Slice\Form\Field\FormFieldInterface;
 use Slice\Form\Field\InputCollection;
+use Slice\Form\Validator\DatabaseAwareValidatorInterface;
 use Slice\Form\Validator\FormValidatorInterface;
 
 /**
@@ -50,6 +51,10 @@ class FormUtils {
         return \in_array(FormValidatorInterface::class, class_implements($object), true);
     }
 
+    public static function validatorNeedsDatabaseAccess($object)
+    {
+       return \in_array(DatabaseAwareValidatorInterface::class, class_implements($object), true);
+    }
 
     public static function camelize($word) {
         return preg_replace('/(^|_)([a-z])/e', 'strtoupper("\\2")', $word);

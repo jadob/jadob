@@ -2,7 +2,9 @@
 
 namespace Slice\Form;
 
+use Doctrine\DBAL\Connection;
 use Slice\Form\Field\ChoiceInput;
+use Slice\Form\Field\PasswordInput;
 use Slice\Form\Field\SubmitButton;
 use Slice\Form\Field\TextareaInput;
 use Slice\Form\Field\TextInput;
@@ -39,15 +41,24 @@ class FormFactory
     private $renderer;
 
     /**
-     * Class constructor
+     * @var Connection
      */
-    public function __construct()
+    protected $dbal;
+
+    /**
+     * Class constructor
+     * @param Connection $dbal
+     */
+    public function __construct(Connection $dbal)
     {
+        $this->dbal = $dbal;
+
         $this->fieldsContainer = [
             'text' => TextInput::class,
             'submit' => SubmitButton::class,
             'textarea' => TextareaInput::class,
-            'choice' => ChoiceInput::class
+            'choice' => ChoiceInput::class,
+            'password' => PasswordInput::class
         ];
 
         $this->renderer = new Bootstrap3HorizontalFormRenderer();
@@ -71,7 +82,7 @@ class FormFactory
             $formName = $this->generateFormName($formType);
         }
 
-        $formObject = new Form($formName, $this->renderer);
+        $formObject = new Form($formName, $this->renderer,'POST', $this->dbal);
         $formObject->setFields($builder->getFields());
 
         return $formObject->fillValuesFromArray($data);
