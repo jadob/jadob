@@ -20,10 +20,12 @@ class FormBuilder
     protected $formName;
     protected $fields;
     protected $formFactory;
+    protected $options;
 
-    public function __construct(FormFactory $formFactory)
+    public function __construct(FormFactory $formFactory, $options = [])
     {
         $this->formFactory = $formFactory;
+        $this->options = $options;
     }
 
     public function getFields()
@@ -74,6 +76,11 @@ class FormBuilder
         $this->add($field);
 
         return $this;
+    }
+
+    public function getOption($name)
+    {
+        return $this->options[$name];
     }
 
 }
