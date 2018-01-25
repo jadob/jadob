@@ -2,6 +2,7 @@
 
 namespace Slice\Form;
 
+use Slice\Form\Field\ChoiceInput;
 use Slice\Form\Field\SubmitButton;
 use Slice\Form\Field\TextareaInput;
 use Slice\Form\Field\TextInput;
@@ -45,7 +46,8 @@ class FormFactory
         $this->fieldsContainer = [
             'text' => TextInput::class,
             'submit' => SubmitButton::class,
-            'textarea' => TextareaInput::class
+            'textarea' => TextareaInput::class,
+            'choice' => ChoiceInput::class
         ];
 
         $this->renderer = new Bootstrap3HorizontalFormRenderer();
@@ -56,16 +58,16 @@ class FormFactory
      * @param array $data
      * @return Form
      */
-    public function createFormType($formType, $data = [])
+    public function createFormType($formType, $data = [], $options = [])
     {
-        $builder = new FormBuilder($this);
+        $builder = new FormBuilder($this, $options);
 
         /** @var FormTypeInterface $form */
         $form = new $formType();
         $form->buildForm($builder);
 
         $formName = $builder->getFormName();
-        if($formName === null) {
+        if ($formName === null) {
             $formName = $this->generateFormName($formType);
         }
 

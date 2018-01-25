@@ -32,7 +32,7 @@ class ChoiceInput extends AbstractInput
      */
     protected $expanded = false;
     protected $checkedOption;
-    private $orientation;
+    private $orientation = self::ORIENTATION_HORIZONTAL;
     private $values;
 
 
@@ -111,4 +111,21 @@ class ChoiceInput extends AbstractInput
     }
 
 
+    /**
+     * Creates ChoiceInput from data passed in array.
+     * @param $data
+     * @return $this
+     */
+    public static function fromArray($data)
+    {
+        return (new self())
+            ->setLabel($data['label'])
+            ->setRequired($data['required'])
+            ->setName($data['name'])
+            ->setValue($data['value'])
+            ->setMultiple($data['multiple'])
+            ->setValues($data['values'])
+            ->setOrientation($data['orientation'] ?? self::ORIENTATION_HORIZONTAL)
+            ->setExpanded($data['expanded']);
+    }
 }
