@@ -32,7 +32,11 @@ class RouterServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
-        $container->add('router', new Router($config, $container->get('request')));
+        $router = new Router($config, $container->get('request'));
+        $router->setGlobalParams([
+            '_locale' => $container->get('globals')->get('locale')
+        ]);
+        $container->add('router', $router);
 
     }
 
