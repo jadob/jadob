@@ -20,7 +20,7 @@ class FormUtils {
      * @return bool
      */
     public static function isInputCollection(FormFieldInterface $input) {
-        return \is_subclass_of($input, InputCollection::class) || get_class($input) === InputCollection::class;
+        return \is_subclass_of($input, InputCollection::class) || \get_class($input) === InputCollection::class;
     }
     
     /**

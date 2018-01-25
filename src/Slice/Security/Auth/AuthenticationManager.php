@@ -2,7 +2,6 @@
 
 namespace Slice\Security\Auth;
 
-
 use Slice\Security\Auth\Provider\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -51,7 +50,7 @@ class AuthenticationManager
 
         $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_auth')['_username']);
 
-        if ($userFromProvider === null || count($userFromProvider) === 0) {
+        if ($userFromProvider === null || \count($userFromProvider) === 0) {
             $this->error = 'auth.user.not.found';
             return false;
         }
@@ -154,6 +153,5 @@ class AuthenticationManager
         $this->lastUsername = $lastUsername;
         return $this;
     }
-
 
 }
