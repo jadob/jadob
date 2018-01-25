@@ -21,6 +21,7 @@ class PasswordInput extends AbstractInput {
             ->setName($data['name'])
             ->setRequired($data['required'])
             ->setPlaceholder($data['placeholder'])
-            ->setValue($data['value']);
+            ->setValue($data['value'] ?? null)
+            ->setValidators($data['validators'] ?? null);
     }
 }

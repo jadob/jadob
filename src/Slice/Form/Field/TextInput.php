@@ -21,6 +21,7 @@ class TextInput extends AbstractInput {
             ->setName($data['name'])
             ->setRequired($data['required'])
             ->setPlaceholder($data['placeholder'])
-            ->setValue($data['value']);
+            ->setValidators($data['validators'] ?? [])
+            ->setValue($data['value'] ?? null);
     }
 }

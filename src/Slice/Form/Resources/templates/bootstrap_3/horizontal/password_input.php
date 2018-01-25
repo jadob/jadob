@@ -18,5 +18,12 @@ $inputId = $formName . '_' . $input->getName();
                 class="form-control"
             <?= $input->getRequired() ? 'required' : '' ?>
                 placeholder="<?= $input->getPlaceholder(); ?>">
+        <?php if (!$input->isValid()) { ?>
+            <?php
+            $messages = $input->getErrors();
+            foreach ($messages as $message) { ?>
+                <span class="help-block"><?= $message; ?></span>
+            <?php } ?>
+        <?php } ?>
     </div>
 <?php unset($inputId);
