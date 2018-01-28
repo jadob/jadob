@@ -2,6 +2,7 @@
 
 namespace Slice\EventListener;
 
+use Slice\EventListener\Event\AfterControllerEvent;
 use Slice\EventListener\Event\AfterRouterEvent;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,7 +44,7 @@ abstract class AbstractEvent implements EventInterface
         return null;
     }
 
-    public function onAfterControllerAction(Response $response)
+    public function onAfterControllerAction(AfterControllerEvent $response)
     {
         return null;
     }

@@ -27,6 +27,6 @@ class DebugServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
-        $container->get('event.listener')->register(EventListener::EVENT_AFTER_CONTROLLER, new ProfilerListener(), 0);
+        //$container->get('event.listener')->register(EventListener::EVENT_AFTER_CONTROLLER, new ProfilerListener(), 0);
     }
 }
