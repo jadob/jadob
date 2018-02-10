@@ -22,6 +22,54 @@ abstract class AbstractInput implements FormFieldInterface
     protected $errors = [];
     protected $validators = [];
 
+    protected $firstValue;
+
+    /**
+     * @return mixed
+     */
+    public function getFirstValue()
+    {
+        return $this->firstValue;
+    }
+
+    /**
+     * @param mixed $firstValue
+     * @return AbstractInput
+     */
+    public function setFirstValue($firstValue)
+    {
+        $this->firstValue = $firstValue;
+        return $this;
+    }
+
+
+
+    /**
+     * Additional classes passed to input.
+     * @var string
+     */
+    protected $class;
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * @param string $class
+     * @return $this
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+        return $this;
+    }
+
+
+
     public function getName()
     {
         return $this->name;
@@ -29,7 +77,10 @@ abstract class AbstractInput implements FormFieldInterface
 
     public function getValue()
     {
-        return $this->value;
+        if($this->value !== null) {
+            return $this->value;
+        }
+        return $this->firstValue;
     }
 
     public function getRequired()

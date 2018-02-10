@@ -8,7 +8,8 @@ namespace Slice\Form\Field;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class TextareaInput extends AbstractInput {
+class TextareaInput extends AbstractInput
+{
 
     /**
      * @param $data
@@ -21,6 +22,7 @@ class TextareaInput extends AbstractInput {
             ->setName($data['name'])
             ->setRequired($data['required'])
             ->setPlaceholder($data['placeholder'])
-            ->setValue($data['value']);
+            ->setValue($data['value'] ?? null)
+            ->setClass($data['class'] ?? null);
     }
 }

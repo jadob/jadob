@@ -107,7 +107,7 @@ class Form
         $this->validate();
     }
 
-    public function fillValuesFromArray($data)
+    public function fillValuesFromArray($data, $firstValues = false)
     {
         if (\count($data) === 0) {
             return $this;
@@ -116,7 +116,11 @@ class Form
         foreach ($this->fields as $field) {
             /** @var AbstractInput $field */
             if ($field->getName() !== null && !FormUtils::isButton($field)) {
-                $field->setValue($data[$field->getName()]);
+                if ($firstValues) {
+                    $field->setFirstValue($data[$field->getName()]);
+                } else {
+                    $field->setValue($data[$field->getName()]);
+                }
             }
         }
 
@@ -133,9 +137,12 @@ class Form
 
         $validator = new FormValidator($this->dbal);
 
+        /** @var AbstractInput $field */
         foreach ($this->fields as $field) {
 
-            $validator->validateInput($field);
+            if (!FormUtils::isButton($field) && $field->getFirstValue() !== $field->getValue()) {
+                $validator->validateInput($field);
+            }
         }
     }
 

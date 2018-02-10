@@ -33,6 +33,12 @@ abstract class AbstractModel
         $this->dbal = $dbal;
     }
 
+    /**
+     * This method assumes that your primary key is called 'id' (☞ຈل͜ຈ)☞
+     *
+     * @param $pk
+     * @return mixed
+     */
     public function findByPK($pk)
     {
         $qb = $this->dbal->createQueryBuilder()
@@ -81,7 +87,6 @@ abstract class AbstractModel
      */
     public function getSingleResult(QueryBuilder $qb, $asArray = false)
     {
-
 
         $result = $qb->execute();
 

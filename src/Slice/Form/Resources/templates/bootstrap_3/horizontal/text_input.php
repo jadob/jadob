@@ -15,7 +15,7 @@ $inputId = $formName . '_' . $input->getName();
                 type="text"
                 name="<?= $formName; ?>[<?= $input->getName(); ?>]"
                 value="<?= $input->getValue() ?: '' ?>"
-                class="form-control"
+                class="form-control <?=$input->getClass(); ?>"
             <?= $input->getRequired() ? 'required' : '' ?>
                 placeholder="<?= $input->getPlaceholder(); ?>">
         <?php if (!$input->isValid()) { ?>

@@ -14,7 +14,7 @@ $inputId = $formName . '_' . $input->getName();
             id="<?= $inputId; ?>"
             type="text"
             name="<?= $formName; ?>[<?= $input->getName(); ?>]"
-            class="form-control"
+            class="form-control <?= $input->getClass(); ?>"
             <?= $input->getRequired() ? 'required' : '' ?>
             placeholder="<?= $input->getPlaceholder(); ?>"><?= $input->getValue() ?: '' ?></textarea>
     </div>
