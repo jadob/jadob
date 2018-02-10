@@ -76,7 +76,12 @@ class Kernel
             ->registerExceptionHandler();
 
         $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
-        $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php');
+
+        $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php', true);
+        $parameters['app.public_dir'] = $bootstrap->getPublicDir();
+        $parameters['app.root_dir'] = $bootstrap->getRootDir();
+        $parameters['app.cache_dir'] = $bootstrap->getCacheDir();
+        $parameters->setReadOnly();
 
         $processor = new Token($parameters, '%{', '}');
         $processor->process($config);

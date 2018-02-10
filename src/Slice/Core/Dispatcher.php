@@ -122,6 +122,7 @@ class Dispatcher
             $response = $afterControllerListener;
         }
 
+        $response->prepare($request);
         //TODO: Response validation
 //        if (!in_array(Response::class, class_parents($response), true)) {
 //            throw new DispatcherException('Invalid response type');
