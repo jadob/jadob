@@ -113,7 +113,7 @@ class Router
                 return $route;
             }
         }
-        throw new RouteNotFoundException('No route matched.');
+        throw new RouteNotFoundException('No route matched for URI '.$uri);
     }
 
     /**
