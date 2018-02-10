@@ -10,6 +10,7 @@ use Slice\MVC\ResponseMethodsTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class AbstractController
@@ -80,5 +81,20 @@ abstract class AbstractController
     {
 
         return $this->get('form.factory');
+    }
+
+    protected function getUser()
+    {
+
+    }
+
+    /**
+     * @param $type
+     * @param $message
+     * @throws \Slice\Container\Exception\ServiceNotFoundException
+     */
+    protected function addFlash($type, $message)
+    {
+        $this->get('session')->getFlashBag()->add($type, $message);
     }
 }
