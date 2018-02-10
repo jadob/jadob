@@ -13,7 +13,7 @@ $inputId = $formName . '_' . $input->getName();
                 name="<?= $formName; ?>[<?= $input->getName(); ?>]"
                 value="<?= $input->getValue() ?: '' ?>"
                 <?= $input->getRequired() ? 'required' : '' ?>
-                class="input <?= $input->isValid() ? '' : 'is-error' ?>"
+                class="input <?= $input->isValid() ? '' : 'is-danger' ?>"
                 type="text"
                 placeholder="<?= $input->getPlaceholder(); ?>">
         </div>
