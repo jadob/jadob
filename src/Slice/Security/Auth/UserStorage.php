@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class UserStorage
 {
+
     /**
      * @var string
      */
@@ -21,6 +22,8 @@ class UserStorage
      * @var SessionInterface
      */
     protected $session;
+
+    protected $userObject;
 
     /**
      * UserStorage constructor.
@@ -36,7 +39,11 @@ class UserStorage
      */
     public function getUser()
     {
-        return $this->session->get(self::USER_SESSION_KEY);
+        if($this->userObject === null && $this->session->has(self::USER_SESSION_KEY)) {
+            $this->userObject = new User($this->session->get(self::USER_SESSION_KEY));
+        }
+
+        return $this->userObject;
     }
 
     /**
