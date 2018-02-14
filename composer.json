@@ -1,5 +1,5 @@
 {
-  "name": "jadob/framework",
+  "name": "jadob/jadob",
   "license": "MIT",
   "description": "PHP Framework.",
   "require": {
