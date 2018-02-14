@@ -54,10 +54,16 @@ class TwigServiceProvider implements ServiceProviderInterface
             'strict_variables' => $config['strict_variables']
         ]);
 
+
+        $user = null;
+        if($container->has('auth.user.storage')) {
+            $user = $container->get('auth.user.storage')->getUser();
+        }
+
         $appVariables = [
             'router' => $container->get('router'),
             'request' => $container->get('request'),
-            'user' => $container->get('auth.user.storage')->getUser(),
+            'user' => $user,
             'flashes' => $container->get('session')->getFlashBag()
         ];
 
