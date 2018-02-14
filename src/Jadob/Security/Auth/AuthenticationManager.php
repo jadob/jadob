@@ -17,13 +17,20 @@ class AuthenticationManager
      * @var UserStorage
      */
     protected $userStorage;
+
     /**
      * @var UserProviderInterface
      */
     protected $provider;
 
+    /**
+     * @var string
+     */
     protected $error;
 
+    /**
+     * @var string
+     */
     protected $lastUsername;
 
     /**
@@ -119,7 +126,7 @@ class AuthenticationManager
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getError()
     {
@@ -127,7 +134,7 @@ class AuthenticationManager
     }
 
     /**
-     * @param mixed $error
+     * @param string $error
      * @return AuthenticationManager
      */
     public function setError($error)
@@ -137,7 +144,7 @@ class AuthenticationManager
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLastUsername()
     {
@@ -145,7 +152,7 @@ class AuthenticationManager
     }
 
     /**
-     * @param mixed $lastUsername
+     * @param string $lastUsername
      * @return AuthenticationManager
      */
     public function setLastUsername($lastUsername)

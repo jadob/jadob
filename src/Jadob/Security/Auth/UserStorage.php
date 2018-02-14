@@ -23,6 +23,9 @@ class UserStorage
      */
     protected $session;
 
+    /**
+     * @var User|null
+     */
     protected $userObject;
 
     /**
@@ -35,7 +38,7 @@ class UserStorage
     }
 
     /**
-     * @return mixed
+     * @return User|null
      */
     public function getUser()
     {
@@ -47,13 +50,16 @@ class UserStorage
     }
 
     /**
-     * @param $user
+     * @param array $user
      */
     public function setUserState($user)
     {
         $this->session->set(self::USER_SESSION_KEY, $user);
     }
 
+    /**
+     * Removes user.
+     */
     public function removeUserFromStorage()
     {
         $this->session->remove(self::USER_SESSION_KEY);
