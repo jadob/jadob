@@ -1,7 +1,7 @@
 {
-  "name": "pizzaminded/slice",
+  "name": "jadob/framework",
   "license": "MIT",
-  "description": "PHP Application boilerplate.",
+  "description": "PHP Framework.",
   "require": {
     "twig/twig": "~1.0",
     "doctrine/dbal": "^2.5",
@@ -13,7 +13,7 @@
   },
   "autoload": {
     "psr-0": {
-      "Slice\\": "src/"
+      "Jadob\\": "src/"
     }
   }
 }
