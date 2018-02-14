@@ -2,7 +2,6 @@
 
 namespace Jadob\Security\Auth;
 
-
 /**
  * Object Oriented representation of user array
  * @package Jadob\Security\Auth
@@ -17,7 +16,6 @@ class User implements \ArrayAccess
      */
     protected $userStorage;
 
-
     /**
      * User constructor.
      * @param array $userData array with user data, stored in session
@@ -30,9 +28,13 @@ class User implements \ArrayAccess
         $this->userStorage = $userData;
     }
 
+    /**
+     * @param string $roleName
+     * @return bool
+     */
     public function hasRole($roleName)
     {
-        if(isset($this->userStorage['roles'])) {
+        if(!isset($this->userStorage['roles'])) {
             return false;
         }
 
