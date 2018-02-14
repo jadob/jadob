@@ -36,6 +36,10 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
+        if (!isset($config['auth'])) {
+            return;
+        }
+
         // registering auth stuff
         $authConfig = $config['auth'];
 
