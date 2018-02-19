@@ -63,7 +63,7 @@ class Router
             $route
                 ->setController($data['controller'])
                 ->setPath($data['path'])
-                ->setAction(isset($data['action'])? $data['action'] : '__invoke');
+                ->setAction($data['action'] ?? '__invoke');
 
             if (isset($data['ignore_locale_prefix'])) {
                 $route->setIgnoreLocalePrefix($data['ignore_locale_prefix']);
