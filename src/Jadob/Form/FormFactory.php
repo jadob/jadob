@@ -4,6 +4,7 @@ namespace Jadob\Form;
 
 use Doctrine\DBAL\Connection;
 use Jadob\Form\Field\ChoiceInput;
+use Jadob\Form\Field\FileInput;
 use Jadob\Form\Field\PasswordInput;
 use Jadob\Form\Field\SubmitButton;
 use Jadob\Form\Field\TextareaInput;
@@ -58,7 +59,8 @@ class FormFactory
             'submit' => SubmitButton::class,
             'textarea' => TextareaInput::class,
             'choice' => ChoiceInput::class,
-            'password' => PasswordInput::class
+            'password' => PasswordInput::class,
+            'file' => FileInput::class
         ];
 
         $this->renderer = new Bootstrap3HorizontalFormRenderer();
