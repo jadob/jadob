@@ -44,7 +44,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function get($id)
     {
@@ -56,7 +56,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function has($id)
     {

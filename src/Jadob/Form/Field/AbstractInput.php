@@ -1,8 +1,8 @@
 <?php
 
-
 namespace Jadob\Form\Field;
 
+use Jadob\Form\Validator\FormValidatorInterface;
 
 /**
  * Class AbstractInput
@@ -13,13 +13,41 @@ namespace Jadob\Form\Field;
 abstract class AbstractInput implements FormFieldInterface
 {
 
+    /**
+     * Input "name" parameter.
+     * @var string
+     */
     protected $name;
+
+    /**
+     * Field label.
+     * @var string
+     */
     protected $label;
+
+    /**
+     * String shown if no value given.
+     * @var string
+     */
     protected $placeholder;
+
+    /**
+     * Input "value" parameter.
+     * @var string
+     */
     protected $value;
+
+    /**
+     * Input "required" parameter.
+     * @var boolean
+     */
     protected $required;
     protected $checked;
     protected $errors = [];
+
+    /**
+     * @var FormValidatorInterface[]
+     */
     protected $validators = [];
 
     protected $firstValue;
@@ -41,8 +69,6 @@ abstract class AbstractInput implements FormFieldInterface
         $this->firstValue = $firstValue;
         return $this;
     }
-
-
 
     /**
      * Additional classes passed to input.
@@ -176,9 +202,6 @@ abstract class AbstractInput implements FormFieldInterface
      * @param $data
      * @throws \Exception
      */
-    public static function fromArray($data)
-    {
-        throw new \Exception('fromArray method is not implemented.');
-    }
+    abstract public static function fromArray($data);
 
 }
