@@ -101,6 +101,8 @@ class Form
             return;
         }
 
+        $data[$this->name] = array_merge($data[$this->name], $request->files->all());
+
         $this->isSubmitted = true;
 
         $this->fillValuesFromArray($data[$this->name]);
