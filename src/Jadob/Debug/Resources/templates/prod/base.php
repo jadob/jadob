@@ -31,7 +31,7 @@
 </main>
 
 <footer>
-    <a target="_blank" href="https://github.com/pizzamindedlabs/slice">Jadob Framework <?= Kernel::VERSION?> </a>
+    <a target="_blank" href="https://github.com/pizzamindedlabs/Jadob">Jadob Framework <?= Kernel::VERSION?> </a>
 </footer>
 </body>
 </html>
