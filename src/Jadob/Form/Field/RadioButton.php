@@ -2,6 +2,8 @@
 
 namespace Jadob\Form\Field;
 
+use Jadob\Form\Exception\FormException;
+
 /**
  * Description of RadioButton
  * 
