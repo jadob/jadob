@@ -63,7 +63,7 @@ class Kernel
      * @param Bootstrap $bootstrap
      * @throws \InvalidArgumentException
      */
-    public function __construct($env, $bootstrap)
+    public function __construct($env, BootstrapInterface $bootstrap)
     {
         $this->env = $env;
         $this->bootstrap = $bootstrap;
