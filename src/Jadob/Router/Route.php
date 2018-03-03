@@ -94,7 +94,7 @@ class Route
     }
 
     /**
-     * @param mixed $action
+     * @param string|null $action
      * @return Route
      */
     public function setAction($action)

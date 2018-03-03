@@ -67,16 +67,12 @@ class Dispatcher
      * @throws DispatcherException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function execute(Request $request)
+    public function execute(Request $request): Response
     {
-        // TODO: what we should do before finding a route and what we should pass?
-        //$this->getEventDispatcher()->dispatchEvent('event.before.router');
-
         /** @var Route $route */
         $route = $this->container->get('router')->matchRoute($request);
 
         $afterRouterObject = new AfterRouterEvent($route, null);
-
 
         $this->getEventDispatcher()->dispatchAfterRouterAction($afterRouterObject);
 
@@ -85,7 +81,6 @@ class Dispatcher
         if (($afterRouterResponse = $afterRouterObject->getResponse()) !== null) {
             return $afterRouterResponse;
         }
-
 
         $controllerClassName = $route->getController();
 
@@ -101,12 +96,16 @@ class Dispatcher
 
         $action = $route->getAction();
 
+        if($action === null && !method_exists($controller, '__invoke')) {
+            throw new \RuntimeException('Class "'.\get_class($controller).'" has neither action nor __invoke() method defined.');
+        }
+
         if ($action !== '__invoke') {
             $action .= 'Action';
         }
 
         if (!method_exists($controller, $action)) {
-            throw new DispatcherException('Action "' . $action . '" does not exists in ' . get_class($controller));
+            throw new DispatcherException('Action "' . $action . '" does not exists in ' . \get_class($controller));
         }
 
         $params = $this->getOrderedParamsForAction($controller, $action, $route);
@@ -139,7 +138,7 @@ class Dispatcher
      * @return array
      * @throws \ReflectionException
      */
-    private function getOrderedParamsForAction($controller, $action, Route $route)
+    private function getOrderedParamsForAction($controller, $action, Route $route): array
     {
         $reflection = new ReflectionMethod($controller, $action);
 
