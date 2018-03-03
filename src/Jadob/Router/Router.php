@@ -42,23 +42,31 @@ class Router
 
     /**
      * @param array $config
+     * @throws \RuntimeException
      */
     public function __construct(array $config, Request $request)
     {
         $this->config = $config;
         $this->request = $request;
-        $this->routes = $this->registerRoutes();
 
+        $this->registerRoutes();
     }
 
     /**
-     * @return array
+     * @throws \RuntimeException
      */
-    private function registerRoutes()
+    public function registerRoutes()
     {
-        $output = [];
-
         foreach ($this->config['routes'] as $key => $data) {
+
+            if (!isset($data['controller'])) {
+                throw new \RuntimeException('Path "' . $key . '" has no controller class defined.');
+            }
+
+            if (!isset($data['path'])) {
+                throw new \RuntimeException('Path "' . $key . '" has no path defined.');
+            }
+
             $route = new Route($key);
             $route
                 ->setController($data['controller'])
@@ -69,10 +77,10 @@ class Router
                 $route->setIgnoreLocalePrefix($data['ignore_locale_prefix']);
             }
 
-            $output[$key] = $route;
+            $this->routes[$key] = $route;
         }
 
-        return $output;
+        return $this;
     }
 
     /**
@@ -81,16 +89,14 @@ class Router
      * @return Route
      * @throws RouteNotFoundException
      */
-    public function matchRoute(Request $request)
+    public function matchRoute(Request $request): Route
     {
         $uri = $request->server->get('REQUEST_URI');
         $explodedURI = explode('?', $uri);
 
-
         $uri = $explodedURI[0];
 
         foreach ($this->routes as $route) {
-
             /** @var Route $route * */
             if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
                 $path = $this->getRegex($this->config['locale_prefix'] . $route->getPath());
@@ -99,6 +105,7 @@ class Router
             }
 
             $matches = [];
+
             if ($path !== false && preg_match($path, $uri, $matches)) {
                 $params = array_intersect_key(
                     $matches, array_flip(array_filter(array_keys($matches), 'is_string'))
@@ -110,10 +117,12 @@ class Router
 
                 $route->setParams($params);
                 $this->currentRoute = $route;
+
                 return $route;
             }
         }
-        throw new RouteNotFoundException('No route matched for URI '.$uri);
+
+        throw new RouteNotFoundException('No route matched for URI ' . $uri);
     }
 
     /**
@@ -152,11 +161,11 @@ class Router
      * @return mixed|string
      * @throws RouteNotFoundException
      */
-    public function generateRoute($name, $params = [], $full = false)
+    public function generateRoute($name, array $params = [], $full = false)
     {
 
-        if(!isset($this->routes[$name])) {
-            throw new RouteNotFoundException('Route "'.$name.'" is not defined');
+        if (!isset($this->routes[$name])) {
+            throw new RouteNotFoundException('Route "' . $name . '" is not defined');
         }
 
         $route = $this->routes[$name];
@@ -181,7 +190,7 @@ class Router
             }
         }
 
-        if(count($paramsToGET) !== 0) {
+        if (count($paramsToGET) !== 0) {
             $convertedPath .= '?';
             $convertedPath .= http_build_query($paramsToGET);
         }
@@ -196,7 +205,7 @@ class Router
     /**
      * @return Route
      */
-    public function getCurrentRoute()
+    public function getCurrentRoute(): Route
     {
         return $this->currentRoute;
     }
@@ -205,9 +214,10 @@ class Router
      * @param Route $currentRoute
      * @return Router
      */
-    public function setCurrentRoute(Route $currentRoute)
+    public function setCurrentRoute(Route $currentRoute): Router
     {
         $this->currentRoute = $currentRoute;
+
         return $this;
     }
 
@@ -234,8 +244,26 @@ class Router
     public function setGlobalParams(array $globalParams)
     {
         $this->globalParams = $globalParams;
+
         return $this;
     }
 
+    /**
+     * @return Route[]
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
 
+    /**
+     * @param Route[] $routes
+     * @return Router
+     */
+    public function setRoutes(array $routes): Router
+    {
+        $this->routes = $routes;
+
+        return $this;
+    }
 }
