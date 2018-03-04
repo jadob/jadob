@@ -206,7 +206,7 @@
                             ?>
                             <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ExceptionView::parseParams($element['args']) ?>)
                         </td>
-                        <td> <?= $element['line'] ?></td>
+                        <td> <?= $element['line'] ?? null ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>

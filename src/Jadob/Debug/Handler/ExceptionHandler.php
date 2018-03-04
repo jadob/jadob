@@ -59,7 +59,7 @@ class ExceptionHandler
         throw new ErrorException($message, 0, $severity, $file, $line);
     }
 
-    public function exceptionHandler(\Exception $exception)
+    public function exceptionHandler(\Throwable $exception)
     {
         $this->logger->error($exception->getMessage(), $exception->getTrace());
 
@@ -72,7 +72,7 @@ class ExceptionHandler
 
     }
 
-    protected function showProductionErrorPage( $exception)
+    protected function showProductionErrorPage($exception)
     {
         $template = 'service-temporarily-unavailable';
         $code = 503;
@@ -86,7 +86,7 @@ class ExceptionHandler
         ExceptionView::showErrorPage($template, 'prod');
     }
 
-    protected function showDevelopmentErrorPage( $exception)
+    protected function showDevelopmentErrorPage($exception)
     {
         ExceptionView::showErrorPage('error', 'dev', [
             'exception' => $exception
