@@ -25,8 +25,6 @@ class FileCache implements CacheInterface
     public function __construct($cacheDir)
     {
         $this->cacheDir = $cacheDir . '/_app';
-
-        $this->createAppCacheDirIfNotExists();
     }
 
     /**
@@ -46,13 +44,14 @@ class FileCache implements CacheInterface
             return $default;
         }
 
-        return include $this->cacheDir.'/'.$key.'.php';
+        return include $this->cacheDir . '/' . $key . '.php';
     }
 
     /**
      * Creates cache directory if does not exists.
      */
-    private function createAppCacheDirIfNotExists() {
+    private function createAppCacheDirIfNotExists()
+    {
         if (!file_exists($this->cacheDir)) {
             mkdir($this->cacheDir, 0777, true);
         }
@@ -74,13 +73,15 @@ class FileCache implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        $content = var_export($value,true);
+        $this->createAppCacheDirIfNotExists();
+
+        $content = var_export($value, true);
         $content = str_replace("stdClass::__set_state", "(object)", $content);
         $file = '<?php
-        //'.$key.' 
-        return '.$content.';';
+        //' . $key . ' 
+        return ' . $content . ';';
 
-        return (bool) file_put_contents($this->cacheDir.'/'.$key.'.php', $file);
+        return (bool)file_put_contents($this->cacheDir . '/' . $key . '.php', $file);
     }
 
     /**
