@@ -96,13 +96,11 @@ class Dispatcher
 
         $action = $route->getAction();
 
-        if($action === null && !method_exists($controller, '__invoke')) {
-            throw new \RuntimeException('Class "'.\get_class($controller).'" has neither action nor __invoke() method defined.');
+        if ($action === null && !method_exists($controller, '__invoke')) {
+            throw new \RuntimeException('Class "' . \get_class($controller) . '" has neither action nor __invoke() method defined.');
         }
 
-        if ($action !== '__invoke') {
-            $action .= 'Action';
-        }
+        $action = ($action === null) ? '__invoke' : $action . 'Action';
 
         if (!method_exists($controller, $action)) {
             throw new DispatcherException('Action "' . $action . '" does not exists in ' . \get_class($controller));
@@ -166,7 +164,7 @@ class Dispatcher
 
         $controllerConstructor = $reflection->getConstructor();
 
-        if($controllerConstructor === null) {
+        if ($controllerConstructor === null) {
             return [];
         }
 
