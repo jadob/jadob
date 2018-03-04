@@ -4,6 +4,7 @@ namespace Jadob\Database;
 
 use Doctrine\DBAL\Connection;
 use Jadob\Database\Model\AbstractModel;
+use Jadob\Stdlib\StaticClassUtils;
 
 /**
  * Class Database
@@ -56,22 +57,22 @@ class Database
     }
 
     /**
-     * @param string $modelName
+     * @param string $modelClass FQCN of model
      * @return AbstractModel
      * @throws \Exception
      */
-    public function getModel($modelName)
+    public function getModel($modelClass)
     {
-        if (!isset($this->config['models'][$modelName])) {
-            throw new \Exception('model ' . $modelName . 'does not exists.');
+
+        if (!class_exists($modelClass) && StaticClassUtils::classExtends($modelClass, AbstractModel::class)) {
+            throw new \Exception('Class "' . $modelClass . '" does not exists or it cannot be used as a Model.');
         }
 
-        if (!isset($this->pool[$modelName])) {
-            $modelClass = $this->config['models'][$modelName];
-            $this->pool[$modelName] = new $modelClass($this->getDbal());
+        if (!isset($this->pool[$modelClass])) {
+            $this->pool[$modelClass] = new $modelClass($this->getDbal());
         }
 
-        return $this->pool[$modelName];
+        return $this->pool[$modelClass];
     }
 
     /**
