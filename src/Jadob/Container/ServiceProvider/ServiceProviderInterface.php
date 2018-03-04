@@ -12,13 +12,15 @@ interface ServiceProviderInterface
 {
 
     /**
-     * @return mixed
+     * returns Config node name that will be passed as $config in register() method.
+     * return null if no config needed.
+     * @return string|null.
      */
     public function getConfigNode();
 
     /**
      * @param Container $container
-     * @param $config
+     * @param array|null $config
      */
     public function register(Container $container, $config);
 }
