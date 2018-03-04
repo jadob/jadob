@@ -2,7 +2,7 @@
 
 namespace Jadob\Debug\Handler;
 
-use Throwable;
+use Psr\Log\LoggerInterface;
 use ErrorException;
 use Jadob\Debug\ExceptionView;
 use Jadob\Debug\Interfaces\PageNotFoundExceptionInterface;
@@ -19,15 +19,18 @@ class ExceptionHandler
     protected $environment;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * ExceptionHandler constructor.
      * @param string $environment
      */
-    public function __construct($environment)
+    public function __construct($environment, LoggerInterface $logger)
     {
         $this->environment = $environment;
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-
+        $this->logger = $logger;
     }
 
     public function registerErrorHandler()
@@ -56,8 +59,10 @@ class ExceptionHandler
         throw new ErrorException($message, 0, $severity, $file, $line);
     }
 
-    public function exceptionHandler($exception)
+    public function exceptionHandler(\Exception $exception)
     {
+        $this->logger->error($exception->getMessage(), $exception->getTrace());
+
         if ($this->environment === 'prod') {
             $this->showProductionErrorPage($exception);
             return;

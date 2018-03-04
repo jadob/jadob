@@ -2,11 +2,13 @@
 
 namespace Jadob\Core;
 
-use Bootstrap;
+
 use Jadob\Container\Container;
-use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\Handler\ExceptionHandler;
 use Jadob\EventListener\EventListener;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zend\Config\Config;
@@ -59,9 +61,15 @@ class Kernel
     private $response;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param string $env
      * @param Bootstrap $bootstrap
      * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
@@ -69,8 +77,9 @@ class Kernel
         $this->bootstrap = $bootstrap;
 
         //Enable error handling
+        $this->createLogger();
 
-        $this->exceptionHandler = new ExceptionHandler($env);
+        $this->exceptionHandler = new ExceptionHandler($env, $this->logger);
         $this->exceptionHandler
             ->registerErrorHandler()
             ->registerExceptionHandler();
@@ -114,6 +123,7 @@ class Kernel
         $container->add('kernel', $this);
         $container->add('request', Request::createFromGlobals());
         $container->add('event.listener', new EventListener());
+        $container->add('logger', $this->logger);
 
         $container->registerProviders($services, $this->config);
 
@@ -146,4 +156,11 @@ class Kernel
         $this->response->send();
     }
 
+    /**
+     * @throws \Exception
+     */
+    private function createLogger() {
+        $this->logger = new Logger('error_log');
+        $this->logger->pushHandler(new StreamHandler($this->bootstrap->getLogsDir().'/error.log'));
+    }
 }
