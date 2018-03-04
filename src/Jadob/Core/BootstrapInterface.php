@@ -35,6 +35,12 @@ interface BootstrapInterface
     public function getRootDir(): string;
 
     /**
+     * Returns log files directory.
+     * @return string
+     */
+    public function getLogsDir(): string;
+
+    /**
      * Returns array of Service providers that will be load while framework bootstrapping.
      * @return array
      */

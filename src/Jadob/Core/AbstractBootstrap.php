@@ -36,4 +36,12 @@ abstract class AbstractBootstrap implements BootstrapInterface
     {
         return $this->getRootDir() . '/var';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLogsDir(): string
+    {
+        return $this->getCacheDir() . '/logs';
+    }
 }
