@@ -187,6 +187,8 @@
                 <tr>
                     <td class="key">No.</td>
                     <td class="function">Method:</td>
+                    <td class="line">Line:</td>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -202,12 +204,9 @@
                                 $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
                             }
                             ?>
-
                             <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ExceptionView::parseParams($element['args']) ?>)
-
-                            <!--                            --><!--:-->
-                            <? //= $element['line'] ?><!--</p>-->
                         </td>
+                        <td> <?= $element['line'] ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
@@ -217,7 +216,7 @@
     <footer class="error-wrapper__footer">
         <a target="_blank"
            class="error-wrapper__footer-link"
-           href="https://github.com/jadob/framework">Jadob Framework <?= Kernel::VERSION ?> </a>
+           href="https://github.com/jadob/jadob">Jadob Framework <?= Kernel::VERSION ?> </a>
     </footer>
 </main>
 
