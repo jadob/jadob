@@ -4,6 +4,7 @@ namespace Jadob\Stdlib;
 
 /**
  * Class StaticClassUtils
+ * @deprecated
  * @package Jadob\Stdlib
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -11,6 +12,7 @@ namespace Jadob\Stdlib;
 class StaticClassUtils
 {
     /**
+     * @deprecated use instanceof instead
      * @param $className
      * @param $parentClassName
      * @return bool
