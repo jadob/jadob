@@ -37,4 +37,14 @@ class CommandBus
             throw new CommandBusException('class "' . get_class($strategy) . '" could not be used as strategy as it does not implement InvokingStrategyInterface.');
         }
     }
+
+    /**
+     * Finds handler and executes command.
+     * @param $command
+     */
+    public function handle($command)
+    {
+        //@TODO add method content
+
+    }
 }
