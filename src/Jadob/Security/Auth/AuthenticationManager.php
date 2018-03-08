@@ -55,7 +55,12 @@ class AuthenticationManager
             return false;
         }
 
-        $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_auth')['_username']);
+        try {
+            $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_auth')['_username']);
+        } catch (UserNotFoundException $e) {
+            $userFromProvider = null;
+        }
+
 
         if ($userFromProvider === null || \count($userFromProvider) === 0) {
             $this->error = 'auth.user.not.found';
