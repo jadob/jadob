@@ -57,14 +57,18 @@ class Database
     }
 
     /**
-     * @param string $modelClass FQCN of model
+     * @param string $modelClass FQCN or model name, passed in config
      * @return AbstractModel
      * @throws \Exception
      */
     public function getModel($modelClass)
     {
 
-        if (!class_exists($modelClass) && StaticClassUtils::classExtends($modelClass, AbstractModel::class)) {
+        if (isset($this->config['models'][$modelClass])) {
+            $modelClass = $this->config['models'][$modelClass];
+        }
+
+        if (!StaticClassUtils::classExtends($modelClass, AbstractModel::class) /**&& !isset($this->config['models'][$modelClass]) **/) {
             throw new \Exception('Class "' . $modelClass . '" does not exists or it cannot be used as a Model.');
         }
 
@@ -116,8 +120,5 @@ class Database
 
         $statement = $this->dbal->prepare($sql);
         $statement->execute($parameters);
-
     }
-
-
 }
