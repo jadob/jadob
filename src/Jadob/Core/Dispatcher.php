@@ -178,7 +178,7 @@ class Dispatcher
                 throw new \RuntimeException('Constructor argument "' . $parameter->getName() . '" has no type.');
             }
 
-            $argumentType = $parameter->getType()->getName();
+            $argumentType = (string)$parameter->getType();
             if ($argumentType === Container::class) {
                 $controllerConstructorArgs[] = $this->container;
                 break;
