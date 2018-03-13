@@ -2,6 +2,7 @@
 
 namespace Jadob\Cache;
 
+use Jadob\Stdlib\StaticFileUtils;
 use Psr\SimpleCache\CacheInterface;
 
 
@@ -28,15 +29,7 @@ class FileCache implements CacheInterface
     }
 
     /**
-     * Fetches a value from the cache.
-     *
-     * @param string $key The unique key of this item in the cache.
-     * @param mixed $default Default value to return if the key does not exist.
-     *
-     * @return mixed The value of the item from the cache, or $default in case of cache miss.
-     *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     * {@inheritdoc}
      */
     public function get($key, $default = null)
     {
@@ -100,13 +93,11 @@ class FileCache implements CacheInterface
     }
 
     /**
-     * Wipes clean the entire cache's keys.
-     *
-     * @return bool True on success and false on failure.
+     * {@inheritdoc}
      */
     public function clear()
     {
-        // TODO: Implement clear() method.
+        StaticFileUtils::recursiveRemoveDirectory($this->cacheDir);
     }
 
     /**
@@ -162,19 +153,7 @@ class FileCache implements CacheInterface
     }
 
     /**
-     * Determines whether an item is present in the cache.
-     *
-     * NOTE: It is recommended that has() is only to be used for cache warming type purposes
-     * and not to be used within your live applications operations for get/set, as this method
-     * is subject to a race condition where your has() will return true and immediately after,
-     * another script can remove it making the state of your app out of date.
-     *
-     * @param string $key The cache item key.
-     *
-     * @return bool
-     *
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     *   MUST be thrown if the $key string is not a legal value.
+     * {@inheritdoc}
      */
     public function has($key)
     {
