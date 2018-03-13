@@ -89,13 +89,6 @@ class AuthListener extends AbstractEvent
                 $redirectPath
             );
 
-        if ($this->request->query->has('redirect_path')) {
-            $redirectUri = $this
-                ->router
-                ->generateRoute(
-                    $this->request->query->get('redirect_path')
-                );
-        }
 
         if ($this->request->query->has('redirect_uri')) {
             $redirectUri = $this->request->query->get('redirect_uri');
