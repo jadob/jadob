@@ -15,7 +15,6 @@ use Jadob\CommandBus\Strategy\ReflectionBasedStrategy;
  */
 class CommandBus
 {
-
     /**
      * @var InvokingStrategyInterface
      */
@@ -27,14 +26,14 @@ class CommandBus
      * @param $strategy
      * @throws CommandBusException
      */
-    public function __construct($handlers, $strategy)
+    public function __construct($strategy = null)
     {
         if ($strategy === null) {
             $this->strategy = new ReflectionBasedStrategy();
         }
 
         if ($strategy !== null && !($strategy instanceof InvokingStrategyInterface)) {
-            throw new CommandBusException('class "' . get_class($strategy) . '" could not be used as strategy as it does not implement InvokingStrategyInterface.');
+            throw new CommandBusException('class "' . \get_class($strategy) . '" could not be used as strategy as it does not implement InvokingStrategyInterface.');
         }
     }
 

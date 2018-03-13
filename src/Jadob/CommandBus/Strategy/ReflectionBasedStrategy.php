@@ -11,4 +11,12 @@ namespace Jadob\CommandBus\Strategy;
 class ReflectionBasedStrategy implements InvokingStrategyInterface
 {
 
+    /**
+     * Send all handlers to strategy to feed collection.
+     * @param array $handlers
+     */
+    public function setHandlers($handlers)
+    {
+        // TODO: Implement setHandlers() method.
+    }
 }
