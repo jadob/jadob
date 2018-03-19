@@ -19,11 +19,18 @@ $isRequiredDefined = false;
 
             <?php } ?>
         <?php } else { // render select form?>
-            <select class="form-control" <?= $input->getRequired() ? 'required' : '' ?> <?= $input->getMultiple() ? 'multiple' : '' ?>
+
+            <select class="form-control <?= $input->getClass() ?>" <?= $input->getRequired() ? 'required' : '' ?> <?= $input->getMultiple() ? 'multiple' : '' ?>
                     id="<?= $inputId; ?>"
                     name="<?= $formName; ?>[<?= $input->getName(); ?>]<?= $input->getMultiple() ? '[]' : '' ?>">
                 <?php foreach ($input->getValues() as $key => $value) { ?>
-                    <option value="<?= $key; ?>"><?= $value; ?></option>
+
+                    <?php if($input->getMultiple()) {
+                        $checked = in_array($key, $input->getValue());
+                    } else {
+                        $checked = $key == $input->getValue();
+                    } ?>
+                    <option value="<?= $key; ?>" <?= $checked ? 'selected' : '' ?>><?= $value; ?></option>
                 <?php } ?>
             </select>
         <?php } ?>
