@@ -38,6 +38,12 @@ abstract class AbstractInput implements FormFieldInterface
     protected $value;
 
     /**
+     * Additional classes passed to input.
+     * @var string
+     */
+    protected $class;
+
+    /**
      * Input "required" parameter.
      * @var boolean
      */
@@ -70,11 +76,7 @@ abstract class AbstractInput implements FormFieldInterface
         return $this;
     }
 
-    /**
-     * Additional classes passed to input.
-     * @var string
-     */
-    protected $class;
+
 
     /**
      * @return string
@@ -93,8 +95,6 @@ abstract class AbstractInput implements FormFieldInterface
         $this->class = $class;
         return $this;
     }
-
-
 
     public function getName()
     {
