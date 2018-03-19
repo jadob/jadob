@@ -58,7 +58,7 @@ class User implements \ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->userStorage[$offset];
+        return $this->userStorage[$offset] ?? null;
     }
 
     /**
