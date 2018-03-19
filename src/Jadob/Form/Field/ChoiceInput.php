@@ -122,10 +122,11 @@ class ChoiceInput extends AbstractInput
             ->setLabel($data['label'])
             ->setRequired($data['required'])
             ->setName($data['name'])
-            ->setValue($data['value'])
+            ->setValue($data['value'] ?? null)
             ->setMultiple($data['multiple'])
             ->setValues($data['values'])
             ->setOrientation($data['orientation'] ?? self::ORIENTATION_HORIZONTAL)
-            ->setExpanded($data['expanded']);
+            ->setExpanded($data['expanded'])
+            ->setClass($data['class'] ?? null);
     }
 }
