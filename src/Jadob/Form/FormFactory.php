@@ -3,6 +3,7 @@
 namespace Jadob\Form;
 
 use Doctrine\DBAL\Connection;
+use Jadob\Database\Database;
 use Jadob\Form\Field\ChoiceInput;
 use Jadob\Form\Field\FileInput;
 use Jadob\Form\Field\PasswordInput;
@@ -46,13 +47,16 @@ class FormFactory
      */
     protected $dbal;
 
+    protected $db;
+
     /**
      * Class constructor
      * @param Connection $dbal
      */
-    public function __construct(Connection $dbal)
+    public function __construct(Database $db)
     {
-        $this->dbal = $dbal;
+        $this->db = $db;
+        $this->dbal = $this->db->getDbal();
 
         $this->fieldsContainer = [
             'text' => TextInput::class,
@@ -73,7 +77,7 @@ class FormFactory
      */
     public function createFormType($formType, $data = [], $options = [])
     {
-        $builder = new FormBuilder($this, $options);
+        $builder = new FormBuilder($this, $this->db, $options);
 
         /** @var FormTypeInterface $form */
         $form = new $formType();

@@ -3,6 +3,7 @@
 
 namespace Jadob\Form;
 
+use Jadob\Database\Database;
 use Jadob\Form\Field\AbstractInput;
 
 /**
@@ -19,12 +20,22 @@ class FormBuilder
      */
     protected $formName;
     protected $fields;
+    /**
+     * @var FormFactory
+     */
     protected $formFactory;
     protected $options;
+    /**
+     * @var Database
+     */
+    protected $database;
 
-    public function __construct(FormFactory $formFactory, $options = [])
+
+    public function __construct(FormFactory $formFactory, Database $db, $options = [])
     {
+
         $this->formFactory = $formFactory;
+        $this->database = $db;
         $this->options = $options;
     }
 
@@ -81,6 +92,14 @@ class FormBuilder
     public function getOption($name)
     {
         return $this->options[$name];
+    }
+
+    /**
+     * @return Database
+     */
+    public function getDatabase()
+    {
+        return $this->database;
     }
 
 }
