@@ -21,11 +21,14 @@ class SubmitButton extends AbstractButton {
        throw new \RuntimeException('You cannot set type in SubmitButton.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function fromArray($data)
     {
         return (new self())
-            ->setValue($data['value'])
-            ->setName($data['name'])
+            ->setValue($data['value'] ?? null)
+            ->setName($data['name'] ?? null)
             ->setLabel($data['label']);
     }
 }
