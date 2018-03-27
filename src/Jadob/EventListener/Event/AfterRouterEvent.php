@@ -3,8 +3,15 @@
 namespace Jadob\EventListener\Event;
 
 use Jadob\Router\Route;
+use Jadob\Router\Router;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class AfterRouterEvent
+ * @package Jadob\EventListener\Event
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class AfterRouterEvent implements EventParameterInterface
 {
     /**
@@ -17,6 +24,11 @@ class AfterRouterEvent implements EventParameterInterface
      */
     protected $response;
 
+    /**
+     * AfterRouterEvent constructor.
+     * @param Route $route
+     * @param null $response
+     */
     public function __construct(Route $route, $response = null)
     {
         $this->route = $route;
@@ -24,7 +36,7 @@ class AfterRouterEvent implements EventParameterInterface
     }
 
     /**
-     * @return mixed
+     * @return Route
      */
     public function getRoute()
     {
