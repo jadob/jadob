@@ -2,8 +2,9 @@
 
 namespace Jadob\Security\Auth\Event;
 
-use Jadob\EventListener\AbstractEvent;
 use Jadob\EventListener\Event\AfterRouterEvent;
+use Jadob\EventListener\Event\Type\AfterRouterListenerInterface;
+use Jadob\EventListener\EventInterface;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\AuthenticationManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class AuthListener extends AbstractEvent
+class AuthListener implements EventInterface, AfterRouterListenerInterface
 {
 
     /**

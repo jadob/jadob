@@ -4,6 +4,8 @@ namespace Jadob\Security\Auth\Event;
 
 use Jadob\EventListener\AbstractEvent;
 use Jadob\EventListener\Event\AfterRouterEvent;
+use Jadob\EventListener\Event\Type\AfterRouterListenerInterface;
+use Jadob\EventListener\EventInterface;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\AuthenticationManager;
@@ -16,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class LogoutListener extends AbstractEvent
+class LogoutListener implements EventInterface, AfterRouterListenerInterface
 {
 
     /**
@@ -61,9 +63,8 @@ class LogoutListener extends AbstractEvent
     }
 
     /**
-     * @param Route $route
+     * @param AfterRouterEvent $event
      * @return null|void
-     * @throws \InvalidArgumentException
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      */
     public function onAfterRouterAction(AfterRouterEvent $event)

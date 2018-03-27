@@ -4,7 +4,6 @@ namespace Jadob\Security\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\EventListener\EventListener;
 use Jadob\Security\Auth\AuthenticationManager;
 use Jadob\Security\Auth\Event\AuthListener;
 use Jadob\Security\Auth\Event\LogoutListener;
@@ -63,24 +62,24 @@ class SecurityProvider implements ServiceProviderInterface
             )
         );
 
-        $container->get('event.listener')->register(
-            EventListener::EVENT_AFTER_ROUTER,
+        $container->get('event.listener')->addListener(
             new AuthListener(
                 $container->get('request'),
                 $container->get('auth.authentication.manager'),
                 $authConfig,
                 $container->get('router')
-            )
+            ),
+            1
         );
 
-        $container->get('event.listener')->register(
-            EventListener::EVENT_AFTER_ROUTER,
+        $container->get('event.listener')->addListener(
             new LogoutListener(
                 $container->get('request'),
                 $container->get('auth.authentication.manager'),
                 $authConfig,
                 $container->get('router')
-            )
+            ),
+            1
         );
     }
 }
