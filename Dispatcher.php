@@ -89,8 +89,6 @@ class Dispatcher
                 . 'does not exists or it cannot be used as a controller.');
         }
 
-        $this->getEventDispatcher()->dispatchEvent('event.before.controller');
-
         $controllerConstructorArgs = $this->getControllerConstructorArguments($controllerClassName);
         $controller = new $controllerClassName(...$controllerConstructorArgs);
 
