@@ -22,7 +22,7 @@ class User implements \ArrayAccess
      */
     public function __construct($userData)
     {
-        if($userData === null) {
+        if ($userData === null) {
             $userData = [];
         }
         $this->userStorage = $userData;
@@ -34,11 +34,21 @@ class User implements \ArrayAccess
      */
     public function hasRole($roleName)
     {
-        if(!isset($this->userStorage['roles'])) {
+        if (!isset($this->userStorage['roles'])) {
             return false;
         }
 
         return \in_array($roleName, $this->userStorage['roles'], true);
+    }
+
+
+    public function getRoles()
+    {
+        if (!isset($this->userStorage['roles'])) {
+            return null;
+        }
+
+        return $this->userStorage['roles'];
     }
 
     /**
