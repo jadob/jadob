@@ -11,6 +11,7 @@ return [
     \Jadob\Database\ServiceProvider\DatabaseServiceProvider::class,
     \Jadob\Form\ServiceProvider\FormProvider::class,
     \Jadob\Security\ServiceProvider\SecurityProvider::class,
+    \Jadob\Security\ServiceProvider\FirewallProvider::class,
     \Jadob\Cache\ServiceProvider\CacheProvider::class,
     \Jadob\TwigBridge\ServiceProvider\TwigServiceProvider::class,
     \Jadob\SymfonyTranslationBridge\ServiceProvider\TranslationServiceProvider::class,
