@@ -61,11 +61,6 @@ class EventListener
         return $this;
     }
 
-    public function dispatchAfterRouterAction(AfterRouterEvent $event)
-    {
-        return $this->dispatch(self::EVENT_AFTER_ROUTER, $event);
-    }
-
     /**
      * @TODO: this one needs some refactoring to make it better
      * @param $eventName
@@ -106,5 +101,10 @@ class EventListener
     public function dispatchAfterControllerAction(AfterControllerEvent $event)
     {
         return $this->dispatch(self::EVENT_AFTER_CONTROLLER, $event);
+    }
+
+    public function dispatchAfterRouterAction(AfterRouterEvent $event)
+    {
+        return $this->dispatch(self::EVENT_AFTER_ROUTER, $event);
     }
 }
