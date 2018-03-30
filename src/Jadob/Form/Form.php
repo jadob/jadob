@@ -116,12 +116,13 @@ class Form
         }
 
         foreach ($this->fields as $field) {
+
             /** @var AbstractInput $field */
             if ($field->getName() !== null && !FormUtils::isButton($field)) {
                 if ($firstValues) {
                     $field->setFirstValue($data[$field->getName()]);
                 } else {
-                    $field->setValue($data[$field->getName()]);
+                    $field->setValue($data[$field->getName()] ?? null);
                 }
             }
         }
@@ -146,20 +147,6 @@ class Form
                 $validator->validateInput($field);
             }
         }
-    }
-
-    private function findField($key)
-    {
-
-        //if there is an field and this is not an InputCollection, get them
-        if (isset($this->fields[$key])) {
-
-            if (!FormUtils::isInputCollection($this->fields[$key])) {
-                return $this->fields[$key];
-            }
-            return $this->fields[$key]->findField($key);
-        }
-
     }
 
     public function getData()

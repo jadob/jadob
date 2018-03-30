@@ -9,7 +9,7 @@ $isRequiredDefined = false;
         <?php /** okay, so at first we need to know what we need to render **/ ?>
         <?php if ($input->getExpanded()) { //render inputs ?>
             <?php foreach ($input->getValues() as $key => $value) { ?>
-                <div class="radio<?= $input->getOrientation() === 'vertical' ? '-inline' : '' ?>">
+                <div class="<?= $input->getMultiple() ? 'checkbox' : 'radio' ?><?= $input->getOrientation() === 'vertical' ? '-inline' : '' ?>">
                     <label class="control-label text-muted"><input
                                 name="<?= $formName; ?>[<?= $input->getName(); ?>]<?= $input->getMultiple() ? '[]' : '' ?>"
                                 type="<?= $input->getMultiple() ? 'checkbox' : 'radio' ?>"
