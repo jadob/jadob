@@ -124,4 +124,16 @@ abstract class AbstractModel
         return $result->fetchAll(\PDO::FETCH_OBJ);
     }
 
+    /**
+     * Shortcut for DBAL insert() method.
+     * @param $data
+     * @return int
+     */
+    public function insert($data)
+    {
+        $this->dbal->insert($this->tableName, $data);
+
+        return (int) $this->dbal->lastInsertId();
+    }
+
 }
