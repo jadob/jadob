@@ -34,4 +34,15 @@ class AfterControllerEvent implements EventParameterInterface
     {
        return $this->response;
     }
+
+    /**
+     * @param Response $response
+     * @return AfterControllerEvent
+     */
+    public function setResponse(Response $response): AfterControllerEvent
+    {
+        $this->response = $response;
+        return $this;
+    }
+
 }

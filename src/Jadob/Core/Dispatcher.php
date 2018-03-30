@@ -111,11 +111,11 @@ class Dispatcher
 
         $afterControllerEvent = new AfterControllerEvent($response);
 
-        $afterControllerListener = $this->getEventDispatcher()->dispatchAfterControllerAction($afterControllerEvent);
+        $response = $this->getEventDispatcher()->dispatchAfterControllerAction($afterControllerEvent);
 
-        if ($afterControllerListener !== null) {
-            $response = $afterControllerListener;
-        }
+//        if ($afterControllerListener !== null) {
+//            $response = $afterControllerListener;
+//        }
 
         $response->prepare($request);
         //TODO: Response validation

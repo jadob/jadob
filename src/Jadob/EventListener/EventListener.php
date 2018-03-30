@@ -5,6 +5,7 @@ namespace Jadob\EventListener;
 use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\Event\AfterRouterEvent;
 use Jadob\EventListener\Event\EventParameterInterface;
+use Jadob\EventListener\Event\Type\AfterControllerListenerInterface;
 use Jadob\EventListener\Event\Type\AfterRouterListenerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,6 +84,11 @@ class EventListener
                     $response = $event->onAfterRouterAction($parameter);
                 }
 
+                if($eventName === self::EVENT_AFTER_CONTROLLER && $event instanceof AfterControllerListenerInterface) {
+                    /** @var AfterControllerEvent $parameter */
+                    $response = $event->onAfterControllerAction($parameter);
+                }
+
                 #TODO: add rest of events here
 
                 if ($event->isEventStoppingPropagation() && $parameter->getResponse() !== $responseBeforeDispatch) {
@@ -91,6 +97,7 @@ class EventListener
             }
         }
 
+        return $responseBeforeDispatch;
     }
 
 
