@@ -2,6 +2,7 @@
 
 namespace Jadob\Security\Auth;
 
+use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\Provider\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 

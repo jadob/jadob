@@ -85,7 +85,7 @@ abstract class AbstractController
 
     protected function getUser()
     {
-
+        return $this->get('auth.authentication.manager')->getUserStorage()->getUser();
     }
 
     /**
