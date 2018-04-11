@@ -22,7 +22,7 @@ $inputId = $formName . '_' . $input->getName();
                 <?php
                 $messages = $input->getErrors();
                 foreach ($messages as $message) { ?>
-                    <span class="help-block"><?= $message; ?></span>
+                    <span class="help-block"><?= $translator->trans($message); ?></span>
                 <?php } ?>
         <?php } ?>
     </div>

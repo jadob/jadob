@@ -4,7 +4,7 @@
 $inputId = $formName . '_' . $input->getName();
 $isRequiredDefined = false;
 ?>
-    <div class="choice-type form-group">
+    <div class="choice-type form-group <?= $input->isValid() ? '' : 'has-error' ?>">
         <label class="text-muted control-label" for="<?= $inputId; ?>"><?= $input->getLabel(); ?></label>
         <?php /** okay, so at first we need to know what we need to render **/ ?>
         <?php if ($input->getExpanded()) { //render inputs ?>
@@ -33,6 +33,13 @@ $isRequiredDefined = false;
                     <option value="<?= $key; ?>" <?= $checked ? 'selected' : '' ?>><?= $value; ?></option>
                 <?php } ?>
             </select>
+        <?php } ?>
+        <?php if (!$input->isValid()) { ?>
+            <?php
+            $messages = $input->getErrors();
+            foreach ($messages as $message) { ?>
+                <span class="help-block"><?= $message; ?></span>
+            <?php } ?>
         <?php } ?>
     </div>
 <?php unset($inputId, $isRequiredDefined); ?>
