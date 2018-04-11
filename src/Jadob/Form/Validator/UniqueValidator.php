@@ -16,7 +16,7 @@ class UniqueValidator implements DatabaseAwareValidatorInterface, FormValidatorI
     /**
      * @var string
      */
-    const MESSAGE = 'form.validator.non-unique';
+    protected $message = 'form.validator.non-unique';
 
     /**
      * @var string
@@ -32,11 +32,16 @@ class UniqueValidator implements DatabaseAwareValidatorInterface, FormValidatorI
      * UniqueValidator constructor.
      * @param string $table
      * @param string $field
+     * @param null $message
      */
-    public function __construct($table, $field)
+    public function __construct($table, $field, $message = null)
     {
         $this->table = $table;
         $this->field = $field;
+
+        if($message !== null) {
+            $this->message = $message;
+        }
     }
 
     /**
@@ -74,7 +79,7 @@ class UniqueValidator implements DatabaseAwareValidatorInterface, FormValidatorI
     public function getMessages()
     {
         return [
-            self::MESSAGE
+            $this->message
         ];
     }
 }
