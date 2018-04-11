@@ -163,4 +163,12 @@ class Kernel
         $this->logger = new Logger('error_log');
         $this->logger->pushHandler(new StreamHandler($this->bootstrap->getLogsDir().'/error.log'));
     }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
 }
