@@ -4,9 +4,9 @@ namespace Jadob\SchemaManager\Definition;
 
 use Jadob\SchemaManager\BitmaskDecoder;
 
-
 /**
  * Decodes table definition from array.
+ * @author pizzaminded <miki@appvende.net>
  */
 class Table
 {
@@ -32,6 +32,7 @@ class Table
     const TYPE_DOUBLE = 8;
 
     /**
+     * @deprecated
      * @var int
      */
     const TYPE_BOOL = 16;
@@ -146,13 +147,21 @@ class Table
     public function getColumns()
     {
         $output = [];
-        foreach ($this->definition['fields'] as $fieldName => $fieldBitmask) {
+        foreach ($this->definition['fields'] as $fieldName => $fieldData) {
+
+            $fieldBitmask = $fieldData;
+
+            if (is_array($fieldData)) {
+                $fieldBitmask = $fieldData['field'];
+            }
+
             $type = BitmaskDecoder::getColumnType($fieldBitmask);
-            $params = BitmaskDecoder::getColumnParams($fieldBitmask);
+            $params = BitmaskDecoder::getColumnParams($fieldData);
 
             $output[$fieldName] = [
                 'type' => $type,
-                'params' => $params];
+                'params' => $params
+            ];
         }
 
         return $output;
