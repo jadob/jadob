@@ -31,7 +31,8 @@ class FormProvider implements ServiceProviderInterface
     public function register(Container $container, $config)
     {
         $container->add('form.factory', new FormFactory(
-            $container->get('database')
+            $container->get('database'),
+            $container->get('translator')
         ));
     }
 }

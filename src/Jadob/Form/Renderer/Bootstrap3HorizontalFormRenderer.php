@@ -5,6 +5,7 @@ namespace Jadob\Form\Renderer;
 use Jadob\Form\Field\FormFieldInterface;
 use Jadob\Form\Form;
 use Jadob\Form\FormUtils;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class Bootstrap3HorizontalFormRenderer
@@ -14,6 +15,20 @@ use Jadob\Form\FormUtils;
  */
 class Bootstrap3HorizontalFormRenderer implements FormRendererInterface
 {
+
+    /**
+     * @var Translator
+     */
+    protected $translator;
+
+    /**
+     * Bootstrap3HorizontalFormRenderer constructor.
+     * @param Translator $translator
+     */
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * @var array
@@ -28,6 +43,7 @@ class Bootstrap3HorizontalFormRenderer implements FormRendererInterface
     public function renderField(FormFieldInterface $input, $formName = '')
     {
         ob_start();
+        $translator = $this->translator;
 
         if (isset($this->customFormTemplates[get_class($input)])) {
             /** @noinspection PhpIncludeInspection */

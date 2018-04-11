@@ -143,7 +143,7 @@ class Form
         /** @var AbstractInput $field */
         foreach ($this->fields as $field) {
 
-            if (!FormUtils::isButton($field) && $field->getFirstValue() !== $field->getValue()) {
+            if (!FormUtils::isButton($field)  && ($field->getRequired() || $field->getFirstValue() !== $field->getValue())) {
                 $validator->validateInput($field);
             }
         }

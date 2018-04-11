@@ -12,6 +12,7 @@ use Jadob\Form\Field\TextareaInput;
 use Jadob\Form\Field\TextInput;
 use Jadob\Form\Renderer\Bootstrap3HorizontalFormRenderer;
 use Jadob\Form\Renderer\FormRendererInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class responsible for creating Forms
@@ -47,16 +48,25 @@ class FormFactory
      */
     protected $dbal;
 
+    /**
+     * @var Database
+     */
     protected $db;
+
+    /**
+     * @var Translator
+     */
+    protected $translator;
 
     /**
      * Class constructor
      * @param Connection $dbal
      */
-    public function __construct(Database $db)
+    public function __construct(Database $db, Translator $translator)
     {
         $this->db = $db;
         $this->dbal = $this->db->getDbal();
+        $this->translator = $translator;
 
         $this->fieldsContainer = [
             'text' => TextInput::class,
@@ -67,7 +77,7 @@ class FormFactory
             'file' => FileInput::class
         ];
 
-        $this->renderer = new Bootstrap3HorizontalFormRenderer();
+        $this->renderer = new Bootstrap3HorizontalFormRenderer($this->translator);
     }
 
     /**
