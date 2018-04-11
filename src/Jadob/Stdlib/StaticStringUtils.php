@@ -26,4 +26,25 @@ class StaticStringUtils
         return $str;
     }
 
+    public static function nullOrEmpty($string)
+    {
+        if ($string === '') {
+            return true;
+        }
+
+        return $string === null;
+    }
+
+    /**
+     * Returns array with no null-or-empty values.
+     * @param string $string
+     * @param string $delimiter
+     * @return array
+     */
+    public static function explode($string, $delimiter = ',')
+    {
+        $explodedValues = \explode($delimiter, $string);
+
+        return array_filter($explodedValues);
+    }
 }
