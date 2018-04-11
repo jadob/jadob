@@ -121,6 +121,7 @@ class ChoiceInput extends AbstractInput
         return (new self())
             ->setLabel($data['label'])
             ->setRequired($data['required'])
+            ->setValidators($data['validators'] ?? [])
             ->setName($data['name'])
             ->setValue($data['value'] ?? null)
             ->setMultiple($data['multiple'])
