@@ -20,6 +20,8 @@ class CommandBus
      */
     protected $strategy;
 
+    protected $handlers;
+
     /**
      * CommandBus constructor.
      * @param $handlers
