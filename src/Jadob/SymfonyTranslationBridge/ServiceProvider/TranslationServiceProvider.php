@@ -36,8 +36,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
         $translator = new Translator($config['locale']);
         $translator->addLoader('array', new ArrayLoader());
 
-        foreach ($config['sources'] as $locale => $path) {
-            $translator->addResource('array', include $path, $locale);
+        foreach ($config['sources'] as $locale => $paths) {
+            foreach ($paths as $path) {
+                $translator->addResource('array', include $path, $locale);
+            }
         }
 
         $container->add('translator', $translator);
