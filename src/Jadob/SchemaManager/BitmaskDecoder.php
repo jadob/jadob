@@ -2,7 +2,6 @@
 
 namespace Jadob\SchemaManager;
 
-
 use Jadob\SchemaManager\Definition\Table;
 
 /**
@@ -31,15 +30,15 @@ class BitmaskDecoder
             return 'boolean';
         }
 
-        if($bitmask & Table::TYPE_DATETIME) {
+        if ($bitmask & Table::TYPE_DATETIME) {
             return 'datetime';
         }
 
-        if($bitmask & Table::TYPE_BIGINT) {
+        if ($bitmask & Table::TYPE_BIGINT) {
             return 'bigint';
         }
 
-        if($bitmask & Table::TYPE_FLOAT) {
+        if ($bitmask & Table::TYPE_FLOAT) {
             return 'float';
         }
 
@@ -49,9 +48,18 @@ class BitmaskDecoder
      * @param int $bitmask
      * @return array
      */
-    public static function getColumnParams($bitmask)
+    public static function getColumnParams($data)
     {
+        $comment = null;
+
+        $bitmask = $data;
+        if (\is_array($data)) {
+            $bitmask = $data['field'];
+            $comment = $data['comment'] ?? null;
+        }
+
         $params = [];
+        $params['comment'] = $comment;
 
         if ($bitmask & Table::AUTO_INCREMENT) {
             $params['autoincrement'] = true;
