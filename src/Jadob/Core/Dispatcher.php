@@ -9,6 +9,7 @@ use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\Event\AfterRouterEvent;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zend\Config\Config;
@@ -123,8 +124,13 @@ class Dispatcher
 //            throw new DispatcherException('Invalid response type');
 //        }
 
-        return $response;
 
+        //enable pretty print for JsonResponse objects in dev environment
+        if ($response instanceof JsonResponse && $this->env === 'dev') {
+            $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+        }
+
+        return $response;
     }
 
     /**
