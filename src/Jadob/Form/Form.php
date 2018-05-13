@@ -120,6 +120,7 @@ class Form
             /** @var AbstractInput $field */
             if ($field->getName() !== null && !FormUtils::isButton($field)) {
                 if ($firstValues) {
+
                     $field->setFirstValue($data[$field->getName()]);
                 } else {
                     $field->setValue($data[$field->getName()] ?? null);
@@ -143,7 +144,11 @@ class Form
         /** @var AbstractInput $field */
         foreach ($this->fields as $field) {
 
-            if (!FormUtils::isButton($field)  && ($field->getRequired() || $field->getFirstValue() !== $field->getValue())) {
+            if (FormUtils::isButton($field)) {
+                continue;
+            }
+
+            if ($field->getFirstValue() !== $field->getValue()) {
                 $validator->validateInput($field);
             }
         }
