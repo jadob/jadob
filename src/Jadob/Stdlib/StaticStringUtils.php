@@ -26,6 +26,10 @@ class StaticStringUtils
         return $str;
     }
 
+    /**
+     * @param string $string
+     * @return bool
+     */
     public static function nullOrEmpty($string)
     {
         if ($string === '') {
