@@ -23,7 +23,7 @@ use Zend\Config\Processor\Token;
 class Kernel
 {
 
-    const VERSION = '0.54.0';
+    const VERSION = '0.55.0';
 
     /**
      * @var Config[]
@@ -67,7 +67,7 @@ class Kernel
 
     /**
      * @param string $env
-     * @param Bootstrap $bootstrap
+     * @param BootstrapInterface $bootstrap
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
