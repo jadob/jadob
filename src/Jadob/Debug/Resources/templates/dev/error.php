@@ -204,7 +204,7 @@
                                 $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
                             }
                             ?>
-                            <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ExceptionView::parseParams($element['args']) ?>)
+                            <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ExceptionView::parseParams($element['args'] ?? null) ?>)
                         </td>
                         <td> <?= $element['line'] ?? null ?></td>
                     </tr>

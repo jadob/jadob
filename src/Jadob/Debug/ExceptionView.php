@@ -16,28 +16,35 @@ class ExceptionView
     public static function getVariableType($variable)
     {
 
-        if(is_scalar($variable)) {
+        if ($variable === null) {
+            return 'null';
+        }
+
+        if (\is_scalar($variable)) {
             return $variable;
         }
 
-        if(\is_object($variable)) {
+        if (\is_object($variable)) {
             return \get_class($variable);
         }
 
-        if(\is_array($variable)) {
+        if (\is_array($variable)) {
             return 'array';
         }
 
-        if(\is_resource($variable)) {
+        if (\is_resource($variable)) {
             return 'resource';
         }
 
         return 'unknown';
     }
 
-    public static function parseParams(array  $params = [])
+    public static function parseParams($params)
     {
         $output = [];
+        if (!\is_array($params)) {
+            return htmlspecialchars(self::getVariableType($params));
+        }
         foreach ($params as $param) {
             $output[] = htmlspecialchars(self::getVariableType($param));
         }
