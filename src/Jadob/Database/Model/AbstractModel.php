@@ -73,7 +73,7 @@ abstract class AbstractModel
     /**
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    public function getQueryBuilder()
+    protected function getQueryBuilder()
     {
         return $this->dbal->createQueryBuilder();
     }
@@ -85,7 +85,7 @@ abstract class AbstractModel
      * @param bool $asArray
      * @return \stdClass|array|null
      */
-    public function getSingleResult(QueryBuilder $qb, $asArray = false)
+    protected function getSingleResult(QueryBuilder $qb, $asArray = false)
     {
 
         $result = $qb->execute();
@@ -109,7 +109,7 @@ abstract class AbstractModel
      * @param bool $asArray
      * @return \stdClass|array|null
      */
-    public function getResults(QueryBuilder $qb, $asArray = false)
+    protected function getResults(QueryBuilder $qb, $asArray = false)
     {
         $result = $qb->execute();
 
@@ -129,7 +129,7 @@ abstract class AbstractModel
      * @param $data
      * @return int
      */
-    public function insert($data)
+    protected function insert($data)
     {
         $this->dbal->insert($this->tableName, $data);
 
