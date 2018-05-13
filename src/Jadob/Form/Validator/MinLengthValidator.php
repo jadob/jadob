@@ -8,7 +8,7 @@ namespace Jadob\Form\Validator;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class MinLengthValidator implements  FormValidatorInterface
+class MinLengthValidator implements FormValidatorInterface
 {
 
     /**
@@ -35,7 +35,7 @@ class MinLengthValidator implements  FormValidatorInterface
      */
     public function isValid($value)
     {
-       return strlen($value) >= $this->minLength;
+        return \strlen($value) >= $this->minLength;
     }
 
     /**
