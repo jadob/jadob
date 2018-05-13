@@ -7,10 +7,8 @@ use Jadob\Container\ContainerAwareTrait;
 use Jadob\Database\Database;
 use Jadob\Form\FormFactory;
 use Jadob\MVC\ResponseMethodsTrait;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class AbstractController
@@ -96,5 +94,14 @@ abstract class AbstractController
     protected function addFlash($type, $message)
     {
         $this->get('session')->getFlashBag()->add($type, $message);
+    }
+
+    /**
+     * @return LoggerInterface
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     */
+    protected function getLogger()
+    {
+        return $this->get('logger');
     }
 }
