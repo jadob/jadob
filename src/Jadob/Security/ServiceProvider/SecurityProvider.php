@@ -58,7 +58,8 @@ class SecurityProvider implements ServiceProviderInterface
             'auth.authentication.manager',
             new AuthenticationManager(
                 $container->get('auth.user.storage'),
-                $provider
+                $provider,
+                $container->get('logger')
             )
         );
 

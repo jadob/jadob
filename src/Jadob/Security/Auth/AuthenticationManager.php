@@ -4,6 +4,7 @@ namespace Jadob\Security\Auth;
 
 use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\Provider\UserProviderInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -35,14 +36,25 @@ class AuthenticationManager
     protected $lastUsername;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * AuthenticationManager constructor.
      * @param UserStorage $userStorage
      * @param UserProviderInterface $provider
+     * @param LoggerInterface $logger
      */
-    public function __construct(UserStorage $userStorage, UserProviderInterface $provider)
+    public function __construct(
+        UserStorage $userStorage,
+        UserProviderInterface $provider,
+        LoggerInterface $logger = null
+    )
     {
         $this->userStorage = $userStorage;
         $this->provider = $provider;
+        $this->logger = $logger;
     }
 
     public function handleRequest(Request $request)
@@ -56,8 +68,10 @@ class AuthenticationManager
             return false;
         }
 
+        $username = $request->request->get('_auth')['_username'];
+
         try {
-            $userFromProvider = (array)$this->provider->loadUserByUsername($request->request->get('_auth')['_username']);
+            $userFromProvider = (array)$this->provider->loadUserByUsername($username);
         } catch (UserNotFoundException $e) {
             $userFromProvider = null;
         }
@@ -72,11 +86,13 @@ class AuthenticationManager
 
         if (password_verify($plainPassword, $userFromProvider['password'])) {
             $this->userStorage->setUserState($userFromProvider);
+            $this->addInfoLog('User ' . $username . ' has been logged from IP: ' . $request->getClientIp());
             return true;
         }
 
         $this->lastUsername = $request->request->get('_username');
         $this->error = 'auth.invalid.password';
+        $this->addInfoLog('User ' . $username . ' were trying to log in from IP: ' . $request->getClientIp());
         return false;
     }
 
@@ -166,5 +182,15 @@ class AuthenticationManager
         $this->lastUsername = $lastUsername;
         return $this;
     }
+
+    private function addInfoLog($message)
+    {
+        if ($this->logger === null) {
+            return;
+        }
+
+        $this->logger->info('[Auth]: ' . $message);
+    }
+
 
 }
