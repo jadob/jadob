@@ -2,11 +2,9 @@
 
 namespace Jadob\Security\Auth\Event;
 
-use Jadob\EventListener\AbstractEvent;
 use Jadob\EventListener\Event\AfterRouterEvent;
 use Jadob\EventListener\Event\Type\AfterRouterListenerInterface;
 use Jadob\EventListener\EventInterface;
-use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\AuthenticationManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,10 +69,7 @@ class LogoutListener implements EventInterface, AfterRouterListenerInterface
     {
         $route = $event->getRoute();
 
-        if (
-            $route->getName() !== $this->config['logout_path'] //route does not match
-            || $this->manager->getUserStorage()->getUser() === null //user is logged in
-        ) {
+        if ($route->getName() !== $this->config['logout_path']) { //route does not match
             return;
         }
 
