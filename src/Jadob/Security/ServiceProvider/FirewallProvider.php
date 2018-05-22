@@ -20,9 +20,14 @@ class FirewallProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      * @param array|null $config
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function register(Container $container, $config)
     {
+        if (!isset($config['firewall'])) {
+            return;
+        }
+
         $container->get('event.listener')->addListener(
             new FirewallListener(
                 $container->get('request'),
