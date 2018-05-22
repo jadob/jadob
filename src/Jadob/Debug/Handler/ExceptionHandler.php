@@ -2,6 +2,7 @@
 
 namespace Jadob\Debug\Handler;
 
+use Jadob\Stdlib\StaticEnvironmentUtils;
 use Psr\Log\LoggerInterface;
 use ErrorException;
 use Jadob\Debug\ExceptionView;
@@ -63,6 +64,11 @@ class ExceptionHandler
     {
         $this->logger->error($exception->getMessage(), $exception->getTrace());
 
+        if (StaticEnvironmentUtils::isCli()) {
+            $this->showCliError($exception);
+            return;
+        }
+
         if ($this->environment === 'prod') {
             $this->showProductionErrorPage($exception);
             return;
@@ -70,6 +76,11 @@ class ExceptionHandler
 
         $this->showDevelopmentErrorPage($exception);
 
+    }
+
+    protected function showCliError(\Throwable $exception)
+    {
+        print($exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL);
     }
 
     protected function showProductionErrorPage($exception)
