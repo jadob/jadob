@@ -34,7 +34,7 @@ class EventListener
      * All events container.
      * @var array
      */
-    protected $events;
+    protected $events = [];
 
     /**
      * Adds new listener to events stack.
