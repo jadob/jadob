@@ -70,9 +70,11 @@ class SchemaManager
                 );
             }
 
+            if (\count($uniqueColumns = $tableObject->getUniqueFields()) !== 0) {
+                foreach ($uniqueColumns as $uniqueColumn) {
+                    $table->addUniqueIndex([$uniqueColumn]);
+                }
 
-            if (count($uniqueColumns = $tableObject->getUniqueFields()) !== 0) {
-                $table->addUniqueIndex($uniqueColumns);
             }
 
             if (($primaryKeys = $tableObject->getPrimaryKeys()) !== null) {
