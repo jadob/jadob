@@ -35,6 +35,12 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
+
+        $container->add(
+            'auth.user.storage',
+            new UserStorage($container->get('session'))
+        );
+
         if (!isset($config['auth'])) {
             return;
         }
@@ -48,11 +54,6 @@ class SecurityProvider implements ServiceProviderInterface
                 $authConfig['provider_settings']
             );
         }
-
-        $container->add(
-            'auth.user.storage',
-            new UserStorage($container->get('session'))
-        );
 
         $container->add(
             'auth.authentication.manager',
