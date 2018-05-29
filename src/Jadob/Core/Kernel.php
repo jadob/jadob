@@ -51,7 +51,7 @@ class Kernel
     private $exceptionHandler;
 
     /**
-     * @var Bootstrap
+     * @var BootstrapInterface
      */
     private $bootstrap;
 
@@ -84,9 +84,9 @@ class Kernel
             ->registerErrorHandler()
             ->registerExceptionHandler();
 
-        $config = new Config(include $this->bootstrap->getConfigDir() . '/config.php', true);
+        $config = new Config(load_array_from_file($this->bootstrap->getConfigDir() . '/config.php'), true);
 
-        $parameters = new Config(include $this->bootstrap->getConfigDir() . '/parameters.php', true);
+        $parameters = new Config(load_array_from_file($this->bootstrap->getConfigDir() . '/parameters.php'), true);
         $parameters['app.public_dir'] = $bootstrap->getPublicDir();
         $parameters['app.root_dir'] = $bootstrap->getRootDir();
         $parameters['app.cache_dir'] = $bootstrap->getCacheDir();
@@ -159,9 +159,10 @@ class Kernel
     /**
      * @throws \Exception
      */
-    private function createLogger() {
+    private function createLogger()
+    {
         $this->logger = new Logger('error_log');
-        $this->logger->pushHandler(new StreamHandler($this->bootstrap->getLogsDir().'/error.log'));
+        $this->logger->pushHandler(new StreamHandler($this->bootstrap->getLogsDir() . '/error.log'));
     }
 
     /**

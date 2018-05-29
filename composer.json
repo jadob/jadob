@@ -16,6 +16,9 @@
   "autoload": {
     "psr-0": {
       "Jadob\\": "src/"
-    }
+    },
+    "files": [
+      "src/Jadob/Core/Resources/functions/load_array_from_file.php"
+    ]
   }
 }
