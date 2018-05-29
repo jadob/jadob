@@ -74,7 +74,6 @@ class SchemaManager
                 foreach ($uniqueColumns as $uniqueColumn) {
                     $table->addUniqueIndex([$uniqueColumn]);
                 }
-
             }
 
             if (($primaryKeys = $tableObject->getPrimaryKeys()) !== null) {
@@ -82,7 +81,9 @@ class SchemaManager
             }
 
             if (($indexes = $tableObject->getIndexes()) !== null) {
-                $table->addIndex($indexes);
+                foreach ($indexes as $singleIndex) {
+                    $table->addIndex([$singleIndex]);
+                }
             }
         }
 
