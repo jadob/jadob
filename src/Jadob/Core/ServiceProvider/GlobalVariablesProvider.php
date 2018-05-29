@@ -4,6 +4,7 @@ namespace Jadob\Core\ServiceProvider;
 
 
 use Jadob\Container\Container;
+use Jadob\Container\Definition;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\Services\GlobalVariables;
 
@@ -28,10 +29,10 @@ class GlobalVariablesProvider implements ServiceProviderInterface
      * @TODO: should i add environment here?
      * @param Container $container
      * @param $config
-     * @return mixed
+     * @return void
      */
     public function register(Container $container, $config)
     {
-        $container->add('globals', new GlobalVariables($config));
+        $container->addDefinition(new Definition('globals', GlobalVariables::class, [$config]));
     }
 }
