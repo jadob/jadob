@@ -15,9 +15,13 @@ class BitmaskDecoder
     /**
      * @param int $bitmask
      * @return string
+     * @see https://www.doctrine-project.org/projects/doctrine-dbal/en/2.7/reference/types.html#mapping-matrix
      */
     public static function getColumnType($bitmask)
     {
+        if ($bitmask & Table::TYPE_VARCHAR) {
+            return 'string';
+        }
         if ($bitmask & Table::TYPE_INT) {
             return 'integer';
         }
@@ -53,13 +57,16 @@ class BitmaskDecoder
         $comment = null;
 
         $bitmask = $data;
+
         if (\is_array($data)) {
             $bitmask = $data['field'];
             $comment = $data['comment'] ?? null;
+
         }
 
         $params = [];
         $params['comment'] = $comment;
+        $params['length'] = $data['length'] ?? null;
 
         if ($bitmask & Table::AUTO_INCREMENT) {
             $params['autoincrement'] = true;
