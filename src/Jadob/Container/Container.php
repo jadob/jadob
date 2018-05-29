@@ -2,6 +2,7 @@
 
 namespace Jadob\Container;
 
+use Jadob\Container\Definition\DefinitionBuilder;
 use Psr\Container\ContainerInterface;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -18,9 +19,21 @@ class Container implements ContainerInterface
 {
 
     /**
+     * Instantiated or manually added services.
      * @var array
      */
     private $container = [];
+
+    /**
+     * Service definitions
+     * @var array
+     */
+    protected $definitions = [];
+
+    /**
+     * @var null|DefinitionBuilder
+     */
+    protected $definitionBuilder = null;
 
     /**
      * Container constructor.
@@ -44,13 +57,35 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @param Definition $definition
+     * @return $this
+     */
+    public function addDefinition(Definition $definition)
+    {
+        $this->definitions[$definition->getServiceName()] = $definition;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function get($id)
     {
         if (isset($this->container[$id])) {
             return $this->container[$id];
         }
+
+        if (isset($this->definitions[$id])) {
+            /** @var Definition $definition */
+            $definition = $this->definitions[$id];
+            $dependency = $this->getDefinitionBuilder()->buildDependencyFromDefinition($definition);
+
+            $this->container[$id] = $dependency;
+
+            return $dependency;
+        }
+
 
         throw new ServiceNotFoundException('Service "' . $id . '" is not registered.');
     }
@@ -72,12 +107,12 @@ class Container implements ContainerInterface
     public function findServiceByClassName($className)
     {
         foreach ($this->container as $key => $service) {
-            if(get_class($service) === $className) {
+            if (\get_class($service) === $className) {
                 return $service;
             }
         }
 
-        throw new \RuntimeException('Class '.$className.' is not registered in container');
+        throw new \RuntimeException('Class ' . $className . ' is not registered in container');
     }
 
     /**
@@ -94,8 +129,8 @@ class Container implements ContainerInterface
             $configNode = $provider->getConfigNode();
             $config = [];
 
-            if($configNode !== null && !$configuration->offsetExists($configNode)) {
-                throw new ContainerException('Config node "'.$configNode.'" requested by '.$service.' does not exists.');
+            if ($configNode !== null && !$configuration->offsetExists($configNode)) {
+                throw new ContainerException('Config node "' . $configNode . '" requested by ' . $service . ' does not exists.');
             }
 
             if ($configNode !== null) {
@@ -104,5 +139,17 @@ class Container implements ContainerInterface
 
             $provider->register($this, $config);
         }
+    }
+
+    /**
+     * @return DefinitionBuilder
+     */
+    protected function getDefinitionBuilder()
+    {
+        if ($this->definitionBuilder === null) {
+            $this->definitionBuilder = new DefinitionBuilder();
+        }
+
+        return $this->definitionBuilder;
     }
 }
