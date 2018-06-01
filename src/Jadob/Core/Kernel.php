@@ -84,9 +84,9 @@ class Kernel
             ->registerErrorHandler()
             ->registerExceptionHandler();
 
-        $config = new Config(load_array_from_file($this->bootstrap->getConfigDir() . '/config.php'), true);
+        $config = new Config(\load_array_from_file($this->bootstrap->getConfigDir() . '/config.php'), true);
 
-        $parameters = new Config(load_array_from_file($this->bootstrap->getConfigDir() . '/parameters.php'), true);
+        $parameters = new Config(\load_array_from_file($this->bootstrap->getConfigDir() . '/parameters.php'), true);
         $parameters['app.public_dir'] = $bootstrap->getPublicDir();
         $parameters['app.root_dir'] = $bootstrap->getRootDir();
         $parameters['app.cache_dir'] = $bootstrap->getCacheDir();
