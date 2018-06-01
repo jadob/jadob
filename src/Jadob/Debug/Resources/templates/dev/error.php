@@ -158,13 +158,18 @@
         .stack-trace .key {
             border-right: 1px dotted #95A5A6;
         }
+
+        .no-message {
+            color: #95A5A6;
+            font-weight: 400;
+        }
     </style>
 </head>
 <body>
 <main class="error-wrapper">
     <section class="error-wrapper__header">
         <div class="error-wrapper__header_metadata">
-            <h2 class="error-wrapper__header_metadata_exception-class"><?= get_class($exception); ?></h2>
+            <h2 class="error-wrapper__header_metadata_exception-class"><?= \get_class($exception); ?></h2>
             <p class="error-wrapper__header_metadata_exception-info">File:
                 <strong><?= $exception->getFile(); ?></strong></p>
             <p class="error-wrapper__header_metadata_exception-info">Line:
@@ -177,7 +182,13 @@
         </section>
     </section>
     <section class="error-wrapper__content">
-        <h1 class="error-wrapper__content_metadata_exception-message"><?= $exception->getMessage(); ?></h1>
+        <h1 class="error-wrapper__content_metadata_exception-message">
+            <?php if(strlen($exception->getMessage()) > 0) { ?>
+                <?= $exception->getMessage(); ?>
+            <?php } else { ?>
+                <span class="no-message">This exception has no message.</span>
+            <?php }; ?>
+        </h1>
         <section class="error-wrapper__content_stack-trace">
             <h2 class="error-wrapper__content_stack-trace-header">
                 Stack Trace:
