@@ -182,15 +182,18 @@ class Router
 
         $convertedPath = $path;
         foreach ($params as $key => $param) {
+
             $isFound = 0;
-            $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
+            if (!\is_array($param)) {
+                $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
+            };
 
             if ($isFound === 0) {
                 $paramsToGET[$key] = $param;
             }
         }
 
-        if (count($paramsToGET) !== 0) {
+        if (\count($paramsToGET) !== 0) {
             $convertedPath .= '?';
             $convertedPath .= http_build_query($paramsToGET);
         }
