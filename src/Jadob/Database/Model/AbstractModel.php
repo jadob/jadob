@@ -4,6 +4,9 @@ namespace Jadob\Database\Model;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Jadob\Database\Exception\ModelException;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * Class AbstractModel
@@ -43,7 +46,7 @@ abstract class AbstractModel
     {
         $qb = $this->dbal->createQueryBuilder()
             ->select('*')
-            ->from($this->getTableName(),'a')
+            ->from($this->getTableName(), 'a')
             ->where('a.id = :id')
             ->setParameter('id', $pk)
             ->setMaxResults(1)
@@ -90,11 +93,11 @@ abstract class AbstractModel
 
         $result = $qb->execute();
 
-        if($result->rowCount() === 0) {
+        if ($result->rowCount() === 0) {
             return null;
         }
 
-        if($asArray) {
+        if ($asArray) {
             return $result->fetch(\PDO::FETCH_ASSOC);
         }
 
@@ -113,11 +116,11 @@ abstract class AbstractModel
     {
         $result = $qb->execute();
 
-        if($result->rowCount() === 0) {
+        if ($result->rowCount() === 0) {
             return null;
         }
 
-        if($asArray) {
+        if ($asArray) {
             return $result->fetchAll(\PDO::FETCH_ASSOC);
         }
 
@@ -128,12 +131,30 @@ abstract class AbstractModel
      * Shortcut for DBAL insert() method.
      * @param $data
      * @return int
+     * @throws \Doctrine\DBAL\DBALException
      */
     protected function insert($data)
     {
         $this->dbal->insert($this->tableName, $data);
 
-        return (int) $this->dbal->lastInsertId();
+        return (int)$this->dbal->lastInsertId();
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param callable $queryBuilderModifier
+     * @return Pagerfanta
+     * @throws ModelException
+     */
+    protected function paginate(QueryBuilder $qb, $queryBuilderModifier)
+    {
+        if (!\class_exists('Pagerfanta\Pagerfanta')) {
+            throw new ModelException('Looks like Pagerfanta is not installed. Please install "pagerfanta/pagerfanta" in Composer.');
+        }
+
+        $adapter = new DoctrineDbalAdapter($qb, $queryBuilderModifier);
+
+        return new Pagerfanta($adapter);
     }
 
 }
