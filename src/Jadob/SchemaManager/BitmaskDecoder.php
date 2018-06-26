@@ -38,6 +38,10 @@ class BitmaskDecoder
             return 'datetime';
         }
 
+        if ($bitmask & Table::TYPE_DATE) {
+            return 'date';
+        }
+
         if ($bitmask & Table::TYPE_BIGINT) {
             return 'bigint';
         }
