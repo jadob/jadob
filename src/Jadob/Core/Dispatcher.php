@@ -90,8 +90,7 @@ class Dispatcher
                 . 'does not exists or it cannot be used as a controller.');
         }
 
-        $controllerConstructorArgs = $this->getControllerConstructorArguments($controllerClassName);
-        $controller = new $controllerClassName(...$controllerConstructorArgs);
+        $controller = $this->autowireControllerClass($controllerClassName);
 
         $action = $route->getAction();
 
@@ -194,4 +193,17 @@ class Dispatcher
         return $controllerConstructorArgs;
 
     }
+
+    /**
+     * Finds depedencies for controller object and instatiate it.
+     * @param string $controllerClassName
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function autowireControllerClass($controllerClassName) {
+        $controllerConstructorArgs = $this->getControllerConstructorArguments($controllerClassName);
+
+        return new $controllerClassName(...$controllerConstructorArgs);
+    }
+
 }
