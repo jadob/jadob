@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AuthenticationManager
+ * @TODO:
+ * - add some user class, which will be serialized and stored in session
+ * - allow developer to make his own User class
  * @package Jadob\Security\Auth
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
