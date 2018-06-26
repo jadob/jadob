@@ -2,7 +2,6 @@
 
 namespace Jadob\Core;
 
-
 use Jadob\Container\Container;
 use Jadob\Debug\Handler\ExceptionHandler;
 use Jadob\EventListener\EventListener;
@@ -16,6 +15,8 @@ use Zend\Config\Processor\Token;
 
 /**
  * Class Kernel
+ * @TODO:
+ * - after container build event
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -68,12 +69,13 @@ class Kernel
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
+     * @throws \ReflectionException
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
-        $this->env = $env;
+        $this->env = strtolower($env);
         $this->bootstrap = $bootstrap;
 
         //Enable error handling
@@ -103,6 +105,17 @@ class Kernel
 
         $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
 
+        if($this->env === 'prod') {
+            $customController = $this->config['framework']['error_handler']['custom_prod_controller'];
+
+            if ($customController !== null) {
+                $this->exceptionHandler->setCustomProductionHandler(
+                    $this->dispatcher->autowireControllerClass(
+                        $customController
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -171,5 +184,13 @@ class Kernel
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProduction()
+    {
+        return $this->env === 'prod';
     }
 }

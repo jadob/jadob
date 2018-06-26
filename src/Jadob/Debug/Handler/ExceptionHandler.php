@@ -7,10 +7,12 @@ use Psr\Log\LoggerInterface;
 use ErrorException;
 use Jadob\Debug\ExceptionView;
 use Jadob\Debug\Interfaces\PageNotFoundExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ExceptionHandler
  * @package Jadob\Debug\Handler
+ * @license MIT
  */
 class ExceptionHandler
 {
@@ -23,6 +25,11 @@ class ExceptionHandler
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var ExceptionHandlerInterface
+     */
+    protected $customProductionHandler;
 
     /**
      * ExceptionHandler constructor.
@@ -85,6 +92,17 @@ class ExceptionHandler
 
     protected function showProductionErrorPage($exception)
     {
+
+        if ($this->customProductionHandler !== null) {
+
+            /** @var Response $response */
+            $response = $this->customProductionHandler->handleExceptionAction($exception);
+
+            $response->send();
+            return;
+        }
+
+
         $template = 'service-temporarily-unavailable';
         $code = 503;
 
@@ -102,5 +120,23 @@ class ExceptionHandler
         ExceptionView::showErrorPage('error', 'dev', [
             'exception' => $exception
         ]);
+    }
+
+    /**
+     * @return ExceptionHandlerInterface
+     */
+    public function getCustomProductionHandler(): ExceptionHandlerInterface
+    {
+        return $this->customProductionHandler;
+    }
+
+    /**
+     * @param ExceptionHandlerInterface $customProductionHandler
+     * @return ExceptionHandler
+     */
+    public function setCustomProductionHandler(ExceptionHandlerInterface $customProductionHandler): ExceptionHandler
+    {
+        $this->customProductionHandler = $customProductionHandler;
+        return $this;
     }
 }
