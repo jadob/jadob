@@ -24,7 +24,7 @@ use Zend\Config\Processor\Token;
 class Kernel
 {
 
-    const VERSION = '0.56.0';
+    const VERSION = '0.57.0';
 
     /**
      * @var Config[]

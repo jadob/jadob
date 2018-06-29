@@ -85,7 +85,7 @@ abstract class AbstractModel
      * Fetches single object from querybuilder. If nothing found, returns NULL.
      * Warning: Query Builder could not be executed before.
      *  @TODO:
-     *  - allow to pass PDO::FETCH_* params as second param
+     *  - allow to pass PDO::FETCH_* params as second param (@see https://phpdelusions.net/pdo/fetch_modes)
      * @param QueryBuilder $qb
      * @param bool $asArray
      * @return \stdClass|array|null
