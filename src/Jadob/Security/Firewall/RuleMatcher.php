@@ -3,7 +3,14 @@
 namespace Jadob\Security\Firewall;
 
 use Jadob\Security\Auth\User;
+use Jadob\Security\Auth\UserInterface;
 
+/**
+ * Class RuleMatcher
+ * @package Jadob\Security\Firewall
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class RuleMatcher
 {
 
@@ -17,19 +24,28 @@ class RuleMatcher
      */
     protected $user;
 
-
+    /**
+     * RuleMatcher constructor.
+     * @param array $rule
+     * @param UserInterface $user
+     */
     public function __construct(array $rule, $user)
     {
         $this->rule = $rule;
         $this->user = $user;
-
     }
 
+    /**
+     * @return bool
+     */
     public function isRuleMatching()
     {
         return $this->hasRoles();
     }
 
+    /**
+     * @return bool
+     */
     protected function hasRoles()
     {
 

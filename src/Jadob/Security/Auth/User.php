@@ -4,6 +4,7 @@ namespace Jadob\Security\Auth;
 
 /**
  * Object Oriented representation of user array
+ * @deprecated
  * @package Jadob\Security\Auth
  * @author pizzaminded <miki@appvende.net>
  * @license MIT

@@ -74,20 +74,27 @@ class AuthenticationManager
         $username = $request->request->get('_auth')['_username'];
 
         try {
-            $userFromProvider = (array)$this->provider->loadUserByUsername($username);
+            /** @var UserInterface $userFromProvider */
+            $userFromProvider = $this->provider->loadUserByUsername($username);
         } catch (UserNotFoundException $e) {
             $userFromProvider = null;
         }
 
+        if(\is_array($userFromProvider)) {
+            @trigger_error('User provider should return an object implementing UserInterface.',E_USER_DEPRECATED);
+            $password = $userFromProvider['password'];
+        } else {
+            $password = $userFromProvider->getPassword();
+        }
 
-        if ($userFromProvider === null || \count($userFromProvider) === 0) {
+        if ($userFromProvider === null || (\is_array($userFromProvider) && \count($userFromProvider) === 0)) {
             $this->error = 'auth.user.not.found';
             return false;
         }
 
         $plainPassword = $request->request->get('_auth')['_password'];
 
-        if (password_verify($plainPassword, $userFromProvider['password'])) {
+        if (password_verify($plainPassword, $password)) {
             $this->userStorage->setUserState($userFromProvider);
             $this->addInfoLog('User ' . $username . ' has been logged from IP: ' . $request->getClientIp());
             return true;

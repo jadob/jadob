@@ -43,7 +43,7 @@ class UserStorage
     public function getUser()
     {
         if($this->userObject === null && $this->session->has(self::USER_SESSION_KEY)) {
-            $this->userObject = new User($this->session->get(self::USER_SESSION_KEY));
+            $this->userObject = unserialize($this->session->get(self::USER_SESSION_KEY));
         }
 
         return $this->userObject;
@@ -54,7 +54,7 @@ class UserStorage
      */
     public function setUserState($user)
     {
-        $this->session->set(self::USER_SESSION_KEY, $user);
+        $this->session->set(self::USER_SESSION_KEY, serialize($user));
     }
 
     /**
