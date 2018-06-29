@@ -4,6 +4,7 @@
   "description": "PHP Framework.",
   "require": {
     "twig/twig": "1.35.0",
+    "doctrine/orm": "2.7.x-dev",
     "doctrine/dbal": "^2.5",
     "symfony/http-foundation": "3.4",
     "symfony/translation": "3.4",
