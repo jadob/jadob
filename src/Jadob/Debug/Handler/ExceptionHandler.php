@@ -117,6 +117,7 @@ class ExceptionHandler
 
     protected function showDevelopmentErrorPage($exception)
     {
+        http_response_code(500);
         ExceptionView::showErrorPage('error', 'dev', [
             'exception' => $exception
         ]);
