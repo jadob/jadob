@@ -80,17 +80,18 @@ class AuthenticationManager
             $userFromProvider = null;
         }
 
-        if(\is_array($userFromProvider)) {
-            @trigger_error('User provider should return an object implementing UserInterface.',E_USER_DEPRECATED);
+        if ($userFromProvider === null || (\is_array($userFromProvider) && \count($userFromProvider) === 0)) {
+            $this->error = 'auth.user.not.found';
+            return false;
+        }
+
+        if (\is_array($userFromProvider)) {
+            @trigger_error('User provider should return an object implementing UserInterface.', E_USER_DEPRECATED);
             $password = $userFromProvider['password'];
         } else {
             $password = $userFromProvider->getPassword();
         }
 
-        if ($userFromProvider === null || (\is_array($userFromProvider) && \count($userFromProvider) === 0)) {
-            $this->error = 'auth.user.not.found';
-            return false;
-        }
 
         $plainPassword = $request->request->get('_auth')['_password'];
 
@@ -108,9 +109,9 @@ class AuthenticationManager
 
     public function updateUserFromStorage()
     {
-        $username = $this->getUserStorage()->getUser()['username'];
+        $username = $this->getUserStorage()->getUser()->getUsername();
         $data = $this->provider->loadUserByUsername($username);
-        $this->getUserStorage()->setUserState((array)$data);
+        $this->getUserStorage()->setUserState($data);
     }
 
     /**

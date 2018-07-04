@@ -38,7 +38,7 @@ class UserStorage
     }
 
     /**
-     * @return User|null
+     * @return UserInterface
      */
     public function getUser()
     {
