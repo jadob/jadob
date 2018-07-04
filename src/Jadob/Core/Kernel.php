@@ -193,4 +193,13 @@ class Kernel
     {
         return $this->env === 'prod';
     }
+
+    /**
+     * @return string
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
 }
