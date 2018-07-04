@@ -37,6 +37,7 @@ class ExceptionHandler
      */
     public function __construct($environment, LoggerInterface $logger)
     {
+
         $this->environment = $environment;
         $this->logger = $logger;
     }
@@ -64,7 +65,9 @@ class ExceptionHandler
      */
     public function errorHandler($severity, $message, $file, $line)
     {
-        throw new ErrorException($message, 0, $severity, $file, $line);
+        if($severity < E_DEPRECATED) {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        }
     }
 
     public function exceptionHandler(\Throwable $exception)
