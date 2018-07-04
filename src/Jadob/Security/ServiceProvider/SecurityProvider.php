@@ -9,6 +9,10 @@ use Jadob\Security\Auth\Event\AuthListener;
 use Jadob\Security\Auth\Event\LogoutListener;
 use Jadob\Security\Auth\Provider\DatabaseUserProvider;
 use Jadob\Security\Auth\UserStorage;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class SecurityProvider
@@ -35,6 +39,19 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
+
+        $serializerEncoders = [
+            new XmlEncoder(),
+            new JsonEncoder()
+        ];
+
+        $serializerNormalizers = [
+            new ObjectNormalizer()
+        ];
+
+        $serializer = new Serializer($serializerEncoders, $serializerNormalizers);
+
+        $container->add('serializer', $serializer);
 
         $container->add(
             'auth.user.storage',
