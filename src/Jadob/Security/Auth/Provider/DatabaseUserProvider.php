@@ -3,7 +3,6 @@
 namespace Jadob\Security\Auth\Provider;
 
 use Jadob\Database\Database;
-use Jadob\Security\Auth\User;
 
 /**
  * Class DatabaseUserProvider

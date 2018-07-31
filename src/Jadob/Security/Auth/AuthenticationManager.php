@@ -44,6 +44,11 @@ class AuthenticationManager
     protected $logger;
 
     /**
+     * @var UserProviderInterface[]
+     */
+    protected $userProviders = [];
+
+    /**
      * AuthenticationManager constructor.
      * @param UserStorage $userStorage
      * @param UserProviderInterface $provider
@@ -51,12 +56,11 @@ class AuthenticationManager
      */
     public function __construct(
         UserStorage $userStorage,
-        UserProviderInterface $provider,
+
         LoggerInterface $logger = null
     )
     {
         $this->userStorage = $userStorage;
-        $this->provider = $provider;
         $this->logger = $logger;
     }
 
@@ -203,5 +207,9 @@ class AuthenticationManager
         $this->logger->info('[Auth]: ' . $message);
     }
 
+    public function addUserProvider(UserProviderInterface $provider, $name)
+    {
+
+    }
 
 }

@@ -9,8 +9,10 @@ use Jadob\Security\Auth\Event\AuthListener;
 use Jadob\Security\Auth\Event\LogoutListener;
 use Jadob\Security\Auth\Provider\DatabaseUserProvider;
 use Jadob\Security\Auth\UserStorage;
+use Symfony\Component\Serializer\Encoder\ChainEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -34,22 +36,23 @@ class SecurityProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      * @param $config
-     * @return mixed
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function register(Container $container, $config)
     {
 
         $serializerEncoders = [
+            new ChainEncoder(),
             new XmlEncoder(),
             new JsonEncoder()
         ];
 
         $serializerNormalizers = [
+            new DateTimeNormalizer(),
             new ObjectNormalizer()
         ];
 
-        $serializer = new Serializer($serializerEncoders, $serializerNormalizers);
+        $serializer = new Serializer($serializerNormalizers, $serializerEncoders);
 
         $container->add('serializer', $serializer);
 
@@ -65,21 +68,23 @@ class SecurityProvider implements ServiceProviderInterface
         // registering auth stuff
         $authConfig = $config['auth'];
 
+
+        $authenticationManager =  new AuthenticationManager(
+            $container->get('auth.user.storage'),
+            $container->get('logger')
+        );
+
+
         if ($authConfig['user_provider'] === 'database') {
             $provider = new DatabaseUserProvider(
                 $container->get('database'),
                 $authConfig['provider_settings']
             );
+
+            $authenticationManager->setProvider($provider);
         }
 
-        $container->add(
-            'auth.authentication.manager',
-            new AuthenticationManager(
-                $container->get('auth.user.storage'),
-                $provider,
-                $container->get('logger')
-            )
-        );
+        $container->add('auth.authentication.manager', $authenticationManager);
 
         $container->get('event.listener')->addListener(
             new AuthListener(
