@@ -113,10 +113,13 @@ abstract class AbstractModel
      * @TODO:
      *  - allow to pass PDO::FETCH_* params as second param
      * @param QueryBuilder $qb
-     * @param bool $asArray
+     * @param bool|int $mode
+     *  params for mode:
+     *  - true: renders as associative arrays
+     *  - int: fetches as PDO::FETCH_* way
      * @return \stdClass|array|null
      */
-    protected function getResults(QueryBuilder $qb, $asArray = false)
+    protected function getResults(QueryBuilder $qb, $mode = false)
     {
         $result = $qb->execute();
 
@@ -124,8 +127,12 @@ abstract class AbstractModel
             return null;
         }
 
-        if ($asArray) {
+        if ($mode === true) {
             return $result->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        if(\is_int($mode)) {
+            return $result->fetchAll($mode);
         }
 
         return $result->fetchAll(\PDO::FETCH_OBJ);
