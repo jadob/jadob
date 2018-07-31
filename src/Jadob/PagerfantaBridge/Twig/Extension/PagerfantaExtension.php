@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\PagerfantaTwigExtension\Twig\Extension;
+namespace Jadob\PagerfantaBridge\Twig\Extension;
 
 use Jadob\Router\Router;
 use Pagerfanta\Pagerfanta;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class PagerfantaProvider
- * @package Jadob\PagerfantaTwigExtension\ServiceProvider
+ * @package Jadob\PagerfantaBridge\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
