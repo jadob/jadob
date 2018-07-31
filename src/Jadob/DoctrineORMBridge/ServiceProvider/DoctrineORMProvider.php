@@ -97,8 +97,8 @@ class DoctrineORMProvider implements ServiceProviderInterface
         $this->registerAnnotations();
 
         $configuration = new Configuration();
-        $configuration->setMetadataCacheImpl($cache);
-        $configuration->setHydrationCacheImpl($cache);
+//        $configuration->setMetadataCacheImpl($cache);
+//        $configuration->setHydrationCacheImpl($cache);
         $configuration->setQueryCacheImpl($cache);
         $configuration->setMetadataDriverImpl(
             new AnnotationDriver(
