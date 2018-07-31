@@ -3,6 +3,7 @@
 namespace Jadob\Container;
 
 use Jadob\Container\Definition\DefinitionBuilder;
+use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -123,6 +124,14 @@ class Container implements ContainerInterface
     public function registerProviders(array $providers, Config $configuration)
     {
         foreach ($providers as $service) {
+
+            /**
+             * We need to check it before we create the class
+             */
+            if (!\in_array(ServiceProviderInterface::class, \class_implements($service), true)) {
+                throw new ContainerException('Class ' . $service . ' cannot be used as a service provider as it is not implements ' . ServiceProviderInterface::class);
+            }
+
             /** @var \Jadob\Container\ServiceProvider\ServiceProviderInterface $provider * */
             $provider = new $service;
 
