@@ -5,7 +5,14 @@ namespace Jadob\Security\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Firewall\EventListener\FirewallListener;
+use Jadob\Security\Firewall\Firewall;
 
+/**
+ * Class FirewallProvider
+ * @package Jadob\Security\ServiceProvider
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class FirewallProvider implements ServiceProviderInterface
 {
 
@@ -24,18 +31,17 @@ class FirewallProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
-        if (!isset($config['firewall'])) {
-            return;
-        }
 
-        $container->get('event.listener')->addListener(
-            new FirewallListener(
-                $container->get('request'),
-                $container->get('auth.user.storage'),
-                $config,
-                $container->get('router')
-            ),
-            2
+        $firewall = new Firewall(
+            $container->get('auth.authentication.manager'),
+            $config['firewall']
         );
+
+        $firewallRule = $firewall->getMatchingRouteByRequest($container->get('request'));
+
+        $container->get('auth.authentication.manager')->setFirewallRule($firewallRule);
+        $container->add('firewall', $firewall);
+        $container->add('firewall.matching.rule', $firewallRule);
+
     }
 }

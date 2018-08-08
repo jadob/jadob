@@ -6,6 +6,7 @@ use Jadob\Security\Auth\User;
 use Jadob\Security\Auth\UserInterface;
 
 /**
+ * @deprecated 
  * Class RuleMatcher
  * @package Jadob\Security\Firewall
  * @author pizzaminded <miki@appvende.net>

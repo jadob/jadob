@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated
  * Class FirewallListener
  * @package Jadob\Security\Firewall\EventListener
  * @author pizzaminded <miki@appvende.net>
@@ -56,6 +57,7 @@ class FirewallListener implements EventInterface, AfterRouterListenerInterface
     }
 
     /**
+     * @TODO: move exceptions to firewall
      * @param AfterRouterEvent $route
      * @throws \InvalidArgumentException
      * @throws \Jadob\Router\Exception\RouteNotFoundException
