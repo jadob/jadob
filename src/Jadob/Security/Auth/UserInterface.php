@@ -10,9 +10,28 @@ namespace Jadob\Security\Auth;
  */
 interface UserInterface
 {
+    /**
+     * @return string
+     */
     public function getUsername();
 
+    /**
+     * @return string[]
+     */
     public function getRoles();
 
+    /**
+     * @return string
+     */
     public function getPassword();
+
+    /**
+     * @return bool
+     */
+    public function userNeedsRefreshing();
+
+    /**
+     * @return mixed
+     */
+    public function getId();
 }
