@@ -49,4 +49,14 @@ class DatabaseUserProvider implements UserProviderInterface
         $userProviderModel = $this->db->getModel($this->config['model']);
         return $userProviderModel->loadUserByUsername($username);
     }
+
+    public function loadUserById($id)
+    {
+        /**
+         * @var UserProviderInterface $userProviderModel
+         */
+        /** @noinspection PhpParamsInspection */
+        $userProviderModel = $this->db->getModel($this->config['model']);
+        return $userProviderModel->loadUserById($id);
+    }
 }
