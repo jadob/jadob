@@ -15,6 +15,8 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\ORM\Tools\Setup;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProvider;
+use Jadob\Security\Auth\AuthenticationManager;
 use Jadob\Stdlib\StaticEnvironmentUtils;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -85,7 +87,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
             switch (strtolower($cacheConfig['type'])) {
                 case 'file':
-                    $cache = new PhpFileCache($cacheDir.'/cache');
+                    $cache = new PhpFileCache($cacheDir . '/cache');
                     break;
                 default:
                     $cache = new ArrayCache();
@@ -97,8 +99,8 @@ class DoctrineORMProvider implements ServiceProviderInterface
         $this->registerAnnotations();
 
         $configuration = new Configuration();
-//        $configuration->setMetadataCacheImpl($cache);
-//        $configuration->setHydrationCacheImpl($cache);
+        $configuration->setMetadataCacheImpl($cache);
+        $configuration->setHydrationCacheImpl($cache); //TODO: this one on dev should be arraycache
         $configuration->setQueryCacheImpl($cache);
         $configuration->setMetadataDriverImpl(
             new AnnotationDriver(
@@ -120,6 +122,20 @@ class DoctrineORMProvider implements ServiceProviderInterface
         );
 
         $container->add('doctrine.orm', $entityManager);
+
+        /** @var AuthenticationManager $authManager */
+        $authManager = $container->get('auth.authentication.manager');
+
+        if ($authManager->getUserProviderName() === 'doctrine') {
+            $authManager->addProvider(
+                new DoctrineORMUserProvider(
+                    $entityManager,
+                    $authManager->getConfig()['provider_settings']['entity']
+                ),
+                'doctrine'
+            );
+        }
+
 
         if (!StaticEnvironmentUtils::isCli()) {
             return;

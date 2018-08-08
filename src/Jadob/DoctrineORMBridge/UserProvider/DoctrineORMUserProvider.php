@@ -43,4 +43,9 @@ class DoctrineORMUserProvider implements UserProviderInterface
     {
         return $this->em->getRepository($this->entityClass)->loadUserByUsername($username);
     }
+
+    public function loadUserById($username)
+    {
+        return $this->em->getRepository($this->entityClass)->loadUserById($username);
+    }
 }
