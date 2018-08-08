@@ -5,8 +5,10 @@ namespace Jadob\Security\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\AuthenticationManager;
+use Jadob\Security\Auth\AuthenticationRule;
 use Jadob\Security\Auth\Event\AuthListener;
 use Jadob\Security\Auth\Event\LogoutListener;
+use Jadob\Security\Auth\Event\UserRefreshListener;
 use Jadob\Security\Auth\Provider\DatabaseUserProvider;
 use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\Serializer\Encoder\ChainEncoder;
@@ -68,20 +70,27 @@ class SecurityProvider implements ServiceProviderInterface
         // registering auth stuff
         $authConfig = $config['auth'];
 
-
-        $authenticationManager =  new AuthenticationManager(
+        $authenticationManager = new AuthenticationManager(
             $container->get('auth.user.storage'),
             $container->get('logger')
+        // $authConfig
         );
 
 
-        if ($authConfig['user_provider'] === 'database') {
-            $provider = new DatabaseUserProvider(
-                $container->get('database'),
-                $authConfig['provider_settings']
-            );
+//        r($authConfig);
+        foreach ($authConfig as $authRuleKey => $authRuleConfig) {
+            $authRule = AuthenticationRule::fromArray($authRuleConfig, $authRuleKey);
+            $authenticationManager->addAuthenticationRule($authRule);
 
-            $authenticationManager->setProvider($provider);
+
+            if ($authRule->getName() === 'database') {
+                $provider = new DatabaseUserProvider(
+                    $container->get('database'),
+                    $authRule['provider_settings']
+                );
+
+                $authenticationManager->addProvider($provider, 'database');
+            }
         }
 
         $container->add('auth.authentication.manager', $authenticationManager);
@@ -93,7 +102,7 @@ class SecurityProvider implements ServiceProviderInterface
                 $authConfig,
                 $container->get('router')
             ),
-            1
+            2
         );
 
         $container->get('event.listener')->addListener(
@@ -103,6 +112,11 @@ class SecurityProvider implements ServiceProviderInterface
                 $authConfig,
                 $container->get('router')
             ),
+            2
+        );
+
+        $container->get('event.listener')->addListener(
+            new UserRefreshListener($container->get('auth.authentication.manager')),
             1
         );
     }
