@@ -1,15 +1,14 @@
 <?php
 
-namespace Jadob\Security\ServiceProvider;
+namespace Jadob\Security\Auth\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\AuthenticationManager;
 use Jadob\Security\Auth\AuthenticationRule;
-use Jadob\Security\Auth\Event\AuthListener;
-use Jadob\Security\Auth\Event\LogoutListener;
-use Jadob\Security\Auth\Event\UserRefreshListener;
+use Jadob\Security\Auth\EventListener\UserRefreshListener;
 use Jadob\Security\Auth\Provider\DatabaseUserProvider;
+use Jadob\Security\Auth\Provider\DatabaseUserProviderFactory;
 use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\Serializer\Encoder\ChainEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -24,7 +23,7 @@ use Symfony\Component\Serializer\Serializer;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class SecurityProvider implements ServiceProviderInterface
+class AuthProvider implements ServiceProviderInterface
 {
 
     /**
@@ -32,16 +31,21 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'security';
+        return 'auth';
     }
 
     /**
      * @param Container $container
      * @param $config
+     * @throws \RuntimeException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function register(Container $container, $config)
     {
+
+        if (!isset($config['user_providers']['default'])) {
+            throw new \RuntimeException('You should provide default user provider');
+        }
 
         $serializerEncoders = [
             new ChainEncoder(),
@@ -63,12 +67,9 @@ class SecurityProvider implements ServiceProviderInterface
             new UserStorage($container->get('session'))
         );
 
-        if (!isset($config['auth'])) {
-            return;
-        }
 
         // registering auth stuff
-        $authConfig = $config['auth'];
+        $userProviders = $config['user_providers'];
 
         $authenticationManager = new AuthenticationManager(
             $container->get('auth.user.storage'),
@@ -77,43 +78,26 @@ class SecurityProvider implements ServiceProviderInterface
         );
 
 
-//        r($authConfig);
-        foreach ($authConfig as $authRuleKey => $authRuleConfig) {
+        //Add default user provider
+        $userProviderFactory = new DatabaseUserProviderFactory(
+            $container->get('database')
+        );
+
+        $authenticationManager->addUserProviderFactory('database', $userProviderFactory);
+
+        foreach ($userProviders as $authRuleKey => $authRuleConfig) {
+            /** @var AuthenticationRule $authRule */
             $authRule = AuthenticationRule::fromArray($authRuleConfig, $authRuleKey);
             $authenticationManager->addAuthenticationRule($authRule);
 
 
-            if ($authRule->getName() === 'database') {
-                $provider = new DatabaseUserProvider(
-                    $container->get('database'),
-                    $authRule['provider_settings']
-                );
-
-                $authenticationManager->addProvider($provider, 'database');
-            }
         }
+
+
+
 
         $container->add('auth.authentication.manager', $authenticationManager);
 
-        $container->get('event.listener')->addListener(
-            new AuthListener(
-                $container->get('request'),
-                $container->get('auth.authentication.manager'),
-                $authConfig,
-                $container->get('router')
-            ),
-            2
-        );
-
-        $container->get('event.listener')->addListener(
-            new LogoutListener(
-                $container->get('request'),
-                $container->get('auth.authentication.manager'),
-                $authConfig,
-                $container->get('router')
-            ),
-            2
-        );
 
         $container->get('event.listener')->addListener(
             new UserRefreshListener($container->get('auth.authentication.manager')),

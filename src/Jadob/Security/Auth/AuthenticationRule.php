@@ -45,12 +45,15 @@ class AuthenticationRule
      */
     protected $stateless = false;
 
-
-
     /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string
+     */
+    protected $extractor;
 
     /**
      * if false - any allowed, otherwise only these passed in array
@@ -62,10 +65,10 @@ class AuthenticationRule
      * @param array $data
      * @param string $name
      * @throws \RuntimeException
+     * @return self
      */
     public static function fromArray($data, $name)
     {
-//        r($data);
         $object = new self($name);
 
         if(!isset($data['user_provider'])) {
@@ -84,7 +87,7 @@ class AuthenticationRule
         }
 
         if(isset($data['logout_redirect'])) {
-            $object->setLoginRedirectPath($data['logout_redirect']);
+            $object->setLogoutRedirectPath($data['logout_redirect']);
         }
 
         if (isset($data['login_path'])) {
@@ -97,6 +100,10 @@ class AuthenticationRule
 
         if(isset($data['stateless'])) {
             $object->setStateless($data['stateless']);
+        }
+
+        if(isset($data['extractor'])) {
+            $object->setExtractor($data['extractor']);
         }
         
         return $object;
@@ -273,5 +280,22 @@ class AuthenticationRule
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getExtractor(): string
+    {
+        return $this->extractor;
+    }
+
+    /**
+     * @param string $extractor
+     * @return AuthenticationRule
+     */
+    public function setExtractor(string $extractor): AuthenticationRule
+    {
+        $this->extractor = $extractor;
+        return $this;
+    }
 
 }

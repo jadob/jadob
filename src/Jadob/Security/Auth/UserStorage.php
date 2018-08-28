@@ -29,6 +29,11 @@ class UserStorage
     protected $userObject;
 
     /**
+     * @var string
+     */
+    protected $currentAuthRuleName;
+
+    /**
      * UserStorage constructor.
      * @param SessionInterface $session
      */
@@ -42,19 +47,19 @@ class UserStorage
      */
     public function getUser()
     {
-        if($this->userObject === null && $this->session->has(self::USER_SESSION_KEY)) {
-            $this->userObject = unserialize($this->session->get(self::USER_SESSION_KEY));
+        if($this->userObject === null && $this->session->has($this->getSessionKey())) {
+            $this->userObject = \unserialize($this->session->get($this->getSessionKey()));
         }
 
         return $this->userObject;
     }
 
     /**
-     * @param array $user
+     * @param UserInterface $user
      */
     public function setUserState($user)
     {
-        $this->session->set(self::USER_SESSION_KEY, serialize($user));
+        $this->session->set($this->getSessionKey(), serialize($user));
     }
 
     /**
@@ -62,7 +67,31 @@ class UserStorage
      */
     public function removeUserFromStorage()
     {
-        $this->session->remove(self::USER_SESSION_KEY);
+        $this->session->remove($this->getSessionKey());
+    }
+
+
+    public function getSessionKey()
+    {
+        return $this->currentAuthRuleName.'-'.self::USER_SESSION_KEY;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentAuthRuleName(): string
+    {
+        return $this->currentAuthRuleName;
+    }
+
+    /**
+     * @param string $currentAuthRuleName
+     * @return UserStorage
+     */
+    public function setCurrentAuthRuleName(string $currentAuthRuleName): UserStorage
+    {
+        $this->currentAuthRuleName = $currentAuthRuleName;
+        return $this;
     }
 
 }
