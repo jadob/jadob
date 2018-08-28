@@ -1,6 +1,7 @@
 <?php
 
 namespace Jadob\Security\Firewall;
+
 use Jadob\Security\Auth\AuthenticationRule;
 
 /**
@@ -15,12 +16,7 @@ class FirewallRule
     /**
      * @var string|null
      */
-    protected $pathWildcard;
-
-    /**
-     * @var string|null
-     */
-    protected $routeWildcard;
+    protected $routePattern;
 
     /**
      * @var string
@@ -28,19 +24,19 @@ class FirewallRule
     protected $name;
 
     /**
-     * @var string
-     */
-    protected $pattern;
-
-    /**
      * @var string[]
      */
     protected $roles;
 
     /**
-     * @var AuthenticationRule
+     * @var string
      */
     protected $authenticationRule;
+
+    /**
+     * @var string
+     */
+    protected $accessDeniedController;
 
     /**
      * FirewallRule constructor.
@@ -49,42 +45,6 @@ class FirewallRule
     public function __construct($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getPathWildcard(): string
-    {
-        return $this->pathWildcard;
-    }
-
-    /**
-     * @param null|string $pathWildcard
-     * @return FirewallRule
-     */
-    public function setPathWildcard(string $pathWildcard): FirewallRule
-    {
-        $this->pathWildcard = $pathWildcard;
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getRouteWildcard(): string
-    {
-        return $this->routeWildcard;
-    }
-
-    /**
-     * @param null|string $routeWildcard
-     * @return FirewallRule
-     */
-    public function setRouteWildcard(string $routeWildcard): FirewallRule
-    {
-        $this->routeWildcard = $routeWildcard;
-        return $this;
     }
 
     /**
@@ -106,27 +66,9 @@ class FirewallRule
     }
 
     /**
-     * @return string
-     */
-    public function getPattern(): string
-    {
-        return $this->pattern;
-    }
-
-    /**
-     * @param string $pattern
-     * @return FirewallRule
-     */
-    public function setPattern(string $pattern): FirewallRule
-    {
-        $this->pattern = $pattern;
-        return $this;
-    }
-
-    /**
      * @return string[]
      */
-    public function getRoles(): array
+    public function getRoles()
     {
         return $this->roles;
     }
@@ -142,20 +84,56 @@ class FirewallRule
     }
 
     /**
-     * @return AuthenticationRule
+     * @return string
      */
-    public function getAuthenticationRule(): AuthenticationRule
+    public function getAuthenticationRule()
     {
         return $this->authenticationRule;
     }
 
     /**
-     * @param AuthenticationRule $authenticationRule
+     * @param string $authenticationRule
      * @return FirewallRule
      */
-    public function setAuthenticationRule(AuthenticationRule $authenticationRule): FirewallRule
+    public function setAuthenticationRule($authenticationRule): FirewallRule
     {
         $this->authenticationRule = $authenticationRule;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRoutePattern(): ?string
+    {
+        return $this->routePattern;
+    }
+
+    /**
+     * @param null|string $routePattern
+     * @return FirewallRule
+     */
+    public function setRoutePattern(?string $routePattern): FirewallRule
+    {
+        $this->routePattern = $routePattern;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessDeniedController()
+    {
+        return $this->accessDeniedController;
+    }
+
+    /**
+     * @param string $accessDeniedController
+     * @return FirewallRule
+     */
+    public function setAccessDeniedController($accessDeniedController): FirewallRule
+    {
+        $this->accessDeniedController = $accessDeniedController;
         return $this;
     }
 
