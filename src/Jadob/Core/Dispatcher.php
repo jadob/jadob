@@ -2,6 +2,9 @@
 
 namespace Jadob\Core;
 
+use Jadob\Router\Router;
+use Jadob\Security\Auth\AuthenticationManager;
+use Jadob\Security\Firewall\Firewall;
 use ReflectionMethod;
 use Jadob\Container\Container;
 use Jadob\Core\Exception\DispatcherException;
@@ -10,6 +13,7 @@ use Jadob\EventListener\Event\AfterRouterEvent;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Zend\Config\Config;
@@ -63,15 +67,101 @@ class Dispatcher
     /**
      * @param Request $request
      * @return Response
+     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @throws \ReflectionException
      * @throws DispatcherException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Jadob\Router\Exception\RouteNotFoundException
      */
     public function execute(Request $request): Response
     {
+        /** @var Router $router */
+        $router = $this->container->get('router');
         /** @var Route $route */
-        $route = $this->container->get('router')->matchRoute($request);
+        $route = $router->matchRoute($request);
+        /** @var Firewall $firewall */
+        $firewall = $this->container->get('firewall');
+        /** @var AuthenticationManager $manager */
+        $manager = $this->container->get('auth.authentication.manager');
+
+        $routeName = $route->getName();
+
+        /**
+         * Excluded routes can be eg. login/logout paths for non-stateless rules, we need to werify that
+         * @TODO rewrite and optimize
+         */
+        foreach ($firewall->getExcludedRoutePatterns() as $excludedRoute) {
+            //turn string to regexp
+            $excludedRoute = $this->prepareFirewallPattern(
+                $excludedRoute
+            );
+
+            if ((bool)\preg_match($excludedRoute, $routeName)) {
+
+                foreach ($manager->getAuthenticationRules() as $authenticationRule) {
+
+                    //catch if current route is login route
+                    if (
+                        !$authenticationRule->isStateless()
+                        && $authenticationRule->getLoginPath() === $routeName
+                        && ($token = $manager->getExtractor($authenticationRule->getExtractor())->getCredentialsFromRequest($request)) !== null
+                    ) {
+                        $manager->setCurrentAuthRuleName($authenticationRule->getName());
+
+                        $loginResult = $manager->login($token, $authenticationRule);
+
+                        if ($loginResult === true) {
+                            return new RedirectResponse(
+                                $router->generateRoute(
+                                    $authenticationRule->getLoginRedirectPath()
+                                )
+                            );
+                        }
+
+
+                        //at this place we should log our user
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * If route isnt whitelisted, we should iterate firewall rules and match
+         */
+//        if(!$isWhitelisted) {
+        $overrideController = false;
+        foreach ($firewall->getRules() as $firewallRule) {
+
+            $firewallPattern = $this->prepareFirewallPattern(
+                $firewallRule->getRoutePattern()
+            );
+
+            if ((bool)\preg_match($firewallPattern, $routeName)) {
+
+                $manager->setCurrentAuthRuleName($firewallRule->getAuthenticationRule());
+
+                $controllerClassName = $firewallRule->getAccessDeniedController();
+                $action = null;
+
+                $user = $manager->getUserStorage()->getUser();
+                $userRoles = [];
+
+                if ($user !== null) {
+                    $userRoles = $user->getRoles();
+                }
+
+                if ($user === null
+                    && \count(array_intersect(
+                            $firewallRule->getRoles(),
+                            $userRoles
+                        )
+                    ) === 0) {
+                    $overrideController = true;
+                }
+            }
+        }
 
         $afterRouterObject = new AfterRouterEvent($route, null);
 
@@ -83,16 +173,22 @@ class Dispatcher
             return $afterRouterResponse;
         }
 
-        $controllerClassName = $route->getController();
+        if (!$overrideController) {
+            $controllerClassName = $route->getController();
+        }
 
-        if (!class_exists($controllerClassName)) {
+        if (!\class_exists($controllerClassName)) {
             throw new DispatcherException('Class "' . $controllerClassName . '" '
                 . 'does not exists or it cannot be used as a controller.');
         }
 
+
         $controller = $this->autowireControllerClass($controllerClassName);
 
-        $action = $route->getAction();
+        if (!$overrideController) {
+            $action = $route->getAction();
+        }
+
 
         if ($action === null && !method_exists($controller, '__invoke')) {
             throw new \RuntimeException('Class "' . \get_class($controller) . '" has neither action nor __invoke() method defined.');
@@ -172,7 +268,6 @@ class Dispatcher
         }
 
         $controllerParameters = $controllerConstructor->getParameters();
-
         $controllerConstructorArgs = [];
 
         foreach ($controllerParameters as $parameter) {
@@ -198,12 +293,26 @@ class Dispatcher
      * Finds depedencies for controller object and instatiate it.
      * @param string $controllerClassName
      * @return mixed
+     * @throws \RuntimeException
      * @throws \ReflectionException
      */
-    public function autowireControllerClass($controllerClassName) {
+    public function autowireControllerClass($controllerClassName)
+    {
         $controllerConstructorArgs = $this->getControllerConstructorArguments($controllerClassName);
-
         return new $controllerClassName(...$controllerConstructorArgs);
     }
+
+
+    /**
+     * turns string to regexp pattern.
+     * @param string $pattern
+     * @return string
+     */
+    protected function prepareFirewallPattern($pattern): string
+    {
+        $pattern = \str_replace('*', '(.*)', $pattern);
+        return '@' . $pattern . '@iu';
+    }
+
 
 }
