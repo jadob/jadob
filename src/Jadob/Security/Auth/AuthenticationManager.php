@@ -2,7 +2,10 @@
 
 namespace Jadob\Security\Auth;
 
+use Jadob\Security\Auth\CredentialExtractor\ExtractorInterface;
+use Jadob\Security\Auth\CredentialExtractor\JsonBodyExtractor;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
+use Jadob\Security\Auth\Provider\UserProviderFactoryInterface;
 use Jadob\Security\Auth\Provider\UserProviderInterface;
 use Jadob\Security\Firewall\FirewallRule;
 use Psr\Log\LoggerInterface;
@@ -11,9 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Class AuthenticationManager
  * @TODO:
- * - add some user class, which will be serialized and stored in session
+ * - add some user class, which will be serialized and stored in session (*)
  * - allow developer to make his own User class (*)
- * - allow to store more than one auth rule
+ * - allow to store more than one auth rule (*)
  * @package Jadob\Security\Auth
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -24,12 +27,6 @@ class AuthenticationManager
      * @var UserStorage
      */
     protected $userStorage;
-
-    /**
-     * @deprecated
-     * @var UserProviderInterface
-     */
-    protected $provider;
 
     /**
      * @var string
@@ -47,9 +44,15 @@ class AuthenticationManager
     protected $logger;
 
     /**
+     * @deprecated so far
      * @var UserProviderInterface[]
      */
     protected $userProviders = [];
+
+    /**
+     * @var UserProviderFactoryInterface[]
+     */
+    protected $userProviderFactories;
 
     /**
      * @var array
@@ -57,6 +60,7 @@ class AuthenticationManager
     protected $config;
 
     /**
+     * @deprecated
      * @var string
      */
     protected $userProviderName;
@@ -72,6 +76,21 @@ class AuthenticationManager
     protected $firewallRule;
 
     /**
+     * @var AuthenticationRule
+     */
+    protected $defaultRule;
+
+    /**
+     * @var ExtractorInterface[]
+     */
+    protected $extractors;
+
+    /**
+     * @var string
+     */
+    protected $currentAuthRuleName;
+
+    /**
      * AuthenticationManager constructor.
      * @param UserStorage $userStorage
      * @param LoggerInterface $logger
@@ -79,74 +98,67 @@ class AuthenticationManager
     public function __construct(
         UserStorage $userStorage,
         LoggerInterface $logger = null
-        //array $config
     )
     {
         $this->userStorage = $userStorage;
         $this->logger = $logger;
-        //$this->config = $config;
-        //$this->userProviderName = $config['user_provider'];
+
+        $this->extractors = [
+            'json' => new JsonBodyExtractor()
+        ];
     }
 
     /**
-     * @param Request $request
+     * @param Token $token
+     * @param AuthenticationRule $rule
      * @return bool
      */
-    public function handleRequest(Request $request)
+    public function login(Token $token, AuthenticationRule $rule)
     {
 
-
-        if (
-            $request->getMethod() !== 'POST' // is not post request
-            || !$request->request->has('_auth') //has no _auth array passed
-            || $this->userStorage->getUser() !== null //user is logged in
-        ) {
-
-            return false;
-        }
-
-        $username = $request->request->get('_auth')['_username'];
+        $userProviderFactory = $this->userProviderFactories[$rule->getUserProvider()];
+        $userProvider = $userProviderFactory->create($rule->getProviderSettings());
 
         try {
             /** @var UserInterface $userFromProvider */
-            $userFromProvider = $this->userProviders[$this->userProviderName]->loadUserByUsername($username);
+            $userFromProvider = $userProvider->loadUserByUsername($token->getUsername());
         } catch (UserNotFoundException $e) {
             $userFromProvider = null;
         }
 
-        if ($userFromProvider === null || (\is_array($userFromProvider) && \count($userFromProvider) === 0)) {
+        if ($userFromProvider === null ) {
             $this->error = 'auth.user.not.found';
             return false;
         }
 
-        if (\is_array($userFromProvider)) {
-            @trigger_error('User provider should return an object implementing UserInterface.', E_USER_DEPRECATED);
-            $password = $userFromProvider['password'];
-        } else {
-            $password = $userFromProvider->getPassword();
-        }
+        $password = $userFromProvider->getPassword();
 
-
-        $plainPassword = $request->request->get('_auth')['_password'];
-
-        if (password_verify($plainPassword, $password)) {
+        if (password_verify($token->getPassword(), $password)) {
             $this->userStorage->setUserState($userFromProvider);
-            $this->addInfoLog('User ' . $username . ' has been logged from IP: ' . $request->getClientIp());
             return true;
         }
 
-        $this->lastUsername = $request->request->get('_username');
+        $this->lastUsername = $token->getUsername();
         $this->error = 'auth.invalid.password';
-        $this->addInfoLog('User ' . $username . ' were trying to log in from IP: ' . $request->getClientIp());
         return false;
     }
 
 
     public function updateUserFromStorage()
     {
-        $id = $this->getUserStorage()->getUser()->getId();
-        $data = $this->userProviders[$this->userProviderName]->loadUserById($id);
+
+        $user = $this->getUserStorage()->getUser();
+        $id = $user->getId();
+
+        $rule = $this->authenticationRules[$this->getCurrentAuthRuleName()];
+        $userProviderFactory = $this->userProviderFactories[$rule->getUserProvider()];
+        $userProvider = $userProviderFactory->create($rule->getProviderSettings());
+
+
+        $data = $userProvider->loadUserById($id);
+
         $this->getUserStorage()->setUserState($data);
+
     }
 
     /**
@@ -175,27 +187,9 @@ class AuthenticationManager
         return $this;
     }
 
-    /**
-     * @deprecated
-     * @return UserProviderInterface
-     */
-    public function getProvider(): UserProviderInterface
-    {
-        return $this->provider;
-    }
 
     /**
      * @deprecated
-     * @param UserProviderInterface $provider
-     * @return AuthenticationManager
-     */
-    public function setProvider(UserProviderInterface $provider): AuthenticationManager
-    {
-        $this->provider = $provider;
-        return $this;
-    }
-
-    /**
      * @param UserProviderInterface $provider
      * @param string $name
      * @return AuthenticationManager
@@ -208,6 +202,7 @@ class AuthenticationManager
     }
 
     /**
+     * @deprecated
      * @return UserProviderInterface[]
      */
     public function getUserProviders(): array
@@ -251,55 +246,6 @@ class AuthenticationManager
         return $this;
     }
 
-    private function addInfoLog($message)
-    {
-        if ($this->logger === null) {
-            return;
-        }
-
-        $this->logger->info('[Auth]: ' . $message);
-    }
-
-    /**
-     * @deprecated
-     * @return array
-     */
-    public function getConfig(): array
-    {
-        @trigger_error('This function will be removed soon.');
-        return $this->config;
-    }
-
-    /**
-     * @deprecated
-     * @param array $config
-     * @return AuthenticationManager
-     */
-    public function setConfig(array $config): AuthenticationManager
-    {
-        @trigger_error('This function will be removed soon.');
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserProviderName(): string
-    {
-        return $this->userProviderName;
-    }
-
-    /**
-     * @param string $userProviderName
-     * @return AuthenticationManager
-     */
-    public function setUserProviderName(string $userProviderName): AuthenticationManager
-    {
-        $this->userProviderName = $userProviderName;
-        return $this;
-    }
-
     public function addAuthenticationRule(AuthenticationRule $rule)
     {
         $this->authenticationRules[$rule->getName()] = $rule;
@@ -314,6 +260,24 @@ class AuthenticationManager
     public function getAuthenticationRuleByName($name)
     {
         return $this->authenticationRules[$name] ?? null;
+    }
+
+    /**
+     * @return AuthenticationRule[]
+     */
+    public function getAuthenticationRules(): array
+    {
+        return $this->authenticationRules;
+    }
+
+    /**
+     * @param AuthenticationRule[] $authenticationRules
+     * @return AuthenticationManager
+     */
+    public function setAuthenticationRules(array $authenticationRules): AuthenticationManager
+    {
+        $this->authenticationRules = $authenticationRules;
+        return $this;
     }
 
     /**
@@ -334,4 +298,92 @@ class AuthenticationManager
         return $this;
     }
 
+    /**
+     * @return AuthenticationRule
+     */
+    public function getDefaultRule(): AuthenticationRule
+    {
+        return $this->defaultRule;
+    }
+
+    /**
+     * @param AuthenticationRule $defaultRule
+     * @return AuthenticationManager
+     */
+    public function setDefaultRule(AuthenticationRule $defaultRule): AuthenticationManager
+    {
+        $this->defaultRule = $defaultRule;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return ExtractorInterface
+     */
+    public function getExtractor($name)
+    {
+        return $this->extractors[$name];
+    }
+
+    /**
+     * @return ExtractorInterface[]
+     */
+    public function getExtractors(): array
+    {
+        return $this->extractors;
+    }
+
+    /**
+     * @param ExtractorInterface[] $extractors
+     * @return AuthenticationManager
+     */
+    public function setExtractors(array $extractors): AuthenticationManager
+    {
+        $this->extractors = $extractors;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentAuthRuleName(): string
+    {
+        return $this->currentAuthRuleName;
+    }
+
+    /**
+     * @param string $currentAuthRuleName
+     * @return AuthenticationManager
+     */
+    public function setCurrentAuthRuleName(string $currentAuthRuleName): AuthenticationManager
+    {
+        $this->currentAuthRuleName = $currentAuthRuleName;
+        $this->userStorage->setCurrentAuthRuleName($currentAuthRuleName);
+        return $this;
+    }
+
+    /**
+     * @return UserProviderFactoryInterface[]
+     */
+    public function getUserProviderFactories(): array
+    {
+        return $this->userProviderFactories;
+    }
+
+    /**
+     * @param UserProviderFactoryInterface[] $userProviderFactories
+     * @return AuthenticationManager
+     */
+    public function setUserProviderFactories(array $userProviderFactories): AuthenticationManager
+    {
+        $this->userProviderFactories = $userProviderFactories;
+        return $this;
+    }
+
+    public function addUserProviderFactory($name, UserProviderFactoryInterface $factory)
+    {
+        $this->userProviderFactories[$name] = $factory;
+
+        return $this;
+    }
 }

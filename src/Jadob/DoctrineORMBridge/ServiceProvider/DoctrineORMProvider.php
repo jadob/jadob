@@ -15,7 +15,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\ORM\Tools\Setup;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProvider;
+use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProviderFactory;
 use Jadob\Security\Auth\AuthenticationManager;
 use Jadob\Stdlib\StaticEnvironmentUtils;
 use Symfony\Component\Console\Application;
@@ -99,9 +99,9 @@ class DoctrineORMProvider implements ServiceProviderInterface
         $this->registerAnnotations();
 
         $configuration = new Configuration();
-        $configuration->setMetadataCacheImpl($cache);
-        $configuration->setHydrationCacheImpl($cache); //TODO: this one on dev should be arraycache
-        $configuration->setQueryCacheImpl($cache);
+        $configuration->setMetadataCacheImpl($isDevMode ? new ArrayCache() : $cache);
+        $configuration->setHydrationCacheImpl($isDevMode ? new ArrayCache() : $cache);
+        $configuration->setQueryCacheImpl($isDevMode ? new ArrayCache() : $cache);
         $configuration->setMetadataDriverImpl(
             new AnnotationDriver(
                 new CachedReader(new AnnotationReader(), $cache),
@@ -110,7 +110,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
         );
         $configuration->setProxyNamespace('Doctrine\ORM\Proxies');
         $configuration->setProxyDir($cacheDir . '/Doctrine/ORM/Proxies');
-        $configuration->setAutoGenerateProxyClasses(!$isDevMode);
+        $configuration->setAutoGenerateProxyClasses(true);
 
 
         /**
@@ -126,15 +126,10 @@ class DoctrineORMProvider implements ServiceProviderInterface
         /** @var AuthenticationManager $authManager */
         $authManager = $container->get('auth.authentication.manager');
 
-        if ($authManager->getUserProviderName() === 'doctrine') {
-            $authManager->addProvider(
-                new DoctrineORMUserProvider(
-                    $entityManager,
-                    $authManager->getConfig()['provider_settings']['entity']
-                ),
-                'doctrine'
-            );
-        }
+        $authManager->addUserProviderFactory(
+            'doctrine',
+            new DoctrineORMUserProviderFactory($entityManager)
+        );
 
 
         if (!StaticEnvironmentUtils::isCli()) {
