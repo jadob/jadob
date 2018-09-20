@@ -5,6 +5,7 @@ namespace Jadob\Security\Firewall;
 use Jadob\Security\Auth\AuthenticationRule;
 
 /**
+ * @deprecated
  * Class FirewallRule
  * @package Jadob\Security\Firewall
  * @author pizzaminded <miki@appvende.net>

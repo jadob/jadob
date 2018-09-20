@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated
  * Watches your requests and blocks them if needed.
  * @package Jadob\Security\Firewall
  * @author pizzaminded <miki@appvende.net>
@@ -50,7 +51,7 @@ class Firewall
         $this->manager = $manager;
         $this->config = $config;
         $this->logger = $logger;
-        $this->excludedRoutePatterns = $config['exclude'] ?? null;
+        $this->excludedRoutePatterns = $config['exclude'] ?? [];
 
         $this->buildRules();
 

@@ -7,6 +7,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Firewall\Firewall;
 
 /**
+ * @deprecated
  * Class FirewallProvider
  * @package Jadob\Security\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
@@ -30,7 +31,7 @@ class FirewallProvider implements ServiceProviderInterface
      */
     public function register(Container $container, $config)
     {
-
+        return;
         $firewall = new Firewall(
             $container->get('auth.authentication.manager'),
             $config,
