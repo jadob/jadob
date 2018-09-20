@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated
  * Trait ResponseMethodsTrait
  * @package Jadob\MVC
  */

@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated
  * Class AbstractController
  * @package Jadob\MVC\Controller
  * @author pizzaminded <miki@appvende.net>
@@ -19,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class AbstractController
 {
 
-    use ContainerAwareTrait;
     use ResponseMethodsTrait;
 
     /**
