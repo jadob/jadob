@@ -3,203 +3,207 @@
 namespace Jadob\Core;
 
 use Jadob\Container\Container;
-use Jadob\Debug\Handler\ExceptionHandler;
+use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\EventListener\Event\AfterRouterEvent;
+use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\EventListener;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
+use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Router;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Zend\Config\Config;
-use Zend\Config\Processor\Token;
+use Jadob\Debug\Handler\ExceptionHandler;
 
 /**
- * Class Kernel
- * @TODO:
- * - after container build event
+ * Front Controller of your application.
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Kernel
 {
-
-    const VERSION = '0.57.0';
+    /**
+     * Framework version.
+     * @var string
+     */
+    const VERSION = '0.70.0';
 
     /**
-     * @var Config[]
+     * @var [][]
      */
-    private $config;
-
-    /**
-     * @var string (dev/prod)
-     */
-    private $env;
+    protected $config;
 
     /**
      * @var Container
      */
-    private $container;
+    protected $container;
 
     /**
-     * @var Dispatcher
+     * @var FrameworkConfiguration
      */
-    private $dispatcher;
+    protected $frameworkConfiguration;
 
     /**
-     * @var ExceptionHandler
+     * @var EventListener
      */
-    private $exceptionHandler;
-
-    /**
-     * @var BootstrapInterface
-     */
-    private $bootstrap;
-
-    /**
-     * @var Response
-     */
-    private $response;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    protected $eventListener;
 
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
-     * @throws \ReflectionException
      * @throws \InvalidArgumentException
      * @throws \Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
+        StaticPerformanceTimer::addEntry('framework.start');
         $this->env = strtolower($env);
         $this->bootstrap = $bootstrap;
+        /** @noinspection PhpIncludeInspection */
+        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
 
-        //Enable error handling
-        $this->createLogger();
+        if (!isset($this->config['framework'])) {
+            throw new \RuntimeException('Configuration file does not have "framework" node.');
 
-        $this->exceptionHandler = new ExceptionHandler($env, $this->logger);
+        }
+
+        $this->eventListener = new EventListener();
+
+        $this->container = $this->buildContainer();
+
+        $this->exceptionHandler = new ExceptionHandler($env);
         $this->exceptionHandler
             ->registerErrorHandler()
             ->registerExceptionHandler();
 
-        $config = new Config(\load_array_from_file($this->bootstrap->getConfigDir() . '/config.php'), true);
-
-        $parameters = new Config(\load_array_from_file($this->bootstrap->getConfigDir() . '/parameters.php'), true);
-        $parameters['app.public_dir'] = $bootstrap->getPublicDir();
-        $parameters['app.root_dir'] = $bootstrap->getRootDir();
-        $parameters['app.cache_dir'] = $bootstrap->getCacheDir();
-        $parameters->setReadOnly();
-
-        $processor = new Token($parameters, '%{', '}');
-        $processor->process($config);
-
-        $this->config = $config;
-
-        $this->response = new Response();
-        $this->container = $this->createContainer();
-        #event.after.container
-
-        $this->dispatcher = new Dispatcher($this->env, $this->config, $this->container);
-
-        if($this->env === 'prod') {
-            $customController = $this->config['framework']['error_handler']['custom_prod_controller'];
-
-            if ($customController !== null) {
-                $this->exceptionHandler->setCustomProductionHandler(
-                    $this->dispatcher->autowireControllerClass(
-                        $customController
-                    )
-                );
-            }
-        }
     }
 
-    /**
-     * @return Container
-     * @throws \Jadob\Container\Exception\ContainerException
-     */
-    private function createContainer()
+    protected function buildContainer()
     {
-        $serviceProviders = include __DIR__ . '/Resources/data/framework_service_providers.php';
+        StaticPerformanceTimer::addEntry('container.providers.start');
+        /**
+         * Register providers first
+         */
+        $coreServiceProviders = include __DIR__ . '/Resources/data/framework_service_providers.php';
         $userDefinedProviders = $this->bootstrap->getServiceProviders();
 
-        $services = array_merge($serviceProviders, $userDefinedProviders);
+        /** @var ServiceProviderInterface[] $services */
+        $serviceProviders = array_merge($coreServiceProviders, $userDefinedProviders);
 
         $container = new Container();
 
-        //register all singular core objects here
-        $container->add('bootstrap', $this->bootstrap);
-        $container->add('kernel', $this);
         $container->add('request', Request::createFromGlobals());
-        $container->add('event.listener', new EventListener());
-        $container->add('logger', $this->logger);
+        $container->add('bootstrap', $this->bootstrap);
+        $container->add('event.listener', $this->eventListener);
 
-        $container->registerProviders($services, $this->config);
+        $container->registerProviders($serviceProviders, $this->config);
+
+        StaticPerformanceTimer::addEntry('container.providers.stop');
+
+        /**
+         * Register single services, provided in services.php
+         */
+        $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
+
+        if (\file_exists($servicesFile)) {
+            $services = include $servicesFile;
+
+            foreach ($services as $name => $object) {
+                $container->add($name, $object);
+            }
+        }
+
+        StaticPerformanceTimer::addEntry('container.services.stop');
+
 
         return $container;
     }
 
-    /**
-     * @return $this
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws Exception\DispatcherException
-     * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ContainerException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     */
     public function execute()
     {
-        #kernel.before.execute
-        $this->response = $this->dispatcher->execute($this->container->get('request'));
-        #kernel.after.execute
+        StaticPerformanceTimer::addEntry('kernel.execute');
+        StaticPerformanceTimer::addEntry('router.start');
 
-        return $this;
+        $dispatcher = new Dispatcher($this->env, $this->container);
+
+        $route = $this->matchRoute();
+
+        if ($route === null) {
+            $route = $this->frameworkConfiguration->getErrorControllerRoute();
+        }
+
+        $afterRouteEvent = new AfterRouterEvent($route);
+
+        $this->eventListener->dispatchAfterRouterAction($afterRouteEvent);
+
+        if ($afterRouteEvent->getResponse() !== null) {
+            return $afterRouteEvent->getResponse();
+        }
+
+        $controllerClassName = $route->getController();
+
+        if (!\class_exists($controllerClassName)) {
+            throw new DispatcherException('Class "' . $controllerClassName . '" '
+                . 'does not exists or it cannot be used as a controller.');
+        }
+
+        $controller = $dispatcher->autowireControllerClass($controllerClassName);
+
+
+        $action = $route->getAction();
+
+        if ($action === null && !method_exists($controller, '__invoke')) {
+            throw new \RuntimeException('Class "' . \get_class($controller) . '" has neither action nor __invoke() method defined.');
+        }
+
+        $action = ($action === null) ? '__invoke' : $action . 'Action';
+
+        if (!method_exists($controller, $action)) {
+            throw new DispatcherException('Action "' . $action . '" does not exists in ' . \get_class($controller));
+        }
+
+        $params = $dispatcher->getOrderedParamsForAction($controller, $action, $route);
+
+        /** @var Response $response */
+        $response = \call_user_func_array([$controller, $action], $params);
+
+        $afterControllerEvent = new AfterControllerEvent($response);
+
+        $response = $this->eventListener->dispatchAfterControllerAction($afterControllerEvent);
+
+        /**
+         * enable pretty print for JsonResponse objects in dev environment
+         */
+        if ($response instanceof JsonResponse && $this->env === 'dev') {
+            $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+        }
+
+        return $response;
+
     }
 
     /**
-     * Sends all output (response headers, cookies, content) to browser.
+     * @return \Jadob\Router\Route|null
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function send()
+    protected function matchRoute()
     {
-        $this->response->send();
-    }
+        /** @var Router $router */
+        $router = $this->container->get('router');
+        /** @var Request $request */
+        $request = $this->container->get('request');
 
-    /**
-     * @throws \Exception
-     */
-    private function createLogger()
-    {
-        $this->logger = new Logger('error_log');
-        $this->logger->pushHandler(new StreamHandler($this->bootstrap->getLogsDir() . '/error.log'));
-    }
+        try {
+            $route = $router->matchRoute($request);
+        } catch (RouteNotFoundException $e) {
+            /**
+             * Throw exception in development mode.
+             */
+            if ($this->env === 'dev') {
+                throw  $e;
+            }
 
-    /**
-     * @return Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
+            return null;
+        }
 
-    /**
-     * @return bool
-     */
-    public function isProduction()
-    {
-        return $this->env === 'prod';
+        return $route;
     }
-
-    /**
-     * @return string
-     */
-    public function getEnv()
-    {
-        return $this->env;
-    }
-
 }
