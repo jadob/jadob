@@ -2,93 +2,48 @@
 
 namespace Jadob\Container;
 
-use Jadob\Container\Definition\DefinitionBuilder;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Zend\Config\Config;
+use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 
 /**
- * Class Container
+ * PSR-11 Dependency Injection container.
  * @package Jadob\Container
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
- * @see http://www.php-fig.org/psr/psr-11/
  */
 class Container implements ContainerInterface
 {
-
     /**
-     * Instantiated or manually added services.
      * @var array
      */
-    private $container = [];
+    protected $services = [];
 
     /**
-     * Service definitions
      * @var array
      */
-    protected $definitions = [];
-
-    /**
-     * @var null|DefinitionBuilder
-     */
-    protected $definitionBuilder = null;
-
-    /**
-     * Container constructor.
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
-     * @param $id
-     * @param $object
-     * @return $this
-     * @internal param $key
-     */
-    public function add($id, $object)
-    {
-        $this->container[$id] = $object;
-
-        return $this;
-    }
-
-    /**
-     * @param Definition $definition
-     * @return $this
-     */
-    public function addDefinition(Definition $definition)
-    {
-        $this->definitions[$definition->getServiceName()] = $definition;
-        return $this;
-    }
+    protected $factories = [];
 
     /**
      * {@inheritdoc}
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function get($id)
     {
-        if (isset($this->container[$id])) {
-            return $this->container[$id];
+        if (isset($this->factories[$id])) {
+
+            $closure = $this->factories[$id];
+            $service = $this->createServiceFromClosure($closure);
+
+            unset($this->factories[$id]);
+            $this->services[$id] = $service;
         }
 
-        if (isset($this->definitions[$id])) {
-            /** @var Definition $definition */
-            $definition = $this->definitions[$id];
-            $dependency = $this->getDefinitionBuilder()->buildDependencyFromDefinition($definition);
-
-            $this->container[$id] = $dependency;
-
-            return $dependency;
+        if (isset($this->services[$id])) {
+            return $this->services[$id];
         }
 
-
-        throw new ServiceNotFoundException('Service "' . $id . '" is not registered.');
+        throw new ServiceNotFoundException('Service "' . $id . '" is not registered in container.');
     }
 
     /**
@@ -96,7 +51,60 @@ class Container implements ContainerInterface
      */
     public function has($id)
     {
-        return isset($this->container[$id]);
+        return isset($this->factories[$id]) || isset($this->services[$id]);
+    }
+
+    /**
+     * @param string $id
+     * @param $object
+     * @return Container
+     * @throws ContainerException
+     */
+    public function add($id, $object)
+    {
+        if (!\is_scalar($id)) {
+            throw new ContainerException('You cannot use non-scalar values as a service ID.');
+        }
+
+        if ($object instanceof \Closure) {
+            $this->factories[$id] = $object;
+
+            return $this;
+        }
+
+        $this->services[$id] = $object;
+    }
+
+    /**
+     * @param array $providers
+     * @param array $configuration
+     * @throws ContainerException
+     */
+    public function registerProviders(array $providers, array $configuration)
+    {
+        foreach ($providers as $service) {
+            /**
+             * We need to check it before we create the class
+             */
+            if (!\in_array(ServiceProviderInterface::class, \class_implements($service), true)) {
+                throw new ContainerException('Class ' . $service . ' cannot be used as a service provider as it is not implements ' . ServiceProviderInterface::class);
+            }
+
+            /** @var \Jadob\Container\ServiceProvider\ServiceProviderInterface $provider * */
+            $provider = new $service;
+            $configNode = $provider->getConfigNode();
+            $config = [];
+
+            if ($configNode !== null && !isset($configuration[$configNode])) {
+                throw new ContainerException('Config node "' . $configNode . '" requested by ' . $service . ' does not exists.');
+            }
+
+            if ($configNode !== null) {
+                $config = $configuration[$configNode];
+            }
+
+            $provider->register($this, $config);
+        }
     }
 
     /**
@@ -107,7 +115,7 @@ class Container implements ContainerInterface
      */
     public function findServiceByClassName($className)
     {
-        foreach ($this->container as $key => $service) {
+        foreach ($this->services as $key => $service) {
             if (\get_class($service) === $className) {
                 return $service;
             }
@@ -117,48 +125,11 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param array $providers
-     * @param Config $configuration
-     * @throws ContainerException
+     * @param \Closure $closure
+     * @return mixed
      */
-    public function registerProviders(array $providers, Config $configuration)
+    public function createServiceFromClosure(\Closure $closure)
     {
-        foreach ($providers as $service) {
-
-            /**
-             * We need to check it before we create the class
-             */
-            if (!\in_array(ServiceProviderInterface::class, \class_implements($service), true)) {
-                throw new ContainerException('Class ' . $service . ' cannot be used as a service provider as it is not implements ' . ServiceProviderInterface::class);
-            }
-
-            /** @var \Jadob\Container\ServiceProvider\ServiceProviderInterface $provider * */
-            $provider = new $service;
-
-            $configNode = $provider->getConfigNode();
-            $config = [];
-
-            if ($configNode !== null && !$configuration->offsetExists($configNode)) {
-                throw new ContainerException('Config node "' . $configNode . '" requested by ' . $service . ' does not exists.');
-            }
-
-            if ($configNode !== null) {
-                $config = $configuration[$configNode]->toArray();
-            }
-
-            $provider->register($this, $config);
-        }
-    }
-
-    /**
-     * @return DefinitionBuilder
-     */
-    protected function getDefinitionBuilder()
-    {
-        if ($this->definitionBuilder === null) {
-            $this->definitionBuilder = new DefinitionBuilder();
-        }
-
-        return $this->definitionBuilder;
+        return $closure($this);
     }
 }
