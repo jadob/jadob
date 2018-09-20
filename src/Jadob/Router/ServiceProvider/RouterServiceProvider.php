@@ -27,15 +27,18 @@ class RouterServiceProvider implements ServiceProviderInterface
      * @param Container $container
      * @param $config
      * @return mixed|void
+     * @throws \RuntimeException
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function register(Container $container, $config)
     {
         $router = new Router($config, $container->get('request'));
+
         $router->setGlobalParams([
             '_locale' => $container->get('globals')->get('locale')
         ]);
+
         $container->add('router', $router);
 
     }

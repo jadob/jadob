@@ -8,7 +8,7 @@ namespace Jadob\Router;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class Route
+final class Route
 {
 
     /**
