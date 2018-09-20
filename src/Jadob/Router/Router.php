@@ -91,7 +91,9 @@ class Router
      */
     public function matchRoute(Request $request): Route
     {
-        $uri = $request->server->get('REQUEST_URI');
+        $uri = $request->getPathInfo();
+
+
         $explodedURI = explode('?', $uri);
 
         $uri = $explodedURI[0];
@@ -152,6 +154,12 @@ class Router
         }
 
         return $patternAsRegex;
+    }
+
+
+    protected function findUriAlias()
+    {
+
     }
 
     /**
