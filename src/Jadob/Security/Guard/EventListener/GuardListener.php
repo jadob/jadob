@@ -2,14 +2,14 @@
 /**
  * Created by pizzaminded <miki@appvende.net> PhpStorm.
  * User: mikolajczajkowsky
- * Date: 24.08.2018
- * Time: 02:37
+ * Date: 09.11.2018
+ * Time: 23:45
  */
 
-namespace Jadob\Security\Auth\EventListener;
+namespace Jadob\Security\Guard\EventListener;
 
 
-class LoginListener
+class GuardListener
 {
 
 }

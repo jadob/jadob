@@ -61,6 +61,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         }
 
         $appVariables = [
+//            'current_route' => $container->get('router')->getCurrentRoute(),
             'router' => $container->get('router'),
             'request' => $container->get('request'),
             'user' => $user,
@@ -68,6 +69,12 @@ class TwigServiceProvider implements ServiceProviderInterface
         ];
 
         $twig->addGlobal('app', $appVariables);
+
+        if(isset($config['globals'])) {
+            foreach ($config['globals'] as $globalKey => $globalValue) {
+                $twig->addGlobal($globalKey, $globalValue);
+            }
+        }
 
         $twig->addExtension(new AssetExtension($container->get('request')));
         $twig->addExtension(new PathExtension($container->get('router')));

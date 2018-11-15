@@ -3,7 +3,7 @@
 namespace Jadob\DoctrineORMBridge\UserProvider;
 
 use Doctrine\ORM\EntityManager;
-use Jadob\Security\Auth\Provider\UserProviderInterface;
+//use Jadob\Security\Auth\Provider\UserProviderInterface;
 
 /**
  * Class DoctrineORMUserProvider
@@ -11,7 +11,7 @@ use Jadob\Security\Auth\Provider\UserProviderInterface;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class DoctrineORMUserProvider implements UserProviderInterface
+class DoctrineORMUserProvider //implements UserProviderInterface
 {
 
     /**

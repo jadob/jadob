@@ -3,7 +3,6 @@
 namespace Jadob\Container\Exception;
 
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
 
 /**
  * Class ContainerException
@@ -11,7 +10,6 @@ use Psr\Container\ContainerExceptionInterface;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class ContainerException extends Exception implements ContainerExceptionInterface
-{
+class ContainerException extends Exception {
 
 }

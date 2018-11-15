@@ -3,33 +3,34 @@
 namespace Jadob\Core;
 
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\EventListener\Event\AfterRouterEvent;
-use Jadob\EventListener\Event\AfterControllerEvent;
+use Jadob\EventListener\Event\BeforeControllerEvent;
+use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
-use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
+use Jadob\Security\Auth\UserStorage;
+use Jadob\Security\Firewall\Firewall;
 use Symfony\Component\HttpFoundation\Request;
-use Jadob\Debug\Handler\ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Front Controller of your application.
+ * Class Kernel
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Kernel
 {
-    /**
-     * Framework version.
-     * @var string
-     */
-    const VERSION = '0.70.0';
 
     /**
-     * @var [][]
+     * @var string
      */
-    protected $config;
+    protected $env;
+
+    /**
+     * @var BootstrapInterface
+     */
+    protected $bootstrap;
 
     /**
      * @var Container
@@ -37,173 +38,108 @@ class Kernel
     protected $container;
 
     /**
-     * @var FrameworkConfiguration
+     * @var Router
      */
-    protected $frameworkConfiguration;
+    protected $router;
+
+    /**
+     * @var array
+     */
+    protected $config;
 
     /**
      * @var EventListener
      */
     protected $eventListener;
 
+
     /**
-     * @param string $env
+     * Kernel constructor.
+     * @param string $env application environment (dev/prod)
      * @param BootstrapInterface $bootstrap
-     * @throws \InvalidArgumentException
-     * @throws \Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
-        StaticPerformanceTimer::addEntry('framework.start');
-        $this->env = strtolower($env);
+        $this->env = $env;
         $this->bootstrap = $bootstrap;
-        /** @noinspection PhpIncludeInspection */
-        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
+        $this->container = new Container();
 
-        if (!isset($this->config['framework'])) {
-            throw new \RuntimeException('Configuration file does not have "framework" node.');
+        $this->config = include $bootstrap->getConfigDir() . '/config.php';
+    }
 
-        }
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Jadob\Container\Exception\ContainerException
+     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     */
+    public function execute(Request $request)
+    {
+        $this->container->add('request', $request);
+
+        $this->buildCoreServices();
+        $this->buildContainer();
+
+        //match route
+        $route = $this->router->matchRequest($request);
+
+        $beforeControllerEvent = new BeforeControllerEvent($request);
+
+        $this->eventListener->dispatchEvent($beforeControllerEvent);
+
+//        r($this->container->get('firewall'));
+
+
+        r('jestem aż tutaj moi drodzy');
+
+        //check if user needs to be logged:
+
+//        r($this->userStorage->getUser());
+
+//        r($this->firewall->matchRequest())
+
+    }
+
+    protected function buildCoreServices()
+    {
+        $this->router = new Router($this->config['framework']['router']);
 
         $this->eventListener = new EventListener();
 
-        $this->container = $this->buildContainer();
-
-        $this->exceptionHandler = new ExceptionHandler($env);
-        $this->exceptionHandler
-            ->registerErrorHandler()
-            ->registerExceptionHandler();
-
-    }
-
-    protected function buildContainer()
-    {
-        StaticPerformanceTimer::addEntry('container.providers.start');
-        /**
-         * Register providers first
-         */
-        $coreServiceProviders = include __DIR__ . '/Resources/data/framework_service_providers.php';
-        $userDefinedProviders = $this->bootstrap->getServiceProviders();
-
-        /** @var ServiceProviderInterface[] $services */
-        $serviceProviders = array_merge($coreServiceProviders, $userDefinedProviders);
-
-        $container = new Container();
-
-        $container->add('request', Request::createFromGlobals());
-        $container->add('bootstrap', $this->bootstrap);
-        $container->add('event.listener', $this->eventListener);
-
-        $container->registerProviders($serviceProviders, $this->config);
-
-        StaticPerformanceTimer::addEntry('container.providers.stop');
-
-        /**
-         * Register single services, provided in services.php
-         */
-        $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
-
-        if (\file_exists($servicesFile)) {
-            $services = include $servicesFile;
-
-            foreach ($services as $name => $object) {
-                $container->add($name, $object);
-            }
-        }
-
-        StaticPerformanceTimer::addEntry('container.services.stop');
-
-
-        return $container;
-    }
-
-    public function execute()
-    {
-        StaticPerformanceTimer::addEntry('kernel.execute');
-        StaticPerformanceTimer::addEntry('router.start');
-
-        $dispatcher = new Dispatcher($this->env, $this->container);
-
-        $route = $this->matchRoute();
-
-        if ($route === null) {
-            $route = $this->frameworkConfiguration->getErrorControllerRoute();
-        }
-
-        $afterRouteEvent = new AfterRouterEvent($route);
-
-        $this->eventListener->dispatchAfterRouterAction($afterRouteEvent);
-
-        if ($afterRouteEvent->getResponse() !== null) {
-            return $afterRouteEvent->getResponse();
-        }
-
-        $controllerClassName = $route->getController();
-
-        if (!\class_exists($controllerClassName)) {
-            throw new DispatcherException('Class "' . $controllerClassName . '" '
-                . 'does not exists or it cannot be used as a controller.');
-        }
-
-        $controller = $dispatcher->autowireControllerClass($controllerClassName);
-
-
-        $action = $route->getAction();
-
-        if ($action === null && !method_exists($controller, '__invoke')) {
-            throw new \RuntimeException('Class "' . \get_class($controller) . '" has neither action nor __invoke() method defined.');
-        }
-
-        $action = ($action === null) ? '__invoke' : $action . 'Action';
-
-        if (!method_exists($controller, $action)) {
-            throw new DispatcherException('Action "' . $action . '" does not exists in ' . \get_class($controller));
-        }
-
-        $params = $dispatcher->getOrderedParamsForAction($controller, $action, $route);
-
-        /** @var Response $response */
-        $response = \call_user_func_array([$controller, $action], $params);
-
-        $afterControllerEvent = new AfterControllerEvent($response);
-
-        $response = $this->eventListener->dispatchAfterControllerAction($afterControllerEvent);
-
-        /**
-         * enable pretty print for JsonResponse objects in dev environment
-         */
-        if ($response instanceof JsonResponse && $this->env === 'dev') {
-            $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
-        }
-
-        return $response;
+        //add before controller event
+        $this->eventListener->addEvent(
+            BeforeControllerEvent::class,
+            BeforeControllerEventListenerInterface::class,
+            'onBeforeControllerInterface'
+        );
 
     }
 
     /**
-     * @return \Jadob\Router\Route|null
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Jadob\Container\Exception\ContainerException
      */
-    protected function matchRoute()
+    protected function buildContainer(): void
     {
-        /** @var Router $router */
-        $router = $this->container->get('router');
-        /** @var Request $request */
-        $request = $this->container->get('request');
+        $this->container->add('router', $this->router);
+        $this->container->add('bootstrap', $this->bootstrap);
+        $this->container->add('event.listener', $this->eventListener);
 
-        try {
-            $route = $router->matchRoute($request);
-        } catch (RouteNotFoundException $e) {
-            /**
-             * Throw exception in development mode.
-             */
-            if ($this->env === 'dev') {
-                throw  $e;
+        $this->container->registerProviders(
+            $this->bootstrap->getServiceProviders(),
+            $this->config
+        );
+
+        //if there is any services.php in config file, add them
+        $servicesFileLocation = $this->bootstrap->getConfigDir().'/services.php';
+
+        if(\file_exists($servicesFileLocation)) {
+            //@TODO: add "merge" or something like that method in container to merge arrays with services
+            $userServices = include $servicesFileLocation;
+            //@TODO werify if array passed
+            foreach ($userServices as $userServiceKey => $userService) {
+                $this->container->add($userServiceKey, $userService);
             }
-
-            return null;
         }
 
-        return $route;
     }
 }

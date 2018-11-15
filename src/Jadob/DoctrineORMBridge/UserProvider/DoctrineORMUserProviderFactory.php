@@ -11,6 +11,7 @@ use Jadob\Security\Auth\Provider\UserProviderInterface;
  * @package Jadob\DoctrineORMBridge\UserProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
+ * @deprecated
  */
 class DoctrineORMUserProviderFactory implements UserProviderFactoryInterface
 {

@@ -8,45 +8,59 @@ namespace Jadob\Router;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-final class Route
+class Route
 {
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      */
-    private $path;
+    protected $path;
 
     /**
      * @var string
      */
-    private $action;
+    protected $action;
 
     /**
      * @var string
      */
-    private $controller;
+    protected $controller;
 
     /**
      * @var bool
      */
-    private $ignoreLocalePrefix = false;
+    protected $ignoreGlobalPrefix = false;
+
+    /**
+     * @var string|null
+     */
+    protected $host;
 
     /**
      * @var array
      */
-    private $params = [];
+    protected $params = [];
 
     /**
      * @param string $name
+     * @param string|null $path
+     * @param string|null $controller
+     * @param string|null $action
+     * @param bool $ignoreGlobalPrefix
      */
-    public function __construct($name)
+    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $ignoreGlobalPrefix = false, $host = null)
     {
         $this->name = $name;
+        $this->path = $path;
+        $this->controller = $controller;
+        $this->action = $action;
+        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
+        $this->host = $host;
     }
 
     /**
@@ -142,18 +156,36 @@ final class Route
     /**
      * @return bool
      */
-    public function isIgnoreLocalePrefix()
+    public function isIgnoreGlobalPrefix(): bool
     {
-        return $this->ignoreLocalePrefix;
+        return $this->ignoreGlobalPrefix;
     }
 
     /**
-     * @param bool $ignoreLocalePrefix
+     * @param bool $ignoreGlobalPrefix
      * @return Route
      */
-    public function setIgnoreLocalePrefix($ignoreLocalePrefix)
+    public function setIgnoreGlobalPrefix(bool $ignoreGlobalPrefix): Route
     {
-        $this->ignoreLocalePrefix = $ignoreLocalePrefix;
+        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getHost(): ?string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param null|string $host
+     * @return Route
+     */
+    public function setHost(?string $host): Route
+    {
+        $this->host = $host;
         return $this;
     }
 

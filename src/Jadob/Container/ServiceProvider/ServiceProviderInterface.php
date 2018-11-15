@@ -12,13 +12,13 @@ interface ServiceProviderInterface
 {
 
     /**
-     * returns Config node name that will be passed as $config in register() method.
-     * return null if no config needed.
-     * @return string|null.
+     * Returns config node name that will be passed as $config in register() method or null if no config needed.
+     * @return string|null
      */
     public function getConfigNode();
 
     /**
+     * @TODO: maybe we should typehint ContainerInterface instead of Container? this will allow to be more flexible
      * @param Container $container
      * @param array|null $config
      */

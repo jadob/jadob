@@ -26,6 +26,11 @@ class Router
     private $routes;
 
     /**
+     * @var RouteCollection
+     */
+    protected $routeCollection;
+
+    /**
      * @var Route
      */
     private $currentRoute;
@@ -42,12 +47,19 @@ class Router
 
     /**
      * @param array $config
-     * @throws \RuntimeException
+     * @param Request $request - used for setting context
      */
-    public function __construct(array $config, Request $request)
+    public function __construct(array $config, Request $request = null)
     {
         $this->config = $config;
-        $this->request = $request;
+
+        if ($request !== null) {
+            $this->request = $request;
+        } else {
+            $this->request = Request::createFromGlobals();
+        }
+
+        $this->routeCollection = new RouteCollection();
 
         $this->registerRoutes();
     }
@@ -57,30 +69,23 @@ class Router
      */
     public function registerRoutes()
     {
-        foreach ($this->config['routes'] as $key => $data) {
-
-            if (!isset($data['controller'])) {
-                throw new \RuntimeException('Path "' . $key . '" has no controller class defined.');
-            }
-
-            if (!isset($data['path'])) {
-                throw new \RuntimeException('Path "' . $key . '" has no path defined.');
-            }
-
-            $route = new Route($key);
-            $route
-                ->setController($data['controller'])
-                ->setPath($data['path'])
-                ->setAction($data['action'] ?? null);
-
-            if (isset($data['ignore_locale_prefix'])) {
-                $route->setIgnoreLocalePrefix($data['ignore_locale_prefix']);
-            }
-
+//        r($this->config);
+        foreach ($this->config['routes'] as $key => $route) {
             $this->routes[$key] = $route;
         }
 
+//        r($this->routes);
+
         return $this;
+    }
+
+    protected function hostMatches(Route $route, $host)
+    {
+        if ($route->getHost() === null) {
+            return true;
+        }
+
+        return $route->getHost() === $host;
     }
 
     /**
@@ -89,31 +94,33 @@ class Router
      * @return Route
      * @throws RouteNotFoundException
      */
-    public function matchRoute(Request $request): Route
+    public function matchRequest(Request $request): Route
     {
         $uri = $request->getPathInfo();
+//        $explodedURI = explode('?', $uri);
 
-
-        $explodedURI = explode('?', $uri);
-
-        $uri = $explodedURI[0];
+//        $uri = $explodedURI[0];
 
         foreach ($this->routes as $route) {
+
             /** @var Route $route * */
-            if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
-                $path = $this->getRegex($this->config['locale_prefix'] . $route->getPath());
+            if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
+                $path = $this->getRegex($this->config['global_prefix'] . $route->getPath());
             } else {
                 $path = $this->getRegex($route->getPath());
             }
 
             $matches = [];
 
-            if ($path !== false && preg_match($path, $uri, $matches)) {
+            if ($path !== false && preg_match($path, $uri, $matches)
+                && $this->hostMatches($route, $request->getHost())
+
+            ) {
                 $params = array_intersect_key(
                     $matches, array_flip(array_filter(array_keys($matches), 'is_string'))
                 );
 
-                if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
+                if (isset($this->config['locale_prefix']) && !$route->isIgnoreGlobalPrefix()) {
                     $this->globalParams['_locale'] = $params['_locale'];
                 }
 
@@ -154,12 +161,6 @@ class Router
         }
 
         return $patternAsRegex;
-    }
-
-
-    protected function findUriAlias()
-    {
-
     }
 
     /**

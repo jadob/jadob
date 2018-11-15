@@ -2,177 +2,142 @@
 
 namespace Jadob\Security\Firewall;
 
-use Jadob\Security\Auth\AuthenticationManager;
-use Psr\Log\LoggerInterface;
+use Jadob\Security\Auth\User\UserInterface;
+use Jadob\Security\Firewall\Exception\AccessDeniedException;
+use Jadob\Security\Firewall\Rule\FirewallRule;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 
 /**
- * @deprecated
- * Watches your requests and blocks them if needed.
+ * Class Firewall
  * @package Jadob\Security\Firewall
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Firewall
 {
-
     /**
-     * @var AuthenticationManager
-     */
-    protected $manager;
-
-    /**
-     * @var array
+     * @var array[]
      */
     protected $config;
 
     /**
      * @var FirewallRule[]
      */
-    protected $rules;
+    protected $firewallRules = [];
 
     /**
-     * @var string[]
+     * @var ExcludedPath[]
      */
-    protected $excludedRoutePatterns;
+    protected $excludedPaths = [];
 
     /**
-     * @var LoggerInterface
+     * @var string|null
      */
-    protected $logger;
+    protected $currentFirewallRule;
 
     /**
      * Firewall constructor.
-     * @param AuthenticationManager $manager
      * @param array $config
+     * @throws \RuntimeException
      */
-    public function __construct(AuthenticationManager $manager, array $config, LoggerInterface $logger)
+    public function __construct(array $config)
     {
-        $this->manager = $manager;
+//        r($config);
         $this->config = $config;
-        $this->logger = $logger;
-        $this->excludedRoutePatterns = $config['exclude'] ?? [];
 
-        $this->buildRules();
+        if (isset($config['excluded_paths'])) {
+            //@TODO: Make sure excluded_paths contains only instances of ExcludedPath
+            $this->excludedPaths = $config['excluded_paths'];
+        }
 
-    }
-
-    protected function buildRules()
-    {
-        foreach ($this->config['rules'] as $ruleName => $ruleData) {
-
-            $rule = new FirewallRule($ruleName);
-
-
-            if ($this->manager->getAuthenticationRuleByName($ruleData['auth_rule']) === null) {
-                throw new \RuntimeException('Auth rule called ' . $ruleData['auth_rule'] . ' does not exists.');
+        if (isset($config['firewall_rules'])) {
+            foreach ($config['firewall_rules'] as $firewallRuleKey => $firewallRuleArray) {
+                $this->firewallRules[$firewallRuleKey] = FirewallRule::fromArray(
+                    $firewallRuleArray,
+                    $firewallRuleKey
+                );
             }
-
-            $rule->setAccessDeniedController($ruleData['access_denied_controller'] ?? null);
-            $rule->setAuthenticationRule($ruleData['auth_rule']);
-            $rule->setRoutePattern($ruleData['route_pattern']);
-            $rule->setRoles($ruleData['roles']);
-
-            $this->rules[$ruleName] = $rule;
-            unset($rule, $authRule);
         }
     }
 
-    /**
-     * @deprecated
-     * Matches only request URI.
-     * @param Request $request
-     * @return FirewallRule|null
-     */
-    public function getMatchingRouteByRequest(Request $request)
-    {
-        foreach ($this->rules as $rule) {
 
-            if ($this->matchPath($rule->getPattern(), $request->getPathInfo())) {
-                return $rule;
+    /**
+     * Finds firewall rule by Request object.
+     * @param Request $request
+     * @return string|null returns rule name or null if no passed
+     * @throws \Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException
+     */
+    public function matchRequest(Request $request)
+    {
+        //check if current path is excluded
+        foreach ($this->excludedPaths as $excludedPath) {
+            $matcher = new RequestMatcher($excludedPath->getPath());
+            if ($matcher->matches($request)) {
+                return null;
+            }
+        }
+
+        //if current path is not excluded, check firewall rules
+        foreach ($this->firewallRules as $ruleName => $firewallRule) {
+
+            $host = $request->getHost();
+            //if there is host passed in rule, use them
+            if ($firewallRule->getHost() !== null) {
+                $host = $firewallRule->getHost();
             }
 
+            $matcher = new RequestMatcher(
+                $firewallRule->getPath(),
+                $host
+            );
+
+            if ($matcher->matches($request)) {
+                return $ruleName;
+            }
         }
 
         return null;
     }
 
     /**
-     * Here we check ANYTHING.
-     * We pass rule we found earlier and current request.
-     * If user will be needed we will take it from firewall constructor.
+     * Checks if user can go through given rule.
      *
-     * @deprecated
-     * @param FirewallRule $rule
-     * @param Request $request
-     * @return bool
+     * @param string $ruleName
+     * @param UserInterface|null $user
+     * @throws AccessDeniedException
      */
-    public function matchRule(FirewallRule $rule, Request $request)
+    public function matchRuleToUser($ruleName, UserInterface $user = null)
     {
-
-        //path does not matches
-        if ($this->matchPath($rule->getPattern(), $request->getPathInfo())) {
-            return false;
+        if($ruleName === null) {
+            return;
         }
 
+        $rule = $this->firewallRules[$ruleName];
 
-        //but after all...
-        $roles = array_intersect(
-            $rule->getRoles(),
-            $this->manager->getUserStorage()->getUser()->getRoles()
-        );
+        if($user === null && $rule->getRoles() !== null) {
+            throw new AccessDeniedException('User is not logged in.');
+        }
 
-        return \count($roles) > 0;
     }
 
     /**
-     * @deprecated
-     * @param $pattern
-     * @param $path
-     * @return bool
+     * @return string|null
      */
-    protected function matchPath($pattern, $path)
+    public function getCurrentFirewallRule()
     {
-        $pattern = '#^' . $pattern . '$#';
-
-        return (bool)preg_match($pattern, $path);
-
+        return $this->currentFirewallRule;
     }
 
     /**
-     * @return FirewallRule[]
-     */
-    public function getRules(): array
-    {
-        return $this->rules;
-    }
-
-    /**
-     * @param FirewallRule[] $rules
+     * @param string|null $currentFirewallRule
      * @return Firewall
      */
-    public function setRules(array $rules): Firewall
+    public function setCurrentFirewallRule($currentFirewallRule): Firewall
     {
-        $this->rules = $rules;
+        $this->currentFirewallRule = $currentFirewallRule;
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getExcludedRoutePatterns(): array
-    {
-        return $this->excludedRoutePatterns;
-    }
-
-    /**
-     * @param string[] $excludedRoutePatterns
-     * @return Firewall
-     */
-    public function setExcludedRoutePatterns(array $excludedRoutePatterns): Firewall
-    {
-        $this->excludedRoutePatterns = $excludedRoutePatterns;
-        return $this;
-    }
 
 }

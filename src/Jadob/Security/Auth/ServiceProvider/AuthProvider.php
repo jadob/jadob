@@ -4,22 +4,11 @@ namespace Jadob\Security\Auth\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\Security\Auth\AuthenticationManager;
-use Jadob\Security\Auth\AuthenticationRule;
-use Jadob\Security\Auth\EventListener\UserRefreshListener;
-use Jadob\Security\Auth\Provider\DatabaseUserProvider;
-use Jadob\Security\Auth\Provider\DatabaseUserProviderFactory;
 use Jadob\Security\Auth\UserStorage;
-use Symfony\Component\Serializer\Encoder\ChainEncoder;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 /**
- * Class SecurityProvider
- * @package Jadob\Security\ServiceProvider
+ * Class AuthProvider
+ * @package Jadob\Security\Auth\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -27,81 +16,29 @@ class AuthProvider implements ServiceProviderInterface
 {
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getConfigNode()
     {
-        return 'auth';
+        return 'framework';
     }
 
     /**
-     * @param Container $container
-     * @param $config
-     * @throws \RuntimeException
+     * {@inheritdoc}
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \RuntimeException
      */
     public function register(Container $container, $config)
     {
-
-        if (!isset($config['user_providers']['default'])) {
-            throw new \RuntimeException('You should provide default user provider');
+        if (!$container->has('session')) {
+            throw new \RuntimeException('There is no "session" service in container. Please add SessionProvider before AuthProvider in your Bootstrap file.');
         }
-
-        $serializerEncoders = [
-            new ChainEncoder(),
-            new XmlEncoder(),
-            new JsonEncoder()
-        ];
-
-        $serializerNormalizers = [
-            new DateTimeNormalizer(),
-            new ObjectNormalizer()
-        ];
-
-        $serializer = new Serializer($serializerNormalizers, $serializerEncoders);
-
-        $container->add('serializer', $serializer);
 
         $container->add(
-            'auth.user.storage',
-            new UserStorage($container->get('session'))
-        );
-
-
-        // registering auth stuff
-        $userProviders = $config['user_providers'];
-
-        $authenticationManager = new AuthenticationManager(
-            $container->get('auth.user.storage'),
-            $container->get('logger')
-        // $authConfig
-        );
-
-
-        //Add default user provider
-        $userProviderFactory = new DatabaseUserProviderFactory(
-            $container->get('database')
-        );
-
-        $authenticationManager->addUserProviderFactory('database', $userProviderFactory);
-
-        foreach ($userProviders as $authRuleKey => $authRuleConfig) {
-            /** @var AuthenticationRule $authRule */
-            $authRule = AuthenticationRule::fromArray($authRuleConfig, $authRuleKey);
-            $authenticationManager->addAuthenticationRule($authRule);
-
-
-        }
-
-
-
-
-        $container->add('auth.authentication.manager', $authenticationManager);
-
-
-        $container->get('event.listener')->addListener(
-            new UserRefreshListener($container->get('auth.authentication.manager')),
-            1
+            'user.storage',
+            new UserStorage(
+                $container->get('session'), null
+            )
         );
     }
 }

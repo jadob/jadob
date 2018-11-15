@@ -2,8 +2,7 @@
 
 namespace Jadob\Security\Auth\EventListener;
 
-
-class UserRefreshListener
+class StatelessUserListener
 {
 
 }

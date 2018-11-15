@@ -2,18 +2,9 @@
 
 namespace Jadob\EventListener;
 
-use Jadob\EventListener\Event\AfterControllerEvent;
-use Jadob\EventListener\Event\AfterRouterEvent;
-use Jadob\EventListener\Event\EventParameterInterface;
-use Jadob\EventListener\Event\Type\AfterControllerListenerInterface;
-use Jadob\EventListener\Event\Type\AfterRouterListenerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Class EventListener
- * Service name: event.listener
- * @package Jadob\EventDispatcher
+ * @package Jadob\EventListener
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -21,97 +12,66 @@ class EventListener
 {
 
     /**
-     * @var string
+     * @var array[]
      */
-    const EVENT_AFTER_CONTROLLER = 'event.after.controller';
+    protected $listeners = [];
 
-    /**
-     * @var string
-     */
-    const EVENT_AFTER_ROUTER = 'event.after.router';
-
-    /**
-     * All events container.
-     * @var array
-     */
     protected $events = [];
 
     /**
-     * Adds new listener to events stack.
-     * @param EventInterface $event
+     * @param EventListenerInterface $listener
      * @param int $priority
+     * @return EventListener
      */
-    public function addListener(EventInterface $event, $priority = 100)
+    public function addListener(EventListenerInterface $listener, $priority = 100): EventListener
     {
-        $this->events[$priority][] = $event;
-    }
-
-    /**
-     * @deprecated
-     * @param $eventName
-     * @param EventInterface $event
-     * @param int $priority
-     * @return $this
-     */
-    public function register($eventName, EventInterface $event, $priority = 0)
-    {
-        @trigger_error('register() is deprecated and will be removed soon. Use addListener() method instead.', E_USER_DEPRECATED);
-
-        $this->events[$eventName][$priority][] = $event;
+        $this->listeners[$priority][] = $listener;
 
         return $this;
     }
 
     /**
-     * @TODO: this one needs some refactoring to make it better
-     * @param $eventName
-     * @param null $parameter
-     * @return null
+     * @param string $eventArgumentClassName FQCN of arguments class that will be passed to listener
+     * @param string $interfaceToCheckName FQCN of interface we need to check to match event type
+     * @param string $methodToCall method name, that will be executed
+     * @return $this
      */
-    protected function dispatch($eventName, EventParameterInterface $parameter)
+    public function addEvent($eventArgumentClassName, $interfaceToCheckName, $methodToCall)
+    {
+        $this->events[$eventArgumentClassName] = [
+            'interface' => $interfaceToCheckName,
+            'method' => $methodToCall
+        ];
+
+        return $this;
+    }
+
+    public function dispatchEvent($argumentClass): void
     {
 
-        $responseBeforeDispatch = $parameter->getResponse();
+        ksort($this->listeners);
+        $eventClassName = \get_class($argumentClass);
 
-        foreach ($this->events as $eventsByPriority) {
+        if (!isset($this->events[$eventClassName])) {
+            throw new \RuntimeException('Event ' . $eventClassName . ' is not registered.');
+        }
 
-            foreach ($eventsByPriority as $event) {
+        $eventInfo = $this->events[$eventClassName];
+        $interfaceToCheck = $eventInfo['interface'];
+        $methodToCall = $eventInfo['method'];
 
-                /** @var EventInterface $event */
+        foreach ($this->listeners as $eventsByPriority) {
+            /** @var EventListenerInterface[] $eventsByPriority */
+            foreach ($eventsByPriority as $eventListener) {
 
-                if($eventName === self::EVENT_AFTER_ROUTER && $event instanceof AfterRouterListenerInterface) {
-                    /** @var AfterRouterEvent $parameter */
-                    $response = $event->onAfterRouterAction($parameter);
-                }
+                if (\in_array($interfaceToCheck, \class_implements($eventListener), true)) {
+                    $eventListener->$methodToCall($argumentClass);
 
-                if($eventName === self::EVENT_AFTER_CONTROLLER && $event instanceof AfterControllerListenerInterface) {
-                    /** @var AfterControllerEvent $parameter */
-                    $response = $event->onAfterControllerAction($parameter);
-                }
-
-                #TODO: add rest of events here
-
-                if ($event->isEventStoppingPropagation() && $parameter->getResponse() !== $responseBeforeDispatch) {
-                    return $response;
+                    if ($eventListener->isEventStoppingPropagation()) {
+                        return;
+                    }
                 }
             }
         }
-
-        return $responseBeforeDispatch;
-    }
-
-
-    /**
-     * @param Response $response
-     * @return Response
-     */
-    public function dispatchAfterControllerAction(AfterControllerEvent $event)
-    {
-        return $this->dispatch(self::EVENT_AFTER_CONTROLLER, $event);
-    }
-
-    public function dispatchAfterRouterAction(AfterRouterEvent $event)
-    {
-        return $this->dispatch(self::EVENT_AFTER_ROUTER, $event);
     }
 }
