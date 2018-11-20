@@ -3,6 +3,7 @@
 namespace Jadob\PagerfantaBridge\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\PagerfantaBridge\Twig\Extension\PagerfantaExtension;
 
@@ -30,13 +31,21 @@ class PagerfantaProvider implements ServiceProviderInterface
      * @param array|null $config
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
-        $container->get('twig')->addExtension(
-            new PagerfantaExtension(
+        $container->add('pagerfanta.extension', function (Container $container) {
+            return new PagerfantaExtension(
                 $container->get('request'),
                 $container->get('router')
-            )
-        );
+            );
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+        $container->get('twig')->addExtension($container->get('pagerfanta.extension'));
     }
 }

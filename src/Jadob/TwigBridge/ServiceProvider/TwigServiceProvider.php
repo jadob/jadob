@@ -3,6 +3,7 @@
 namespace Jadob\TwigBridge\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\TwigBridge\Twig\Extension\AssetExtension;
 use Jadob\TwigBridge\Twig\Extension\DebugExtension;
@@ -34,14 +35,22 @@ class TwigServiceProvider implements ServiceProviderInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Twig_Error_Loader
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
     {
         /** @var \Bootstrap $bootstrap */
         $bootstrap = $container->get('bootstrap');
 
         $loader = new \Twig_Loader_Filesystem();
         foreach ($config['templates_paths'] as $key => $path) {
-            $loader->addPath($bootstrap->getRootDir() . $path, $key);
+            $loader->addPath($bootstrap->getRootDir() .'/'. $path, $key);
         }
 
         $cache = false;
@@ -54,27 +63,14 @@ class TwigServiceProvider implements ServiceProviderInterface
             'strict_variables' => $config['strict_variables']
         ]);
 
-
-        $user = null;
-        if($container->has('auth.user.storage')) {
-            $user = $container->get('auth.user.storage')->getUser();
-        }
-
         $appVariables = [
-//            'current_route' => $container->get('router')->getCurrentRoute(),
             'router' => $container->get('router'),
             'request' => $container->get('request'),
-            'user' => $user,
+//            'user' => $user,
             'flashes' => $container->get('session')->getFlashBag()
         ];
 
         $twig->addGlobal('app', $appVariables);
-
-        if(isset($config['globals'])) {
-            foreach ($config['globals'] as $globalKey => $globalValue) {
-                $twig->addGlobal($globalKey, $globalValue);
-            }
-        }
 
         $twig->addExtension(new AssetExtension($container->get('request')));
         $twig->addExtension(new PathExtension($container->get('router')));
@@ -82,5 +78,4 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $container->add('twig', $twig);
     }
-
 }

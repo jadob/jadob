@@ -22,7 +22,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     /**
      * @var Route[]
      */
-    protected $routes;
+    protected $routes = [];
 
     /**
      * @param Route $route
@@ -51,14 +51,9 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function addCollection(RouteCollection $collection)
     {
-
-//        r($collection);
         foreach ($collection as $route) {
-
-
-//            r($route);
-            $route->setPath($this->getPrefix() .  $route->getPath());
-
+            $route->setPath($this->getPrefix() . $route->getPath());
+            $route->setHost($this->getHost());
 
             $this->routes[$route->getName()] = $route;
         }

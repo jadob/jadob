@@ -3,18 +3,23 @@
 namespace Jadob\Core;
 
 use Jadob\Container\Container;
-use Jadob\EventListener\Event\BeforeControllerEvent;
-use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
+use Jadob\Container\ContainerBuilder;
+use Jadob\Core\Exception\KernelException;
+use Jadob\Debug\Handler\ExceptionHandler;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
-use Jadob\Security\Auth\UserStorage;
-use Jadob\Security\Firewall\Firewall;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Zend\Config\Config;
+use Zend\Config\Processor\Token;
 
 /**
  * Class Kernel
+ * @TODO:
+ * - after container build event
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -22,124 +27,122 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class Kernel
 {
 
-    /**
-     * @var string
-     */
-    protected $env;
-
-    /**
-     * @var BootstrapInterface
-     */
-    protected $bootstrap;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @var Router
-     */
-    protected $router;
+    public const VERSION = '0.0.60';
 
     /**
      * @var array
      */
-    protected $config;
+    private $config;
 
     /**
-     * @var EventListener
+     * @var string (dev/prod)
      */
-    protected $eventListener;
-
+    private $env;
 
     /**
-     * Kernel constructor.
-     * @param string $env application environment (dev/prod)
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @var BootstrapInterface
+     */
+    private $bootstrap;
+
+    /**
+     * @param string $env
      * @param BootstrapInterface $bootstrap
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
-        $this->env = $env;
+        $this->env = strtolower($env);
         $this->bootstrap = $bootstrap;
-        $this->container = new Container();
-
-        $this->config = include $bootstrap->getConfigDir() . '/config.php';
     }
 
     /**
-     * @param Request $request
      * @return Response
      * @throws \Jadob\Container\Exception\ContainerException
-     * @throws \Jadob\Router\Exception\RouteNotFoundException
      */
     public function execute(Request $request)
     {
-        $this->container->add('request', $request);
 
-        $this->buildCoreServices();
-        $this->buildContainer();
+        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
+        $services = include $this->bootstrap->getConfigDir() . '/services.php';
 
-        //match route
-        $route = $this->router->matchRequest($request);
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->add('request', $request);
+        $containerBuilder->add('bootstrap', $this->bootstrap);
+        $containerBuilder->add('kernel', $this);
+        $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
 
-        $beforeControllerEvent = new BeforeControllerEvent($request);
+        foreach ($services as $serviceName => $serviceObject) {
+            $containerBuilder->add($serviceName, $serviceObject);
+        }
 
-        $this->eventListener->dispatchEvent($beforeControllerEvent);
+        $this->container = $containerBuilder->build($this->config);
 
-//        r($this->container->get('firewall'));
+        /** @var Router $router */
+        $router = $this->container->get('router');
 
+        $route = $router->matchRequest($request);
 
-        r('jestem aż tutaj moi drodzy');
+        $controllerClass = $route->getController();
 
-        //check if user needs to be logged:
+        $autowiredController = $this->autowireControllerClass($controllerClass);
 
-//        r($this->userStorage->getUser());
+        $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
 
-//        r($this->firewall->matchRequest())
-
-    }
-
-    protected function buildCoreServices()
-    {
-        $this->router = new Router($this->config['framework']['router']);
-
-        $this->eventListener = new EventListener();
-
-        //add before controller event
-        $this->eventListener->addEvent(
-            BeforeControllerEvent::class,
-            BeforeControllerEventListenerInterface::class,
-            'onBeforeControllerInterface'
-        );
-
+        return $response;
     }
 
     /**
-     * @throws \Jadob\Container\Exception\ContainerException
+     * @param $controllerClassName
+     * @return mixed
+     * @throws \ReflectionException
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws KernelException
      */
-    protected function buildContainer(): void
+    protected function autowireControllerClass($controllerClassName)
     {
-        $this->container->add('router', $this->router);
-        $this->container->add('bootstrap', $this->bootstrap);
-        $this->container->add('event.listener', $this->eventListener);
+        $reflection = new \ReflectionClass($controllerClassName);
+        $classConstructor = $reflection->getConstructor();
+        $arguments = [];
 
-        $this->container->registerProviders(
-            $this->bootstrap->getServiceProviders(),
-            $this->config
-        );
-
-        //if there is any services.php in config file, add them
-        $servicesFileLocation = $this->bootstrap->getConfigDir().'/services.php';
-
-        if(\file_exists($servicesFileLocation)) {
-            //@TODO: add "merge" or something like that method in container to merge arrays with services
-            $userServices = include $servicesFileLocation;
-            //@TODO werify if array passed
-            foreach ($userServices as $userServiceKey => $userService) {
-                $this->container->add($userServiceKey, $userService);
+        foreach ($classConstructor->getParameters() as $parameter) {
+            if (!$parameter->hasType()) {
+                throw new KernelException('Argument "' . $parameter->getName() . '" defined in ' . $controllerClassName . ' does not have any type.');
             }
+
+            $type = (string)$parameter->getType();
+
+            $arguments[] = $this->container->findObjectByClassName($type);
         }
 
+        return new $controllerClassName(...$arguments);
     }
+
+    /**
+     * @return Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProduction()
+    {
+        return $this->env === 'prod';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
 }

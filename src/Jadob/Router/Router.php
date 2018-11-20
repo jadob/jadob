@@ -21,11 +21,6 @@ class Router
     private $config;
 
     /**
-     * @var Route[]
-     */
-    private $routes;
-
-    /**
      * @var RouteCollection
      */
     protected $routeCollection;
@@ -43,41 +38,23 @@ class Router
     /**
      * @var Request
      */
-    private $request;
+    private $context;
 
     /**
-     * @param array $config
-     * @param Request $request - used for setting context
+     * @param RouteCollection $routeCollection
+     * @param Request|null $context
      */
-    public function __construct(array $config, Request $request = null)
+    public function __construct(RouteCollection $routeCollection, Request $context = null)
     {
-        $this->config = $config;
+        $this->routeCollection = $routeCollection;
 
-        if ($request !== null) {
-            $this->request = $request;
+        if ($context !== null) {
+            $this->context = $context;
         } else {
-            $this->request = Request::createFromGlobals();
+            $this->context = Request::createFromGlobals();
         }
-
-        $this->routeCollection = new RouteCollection();
-
-        $this->registerRoutes();
     }
 
-    /**
-     * @throws \RuntimeException
-     */
-    public function registerRoutes()
-    {
-//        r($this->config);
-        foreach ($this->config['routes'] as $key => $route) {
-            $this->routes[$key] = $route;
-        }
-
-//        r($this->routes);
-
-        return $this;
-    }
 
     protected function hostMatches(Route $route, $host)
     {
@@ -97,17 +74,20 @@ class Router
     public function matchRequest(Request $request): Route
     {
         $uri = $request->getPathInfo();
-//        $explodedURI = explode('?', $uri);
 
-//        $uri = $explodedURI[0];
+        foreach ($this->routeCollection as $routeKey => $route) {
 
-        foreach ($this->routes as $route) {
+            $path = $route->getPath();
+
+            if ($path !== '/') {
+                $path = \rtrim($route->getPath(), '/');
+            }
 
             /** @var Route $route * */
             if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
-                $path = $this->getRegex($this->config['global_prefix'] . $route->getPath());
+                $path = $this->getRegex($this->config['global_prefix'] . $path);
             } else {
-                $path = $this->getRegex($route->getPath());
+                $path = $this->getRegex($path);
             }
 
             $matches = [];
@@ -173,44 +153,48 @@ class Router
     public function generateRoute($name, array $params = [], $full = false)
     {
 
-        if (!isset($this->routes[$name])) {
-            throw new RouteNotFoundException('Route "' . $name . '" is not defined');
-        }
+        foreach ($this->routeCollection as $routeName => $route) {
+            if ($routeName === $name) {
+                if (isset($this->config['locale_prefix']) && !$route->isIgnoreGlobalPrefix()) {
+                    $path = $this->config['locale_prefix'] . $route->getPath();
+                    $params = array_merge($params, $this->globalParams);
 
-        $route = $this->routes[$name];
+                } else {
+                    $path = $route->getPath();
+                }
 
-        if (isset($this->config['locale_prefix']) && !$route->isIgnoreLocalePrefix()) {
-            $path = $this->config['locale_prefix'] . $route->getPath();
-            $params = array_merge($params, $this->globalParams);
+                $paramsToGET = [];
 
-        } else {
-            $path = $route->getPath();
-        }
+                $convertedPath = $path;
+                foreach ($params as $key => $param) {
 
-        $paramsToGET = [];
+                    $isFound = 0;
+                    if (!\is_array($param)) {
+                        $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
+                    };
 
-        $convertedPath = $path;
-        foreach ($params as $key => $param) {
+                    if ($isFound === 0) {
+                        $paramsToGET[$key] = $param;
+                    }
+                }
 
-            $isFound = 0;
-            if (!\is_array($param)) {
-                $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
-            };
+                if (\count($paramsToGET) !== 0) {
+                    $convertedPath .= '?';
+                    $convertedPath .= http_build_query($paramsToGET);
+                }
 
-            if ($isFound === 0) {
-                $paramsToGET[$key] = $param;
+                if ($full) {
+                    return $this->context->getSchemeAndHttpHost() . $convertedPath;
+                }
+                return $convertedPath;
             }
         }
+//        if (!isset($this->routes[$name])) {
+        throw new RouteNotFoundException('Route "' . $name . '" is not defined');
+//        }
 
-        if (\count($paramsToGET) !== 0) {
-            $convertedPath .= '?';
-            $convertedPath .= http_build_query($paramsToGET);
-        }
+//        $route = $this->routes[$name];
 
-        if ($full) {
-            return $this->request->getSchemeAndHttpHost() . $convertedPath;
-        }
-        return $convertedPath;
 
     }
 

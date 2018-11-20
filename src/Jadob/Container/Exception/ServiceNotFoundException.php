@@ -2,7 +2,6 @@
 
 namespace Jadob\Container\Exception;
 
-use Exception;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -11,7 +10,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class ServiceNotFoundException extends Exception implements NotFoundExceptionInterface
+class ServiceNotFoundException extends \Exception implements NotFoundExceptionInterface
 {
 
 }

@@ -16,6 +16,9 @@ class EventListener
      */
     protected $listeners = [];
 
+    /**
+     * @var array
+     */
     protected $events = [];
 
     /**

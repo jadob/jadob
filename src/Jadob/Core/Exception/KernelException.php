@@ -2,15 +2,13 @@
 
 namespace Jadob\Core\Exception;
 
-use Exception;
-
 /**
  * Class KernelException
  * @package Jadob\Core\Exception
  * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @license proprietary
  */
-class KernelException extends Exception
+class KernelException extends \Exception
 {
 
 }

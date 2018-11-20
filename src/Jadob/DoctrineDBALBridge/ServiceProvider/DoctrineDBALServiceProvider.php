@@ -5,6 +5,7 @@ namespace Jadob\DoctrineDBALBridge\ServiceProvider;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
 /**
@@ -21,20 +22,24 @@ class DoctrineDBALServiceProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'dbal';
+        return 'doctrine_dbal';
     }
 
     /**
-     * @param Container $container
+     * @param ContainerBuilder $container
      * @param $config
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
-
         $configObject = new Configuration();
         $container->add('doctrine.dbal', DriverManager::getConnection($config, $configObject));
-
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+    }
 }

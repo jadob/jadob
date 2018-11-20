@@ -14,6 +14,7 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\ORM\Tools\Setup;
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProviderFactory;
 use Jadob\Security\Auth\AuthenticationManager;
@@ -45,7 +46,53 @@ class DoctrineORMProvider implements ServiceProviderInterface
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
+    {
+
+
+        //@TODO add console!
+        return;
+
+        if (!StaticEnvironmentUtils::isCli()) {
+            return;
+        }
+
+        /**
+         * If in CLI mode, add console helper
+         */
+
+        /** @var Application $console */
+        $console = $container->get('console');
+
+        //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
+        $helperSet = new HelperSet([
+            'db' => new ConnectionHelper($container->get('doctrine.dbal')),
+            'em' => new EntityManagerHelper($entityManager)
+        ]);
+
+        $console->setHelperSet($helperSet);
+
+        ConsoleRunner::addCommands($console);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function registerAnnotations()
+    {
+        $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
+
+        require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \ReflectionException
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     */
+    public function onContainerBuild(Container $container, $config)
     {
         /**
          * Entity paths must be defined, otherwise there is no sense to load rest of ORM
@@ -108,10 +155,10 @@ class DoctrineORMProvider implements ServiceProviderInterface
                 $entityPaths
             )
         );
+
         $configuration->setProxyNamespace('Doctrine\ORM\Proxies');
         $configuration->setProxyDir($cacheDir . '/Doctrine/ORM/Proxies');
         $configuration->setAutoGenerateProxyClasses(true);
-
 
         /**
          * Build EntityManager
@@ -122,46 +169,5 @@ class DoctrineORMProvider implements ServiceProviderInterface
         );
 
         $container->add('doctrine.orm', $entityManager);
-
-        /** @var AuthenticationManager $authManager */
-        $authManager = $container->get('auth.authentication.manager');
-
-        $authManager->addUserProviderFactory(
-            'doctrine',
-            new DoctrineORMUserProviderFactory($entityManager)
-        );
-
-
-        if (!StaticEnvironmentUtils::isCli()) {
-            return;
-        }
-
-        /**
-         * If in CLI mode, add console helper
-         */
-
-        /** @var Application $console */
-        $console = $container->get('console');
-
-        //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
-        $helperSet = new HelperSet([
-            'db' => new ConnectionHelper($container->get('doctrine.dbal')),
-            'em' => new EntityManagerHelper($entityManager)
-        ]);
-
-        $console->setHelperSet($helperSet);
-
-        ConsoleRunner::addCommands($console);
     }
-
-    /**
-     * @throws \ReflectionException
-     */
-    protected function registerAnnotations()
-    {
-        $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
-
-        require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
-    }
-
 }

@@ -51,9 +51,10 @@ class Route
      * @param string|null $path
      * @param string|null $controller
      * @param string|null $action
+     * @param string|null $host
      * @param bool $ignoreGlobalPrefix
      */
-    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $ignoreGlobalPrefix = false, $host = null)
+    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $ignoreGlobalPrefix = false)
     {
         $this->name = $name;
         $this->path = $path;

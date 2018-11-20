@@ -3,12 +3,11 @@
 namespace Jadob\Core\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\Definition;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * @deprecated - to be merged to common framework services provider
  * Class TopLevelServicesProvider
  * @package Jadob\Core\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
@@ -26,13 +25,22 @@ class TopLevelServicesProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container
+     * @param ContainerBuilder $container
      * @param $config
      * @return mixed|void
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
-        $container->addDefinition(new Definition('session', Session::class));
+        $container->add('session', function () {
+            return new Session();
+        });
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+        return;
+    }
 }

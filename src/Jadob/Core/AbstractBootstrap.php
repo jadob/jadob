@@ -7,6 +7,7 @@ namespace Jadob\Core;
  * You can extend your bootstrap class by this one to get some job done.
  * By default, Jadob uses php-pds standards (@see https://github.com/php-pds/skeleton)
  * but you can override this to your own needs.
+ *
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT

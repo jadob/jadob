@@ -3,6 +3,7 @@
 namespace Jadob\Router\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Router\Router;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
@@ -30,14 +31,25 @@ class RouterServiceProvider implements ServiceProviderInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
-        $router = new Router($config, $container->get('request'));
-        $router->setGlobalParams([
-            '_locale' => $container->get('globals')->get('locale')
-        ]);
-        $container->add('router', $router);
+
+        $container->add('router', function (Container $container) use ($config) {
+            $router = new Router($config['routes'], $container->get('request'));
+            $router->setGlobalParams([
+                '_locale' => 'en'//$container->get('globals')->get('locale')
+            ]);
+
+            return $router;
+        });
 
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+        // TODO: Implement onContainerBuild() method.
+    }
 }

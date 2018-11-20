@@ -1,20 +1,13 @@
 <?php
 
-namespace Jadob\Security\Auth\User;
+namespace Jadob\Security\Auth;
 
 /**
  * Interface UserInterface
- * @package Jadob\Security\Auth\User
+ * @package Jadob\Security\Auth
  * @author pizzaminded <miki@appvende.net>
- * @license MIT
  */
 interface UserInterface
 {
-    public function getId();
 
-    public function getUsername();
-
-    public function getPassword();
-
-    public function getRoles();
 }
