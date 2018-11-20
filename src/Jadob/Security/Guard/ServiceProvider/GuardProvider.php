@@ -5,6 +5,8 @@ namespace Jadob\Security\Guard\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Security\Guard\Guard;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class GuardProvider
@@ -14,6 +16,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
  */
 class GuardProvider implements ServiceProviderInterface
 {
+
 
     /**
      * {@inheritdoc}
@@ -28,7 +31,7 @@ class GuardProvider implements ServiceProviderInterface
      */
     public function register(ContainerBuilder $container, $config)
     {
-        // TODO: Implement register() method.
+
     }
 
     /**
@@ -36,6 +39,15 @@ class GuardProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        // TODO: Implement onContainerBuild() method.
+        $security = $config['security'];
+        $guards = $security['guards'];
+
+        $guardService = new Guard();
+
+        foreach ($guards as $guard) {
+            $guardService->addGuard($container->get($guard));
+        }
+
+        $container->add('guard', $guardService);
     }
 }

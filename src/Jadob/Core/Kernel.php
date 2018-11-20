@@ -5,16 +5,10 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
-use Jadob\Debug\Handler\ExceptionHandler;
-use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
+use Jadob\Security\Guard\Guard;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Zend\Config\Config;
-use Zend\Config\Processor\Token;
 
 /**
  * Class Kernel
@@ -84,11 +78,23 @@ class Kernel
         /** @var Router $router */
         $router = $this->container->get('router');
 
+        #@TODO: move this to listener
+        /** @var Guard $guard */
+        $guard = $this->container->get('guard');
+
+        $guard->dispatchRequest($request);
+
+
+
         $route = $router->matchRequest($request);
 
         $controllerClass = $route->getController();
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
+
+        if(!method_exists($autowiredController, $route->getAction())) {
+            throw new KernelException('Controller '.$controllerClass.' has not method called '.$route->getAction());
+        }
 
         $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
 
@@ -107,6 +113,10 @@ class Kernel
         $reflection = new \ReflectionClass($controllerClassName);
         $classConstructor = $reflection->getConstructor();
         $arguments = [];
+
+        if($classConstructor === null) {
+            return new $controllerClassName;
+        }
 
         foreach ($classConstructor->getParameters() as $parameter) {
             if (!$parameter->hasType()) {
