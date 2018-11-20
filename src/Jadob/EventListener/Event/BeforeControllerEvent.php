@@ -54,9 +54,9 @@ class BeforeControllerEvent
     }
 
     /**
-     * @return Response
+     * @return null|Response
      */
-    public function getResponse(): Response
+    public function getResponse()
     {
         return $this->response;
     }
