@@ -3,6 +3,7 @@
 namespace Jadob\Security\Guard;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Interface GuardAuthenticatorInterface
@@ -25,6 +26,11 @@ interface GuardAuthenticatorInterface
     public function extractCredentialsFromRequest(Request $request);
 
     public function getUser($userData);
+
+    /**
+     * This action will be called if current guard matches but there is no user object in UserStorage
+     */
+    public function createNotLoggedInResponse(): Response;
 
 
 }
