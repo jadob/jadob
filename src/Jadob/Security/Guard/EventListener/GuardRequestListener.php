@@ -5,7 +5,6 @@ namespace Jadob\Security\Guard\EventListener;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\Security\Auth\User\UserInterface;
-use Jadob\Security\Auth\UserStorage;
 use Jadob\Security\Guard\Guard;
 
 /**
@@ -25,19 +24,12 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
     protected $guard;
 
     /**
-     * @var UserStorage
-     */
-    protected $storage;
-
-    /**
      * GuardRequestListener constructor.
      * @param Guard $guard
-     * @param UserStorage $storage
      */
-    public function __construct(Guard $guard, UserStorage $storage)
+    public function __construct(Guard $guard)
     {
         $this->guard = $guard;
-        $this->storage = $storage;
     }
 
     /**
@@ -45,46 +37,12 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
      */
     public function onBeforeControllerInterface(BeforeControllerEvent $event): void
     {
-        $authenticatorRule = $this->guard->matchRule($event->getRequest());
+        $guardResponse = $this->guard->execute($event->getRequest());
 
-
-//        r($this->storage->getUser());
-        if ($authenticatorRule === null) {
-            return;
-        }
-
-        if ($this->storage->getUser() !== null) {
-            return;
-        }
-
-        $user = null;
-
-//        if ($this->storage->getUser() === null) {
-        $credentials = $authenticatorRule->extractCredentialsFromRequest($event->getRequest());
-
-        if ($credentials === null) {
+        if ($guardResponse !== null) {
             $this->blockPropagation = true;
-            $event->setResponse($authenticatorRule->createNotLoggedInResponse());
-            return;
+            $event->setResponse($guardResponse);
         }
-
-//        }
-
-        $user = $authenticatorRule->getUserFromProvider($credentials);
-
-        if ($user instanceof UserInterface && $authenticatorRule->verifyCredentials($credentials, $user)) {
-            $this->storage->setUser($user);
-            $successResponse = $authenticatorRule->createSuccessAuthenticationResponse();
-
-            if ($successResponse !== null) {
-                $this->blockPropagation = true;
-                $event->setResponse($successResponse);
-                return;
-            }
-        }
-
-        $this->blockPropagation = true;
-        $event->setResponse($authenticatorRule->createInvalidCredentialsResponse());
     }
 
     /**

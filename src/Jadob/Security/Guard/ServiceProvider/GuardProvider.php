@@ -43,17 +43,16 @@ class GuardProvider implements ServiceProviderInterface
         $security = $config['security'];
         $guards = $security['guards'];
 
-        $guardService = new Guard();
+        $guardService = new Guard($container->get('auth.user.storage'));
 
-        foreach ($guards as $guard) {
-            $guardService->addGuard($container->get($guard['service']));
+        foreach ($guards as $guardKey => $guard) {
+            $guardService->addGuard($container->get($guard['service']), $guardKey);
+            $guardService->addUserProvider($container->get($guard['user_provider']), $guardKey);
         }
 
         $container->add('guard', $guardService);
         $container->get('event.listener')->addListener(
-            new GuardRequestListener($guardService,
-                $container->get('auth.user.storage')
-            )
+            new GuardRequestListener($guardService)
         );
     }
 }

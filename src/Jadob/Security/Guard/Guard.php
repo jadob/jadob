@@ -2,7 +2,9 @@
 
 namespace Jadob\Security\Guard;
 
+use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Auth\UserProviderInterface;
+use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,6 +24,21 @@ class Guard
      * @var UserProviderInterface[]
      */
     protected $userProviders = [];
+
+    /**
+     * @var UserStorage
+     */
+    protected $userStorage;
+
+
+    /**
+     * Guard constructor.
+     * @param UserStorage $userStorage
+     */
+    public function __construct(UserStorage $userStorage)
+    {
+        $this->userStorage = $userStorage;
+    }
 
     /**
      * @param GuardAuthenticatorInterface $authenticator
@@ -52,8 +69,38 @@ class Guard
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response|null
+     */
     public function execute(Request $request)
     {
+        foreach ($this->guards as $guardKey => $guard) {
+            if ($guard->requestMatches($request)) {
 
+                if ($this->userStorage->getUser() !== null) {
+                    return null;
+                }
+
+                $credentials = $guard->extractCredentialsFromRequest($request);
+
+                if ($credentials === null) {
+                    return $guard->createNotLoggedInResponse();
+                }
+
+                $user = $guard->getUserFromProvider($credentials);
+
+                if ($user instanceof UserInterface && $guard->verifyCredentials($credentials, $user)) {
+                    $this->userStorage->setUser($user, $guardKey);
+
+                    return $guard->createSuccessAuthenticationResponse();
+                }
+
+                return $guard->createInvalidCredentialsResponse();
+            }
+        }
+
+        return null;
     }
+
 }
