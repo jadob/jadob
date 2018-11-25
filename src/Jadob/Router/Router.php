@@ -79,9 +79,7 @@ class Router
 
             $path = $route->getPath();
 
-            if ($path !== '/') {
-                $path = \rtrim($route->getPath(), '/');
-            }
+
 
             /** @var Route $route * */
             if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
