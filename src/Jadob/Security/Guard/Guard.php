@@ -30,6 +30,10 @@ class Guard
      */
     protected $userStorage;
 
+    /**
+     * @var string|null
+     */
+    protected $currentGuardName;
 
     /**
      * Guard constructor.
@@ -78,6 +82,9 @@ class Guard
         foreach ($this->guards as $guardKey => $guard) {
             if ($guard->requestMatches($request)) {
 
+                $this->userStorage->setCurrentProvider($guardKey);
+                $this->setCurrentGuardName($guardKey);
+
                 if ($this->userStorage->getUser() !== null) {
                     return null;
                 }
@@ -88,7 +95,7 @@ class Guard
                     return $guard->createNotLoggedInResponse();
                 }
 
-                $user = $guard->getUserFromProvider($credentials);
+                $user = $guard->getUserFromProvider($credentials, $this->userProviders[$guardKey]);
 
                 if ($user instanceof UserInterface && $guard->verifyCredentials($credentials, $user)) {
                     $this->userStorage->setUser($user, $guardKey);
@@ -102,5 +109,43 @@ class Guard
 
         return null;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getCurrentGuardName(): ?string
+    {
+        return $this->currentGuardName;
+    }
+
+    /**
+     * @param null|string $currentGuardName
+     * @return Guard
+     */
+    public function setCurrentGuardName(?string $currentGuardName): Guard
+    {
+        $this->currentGuardName = $currentGuardName;
+        return $this;
+    }
+
+
+    /**
+     * @param $name
+     * @return GuardAuthenticatorInterface
+     */
+    public function getGuardByName($name)
+    {
+        return $this->guards[$name];
+    }
+
+    /**
+     * @param $name
+     * @return UserProviderInterface
+     */
+    public function getProviderByName($name)
+    {
+        return $this->userProviders[$name];
+    }
+
 
 }
