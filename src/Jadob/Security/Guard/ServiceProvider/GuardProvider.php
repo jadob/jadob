@@ -5,6 +5,7 @@ namespace Jadob\Security\Guard\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Security\Guard\EventListener\GuardRequestListener;
 use Jadob\Security\Guard\Guard;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,9 +46,14 @@ class GuardProvider implements ServiceProviderInterface
         $guardService = new Guard();
 
         foreach ($guards as $guard) {
-            $guardService->addGuard($container->get($guard));
+            $guardService->addGuard($container->get($guard['service']));
         }
 
         $container->add('guard', $guardService);
+        $container->get('event.listener')->addListener(
+            new GuardRequestListener($guardService,
+                $container->get('auth.user.storage')
+            )
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Jadob\Security\Guard;
 
+use Jadob\Security\Auth\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,23 +19,41 @@ class Guard
     protected $guards = [];
 
     /**
+     * @var UserProviderInterface[]
+     */
+    protected $userProviders = [];
+
+    /**
      * @param GuardAuthenticatorInterface $authenticator
      * @param string|null $name
      * @return Guard
      */
-    public function addGuard(GuardAuthenticatorInterface $authenticator)
+    public function addGuard(GuardAuthenticatorInterface $authenticator, $name)
     {
-        $this->guards[] = $authenticator;
+        $this->guards[$name] = $authenticator;
         return $this;
     }
 
+    public function addUserProvider(UserProviderInterface $userProvider, $name)
+    {
+        $this->userProviders[$name] = $userProvider;
+        return $this;
+    }
 
-    public function dispatchRequest(Request $request)
+    public function matchRule(Request $request)
     {
         foreach ($this->guards as $guard) {
-            if($guard->requestMatches($request)) {
-
+            if ($guard->requestMatches($request)) {
+                return $guard;
             }
         }
+
+        return null;
+    }
+
+
+    public function execute(Request $request)
+    {
+
     }
 }

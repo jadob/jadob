@@ -3,6 +3,7 @@
 namespace Jadob\SymfonyTranslationBridge\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\SymfonyTranslationBridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Translation\Loader\ArrayLoader;
@@ -26,11 +27,11 @@ class TranslationServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container
+     * @param ContainerBuilder $container
      * @param $config [] Config node
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
 
         $translator = new Translator($config['locale']);
@@ -44,6 +45,14 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
         $container->add('translator', $translator);
 
-        $container->get('twig')->addExtension(new TranslationExtension($translator));
+    }
+
+    /**
+     * {@inheritdoc}
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+        $container->get('twig')->addExtension(new TranslationExtension($container->get('translator')));
     }
 }

@@ -12,13 +12,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use Doctrine\ORM\Tools\Setup;
+//use Doctrine\ORM\Tools\Setup;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProviderFactory;
-use Jadob\Security\Auth\AuthenticationManager;
-use Jadob\Stdlib\StaticEnvironmentUtils;
+//use Jadob\DoctrineORMBridge\UserProvider\DoctrineORMUserProviderFactory;
+//use Jadob\Security\Auth\AuthenticationManager;
+//use Jadob\Stdlib\StaticEnvironmentUtils;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 
@@ -52,10 +52,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
         //@TODO add console!
         return;
-
-        if (!StaticEnvironmentUtils::isCli()) {
-            return;
-        }
 
         /**
          * If in CLI mode, add console helper
