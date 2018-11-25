@@ -2,14 +2,20 @@
 
 namespace Jadob\SymfonyFormBridge\ServiceProvider;
 
-
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
+/**
+ * Class CsrfProvider
+ * @package Jadob\SymfonyFormBridge\ServiceProvider
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class CsrfProvider implements ServiceProviderInterface
 {
 
@@ -28,7 +34,15 @@ class CsrfProvider implements ServiceProviderInterface
      */
     public function register(ContainerBuilder $container, $config)
     {
-        // TODO: Implement register() method.
+        $container->add('symfony.csrf.token.manager', function (Container $container) {
+            $csrfGenerator = new UriSafeTokenGenerator();
+            $csrfStorage = new SessionTokenStorage($container->get('session'));
+            return new CsrfTokenManager($csrfGenerator, $csrfStorage);
+        });
+
+        $container->add('symfony.forms.csrf.extension', function (Container $container) {
+            return new CsrfExtension($container->get('symfony.csrf.token.manager'));
+        });
     }
 
     /**
@@ -36,11 +50,7 @@ class CsrfProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        $csrfGenerator = new UriSafeTokenGenerator();
-        $csrfStorage = new SessionTokenStorage($container->get('session'));
-        $csrfManager = new CsrfTokenManager($csrfGenerator, $csrfStorage);
 
-        $container->add('symfony.csrf.token.manager', $csrfManager);
 
     }
 }

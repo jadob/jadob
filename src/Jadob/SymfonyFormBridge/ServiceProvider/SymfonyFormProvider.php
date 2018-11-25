@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -60,43 +61,39 @@ class SymfonyFormProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        /** @var \Twig\Environment $twig */
-        $twig = $container->get('twig');
 
-        /** @var Translator $translator */
-        $translator = $container->get('translator');
+        $container->add('symfony.form.factory', function (Container $container) use ($config) {
+            /** @var \Twig\Environment $twig */
+            $twig = $container->get('twig');
 
-        $translator->addLoader('xlf', new XliffFileLoader());
+            /** @var Translator $translator */
+            $translator = $container->get('translator');
 
-//        $validatorPath = \dirname((new \ReflectionClass(Validation::class))->getFileName()) . '/Resources/translations/validators.pl.xlf';
-
-//        $translator->addResource('xlf', $validatorPath, $translator->getLocale());
-
-
-        $formEngine = new TwigRendererEngine($config['forms'], $twig);
-
-
-        $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
-            FormRenderer::class => function () use ($formEngine) {
-                return new FormRenderer($formEngine);
-            },
-        ]));
+            $formEngine = new TwigRendererEngine($config['forms'], $twig);
+            $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+                FormRenderer::class => function () use ($formEngine) {
+                    return new FormRenderer($formEngine);
+                },
+            ]));
 
 
-        $twig->addExtension(new FormExtension());
-        $twig->addExtension(
-            new TranslationExtension(
-                $container->get('translator')
-            )
-        );
+            $twig->addExtension(new FormExtension());
+            $twig->addExtension(
+                new TranslationExtension(
+                    $container->get('translator')
+                )
+            );
+
+            $formFactoryBuilder = Forms::createFormFactoryBuilder()
+                ->addExtension(new HttpFoundationExtension());
+
+//            $formExtensions = $container->getObjectsImplementing(FormExtensionInterface::class);
+
+//            r($formExtensions);
 
 
-        $container->add('sf.forms', Forms::createFormFactoryBuilder()
-            ->addExtension(new HttpFoundationExtension())//This will be needed as we use http-foundation component
-//            ->addExtension(new ValidatorExtension($validator))
-            ->addExtension(new CsrfExtension($container->get('symfony.csrf.token.manager')))
-        );
 
-        $container->add('symfony.form.factory', $container->get('sf.forms')->getFormFactory());
+            return $formFactoryBuilder->getFormFactory();
+        });
     }
 }
