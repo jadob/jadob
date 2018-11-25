@@ -3,6 +3,7 @@
 namespace Jadob\Security\Guard;
 
 use Jadob\Security\Auth\User\UserInterface;
+use Jadob\Security\Auth\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +29,7 @@ interface GuardAuthenticatorInterface
 
     public function verifyCredentials($credentials, UserInterface $user);
 
-    public function getUserFromProvider($credentials);
+    public function getUserFromProvider($credentials, UserProviderInterface $userProvider);
 
     /**
      * This action will be called if current guard matches but there is no user object in UserStorage
