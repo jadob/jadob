@@ -5,6 +5,7 @@ namespace Jadob\Security\Auth\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Security\Auth\EventListener\UserRefreshListener;
 use Jadob\Security\Auth\UserStorage;
 
 /**
@@ -32,6 +33,8 @@ class AuthProvider implements ServiceProviderInterface
         $container->add('auth.user.storage', function (Container $container) {
             return new UserStorage($container->get('session'));
         });
+
+
     }
 
     /**
@@ -39,6 +42,15 @@ class AuthProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        // TODO: Implement onContainerBuild() method.
+
+        $container
+            ->get('event.listener')
+            ->addListener(
+                new UserRefreshListener(
+                    $container->get('guard'),
+                    $container->get('auth.user.storage')
+                ), 22
+            )
+        ;
     }
 }
