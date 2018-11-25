@@ -5,6 +5,7 @@ namespace Jadob\Core\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\ControllerUtils;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -33,6 +34,10 @@ class TopLevelServicesProvider implements ServiceProviderInterface
     {
         $container->add('session', function () {
             return new Session();
+        });
+
+        $container->add('controller.utils', function (Container $container) {
+            return new ControllerUtils($container);
         });
     }
 
