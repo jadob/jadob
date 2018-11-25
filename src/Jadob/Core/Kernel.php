@@ -5,6 +5,9 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
+use Jadob\EventListener\Event\BeforeControllerEvent;
+use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
+use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
 use Jadob\Security\Guard\Guard;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +47,11 @@ class Kernel
     private $bootstrap;
 
     /**
+     * @var EventListener
+     */
+    protected $eventListener;
+
+    /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
      */
@@ -51,6 +59,12 @@ class Kernel
     {
         $this->env = strtolower($env);
         $this->bootstrap = $bootstrap;
+
+        $this->eventListener = new EventListener();
+
+        $this->addEvents();
+
+        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
     }
 
     /**
@@ -60,40 +74,34 @@ class Kernel
     public function execute(Request $request)
     {
 
-        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
-        $services = include $this->bootstrap->getConfigDir() . '/services.php';
-
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->add('request', $request);
-        $containerBuilder->add('bootstrap', $this->bootstrap);
-        $containerBuilder->add('kernel', $this);
-        $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
-
-        foreach ($services as $serviceName => $serviceObject) {
-            $containerBuilder->add($serviceName, $serviceObject);
-        }
-
-        $this->container = $containerBuilder->build($this->config);
+        $builder = $this->getContainerBuilder();
+        $builder->add('request', $request);
+        $this->container = $builder->build($this->config);
 
         /** @var Router $router */
         $router = $this->container->get('router');
-
-        #@TODO: move this to listener
-        /** @var Guard $guard */
-        $guard = $this->container->get('guard');
-
-        $guard->dispatchRequest($request);
-
-
-
         $route = $router->matchRequest($request);
 
+        #TODO: beforeControllerEvent
+
+        $beforeControllerEvent = new BeforeControllerEvent($request);
+
+        $this->eventListener->dispatchEvent($beforeControllerEvent);
+
+        $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
+
+        #@TODO: this part below should be refactored: controller dispatching should be moved to another class
+        if ($beforeControllerEventResponse !== null) {
+            return $beforeControllerEventResponse;
+        }
+
+//        var_dump($this->container->get('symfony.form.factory'));
         $controllerClass = $route->getController();
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
 
-        if(!method_exists($autowiredController, $route->getAction())) {
-            throw new KernelException('Controller '.$controllerClass.' has not method called '.$route->getAction());
+        if (!method_exists($autowiredController, $route->getAction())) {
+            throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
         }
 
         $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
@@ -114,7 +122,7 @@ class Kernel
         $classConstructor = $reflection->getConstructor();
         $arguments = [];
 
-        if($classConstructor === null) {
+        if ($classConstructor === null) {
             return new $controllerClassName;
         }
 
@@ -153,6 +161,54 @@ class Kernel
     public function getEnv()
     {
         return $this->env;
+    }
+
+    protected function addEvents()
+    {
+        $this->eventListener->addEvent(
+            BeforeControllerEvent::class,
+            BeforeControllerEventListenerInterface::class,
+            'onBeforeControllerInterface');
+    }
+
+    /**
+     * @return ContainerBuilder
+     */
+    public function getContainerBuilder(): ContainerBuilder
+    {
+        /** @var array $services */
+        $services = include $this->bootstrap->getConfigDir() . '/services.php';
+
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->add('event.listener', $this->eventListener);
+//        $containerBuilder->add('request', $request);
+        $containerBuilder->add('bootstrap', $this->bootstrap);
+        $containerBuilder->add('kernel', $this);
+        $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
+
+        foreach ($services as $serviceName => $serviceObject) {
+            $containerBuilder->add($serviceName, $serviceObject);
+        }
+
+        return $containerBuilder;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array $config
+     * @return Kernel
+     */
+    public function setConfig(array $config): Kernel
+    {
+        $this->config = $config;
+        return $this;
     }
 
 }
