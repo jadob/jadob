@@ -53,6 +53,6 @@ class GuardProvider implements ServiceProviderInterface
         $container->add('guard', $guardService);
         $container->get('event.listener')->addListener(
             new GuardRequestListener($guardService)
-        );
+        ,21);
     }
 }
