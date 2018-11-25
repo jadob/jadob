@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\Security\Auth;
+namespace Jadob\Security\Auth\User;
 
 /**
  * Interface UserInterface
