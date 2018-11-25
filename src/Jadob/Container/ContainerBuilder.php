@@ -107,6 +107,13 @@ class ContainerBuilder
         return $container;
     }
 
+    /**
+     * @param array $config
+     * @param string $configNodeKey
+     * @return array|null
+     *
+     * @throws ContainerException
+     */
     protected function getConfigNode($config, $configNodeKey)
     {
         if ($configNodeKey !== null && !isset($config[$configNodeKey])) {

@@ -54,10 +54,7 @@ class Container implements ContainerInterface
     {
 
         if (isset($this->factories[$serviceName])) {
-            $service = $this->factories[$serviceName]($this);
-
-            unset($this->factories[$serviceName]);
-            $this->services[$serviceName] = $service;
+            return $this->instantiateFactory($serviceName);
         }
 
         if (isset($this->services[$serviceName])) {
@@ -69,6 +66,7 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @TODO: probably unstable, there will be some tests needed
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
@@ -76,6 +74,19 @@ class Container implements ContainerInterface
     {
         $objects = [];
 
+        foreach ($this->services as $service) {
+            if ($service instanceof $interfaceClassName) {
+                $objects[] = $service;
+            }
+        }
+
+        foreach (\array_keys($this->factories) as $factoryName) {
+            $service = $this->instantiateFactory($factoryName);
+
+            if ($service instanceof $interfaceClassName) {
+                $objects[] = $service;
+            }
+        }
 
         if (count($objects) === 0) {
             return null;
@@ -90,13 +101,22 @@ class Container implements ContainerInterface
      */
     public function findObjectByClassName($className)
     {
+        //search in instantiated stuff
         foreach ($this->services as $service) {
             if ($service instanceof $className) {
                 return $service;
             }
         }
 
-        throw new ServiceNotFoundException('There is no service extendind/implementing '.$className.' class.');
+        foreach (\array_keys($this->factories) as $factoryName) {
+            $service = $this->instantiateFactory($factoryName);
+
+            if ($service instanceof $className) {
+                return $service;
+            }
+        }
+
+        throw new ServiceNotFoundException('There is no service extendind/implementing ' . $className . ' class.');
     }
 
     /**
@@ -114,8 +134,24 @@ class Container implements ContainerInterface
      */
     public function add($id, $object)
     {
-        $this->services[$id] = $object;
+
+        if ($object instanceof \Closure) {
+            $this->factories[$id] = $object;
+        } else {
+            $this->services[$id] = $object;
+        }
+
         return $this;
     }
 
+    /**
+     * @param string $factoryName
+     * @return mixed
+     */
+    protected function instantiateFactory($factoryName)
+    {
+        $this->services[$factoryName] = $this->factories[$factoryName]($this);
+        unset($this->factories[$factoryName]);
+        return $this->services[$factoryName];
+    }
 }
