@@ -11,4 +11,6 @@ interface UserProviderInterface
 {
 
     public function getUserByUsername($name);
+
+    public function getOneById($id);
 }

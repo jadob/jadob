@@ -17,7 +17,7 @@ class UserStorage
     /**
      * @var string
      */
-    private const USER_SESSION_KEY = '_jdb.user';
+    private const USER_SESSION_KEY = '_jdb.user.';
 
     /**
      * @var SessionInterface
@@ -30,6 +30,11 @@ class UserStorage
     protected $user;
 
     /**
+     * @var string
+     */
+    protected $currentProvider;
+
+    /**
      * UserStorage constructor.
      * @param SessionInterface $session
      */
@@ -39,13 +44,19 @@ class UserStorage
     }
 
     /**
+     * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser()
+    public function getUser($provider = null)
     {
 
+
+        if ($provider === null) {
+            $provider = $this->currentProvider;
+        }
+
         if ($this->user === null) {
-            $userFromSession = unserialize($this->session->get(self::USER_SESSION_KEY));
+            $userFromSession = unserialize($this->session->get(self::USER_SESSION_KEY . $provider));
 
             if ($userFromSession !== false) {
                 $this->user = $userFromSession;
@@ -56,12 +67,36 @@ class UserStorage
 
     /**
      * @param UserInterface $user
+     * @param null|string $provider
      * @return UserStorage
      */
-    public function setUser(UserInterface $user): UserStorage
+    public function setUser(UserInterface $user, $provider = null): UserStorage
     {
-        $this->session->set(self::USER_SESSION_KEY, serialize($user));
+        if ($provider === null) {
+            $provider = $this->currentProvider;
+        }
+
+
+        $this->session->set(self::USER_SESSION_KEY . $provider, serialize($user));
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentProvider()
+    {
+        return $this->currentProvider;
+    }
+
+    /**
+     * @param string $currentProvider
+     * @return UserStorage
+     */
+    public function setCurrentProvider($currentProvider): UserStorage
+    {
+        $this->currentProvider = $currentProvider;
         return $this;
     }
 
