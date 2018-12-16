@@ -50,7 +50,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $loader = new \Twig_Loader_Filesystem();
         foreach ($config['templates_paths'] as $key => $path) {
-            $loader->addPath($bootstrap->getRootDir() .'/'. $path, $key);
+            $loader->addPath($bootstrap->getRootDir() . '/' . $path, $key);
         }
 
         $cache = false;
@@ -63,10 +63,11 @@ class TwigServiceProvider implements ServiceProviderInterface
             'strict_variables' => $config['strict_variables']
         ]);
 
+        #TODO: create some utility class
         $appVariables = [
             'router' => $container->get('router'),
             'request' => $container->get('request'),
-//            'user' => $user,
+            'user' => $container->get('auth.user.storage'),
             'flashes' => $container->get('session')->getFlashBag()
         ];
 

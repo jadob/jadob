@@ -10,6 +10,7 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 
 /**
+ * @TODO: translation should be lazy
  * Class TranslationServiceProvider
  * @package Jadob\SymfonyTranslationBridge\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
