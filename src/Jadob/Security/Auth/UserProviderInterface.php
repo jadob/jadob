@@ -2,6 +2,8 @@
 
 namespace Jadob\Security\Auth;
 
+use Jadob\Security\Auth\User\UserInterface;
+
 /**
  * Interface UserProviderInterface
  * @package Jadob\Security\Auth
@@ -10,7 +12,15 @@ namespace Jadob\Security\Auth;
 interface UserProviderInterface
 {
 
-    public function getUserByUsername($name);
+    /**
+     * @param $name
+     * @return null|UserInterface
+     */
+    public function getUserByUsername($name): ?UserInterface;
 
-    public function getOneById($id);
+    /**
+     * @param $id
+     * @return null|UserInterface
+     */
+    public function getOneById($id): ?UserInterface;
 }
