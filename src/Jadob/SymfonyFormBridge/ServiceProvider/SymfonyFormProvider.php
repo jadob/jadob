@@ -47,17 +47,7 @@ class SymfonyFormProvider implements ServiceProviderInterface
     }
 
     /**
-     * Stuff that's needed to be done after container is built.
-     * What can you do using these method?
-     * - This one gets container as a first argument, so, you can e.g. get all services implementing SomeCoolInterface,
-     * and inject them somewhere
-     * (example 1: using Twig, you can register all extensions)
-     * (example 2: EventListener registers all Listeners here)
-     * - You can add new services of course
-     *
-     * @param Container $container
-     * @param array|null $config the same config node as passed in register()
-     * @return void
+     * {@inheritdoc}
      */
     public function onContainerBuild(Container $container, $config)
     {
