@@ -3,6 +3,7 @@
 namespace Jadob\SymfonyConsoleBridge\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\Kernel;
 use Jadob\Stdlib\StaticEnvironmentUtils;
@@ -30,10 +31,18 @@ class ConsoleProvider implements ServiceProviderInterface
      * @param Container $container
      * @param null $config
      */
-    public function register(Container $container, $config)
+    public function register(ContainerBuilder $container, $config)
     {
-        if (StaticEnvironmentUtils::isCli()) {
+//        if (StaticEnvironmentUtils::isCli()) {
             $container->add('console', new Application('Jadob', Kernel::VERSION));
-        }
+//        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onContainerBuild(Container $container, $config)
+    {
+
     }
 }

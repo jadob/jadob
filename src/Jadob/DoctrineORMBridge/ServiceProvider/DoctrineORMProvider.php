@@ -45,26 +45,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
     public function register(ContainerBuilder $container, $config)
     {
 
-
-        //@TODO add console!
-        return;
-
-        /**
-         * If in CLI mode, add console helper
-         */
-
-        /** @var Application $console */
-        $console = $container->get('console');
-
-        //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
-        $helperSet = new HelperSet([
-            'db' => new ConnectionHelper($container->get('doctrine.dbal')),
-            'em' => new EntityManagerHelper($entityManager)
-        ]);
-
-        $console->setHelperSet($helperSet);
-
-        ConsoleRunner::addCommands($console);
     }
 
     /**
@@ -73,7 +53,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
     protected function registerAnnotations()
     {
         $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
-
         require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
     }
 
@@ -172,6 +151,25 @@ class DoctrineORMProvider implements ServiceProviderInterface
             $managerRegistry->addObjectManager($entityManager, $managerName);
             $container->add('doctrine.orm.' . $managerName, $entityManager);
 
+        }
+
+        /**
+         * @TODO: how about providing multiple database console command by providing additional argument
+         * (eg. --conn=<connection_name>)
+         */
+        if($container->has('console')) {
+            /** @var Application $console */
+            $console = $container->get('console');
+
+            //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
+            $helperSet = new HelperSet([
+                'db' => new ConnectionHelper($container->get('doctrine.dbal.default')),
+                'em' => new EntityManagerHelper($entityManager)
+            ]);
+
+            $console->setHelperSet($helperSet);
+
+            ConsoleRunner::addCommands($console);
         }
     }
 }
