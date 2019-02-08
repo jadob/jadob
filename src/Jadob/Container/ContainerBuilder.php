@@ -177,4 +177,11 @@ class ContainerBuilder
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function has($id)
+    {
+        return isset($this->services[$id]) || isset($this->factories[$id]);
+    }
 }

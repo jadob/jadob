@@ -10,6 +10,7 @@ use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
 use Jadob\Security\Guard\Guard;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,6 +51,11 @@ class Kernel
      * @var EventListener
      */
     protected $eventListener;
+
+    /**
+     * @var ContainerBuilder
+     */
+    protected $containerBuilder;
 
     /**
      * @param string $env
@@ -148,6 +154,17 @@ class Kernel
     }
 
     /**
+     * @param ContainerInterface $container
+     * @return Kernel
+     */
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+
+    /**
      * @return bool
      */
     public function isProduction()
@@ -176,18 +193,21 @@ class Kernel
      */
     public function getContainerBuilder(): ContainerBuilder
     {
-        /** @var array $services */
-        $services = include $this->bootstrap->getConfigDir() . '/services.php';
+        if($this->containerBuilder === null) {
+            /** @var array $services */
+            $services = include $this->bootstrap->getConfigDir() . '/services.php';
 
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->add('event.listener', $this->eventListener);
-//        $containerBuilder->add('request', $request);
-        $containerBuilder->add('bootstrap', $this->bootstrap);
-        $containerBuilder->add('kernel', $this);
-        $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
+            $containerBuilder = new ContainerBuilder();
+            $containerBuilder->add('event.listener', $this->eventListener);
+            $containerBuilder->add('bootstrap', $this->bootstrap);
+            $containerBuilder->add('kernel', $this);
+            $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
 
-        foreach ($services as $serviceName => $serviceObject) {
-            $containerBuilder->add($serviceName, $serviceObject);
+            foreach ($services as $serviceName => $serviceObject) {
+                $containerBuilder->add($serviceName, $serviceObject);
+            }
+
+            $this->containerBuilder = $containerBuilder;
         }
 
         return $containerBuilder;
