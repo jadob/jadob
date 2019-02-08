@@ -27,6 +27,15 @@ interface GuardAuthenticatorInterface
      */
     public function requestMatches(Request $request);
 
+    /**
+     * This method allows to extract all user data from Request object.
+     * Anything you return here will be passed to another steps.
+     *
+     * Warning: returning NULL means that user is not logged and createNotLoggedInResponse will be called.
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function extractCredentialsFromRequest(Request $request);
 
     public function verifyCredentials($credentials, UserInterface $user);
