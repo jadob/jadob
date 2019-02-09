@@ -7,6 +7,7 @@ use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\Security\Auth\User\RefreshableUserInterface;
 use Jadob\Security\Auth\UserStorage;
 use Jadob\Security\Guard\Guard;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
 /**
  * Class UserRefreshListener
@@ -56,10 +57,10 @@ class UserRefreshListener implements BeforeControllerEventListenerInterface
         /** @var RefreshableUserInterface $oldUser */
         $oldUser = $this->storage->getUser();
 
-        $newUser = $provider->getOneById($oldUser->getId());
-
-
-        $this->storage->setUser($newUser, $this->guard->getCurrentGuardName());
+        if($oldUser instanceof RefreshTokenRepositoryInterface) {
+            $newUser = $provider->getOneById($oldUser->getId());
+            $this->storage->setUser($newUser, $this->guard->getCurrentGuardName());
+        }
     }
 
     /**
