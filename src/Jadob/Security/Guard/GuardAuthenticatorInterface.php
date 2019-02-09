@@ -63,7 +63,7 @@ interface GuardAuthenticatorInterface
     /**
      * @return null|Response
      */
-    public function createSuccessAuthenticationResponse();
+    public function createSuccessAuthenticationResponse(UserInterface $user);
 
 
 }
