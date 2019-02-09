@@ -139,7 +139,12 @@ class Kernel
 
             $type = (string)$parameter->getType();
 
-            $arguments[] = $this->container->findObjectByClassName($type);
+
+            if($type === ContainerInterface::class) {
+                $arguments[] = $this->container;
+            } else {
+                $arguments[] = $this->container->findObjectByClassName($type);
+            }
         }
 
         return new $controllerClassName(...$arguments);
