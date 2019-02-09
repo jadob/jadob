@@ -74,8 +74,13 @@ class Kernel
     }
 
     /**
+     * @param Request $request
      * @return Response
+     * @throws KernelException
      * @throws \Jadob\Container\Exception\ContainerException
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws \ReflectionException
      */
     public function execute(Request $request)
     {
@@ -87,8 +92,6 @@ class Kernel
         /** @var Router $router */
         $router = $this->container->get('router');
         $route = $router->matchRequest($request);
-
-        #TODO: beforeControllerEvent
 
         $beforeControllerEvent = new BeforeControllerEvent($request);
 
