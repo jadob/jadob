@@ -96,11 +96,16 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param $className
+     * @param string $className FQCN of class that we need to find
      * @return mixed
      */
     public function findObjectByClassName($className)
     {
+
+        if (\in_array($className, [ContainerInterface::class, self::class])) {
+            return $this;
+        }
+
         //search in instantiated stuff
         foreach ($this->services as $service) {
             if ($service instanceof $className) {
