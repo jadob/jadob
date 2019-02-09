@@ -11,6 +11,12 @@ namespace Jadob\Router;
 class Route
 {
 
+    const METHOD_ANY = 0;
+
+    const METHOD_GET = 1;
+
+    const METHOD_POST = 2;
+
     /**
      * @var string
      */
@@ -27,11 +33,12 @@ class Route
     protected $action;
 
     /**
-     * @var string
+     * @var string|\Closure
      */
     protected $controller;
 
     /**
+     * @deprecated and to-be-removed soon
      * @var bool
      */
     protected $ignoreGlobalPrefix = false;
@@ -47,6 +54,11 @@ class Route
     protected $params = [];
 
     /**
+     * @var int
+     */
+    protected $methods;
+
+    /**
      * @param string $name
      * @param string|null $path
      * @param string|null $controller
@@ -54,14 +66,15 @@ class Route
      * @param string|null $host
      * @param bool $ignoreGlobalPrefix
      */
-    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $ignoreGlobalPrefix = false)
+    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $methods = self::METHOD_ANY)
     {
         $this->name = $name;
         $this->path = $path;
         $this->controller = $controller;
         $this->action = $action;
-        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
+//        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
         $this->host = $host;
+        $this->methods = $methods;
     }
 
     /**
@@ -190,4 +203,19 @@ class Route
         return $this;
     }
 
+    /**
+     * @param int $methods
+     */
+    public function setMethods(int $methods): void
+    {
+        $this->methods = $methods;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMethods(): int
+    {
+        return $this->methods;
+    }
 }
