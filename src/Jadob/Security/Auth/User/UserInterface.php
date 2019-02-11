@@ -20,4 +20,9 @@ interface UserInterface
      */
     public function getPassword();
 
+    /**
+     * @return mixed
+     */
+    public function getUsername();
+
 }
