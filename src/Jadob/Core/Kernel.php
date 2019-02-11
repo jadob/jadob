@@ -5,12 +5,14 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
+use Jadob\Debug\ErrorLogger;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
 use Jadob\Security\Guard\Guard;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -58,6 +60,11 @@ class Kernel
     protected $containerBuilder;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $errorLogger;
+
+    /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
      */
@@ -65,12 +72,50 @@ class Kernel
     {
         $this->env = strtolower($env);
         $this->bootstrap = $bootstrap;
-
         $this->eventListener = new EventListener();
 
-        $this->addEvents();
+        $errorLogger = new ErrorLogger($bootstrap->getLogsDir() . '/' . $this->env . '.log');
+        $this->errorLogger = $errorLogger;
 
+        \set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) use ($errorLogger) {
+
+            $context = [
+                'errno' => $errno,
+                'errstr' => $errstr,
+                'errfile' => $errfile,
+                'errline' => $errline,
+                'errcontext' => $errcontext
+            ];
+
+            //do not throw deprecated errors, just log them;
+            if ($errno === E_USER_DEPRECATED || $errno === E_DEPRECATED) {
+                $errorLogger->warning($errstr, $context);
+                return true;
+            }
+
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+
+        });
+
+        \set_exception_handler(function (\Throwable $ex) use ($errorLogger) {
+
+            $errorLogger->emergency($ex->getMessage(), [
+                'message' => $ex->getMessage(),
+                'file' => $ex->getFile(),
+                'line' => $ex->getLine(),
+                'code' => $ex->getCode(),
+                'exception_class' => \get_class($ex),
+                'stack_trace' => $ex->getTrace()
+            ]);
+
+            r($ex);
+            r($ex->getTrace());
+        });
+
+        $this->addEvents();
         $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
+
+
     }
 
     /**
@@ -104,7 +149,6 @@ class Kernel
             return $beforeControllerEventResponse;
         }
 
-//        var_dump($this->container->get('symfony.form.factory'));
         $controllerClass = $route->getController();
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
@@ -141,9 +185,7 @@ class Kernel
             }
 
             $type = (string)$parameter->getType();
-
-
-            if($type === ContainerInterface::class) {
+            if ($type === ContainerInterface::class) {
                 $arguments[] = $this->container;
             } else {
                 $arguments[] = $this->container->findObjectByClassName($type);
@@ -201,7 +243,7 @@ class Kernel
      */
     public function getContainerBuilder(): ContainerBuilder
     {
-        if($this->containerBuilder === null) {
+        if ($this->containerBuilder === null) {
             /** @var array $services */
             $services = include $this->bootstrap->getConfigDir() . '/services.php';
 
