@@ -100,7 +100,7 @@ class Guard
                 if ($user instanceof UserInterface && $guard->verifyCredentials($credentials, $user)) {
                     $this->userStorage->setUser($user, $guardKey);
 
-                    return $guard->createSuccessAuthenticationResponse();
+                    return $guard->createSuccessAuthenticationResponse($user);
                 }
 
                 return $guard->createInvalidCredentialsResponse();
