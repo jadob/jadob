@@ -71,6 +71,12 @@ class TwigServiceProvider implements ServiceProviderInterface
             'flashes' => $container->get('session')->getFlashBag()
         ];
 
+        if(isset($config['globals']) && \is_array($config['globals'])) {
+            foreach ($config['globals'] as $globalKey => $globalValue) {
+                $twig->addGlobal($globalKey, $globalValue);
+            }
+        }
+
         $twig->addGlobal('app', $appVariables);
 
         $twig->addExtension(new AssetExtension($container->get('request')));
