@@ -16,7 +16,7 @@ interface ServiceProviderInterface
     /**
      * returns Config node name that will be passed as $config in register() method.
      * return null if no config needed.
-     * @return string|null.
+     * @return string|null
      */
     public function getConfigNode();
 
