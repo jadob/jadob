@@ -65,6 +65,7 @@ class ContainerBuilder
     {
 
         foreach ($this->serviceProviders as $serviceProvider) {
+            /** @var ServiceProviderInterface $provider */
             $provider = new $serviceProvider;
 
             if (!($provider instanceof ServiceProviderInterface)) {
@@ -108,7 +109,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param array $config
+     * @param mixed[] $config
      * @param string $configNodeKey
      * @return array|null
      *
