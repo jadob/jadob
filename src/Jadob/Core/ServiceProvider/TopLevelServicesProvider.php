@@ -46,6 +46,6 @@ class TopLevelServicesProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        return;
+        return null;
     }
 }
