@@ -5,12 +5,9 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
-use Jadob\Debug\ErrorLogger;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
-use Jadob\Router\Router;
-use Jadob\Security\Guard\Guard;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -105,7 +102,7 @@ class Kernel
         $builder->add('request', $request);
         $this->container = $builder->build($this->config);
 
-        /** @var Router $router */
+        /** @var \Jadob\Router\Router $router */
         $router = $this->container->get('router');
         $route = $router->matchRequest($request);
 
