@@ -7,6 +7,7 @@ use Psr\Log\LogLevel;
 
 /**
  * Logs all PHP related events/errors/exceptions to file.
+ * @deprecated
  * @package Jadob\Debug
  * @author pizzaminded <miki@appvende.net>
  * @license MIT

@@ -5,14 +5,19 @@
   "require": {
     "twig/twig": "1.x-dev",
     "symfony/http-foundation": "3.4",
-    "doctrine/orm": "^2.5",
+    "doctrine/orm": "2.6.3",
     "psr/container": "^1.0",
     "digitalnature/php-ref": "^1.2",
     "symfony/form": "3.4",
     "symfony/validator": "3.4",
     "symfony/twig-bridge": "3.4",
     "symfony/security-csrf": "3.4",
-    "symfony/config": "3.4"
+    "symfony/config": "3.4",
+    "monolog/monolog": "^1.24",
+    "phan/phan": "^1.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
   },
   "autoload": {
     "psr-0": {

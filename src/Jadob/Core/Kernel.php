@@ -11,6 +11,8 @@ use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Router;
 use Jadob\Security\Guard\Guard;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,60 +64,29 @@ class Kernel
     /**
      * @var LoggerInterface
      */
-    protected $errorLogger;
+    protected $logger;
 
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
+     * @throws KernelException
+     * @throws \Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
-        $this->env = strtolower($env);
+        $env = strtolower($env);
+
+        if (!\in_array($env, ['dev', 'prod'], true)) {
+            throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
+        }
+
+        $this->env = $env;
         $this->bootstrap = $bootstrap;
         $this->eventListener = new EventListener();
-
-        $errorLogger = new ErrorLogger($bootstrap->getLogsDir() . '/' . $this->env . '.log');
-        $this->errorLogger = $errorLogger;
-
-        \set_error_handler(function ($errno, $errstr, $errfile, $errline, $errcontext) use ($errorLogger) {
-
-            $context = [
-                'errno' => $errno,
-                'errstr' => $errstr,
-                'errfile' => $errfile,
-                'errline' => $errline,
-                'errcontext' => $errcontext
-            ];
-
-            //do not throw deprecated errors, just log them;
-            if ($errno === E_USER_DEPRECATED || $errno === E_DEPRECATED) {
-                $errorLogger->warning($errstr, $context);
-                return true;
-            }
-
-            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-
-        });
-
-        \set_exception_handler(function (\Throwable $ex) use ($errorLogger) {
-
-            $errorLogger->emergency($ex->getMessage(), [
-                'message' => $ex->getMessage(),
-                'file' => $ex->getFile(),
-                'line' => $ex->getLine(),
-                'code' => $ex->getCode(),
-                'exception_class' => \get_class($ex),
-                'stack_trace' => $ex->getTrace()
-            ]);
-
-            r($ex);
-            r($ex->getTrace());
-        });
-
-        $this->addEvents();
+        $this->logger = $this->initializeLogger();
         $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
 
-
+        $this->addEvents();
     }
 
     /**
@@ -279,6 +250,30 @@ class Kernel
     {
         $this->config = $config;
         return $this;
+    }
+
+    /**
+     * Creates and preconfigures a monolog instance.
+     * @throws \Exception
+     * @return Logger
+     */
+    public function initializeLogger()
+    {
+        $logger = new Logger('app');
+
+        $logLevel = Logger::DEBUG;
+        if ($this->env === 'prod') {
+            $logLevel = Logger::INFO;
+        }
+
+        $fileStreamHandler = new StreamHandler(
+            $this->bootstrap->getLogsDir() . '/' . $this->env . '.log',
+            $logLevel
+        );
+
+        $logger->pushHandler($fileStreamHandler);
+
+        return $logger;
     }
 
 }
