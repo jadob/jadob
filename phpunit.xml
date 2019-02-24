@@ -1,0 +1,13 @@
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/7.1/phpunit.xsd"
+        backupGlobals="true"
+        backupStaticAttributes="false"
+        bootstrap="vendor/autoload.php"
+        colors="true">
+    <testsuites>
+        <testsuite name="Jadob Framework Test Suite">
+            <directory>./src/Jadob/*/Tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

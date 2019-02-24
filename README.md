@@ -2,13 +2,19 @@
 
 ## DISCLAIMER
 
-There is no production ready version at this time. Use at your own risk.
+There is no production-ready version at this time. Use at your own risk.
 
 ## Introduction
 
 Jadob is a PHP7 application framework, based on Symfony and Zend Framework components. It comes with the most important
 stuff needed to start developing your PHP project.
 Jadob uses Twig for templating and Doctrine ORM for SQL databases support.
+
+## Tests
+
+Jadob uses PHPUnit and Phan to test the whole codebase. 
+
+``php-ast`` extension would be useful. 
 
 ## Things that need to be done before `1.0.0` release
 * TESTS

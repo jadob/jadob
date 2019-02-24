@@ -1,0 +1,1384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bdfa2124-72f5-41d0-954b-a1d168025ecc" name="Default" comment="rebuild in progress">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/composerJson.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/framework.iml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/php.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/symfony2.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vagrant.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.phan/config.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Core/Tests/Bootstrap.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Core/Tests/KernelTest.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Debug/ErrorHandler/DevelopmentErrorHandler.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Debug/ErrorHandler/ErrorHandlerInterface.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Debug/ErrorHandler/HandlerFactory.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Debug/ErrorHandler/ProductionErrorHandler.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/Jadob/Debug/Profiler/.gitkeep" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change beforePath="$PROJECT_DIR$/src/Jadob/Container/ContainerBuilder.php" afterPath="$PROJECT_DIR$/src/Jadob/Container/ContainerBuilder.php" />
+      <change beforePath="$PROJECT_DIR$/src/Jadob/Debug/.gitkeep" afterPath="$PROJECT_DIR$/phpunit.xml" />
+      <change beforePath="$PROJECT_DIR$/src/Jadob/Micro/Application.php" afterPath="$PROJECT_DIR$/src/Jadob/Micro/Application.php" />
+      <change beforePath="$PROJECT_DIR$/src/Jadob/TwigBridge/ServiceProvider/TwigServiceProvider.php" afterPath="$PROJECT_DIR$/src/Jadob/TwigBridge/ServiceProvider/TwigServiceProvider.php" />
+    </list>
+    <ignored path=".idea/" />
+    <ignored path="vendor/" />
+    <ignored path="composer.lock" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/../../../oneteam/system_final/composer.json</pharConfigPath>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="KernelTest.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Tests/KernelTest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
+              <folding>
+                <element signature="e#36#77#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ControllerUtils.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Core/ControllerUtils.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ContainerBuilder.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Container/ContainerBuilder.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="319">
+              <caret line="119" column="73" lean-forward="true" selection-start-line="119" selection-start-column="73" selection-end-line="119" selection-end-column="73" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServiceProviderInterface.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Container/ServiceProvider/ServiceProviderInterface.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="18" column="26" lean-forward="true" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="phan_result.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/phan_result.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="146" lean-forward="false" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="146" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Kernel.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Kernel.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="249">
+              <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <folding>
+                <element signature="e#30#60#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Router.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/Router/Router.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="14" column="6" lean-forward="false" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.phan/config.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="365">
+              <caret line="25" column="12" lean-forward="false" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TwigServiceProvider.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Jadob/TwigBridge/ServiceProvider/TwigServiceProvider.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="103">
+              <caret line="59" column="33" lean-forward="true" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+              <folding>
+                <element signature="e#52#82#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="8" lean-forward="false" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Slice</find>
+      <find>dispatchE</find>
+      <find>dispatchEv</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>Jadob</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/src/Jadob</dir>
+      <dir>$PROJECT_DIR$/src</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="dev" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/Jadob/EventListener/Event/Type/BeforeRouterAction.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/EventListener/Event/Type/BeforeControllerListenerInterface.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/EventListener/EventInterface.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/Auth/Event/AuthListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/Auth/Event/LogoutListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/EventListener/EventListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/SchemaManager/Definition/Table.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Form/FormFactory.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Database/Model/AbstractModel.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Debug/Resources/templates/dev/error.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/ServiceProvider/SecurityProvider.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Router/Route.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Router/ServiceProvider/RouterServiceProvider.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Container/Container.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/MVC/Controller/AbstractController.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/MVC/ResponseMethodsTrait.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/ServiceProvider/FirewallProvider.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/Firewall/Firewall.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Security/Firewall/FirewallRule.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/UserStorage.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/AuthenticationManager.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/AuthenticationRule.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/Token.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/UserInterface.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/Exception/UserNotFoundException.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/EventListener/LoginListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/EventListener/LogoutListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/EventListener/UserRefreshListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/DefaultExtractor.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/ExtractorInterface.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/JsonBodyExtractor.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/HttpBasicExtractor.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Auth/Provider/DatabaseUserProvider.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Firewall/EventListener/FirewallListener.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Firewall/ServiceProvider/FirewallProvider.php" />
+        <option value="$USER_HOME$/.composer/composer.json" />
+        <option value="$PROJECT_DIR$/CHANGELOG.md" />
+        <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/phpunit.xml" />
+        <option value="$PROJECT_DIR$/src/Jadob/Core/Tests/Bootstrap.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Core/Tests/KernelTest.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Core/ServiceProvider/TopLevelServicesProvider.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Micro/Application.php" />
+        <option value="$PROJECT_DIR$/.phan/config.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/TwigBridge/ServiceProvider/TwigServiceProvider.php" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/Jadob/Container/ContainerBuilder.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Container/ServiceProvider/ServiceProviderInterface.php" />
+        <option value="$PROJECT_DIR$/src/Jadob/Core/Dispatcher.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/Jadob/Core/Kernel.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="PHP7">
+    <include_path>
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-filter" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-hydrator" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-inputfilter" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-form" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/composer" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/league/container" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
+    <option name="width" value="1920" />
+    <option name="height" value="993" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>CSS</id>
+          </State>
+          <State>
+            <id>Code SmellPHP</id>
+          </State>
+          <State>
+            <id>Code StylePHP</id>
+          </State>
+          <State>
+            <id>Code quality toolsJavaScript</id>
+          </State>
+          <State>
+            <id>Code style issuesJavaScript</id>
+          </State>
+          <State>
+            <id>CoffeeScript</id>
+          </State>
+          <State>
+            <id>Composer.json</id>
+          </State>
+          <State>
+            <id>Control flow issuesJavaScript</id>
+          </State>
+          <State>
+            <id>DOM issuesJavaScript</id>
+          </State>
+          <State>
+            <id>Data flow issuesJavaScript</id>
+          </State>
+          <State>
+            <id>DocBlocksJoomla!</id>
+          </State>
+          <State>
+            <id>Error handlingJavaScript</id>
+          </State>
+          <State>
+            <id>FormSymfony</id>
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+          <State>
+            <id>GeneralJavaScript</id>
+          </State>
+          <State>
+            <id>HAML</id>
+          </State>
+          <State>
+            <id>HTML</id>
+          </State>
+          <State>
+            <id>Ignore</id>
+          </State>
+          <State>
+            <id>Ini Files</id>
+          </State>
+          <State>
+            <id>Internationalization issues</id>
+          </State>
+          <State>
+            <id>Invalid elementsCSS</id>
+          </State>
+          <State>
+            <id>JSON</id>
+          </State>
+          <State>
+            <id>JavaScript</id>
+          </State>
+          <State>
+            <id>JavaScript validity issuesJavaScript</id>
+          </State>
+          <State>
+            <id>Joomla!</id>
+          </State>
+          <State>
+            <id>Node.jsJavaScript</id>
+          </State>
+          <State>
+            <id>PHP</id>
+          </State>
+          <State>
+            <id>Php Inspections (EA Extended)PHP</id>
+          </State>
+          <State>
+            <id>Potentially confusing code constructsJavaScript</id>
+          </State>
+          <State>
+            <id>Probable bugsCSS</id>
+          </State>
+          <State>
+            <id>Probable bugsCoffeeScript</id>
+          </State>
+          <State>
+            <id>Probable bugsJavaScript</id>
+          </State>
+          <State>
+            <id>Probable bugsPHP</id>
+          </State>
+          <State>
+            <id>RouteSymfony</id>
+          </State>
+          <State>
+            <id>SQL</id>
+          </State>
+          <State>
+            <id>SecurityPhp Inspections (EA Extended)PHP</id>
+          </State>
+          <State>
+            <id>ServiceSymfony</id>
+          </State>
+          <State>
+            <id>Spelling</id>
+          </State>
+          <State>
+            <id>Symfony</id>
+          </State>
+          <State>
+            <id>Type compatibilityPHP</id>
+          </State>
+          <State>
+            <id>TypeScript</id>
+          </State>
+          <State>
+            <id>UndefinedPHP</id>
+          </State>
+          <State>
+            <id>XML</id>
+          </State>
+          <State>
+            <id>XPath</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>AngularJS</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="framework" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framework" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="framework" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framework" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name=".phan" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="framework" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framework" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="framework" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framework" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Jadob" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="framework" type="b2602c69:ProjectViewProjectNode" />
+              <item name="framework" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Jadob" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Core" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+              <item name="docs" type="cbb8eebc:String" user="docs" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="Jadob" type="cbb8eebc:String" user="Jadob" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="Jadob" type="cbb8eebc:String" user="Jadob" />
+              <item name="Core" type="cbb8eebc:String" user="Core" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="framework" type="cbb8eebc:String" user="framework" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="Jadob" type="cbb8eebc:String" user="Jadob" />
+              <item name="Debug" type="cbb8eebc:String" user="Debug" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../bin/php/php5.6.10/bin/php" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="462" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="ignore_missing_gitignore" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/Jadob" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>$USER_HOME$/.subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bdfa2124-72f5-41d0-954b-a1d168025ecc" name="Default" comment="" />
+      <created>1518628669422</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1518628669422</updated>
+      <workItem from="1518628671034" duration="2594000" />
+      <workItem from="1518634594113" duration="64000" />
+      <workItem from="1518643400459" duration="2392000" />
+      <workItem from="1518737593031" duration="6829000" />
+      <workItem from="1520109663952" duration="1828000" />
+      <workItem from="1520181504207" duration="5834000" />
+      <workItem from="1520545526074" duration="3353000" />
+      <workItem from="1520970341955" duration="1489000" />
+      <workItem from="1521424499778" duration="1672000" />
+      <workItem from="1522180219892" duration="6999000" />
+      <workItem from="1522695342528" duration="1258000" />
+      <workItem from="1522876102755" duration="2194000" />
+      <workItem from="1523308913071" duration="24000" />
+      <workItem from="1523308947659" duration="1077000" />
+      <workItem from="1523373064032" duration="5535000" />
+      <workItem from="1525898694855" duration="1233000" />
+      <workItem from="1526172464778" duration="1701000" />
+      <workItem from="1527026190529" duration="1235000" />
+      <workItem from="1527632300406" duration="931000" />
+      <workItem from="1527886887467" duration="2056000" />
+      <workItem from="1530026041854" duration="1220000" />
+      <workItem from="1530310472036" duration="567000" />
+      <workItem from="1530630867114" duration="1213000" />
+      <workItem from="1530715165315" duration="1526000" />
+      <workItem from="1533075453327" duration="315000" />
+      <workItem from="1533751497869" duration="1764000" />
+      <workItem from="1535069474745" duration="641000" />
+      <workItem from="1535492924032" duration="1122000" />
+      <workItem from="1537471752096" duration="2440000" />
+      <workItem from="1539876661605" duration="718000" />
+      <workItem from="1539960011747" duration="302000" />
+      <workItem from="1542317557016" duration="5282000" />
+      <workItem from="1542643102810" duration="6964000" />
+      <workItem from="1542999814787" duration="830000" />
+      <workItem from="1543105975418" duration="2178000" />
+      <workItem from="1543173545058" duration="2737000" />
+      <workItem from="1544925581605" duration="417000" />
+      <workItem from="1545154520191" duration="756000" />
+      <workItem from="1548802000788" duration="1108000" />
+      <workItem from="1549641625520" duration="773000" />
+      <workItem from="1549824762419" duration="256000" />
+      <workItem from="1550252464156" duration="311000" />
+      <workItem from="1551031879796" duration="2932000" />
+    </task>
+    <task id="LOCAL-00139" summary="[auth] [orm] adding more than one authentication point">
+      <created>1535493330502</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1535493330502</updated>
+    </task>
+    <task id="LOCAL-00140" summary="[auth] listeners in progress">
+      <created>1535493421503</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1535493421503</updated>
+    </task>
+    <task id="LOCAL-00141" summary="[container] improved container">
+      <created>1537472010313</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472010315</updated>
+    </task>
+    <task id="LOCAL-00142" summary="[router] used getPathInfo instead of request uri">
+      <created>1537472077989</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472077989</updated>
+    </task>
+    <task id="LOCAL-00143" summary="[router] reformatted code">
+      <created>1537472093872</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472093872</updated>
+    </task>
+    <task id="LOCAL-00144" summary="[mvc] deprecated objects">
+      <created>1537472138232</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472138232</updated>
+    </task>
+    <task id="LOCAL-00145" summary="[core] added new core components">
+      <created>1537472197967</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472197967</updated>
+    </task>
+    <task id="LOCAL-00146" summary="[core] kernel refactoring">
+      <created>1537472332088</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472332088</updated>
+    </task>
+    <task id="LOCAL-00147" summary="[firewall] Firewall in progress">
+      <created>1537472407208</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472407208</updated>
+    </task>
+    <task id="LOCAL-00148" summary="[security] deprecated old firewall">
+      <created>1537472513379</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1537472513379</updated>
+    </task>
+    <task id="LOCAL-00149" summary="rebuild in progress">
+      <created>1542324721183</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1542324721185</updated>
+    </task>
+    <task id="LOCAL-00150" summary="rebuild in progress">
+      <created>1542747347651</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1542747347653</updated>
+    </task>
+    <task id="LOCAL-00151" summary="rebuild in progress">
+      <created>1542747400884</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1542747400886</updated>
+    </task>
+    <task id="LOCAL-00152" summary="[Guard] adding new component">
+      <created>1542752331193</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1542752331194</updated>
+    </task>
+    <task id="LOCAL-00153" summary="[EventListener] method can return null too">
+      <created>1542752949420</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1542752949420</updated>
+    </task>
+    <task id="LOCAL-00154" summary="[SymfonyFormBridge] separated CSRF to another provider">
+      <created>1542999876409</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1542999876410</updated>
+    </task>
+    <task id="LOCAL-00155" summary="[Security] Guard in progress">
+      <created>1542999939410</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1542999939410</updated>
+    </task>
+    <task id="LOCAL-00156" summary="[SymfonyFormProvider] improved provider">
+      <created>1542999998329</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1542999998329</updated>
+    </task>
+    <task id="LOCAL-00157" summary="[Guard] added new method definition">
+      <created>1543000135546</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1543000135546</updated>
+    </task>
+    <task id="LOCAL-00158" summary="[Container] intantiating object refactored">
+      <created>1543106091086</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106091087</updated>
+    </task>
+    <task id="LOCAL-00159" summary="[Router] removed trimming">
+      <created>1543106161067</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106161067</updated>
+    </task>
+    <task id="LOCAL-00160" summary="[Kernel] Separated some container-related code to new methods">
+      <created>1543106212215</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106212215</updated>
+    </task>
+    <task id="LOCAL-00161" summary="update depedendcies to newer versions">
+      <created>1543106270158</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106270158</updated>
+    </task>
+    <task id="LOCAL-00162" summary="old documentation cleared">
+      <created>1543106613073</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106613073</updated>
+    </task>
+    <task id="LOCAL-00163" summary="[Auth] Fixed namespace">
+      <created>1543106675685</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106675685</updated>
+    </task>
+    <task id="LOCAL-00164" summary="[Auth] Fixed namespace">
+      <created>1543106698752</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106698752</updated>
+    </task>
+    <task id="LOCAL-00165" summary="[SymfonyFormBridge] Separated CSRF Provider">
+      <created>1543106762666</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106762666</updated>
+    </task>
+    <task id="LOCAL-00166" summary="[SymfonyFormBridge] Preparing new provider for validator">
+      <created>1543106817415</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106817415</updated>
+    </task>
+    <task id="LOCAL-00167" summary="Refactoring in progress">
+      <created>1543106889543</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
+      <option name="project" value="LOCAL" />
+      <updated>1543106889544</updated>
+    </task>
+    <task id="LOCAL-00168" summary="[guard] simplified listener">
+      <created>1543108880547</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1543108880547</updated>
+    </task>
+    <task id="LOCAL-00169" summary="[Core] Added ControllerUtils to reduce dependencies passed to controllers">
+      <created>1543182407181</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1543182407184</updated>
+    </task>
+    <task id="LOCAL-00170" summary="[Core] Added ControllerUtils to reduce dependencies passed to controllers">
+      <created>1543182428111</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
+      <option name="project" value="LOCAL" />
+      <updated>1543182428112</updated>
+    </task>
+    <task id="LOCAL-00171" summary="[Security] Added user refresher">
+      <created>1543184396022</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1543184396022</updated>
+    </task>
+    <task id="LOCAL-00172" summary="[Security] UserStorage improved">
+      <created>1543187843324</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1543187843325</updated>
+    </task>
+    <task id="LOCAL-00173" summary="[Guard] Added listener order in provider">
+      <created>1543187868336</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1543187868336</updated>
+    </task>
+    <task id="LOCAL-00174" summary="[Guard] Added providers/guards getters and setters, Guard now sets current guard name automatically when matched">
+      <created>1543187937263</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1543187937263</updated>
+    </task>
+    <task id="LOCAL-00175" summary="[guard] added userprovider argument">
+      <created>1543187966531</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1543187966531</updated>
+    </task>
+    <task id="LOCAL-00176" summary="preparing for handling many connections">
+      <created>1544925721994</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925721995</updated>
+    </task>
+    <task id="LOCAL-00177" summary="[Auth] Added return types and phpdocs">
+      <created>1544925764584</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925764584</updated>
+    </task>
+    <task id="LOCAL-00178" summary="added comments">
+      <created>1544925824147</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925824148</updated>
+    </task>
+    <task id="LOCAL-00179" summary="[Guard] Added return types, phpdocs, exceptions">
+      <created>1544925859232</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925859232</updated>
+    </task>
+    <task id="LOCAL-00180" summary="[SymfonyFormBridge] fixed phpdoc">
+      <created>1544925919934</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925919934</updated>
+    </task>
+    <task id="LOCAL-00181" summary="[DoctrineORMBridge] Preparing for handling many connections">
+      <created>1544925949916</created>
+      <option name="number" value="00181" />
+      <option name="presentableId" value="LOCAL-00181" />
+      <option name="project" value="LOCAL" />
+      <updated>1544925949917</updated>
+    </task>
+    <task id="LOCAL-00182" summary="[DoctrineDBALBridge][DoctrineODMBridge] new functionalities stubs">
+      <created>1544926006019</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1544926006019</updated>
+    </task>
+    <task id="LOCAL-00183" summary="added new components stubs">
+      <created>1548802536468</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1548802536468</updated>
+    </task>
+    <task id="LOCAL-00184" summary="fixed return statement according to PhpStorm tip">
+      <created>1551032681560</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
+      <option name="project" value="LOCAL" />
+      <updated>1551032681561</updated>
+    </task>
+    <task id="LOCAL-00185" summary="[Core] Removed Dispatcher class">
+      <created>1551034569264</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1551034569264</updated>
+    </task>
+    <task id="LOCAL-00186" summary="[Container] fixed phpdoc">
+      <created>1551034601550</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
+      <option name="project" value="LOCAL" />
+      <updated>1551034601550</updated>
+    </task>
+    <task id="LOCAL-00187" summary="[Core] Changed logger tool">
+      <created>1551034802793</created>
+      <option name="number" value="00187" />
+      <option name="presentableId" value="LOCAL-00187" />
+      <option name="project" value="LOCAL" />
+      <updated>1551034802794</updated>
+    </task>
+    <option name="localTasksCounter" value="188" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="86670000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1920" height="993" extended-state="6" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Regex Tester" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962137" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27616927" sideWeight="0.5029338" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27616927" sideWeight="0.49706623" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48106903" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22790202" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="old documentation cleared" />
+    <MESSAGE value="[Auth] Fixed namespace" />
+    <MESSAGE value="[SymfonyFormBridge] Separated CSRF Provider" />
+    <MESSAGE value="[SymfonyFormBridge] Preparing new provider for validator" />
+    <MESSAGE value="Refactoring in progress" />
+    <MESSAGE value="[guard] simplified listener" />
+    <MESSAGE value="rebuild in progress" />
+    <MESSAGE value="[Core] Added ControllerUtils to reduce dependencies passed to controllers" />
+    <MESSAGE value="[Security] Added user refresher" />
+    <MESSAGE value="[Security] UserStorage improved" />
+    <MESSAGE value="[Guard] Added listener order in provider" />
+    <MESSAGE value="[Guard] Added providers/guards getters and setters, Guard now sets current guard name automatically when matched" />
+    <MESSAGE value="[guard] added userprovider argument" />
+    <MESSAGE value="preparing for handling many connections" />
+    <MESSAGE value="[Auth] Added return types and phpdocs" />
+    <MESSAGE value="added comments" />
+    <MESSAGE value="[Guard] Added return types, phpdocs, exceptions" />
+    <MESSAGE value="[SymfonyFormBridge] fixed phpdoc" />
+    <MESSAGE value="[DoctrineORMBridge] Preparing for handling many connections" />
+    <MESSAGE value="[DoctrineDBALBridge][DoctrineODMBridge] new functionalities stubs" />
+    <MESSAGE value="added new components stubs" />
+    <MESSAGE value="fixed return statement according to PhpStorm tip" />
+    <MESSAGE value="[Core] Removed Dispatcher class" />
+    <MESSAGE value="[Container] fixed phpdoc" />
+    <MESSAGE value="[Core] Changed logger tool" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Core] Changed logger tool" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Provider/UserProviderInterface.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Provider/DatabaseUserProviderFactory.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Provider/UserProviderFactoryInterface.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/UserStorage.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/AuthenticationManager.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/AuthenticationRule.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Token.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/UserInterface.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Provider/CustomUserProvider.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Exception/UserNotFoundException.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/EventListener/LoginListener.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/EventListener/LogoutListener.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/EventListener/UserRefreshListener.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/JsonBodyExtractor.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/HttpBasicExtractor.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/ExtractorInterface.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/CredentialExtractor/DefaultExtractor.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Auth/Provider/DatabaseUserProvider.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Firewall/EventListener/FirewallListener.php" />
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Firewall/ServiceProvider/FirewallProvider.php" />
+    <entry file="file://$USER_HOME$/.composer/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/components/schema-manager.md" />
+    <entry file="file://$PROJECT_DIR$/docs/components/mvc.md" />
+    <entry file="file://$USER_HOME$/.composer/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="1" lean-forward="false" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Exception/KernelException.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="1" lean-forward="false" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/PagerfantaBridge/ServiceProvider/PagerfantaProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+          <folding>
+            <element signature="e#58#88#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Router/RouteCollection.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Saml2/.gitkeep">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Security/Guard/Guard.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+          <folding>
+            <element signature="e#40#83#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Debug/.gitkeep">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/EventListener/EventListener.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="7" lean-forward="false" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Container/Container.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="20" column="4" lean-forward="false" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phpunit.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="10" lean-forward="false" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Tests/Bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="18" lean-forward="false" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/symfony/http-foundation/Request.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="4" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
+          <folding>
+            <element signature="e#283#358#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Tests/KernelTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
+          <folding>
+            <element signature="e#36#77#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Micro/Application.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="41" lean-forward="true" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
+          <folding>
+            <element signature="e#31#69#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CHANGELOG.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.phan/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="25" column="12" lean-forward="false" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/TwigBridge/ServiceProvider/TwigServiceProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="103">
+          <caret line="59" column="33" lean-forward="true" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+          <folding>
+            <element signature="e#52#82#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="255">
+            <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/ServiceProvider/TopLevelServicesProvider.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="39" column="34" lean-forward="false" selection-start-line="39" selection-start-column="34" selection-end-line="39" selection-end-column="34" />
+          <folding>
+            <element signature="e#46#76#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/ControllerUtils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Container/ContainerBuilder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="119" column="73" lean-forward="true" selection-start-line="119" selection-start-column="73" selection-end-line="119" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Router/Router.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="14" column="6" lean-forward="false" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Dispatcher.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-352">
+          <caret line="5" column="30" lean-forward="false" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Container/ServiceProvider/ServiceProviderInterface.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="18" column="26" lean-forward="true" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="8" lean-forward="false" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/phan_result.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="146" lean-forward="false" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="146" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Jadob/Core/Kernel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding>
+            <element signature="e#30#60#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="Copyright.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+  <component name="regexState">
+    <option name="map">
+      <map>
+        <entry key="flags" value="0" />
+        <entry key="mode" value="0" />
+        <entry key="regex" value="(19||20)\d\d([- /.])(0[1-9]||1[012])\2(0[1-9]||[12][0-9]||3[01])" />
+        <entry key="text" value="1900-01-01 2007/08/13 1900.01.01 1900 01 01 1900-01.01 1900 13 01 1900 02 31" />
+      </map>
+    </option>
+  </component>
+</project>

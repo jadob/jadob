@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Behat">
+    <behat_settings>
+      <BehatSettings />
+    </behat_settings>
+  </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-filter" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-config" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-stdlib" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-validator" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-hydrator" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-inputfilter" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-servicemanager" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/zendframework/zend-form" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/composer" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/../../../oneteam/system_final/vendor/league/container" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7" />
+</project>

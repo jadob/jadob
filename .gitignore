@@ -1,1 +1,3 @@
-/.idea
+/.idea/
+/vendor/
+/phan_result.txt
