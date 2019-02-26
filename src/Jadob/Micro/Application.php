@@ -2,7 +2,6 @@
 
 namespace Jadob\Micro;
 
-use Jadob\Container\Container;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Route;
 use Psr\Container\ContainerInterface;
