@@ -5,6 +5,7 @@ namespace Jadob\TwigBridge\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\BootstrapInterface;
 use Jadob\TwigBridge\Twig\Extension\AssetExtension;
 use Jadob\TwigBridge\Twig\Extension\DebugExtension;
 use Jadob\TwigBridge\Twig\Extension\PathExtension;
@@ -27,28 +28,26 @@ class TwigServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container
-     * @param $config
-     * @return mixed|void
-     * @throws \Jadob\Container\Exception\ContainerException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Twig_Error_Loader
+     * {@inheritdoc}
      */
     public function register(ContainerBuilder $container, $config)
     {
-
+        return null;
     }
 
     /**
-     * {@inheritdoc}
+     * @param array[] $config
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Twig\Error\LoaderError
      */
     public function onContainerBuild(Container $container, $config)
     {
-        /** @var \Bootstrap $bootstrap */
+
+        /** @var BootstrapInterface $bootstrap */
         $bootstrap = $container->get('bootstrap');
 
         $loader = new \Twig_Loader_Filesystem();
+
         foreach ($config['templates_paths'] as $key => $path) {
             $loader->addPath($bootstrap->getRootDir() . '/' . $path, $key);
         }
