@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class TopLevelServicesProvider implements ServiceProviderInterface
+class FrameworkServiceProvider implements ServiceProviderInterface
 {
 
     /**
@@ -22,7 +22,7 @@ class TopLevelServicesProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return null;
+        return 'framework';
     }
 
     /**
@@ -39,6 +39,8 @@ class TopLevelServicesProvider implements ServiceProviderInterface
         $container->add('controller.utils', function (Container $container) {
             return new ControllerUtils($container);
         });
+
+
     }
 
     /**
@@ -46,6 +48,9 @@ class TopLevelServicesProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        return null;
+        //enable development-only features
+        if(isset($config['dev'])) {
+
+        }
     }
 }
