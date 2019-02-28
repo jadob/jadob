@@ -11,11 +11,11 @@ namespace Jadob\Router;
 class Route
 {
 
-    const METHOD_ANY = 0;
+    public const METHOD_ANY = 0;
 
-    const METHOD_GET = 1;
+    public const METHOD_GET = 1;
 
-    const METHOD_POST = 2;
+    public const METHOD_POST = 2;
 
     /**
      * @var string
@@ -38,12 +38,6 @@ class Route
     protected $controller;
 
     /**
-     * @deprecated and to-be-removed soon
-     * @var bool
-     */
-    protected $ignoreGlobalPrefix = false;
-
-    /**
      * @var string|null
      */
     protected $host;
@@ -64,7 +58,7 @@ class Route
      * @param string|null $controller
      * @param string|null $action
      * @param string|null $host
-     * @param bool $ignoreGlobalPrefix
+     * @param int $methods
      */
     public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $methods = self::METHOD_ANY)
     {
@@ -72,7 +66,6 @@ class Route
         $this->path = $path;
         $this->controller = $controller;
         $this->action = $action;
-//        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
         $this->host = $host;
         $this->methods = $methods;
     }
@@ -164,24 +157,6 @@ class Route
     public function setParams($params)
     {
         $this->params = $params;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isIgnoreGlobalPrefix(): bool
-    {
-        return $this->ignoreGlobalPrefix;
-    }
-
-    /**
-     * @param bool $ignoreGlobalPrefix
-     * @return Route
-     */
-    public function setIgnoreGlobalPrefix(bool $ignoreGlobalPrefix): Route
-    {
-        $this->ignoreGlobalPrefix = $ignoreGlobalPrefix;
         return $this;
     }
 

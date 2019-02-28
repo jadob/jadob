@@ -37,7 +37,7 @@ class RouterServiceProvider implements ServiceProviderInterface
         $container->add('router', function (Container $container) use ($config) {
             $router = new Router($config['routes'], $container->get('request'));
             $router->setGlobalParams([
-                '_locale' => 'en'//$container->get('globals')->get('locale')
+                '_locale' => 'en'
             ]);
 
             return $router;

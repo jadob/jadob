@@ -78,9 +78,6 @@ class Router
         foreach ($this->routeCollection as $routeKey => $route) {
 
             $path = $route->getPath();
-
-
-
             /** @var Route $route * */
             if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
                 $path = $this->getRegex($this->config['global_prefix'] . $path);
@@ -187,12 +184,8 @@ class Router
                 return $convertedPath;
             }
         }
-//        if (!isset($this->routes[$name])) {
+
         throw new RouteNotFoundException('Route "' . $name . '" is not defined');
-//        }
-
-//        $route = $this->routes[$name];
-
 
     }
 
@@ -242,22 +235,4 @@ class Router
         return $this;
     }
 
-    /**
-     * @return Route[]
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
-    }
-
-    /**
-     * @param Route[] $routes
-     * @return Router
-     */
-    public function setRoutes(array $routes): Router
-    {
-        $this->routes = $routes;
-
-        return $this;
-    }
 }
