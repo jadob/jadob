@@ -31,7 +31,6 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     public function addRoute(Route $route)
     {
 
-//        r($this->getHost());
         $route->setHost($this->getHost());
         $route->setPath($this->getPrefix() . $route->getPath());
         $this->routes[$route->getName()] = $route;
