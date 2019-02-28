@@ -9,7 +9,8 @@ use Jadob\Core\ControllerUtils;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Class TopLevelServicesProvider
+ * Configures any Framework related things.
+ * Class FrameworkServiceProvider
  * @package Jadob\Core\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -52,5 +53,11 @@ class FrameworkServiceProvider implements ServiceProviderInterface
         if(isset($config['dev'])) {
 
         }
+
+        //@TODO: add custom Monolog Handler Interfaces and register it
+
+
+
+
     }
 }

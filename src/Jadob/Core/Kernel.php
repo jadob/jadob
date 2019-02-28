@@ -100,6 +100,8 @@ class Kernel
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
+        /** @TODO: how about creating an 'logger' service pointing to this.logger? */
+        $builder->add('monolog', $this->logger);
         $this->container = $builder->build($this->config);
 
         /** @var \Jadob\Router\Router $router */
