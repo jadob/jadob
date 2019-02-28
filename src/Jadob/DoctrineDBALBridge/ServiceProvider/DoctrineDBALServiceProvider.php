@@ -9,6 +9,8 @@ use Doctrine\DBAL\Logging\DebugStack;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\DoctrineDBALBridge\Logger\Psr3QueryLogger;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class DoctrineDBALServiceProvider
@@ -40,19 +42,26 @@ class DoctrineDBALServiceProvider implements ServiceProviderInterface
             throw new \RuntimeException('You should provide at least one connection in config.doctrine_dbal node.');
         }
 
-        $configObject = new Configuration();
         $eventManager = new EventManager();
-        $debugStackLogger = new DebugStack();
-        $configObject->setSQLLogger($debugStackLogger);
-
-        $container->add('doctrine.dbal.config', $configObject);
         $container->add('doctrine.dbal.event_manager', $eventManager);
-        $container->add('doctrine.dbal.debug_stack.logger', $debugStackLogger);
+        $container->add('doctrine.dbal.config', function (ContainerInterface $container) {
+            $configObject = new Configuration();
+            $configObject->setSQLLogger(new Psr3QueryLogger($container->get('monolog')));
+            return $configObject;
+        });
 
         foreach ($config['connections'] as $connectionName => $configuration) {
             $container->add(
                 'doctrine.dbal.' . $connectionName,
-                DriverManager::getConnection($configuration, $configObject, $eventManager)
+
+                function (ContainerInterface $container) use ($configuration, $eventManager) {
+
+                    return DriverManager::getConnection(
+                        $configuration,
+                        $container->get('doctrine.dbal.config'),
+                        $eventManager
+                    );
+                }
             );
         }
     }
