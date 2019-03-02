@@ -5,7 +5,9 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
+use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\Event\BeforeControllerEvent;
+use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
 use Monolog\Handler\StreamHandler;
@@ -17,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Kernel
- * @TODO:
- * - after container build event
  * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -26,6 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 class Kernel
 {
 
+    /**
+     * semver formatted framework version
+     * @see https://semver.org/
+     * @var string
+     */
     public const VERSION = '0.0.60';
 
     /**
@@ -132,7 +137,11 @@ class Kernel
             throw new KernelException('Controller should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
         }
 
-        return $response;
+        $afterControllerEvent = new AfterControllerEvent($response);
+
+        $this->eventListener->dispatchEvent($afterControllerEvent);
+
+        return $afterControllerEvent->getResponse();
     }
 
     /**
@@ -208,7 +217,13 @@ class Kernel
         $this->eventListener->addEvent(
             BeforeControllerEvent::class,
             BeforeControllerEventListenerInterface::class,
-            'onBeforeControllerInterface');
+            'onBeforeControllerEvent');
+
+        $this->eventListener->addEvent(
+            AfterControllerEvent::class,
+            AfterControllerEventListenerInterface::class,
+            'onAfterControllerEvent'
+        );
     }
 
     /**
