@@ -251,7 +251,7 @@ class Kernel
             $this->containerBuilder = $containerBuilder;
         }
 
-        return $containerBuilder;
+        return $this->containerBuilder;
     }
 
     /**
