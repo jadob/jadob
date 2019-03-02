@@ -16,6 +16,6 @@ interface BeforeControllerEventListenerInterface extends EventListenerInterface
      * @param BeforeControllerEvent $event
      * @return void
      */
-    public function onBeforeControllerInterface(BeforeControllerEvent $event): void;
+    public function onBeforeControllerEvent(BeforeControllerEvent $event): void;
 
 }
