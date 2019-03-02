@@ -125,6 +125,10 @@ class Kernel
 
         $controllerClass = $route->getController();
 
+        if($controllerClass === null) {
+            throw new KernelException('Route '.$route->getName().' should provide a valid FQCN or Closure, null given');
+        }
+
         $autowiredController = $this->autowireControllerClass($controllerClass);
 
         if (!method_exists($autowiredController, $route->getAction())) {
