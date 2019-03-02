@@ -6,6 +6,7 @@ use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 
 /**
+ * @TODO: Maybe we should add here 'getDefaultConfiguration' method, which will be merged with user-defined config?
  * Interface ServiceProviderInterface
  * @package Jadob\Container\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
