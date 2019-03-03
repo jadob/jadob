@@ -48,6 +48,9 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $loader = new \Twig_Loader_Filesystem();
 
+
+        $loader->addPath(__DIR__ . '/../templates', 'Jadob');
+
         foreach ($config['templates_paths'] as $key => $path) {
             $loader->addPath($bootstrap->getRootDir() . '/' . $path, $key);
         }
@@ -70,7 +73,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             'flashes' => $container->get('session')->getFlashBag()
         ];
 
-        if(isset($config['globals']) && \is_array($config['globals'])) {
+        if (isset($config['globals']) && \is_array($config['globals'])) {
             foreach ($config['globals'] as $globalKey => $globalValue) {
                 $twig->addGlobal($globalKey, $globalValue);
             }
