@@ -6,6 +6,8 @@ use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\ControllerUtils;
+use Jadob\Debug\Profiler\EventListener\ProfilerListener;
+use Jadob\EventListener\EventListener;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -51,6 +53,10 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     {
         //enable development-only features
         if(isset($config['dev'])) {
+            /** @var EventListener $eventListener */
+            $eventListener = $container->get('event.listener');
+
+            $eventListener->addListener(new ProfilerListener());
 
         }
 
