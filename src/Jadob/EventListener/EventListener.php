@@ -3,6 +3,7 @@
 namespace Jadob\EventListener;
 
 /**
+ * @TODO: this class should be called EventDispatcher to prevent misnaming and future errors
  * Class EventListener
  * @package Jadob\EventListener
  * @author pizzaminded <miki@appvende.net>
