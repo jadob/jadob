@@ -15,7 +15,7 @@ class Psr3QueryLogger implements SQLLogger
 {
 
     /**
-     * @var string
+     * @var LoggerInterface
      */
     protected $logger;
 
@@ -68,6 +68,6 @@ class Psr3QueryLogger implements SQLLogger
         unset($this->recentQuery['sql']);
         $this->recentQuery['finish_time'] = microtime(true);
         $this->logger->info($message, $this->recentQuery);
-        $this->recentQuery = null;
+        $this->recentQuery = [];
     }
 }
