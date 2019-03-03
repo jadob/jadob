@@ -10,6 +10,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
@@ -43,7 +44,10 @@ class SymfonyFormProvider implements ServiceProviderInterface
     public function register(ContainerBuilder $container, $config)
     {
 
+        $validator = Validation::createValidatorBuilder();
 
+
+        $container->add('symfony.validator', $validator->getValidator());
     }
 
     /**
@@ -66,8 +70,8 @@ class SymfonyFormProvider implements ServiceProviderInterface
                 },
             ]));
 
-
             $twig->addExtension(new FormExtension());
+
             $twig->addExtension(
                 new TranslationExtension(
                     $container->get('translator')
@@ -75,12 +79,13 @@ class SymfonyFormProvider implements ServiceProviderInterface
             );
 
             $formFactoryBuilder = Forms::createFormFactoryBuilder()
-                ->addExtension(new HttpFoundationExtension());
+                ->addExtension(new HttpFoundationExtension())
+                ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
+
 
 //            $formExtensions = $container->getObjectsImplementing(FormExtensionInterface::class);
 
 //            r($formExtensions);
-
 
 
             return $formFactoryBuilder->getFormFactory();
