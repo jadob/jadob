@@ -42,13 +42,12 @@ class UserRefreshListener implements BeforeControllerEventListenerInterface
      * @param BeforeControllerEvent $event
      * @return void
      */
-    public function onBeforeControllerInterface(BeforeControllerEvent $event): void
+    public function onBeforeControllerEvent(BeforeControllerEvent $event): void
     {
 
         if ($this->storage->getUser() === null) {
             return;
         }
-
 
         $provider = $this->guard->getProviderByName(
             $this->guard->getCurrentGuardName()

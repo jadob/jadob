@@ -23,7 +23,7 @@ class BeforeControllerEventWrapper implements BeforeControllerEventListenerInter
      * @param BeforeControllerEvent $event
      * @return void
      */
-    public function onBeforeControllerInterface(BeforeControllerEvent $event): void
+    public function onBeforeControllerEvent(BeforeControllerEvent $event): void
     {
         // TODO: Implement onBeforeControllerInterface() method.
     }

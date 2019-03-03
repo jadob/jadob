@@ -35,7 +35,7 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
     /**
      * {@inheritdoc}
      */
-    public function onBeforeControllerInterface(BeforeControllerEvent $event): void
+    public function onBeforeControllerEvent(BeforeControllerEvent $event): void
     {
         $guardResponse = $this->guard->execute($event->getRequest());
 
