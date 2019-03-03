@@ -66,7 +66,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @TODO: probably unstable, there will be some tests needed
+     * UNSTABLE, there will be some tests needed
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
