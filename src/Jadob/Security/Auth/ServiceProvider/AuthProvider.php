@@ -5,8 +5,10 @@ namespace Jadob\Security\Auth\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Security\Auth\Command\GeneratePasswordHashCommand;
 use Jadob\Security\Auth\EventListener\UserRefreshListener;
 use Jadob\Security\Auth\UserStorage;
+use Symfony\Component\Console\Application;
 
 /**
  * Class AuthProvider
@@ -52,5 +54,13 @@ class AuthProvider implements ServiceProviderInterface
                 ), 22
             )
         ;
+
+
+        if($container->has('console')) {
+            /** @var Application $console */
+            $console = $container->get('console');
+
+            $console->add(new GeneratePasswordHashCommand());
+        }
     }
 }
