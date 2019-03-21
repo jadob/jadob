@@ -60,7 +60,7 @@ class Psr3QueryLogger implements SQLLogger
      */
     public function stopQuery()
     {
-        if($this->recentQuery === null) {
+        if ($this->recentQuery === null) {
             return;
         }
 
