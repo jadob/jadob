@@ -11,4 +11,17 @@ namespace Jadob\Debug\ErrorHandler;
 class DevelopmentErrorHandler implements ErrorHandlerInterface
 {
 
+    public function registerErrorHandler()
+    {
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            throw new \Error($errstr, $errno);
+        });
+    }
+
+    public function registerExceptionHandler()
+    {
+        set_exception_handler(function ($exception) {
+            include __DIR__.'/../templates/error_view.php';
+        });
+    }
 }

@@ -5,6 +5,7 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
+use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
@@ -89,6 +90,10 @@ class Kernel
         $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
 
         $this->addEvents();
+
+        $errorHandler = HandlerFactory::factory($env);
+        $errorHandler->registerErrorHandler();
+        $errorHandler->registerExceptionHandler();
     }
 
     /**
@@ -125,8 +130,8 @@ class Kernel
 
         $controllerClass = $route->getController();
 
-        if($controllerClass === null) {
-            throw new KernelException('Route '.$route->getName().' should provide a valid FQCN or Closure, null given');
+        if ($controllerClass === null) {
+            throw new KernelException('Route ' . $route->getName() . ' should provide a valid FQCN or Closure, null given');
         }
 
         $autowiredController = $this->autowireControllerClass($controllerClass);

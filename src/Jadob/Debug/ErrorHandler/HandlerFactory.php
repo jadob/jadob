@@ -12,9 +12,16 @@ use Psr\Log\LoggerInterface;
  */
 class HandlerFactory
 {
-
-    public static function factory($env, LoggerInterface $logger)
+    /**
+     * @param $env
+     * @return ErrorHandlerInterface
+     */
+    public static function factory($env)
     {
+        if ($env === 'dev') {
+            return new DevelopmentErrorHandler();
+        }
 
+        return new ProductionErrorHandler();
     }
 }

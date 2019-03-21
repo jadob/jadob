@@ -11,4 +11,8 @@ namespace Jadob\Debug\ErrorHandler;
 interface ErrorHandlerInterface
 {
 
+    public function registerErrorHandler();
+
+    public function registerExceptionHandler();
+    
 }
