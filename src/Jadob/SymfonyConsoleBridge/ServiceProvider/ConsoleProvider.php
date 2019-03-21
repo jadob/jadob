@@ -24,18 +24,18 @@ class ConsoleProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        // TODO: Implement getConfigNode() method.
+        return null;
     }
 
     /**
      * @param Container $container
      * @param null $config
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-//        if (StaticEnvironmentUtils::isCli()) {
-            $container->add('console', new Application('Jadob', Kernel::VERSION));
-//        }
+        if (strtolower(php_sapi_name()) === 'cli') {
+            return ['console' => new Application('Jadob', Kernel::VERSION)];
+        }
     }
 
     /**

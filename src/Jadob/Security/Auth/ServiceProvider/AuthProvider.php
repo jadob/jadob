@@ -24,19 +24,19 @@ class AuthProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        // TODO: Implement getConfigNode() method.
+        return;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-        $container->add('auth.user.storage', function (Container $container) {
-            return new UserStorage($container->get('session'));
-        });
-
-
+        return [
+            'auth.user.storage' => function (Container $container) {
+                return new UserStorage($container->get('session'));
+            }
+        ];
     }
 
     /**
@@ -52,11 +52,10 @@ class AuthProvider implements ServiceProviderInterface
                     $container->get('guard'),
                     $container->get('auth.user.storage')
                 ), 22
-            )
-        ;
+            );
 
 
-        if($container->has('console')) {
+        if ($container->has('console')) {
             /** @var Application $console */
             $console = $container->get('console');
 

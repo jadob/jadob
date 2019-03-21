@@ -35,35 +35,33 @@ class DoctrineDBALServiceProvider implements ServiceProviderInterface
      * @throws \RuntimeException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
 
         if (!isset($config['connections']) || \count($config['connections']) === 0) {
             throw new \RuntimeException('You should provide at least one connection in config.doctrine_dbal node.');
         }
 
-        $eventManager = new EventManager();
-        $container->add('doctrine.dbal.event_manager', $eventManager);
-        $container->add('doctrine.dbal.config', function (ContainerInterface $container) {
+        $services['doctrine.dbal.event_manager'] = $eventManager = new EventManager();
+
+        $services['doctrine.dbal.config'] = function (ContainerInterface $container) {
             $configObject = new Configuration();
             $configObject->setSQLLogger(new Psr3QueryLogger($container->get('monolog')));
             return $configObject;
-        });
+        };
 
         foreach ($config['connections'] as $connectionName => $configuration) {
-            $container->add(
-                'doctrine.dbal.' . $connectionName,
+            $services['doctrine.dbal.' . $connectionName] = function (ContainerInterface $container) use ($configuration, $eventManager) {
+                return DriverManager::getConnection(
+                    $configuration,
+                    $container->get('doctrine.dbal.config'),
+                    $eventManager
+                );
+            };
 
-                function (ContainerInterface $container) use ($configuration, $eventManager) {
-
-                    return DriverManager::getConnection(
-                        $configuration,
-                        $container->get('doctrine.dbal.config'),
-                        $eventManager
-                    );
-                }
-            );
         }
+
+        return $services;
     }
 
     /**

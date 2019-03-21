@@ -8,6 +8,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\ControllerUtils;
 use Jadob\Debug\Profiler\EventListener\ProfilerListener;
 use Jadob\EventListener\EventListener;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -33,17 +34,14 @@ class FrameworkServiceProvider implements ServiceProviderInterface
      * @param $config
      * @return mixed|void
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-        $container->add('session', function () {
-            return new Session();
-        });
-
-        $container->add('controller.utils', function (Container $container) {
-            return new ControllerUtils($container);
-        });
-
-
+        return [
+            'session' => new Session(),
+            'controller.utils' => function (ContainerInterface $container) {
+                return new ControllerUtils($container);
+            }
+        ];
     }
 
     /**
@@ -52,7 +50,7 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         //enable development-only features
-        if(isset($config['dev'])) {
+        if (isset($config['dev'])) {
             /** @var EventListener $eventListener */
             $eventListener = $container->get('event.listener');
 
@@ -61,8 +59,6 @@ class FrameworkServiceProvider implements ServiceProviderInterface
         }
 
         //@TODO: add custom Monolog Handler Interfaces and register it
-
-
 
 
     }

@@ -2,6 +2,7 @@
 
 namespace Jadob\Container;
 
+use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
@@ -45,18 +46,24 @@ class ContainerBuilder
     }
 
     /**
-     * @TODO:
      * @return Container
      * @throws ContainerException
+     * @throws ContainerBuildException
      */
     public function build($config)
     {
-        $this->registerServiceProviders($config);
+
+        if (!\is_array($config)) {
+            throw new ContainerBuildException('Config should be an array, ' . \gettype($config) . ' passed');
+        }
+
+//        $this->registerServiceProviders($config);
 
         return $this->buildContainer($config);
     }
 
     /**
+     * @deprecated
      * @param array $config framework configuration
      * @return $this
      * @throws ContainerException
@@ -75,7 +82,8 @@ class ContainerBuilder
             $configNodeKey = $provider->getConfigNode();
             $configNode = $this->getConfigNode($config, $configNodeKey);
 
-            $provider->register($this, $configNode);
+
+            $provider->register($configNode);
         }
 
         return $this;
@@ -90,7 +98,8 @@ class ContainerBuilder
     protected function buildContainer($config)
     {
 
-        $container = new Container($this->services, $this->factories);
+
+        $services = [];
 
         foreach ($this->serviceProviders as $serviceProvider) {
             $provider = new $serviceProvider;
@@ -102,7 +111,35 @@ class ContainerBuilder
             $configNodeKey = $provider->getConfigNode();
             $configNode = $this->getConfigNode($config, $configNodeKey);
 
+            $results = $provider->register($configNode);
+
+            if (\is_array($results)) {
+                foreach ($results as $serviceKey => $service) {
+
+                    if ($service instanceof \Closure) {
+                        $this->factories[$serviceKey] = $service;
+                    } else {
+                        $this->services[$serviceKey] = $service;
+                    }
+                }
+            }
+        }
+
+
+        $container = new Container($this->services, $this->factories);
+
+
+        foreach ($this->serviceProviders as $serviceProvider) {
+            $provider = new $serviceProvider;
+
+            if (!($provider instanceof ServiceProviderInterface)) {
+                throw new ContainerException('Class ' . $serviceProvider . ' cannot be used as an service provider');
+            }
+
+            $configNodeKey = $provider->getConfigNode();
+            $configNode = $this->getConfigNode($config, $configNodeKey);
             $provider->onContainerBuild($container, $configNode);
+
         }
 
         return $container;

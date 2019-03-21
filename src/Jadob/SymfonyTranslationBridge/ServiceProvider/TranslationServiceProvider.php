@@ -32,7 +32,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
      * @param $config [] Config node
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
 
         $translator = new Translator($config['locale']);
@@ -44,7 +44,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
             }
         }
 
-        $container->add('translator', $translator);
+        return ['translator' => $translator];
 
     }
 

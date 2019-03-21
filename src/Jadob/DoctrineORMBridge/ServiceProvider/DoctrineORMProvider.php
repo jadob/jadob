@@ -42,9 +42,9 @@ class DoctrineORMProvider implements ServiceProviderInterface
      * @throws \Doctrine\ORM\ORMException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-
+        return;
     }
 
     /**
@@ -157,7 +157,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
          * @TODO: how about providing multiple database console command by providing additional argument
          * (eg. --conn=<connection_name>)
          */
-        if($container->has('console')) {
+        if ($container->has('console')) {
             /** @var Application $console */
             $console = $container->get('console');
 

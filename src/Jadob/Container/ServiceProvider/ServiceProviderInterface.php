@@ -23,10 +23,9 @@ interface ServiceProviderInterface
 
     /**
      * Here you can define things that will be registered in Container.
-     * @param ContainerBuilder $container
      * @param array|null $config
      */
-    public function register(ContainerBuilder $container, $config);
+    public function register($config);
 
     /**
      * Stuff that's needed to be done after container is built.
@@ -40,6 +39,7 @@ interface ServiceProviderInterface
      * @param Container $container
      * @param array|null $config the same config node as passed in register()
      * @return void
+     * @deprecated probably
      */
     public function onContainerBuild(Container $container, $config);
 

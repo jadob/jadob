@@ -31,17 +31,16 @@ class RouterServiceProvider implements ServiceProviderInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-
-        $container->add('router', function (Container $container) use ($config) {
+        return ['router' => function (Container $container) use ($config) {
             $router = new Router($config['routes'], $container->get('request'));
             $router->setGlobalParams([
                 '_locale' => 'en'
             ]);
 
             return $router;
-        });
+        }];
 
     }
 

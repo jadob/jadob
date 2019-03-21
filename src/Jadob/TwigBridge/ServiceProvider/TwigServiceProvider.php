@@ -30,7 +30,7 @@ class TwigServiceProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
         return null;
     }
@@ -65,11 +65,18 @@ class TwigServiceProvider implements ServiceProviderInterface
             'strict_variables' => $config['strict_variables']
         ]);
 
+        $userStorage = null;
+
+        if ($container->has('auth.user.storage')) {
+            $userStorage = $container->get('auth.user.storage');
+        }
+
+
         #TODO: create some utility class
         $appVariables = [
             'router' => $container->get('router'),
             'request' => $container->get('request'),
-            'user' => $container->get('auth.user.storage'),
+            'user' => $userStorage,
             'flashes' => $container->get('session')->getFlashBag()
         ];
 

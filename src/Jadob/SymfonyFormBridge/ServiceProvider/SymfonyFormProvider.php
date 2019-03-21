@@ -41,13 +41,12 @@ class SymfonyFormProvider implements ServiceProviderInterface
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
 
         $validator = Validation::createValidatorBuilder();
-
-
-        $container->add('symfony.validator', $validator->getValidator());
+        
+        return ['symfony.validator' => $validator->getValidator()];
     }
 
     /**

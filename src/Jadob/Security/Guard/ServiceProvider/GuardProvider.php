@@ -30,7 +30,7 @@ class GuardProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
 
     }
@@ -53,6 +53,6 @@ class GuardProvider implements ServiceProviderInterface
         $container->add('guard', $guardService);
         $container->get('event.listener')->addListener(
             new GuardRequestListener($guardService)
-        ,21);
+            , 21);
     }
 }
