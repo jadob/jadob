@@ -11,4 +11,13 @@ namespace Jadob\Debug\ErrorHandler;
 class ProductionErrorHandler implements ErrorHandlerInterface
 {
 
+    public function registerErrorHandler()
+    {
+        // TODO: Implement registerErrorHandler() method.
+    }
+
+    public function registerExceptionHandler()
+    {
+        // TODO: Implement registerExceptionHandler() method.
+    }
 }
