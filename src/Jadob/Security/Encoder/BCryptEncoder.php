@@ -8,7 +8,7 @@ namespace Jadob\Security\Encoder;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class BcryptEncoder extends AbstractPasswordEncoder
+class BCryptEncoder extends AbstractPasswordEncoder
 {
     /**
      * @var int
@@ -21,6 +21,11 @@ class BcryptEncoder extends AbstractPasswordEncoder
      */
     public function __construct(int $cost)
     {
+
+        if ($cost < 4 || $cost > 31) {
+            throw new \RuntimeException('Invalid password cost passed');
+        }
+
         $this->cost = $cost;
     }
 
