@@ -11,10 +11,19 @@ namespace Jadob\Router;
 class Route
 {
 
+    /**
+     * @var int
+     */
     public const METHOD_ANY = 0;
 
+    /**
+     * @var int
+     */
     public const METHOD_GET = 1;
 
+    /**
+     * @var int
+     */
     public const METHOD_POST = 2;
 
     /**

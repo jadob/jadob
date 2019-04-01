@@ -10,4 +10,12 @@
             <directory>./src/Jadob/*/Tests/</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <file>src/Jadob/Debug/templates/error_view.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
