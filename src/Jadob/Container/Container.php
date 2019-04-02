@@ -102,7 +102,7 @@ class Container implements ContainerInterface
     public function findObjectByClassName($className)
     {
 
-        if (\in_array($className, [ContainerInterface::class, self::class])) {
+        if (\in_array($className, [ContainerInterface::class, self::class], true)) {
             return $this;
         }
 
