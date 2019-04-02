@@ -159,4 +159,25 @@ class Container implements ContainerInterface
         unset($this->factories[$factoryName]);
         return $this->services[$factoryName];
     }
+
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @return Container
+     */
+    public function alias(string $from, string $to)
+    {
+
+        //factories will create different stuff each time so we need to instantiate them
+        if (isset($this->factories[$from])) {
+            $this->instantiateFactory($from);
+        }
+
+        if (isset($this->services[$from])) {
+            $this->services[$to] = &$this->services[$from];
+        }
+
+        return $this;
+    }
 }
