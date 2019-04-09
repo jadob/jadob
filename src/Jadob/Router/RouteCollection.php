@@ -25,22 +25,32 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     protected $routes = [];
 
     /**
+     * @var RouteCollection
+     */
+    protected $parentCollection;
+
+    /**
+     * RouteCollection constructor.
+     * @param string|null $prefix
+     * @param string|null $host
+     */
+    public function __construct(?string $prefix = null, ?string $host = null)
+    {
+        $this->prefix = $prefix;
+        $this->host = $host;
+    }
+
+    /**
      * @param Route $route
      * @return $this
      */
     public function addRoute(Route $route)
     {
+        $route->setParentCollection($this);
 
         $route->setHost($this->getHost());
-        $route->setPath($this->getPrefix() . $route->getPath());
         $this->routes[$route->getName()] = $route;
         return $this;
-    }
-
-    public function __construct($prefix = null, $host = null)
-    {
-        $this->prefix = $prefix;
-        $this->host = $host;
     }
 
     /**
@@ -48,12 +58,13 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      * @param RouteCollection $collection
      * @return RouteCollection
      */
-    public function addCollection(RouteCollection $collection)
+    public function addCollection(RouteCollection $collection): RouteCollection
     {
-        foreach ($collection as $route) {
-            $route->setPath($this->getPrefix() . $route->getPath());
-            $route->setHost($this->getHost());
 
+        $collection->setParentCollection($this);
+
+        foreach ($collection as $route) {
+            $route->setHost($this->getHost());
             $this->routes[$route->getName()] = $route;
         }
 
@@ -164,6 +175,10 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function getPrefix(): ?string
     {
+        if ($this->parentCollection !== null) {
+            return $this->parentCollection->getPrefix() . $this->prefix;
+        }
+
         return $this->prefix;
     }
 
@@ -174,6 +189,24 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     public function setPrefix(?string $prefix): RouteCollection
     {
         $this->prefix = $prefix;
+        return $this;
+    }
+
+    /**
+     * @return RouteCollection
+     */
+    public function getParentCollection(): ?RouteCollection
+    {
+        return $this->parentCollection;
+    }
+
+    /**
+     * @param RouteCollection $parentCollection
+     * @return RouteCollection
+     */
+    public function setParentCollection(RouteCollection $parentCollection): RouteCollection
+    {
+        $this->parentCollection = $parentCollection;
         return $this;
     }
 

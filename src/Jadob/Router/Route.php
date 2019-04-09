@@ -12,21 +12,6 @@ class Route
 {
 
     /**
-     * @var int
-     */
-    public const METHOD_ANY = 0;
-
-    /**
-     * @var int
-     */
-    public const METHOD_GET = 1;
-
-    /**
-     * @var int
-     */
-    public const METHOD_POST = 2;
-
-    /**
      * @var string
      */
     protected $name;
@@ -57,7 +42,12 @@ class Route
     protected $params = [];
 
     /**
-     * @var int
+     * @var null|RouteCollection
+     */
+    protected $parentCollection;
+
+    /**
+     * @var string[]
      */
     protected $methods;
 
@@ -69,7 +59,7 @@ class Route
      * @param string|null $host
      * @param int $methods
      */
-    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $methods = self::METHOD_ANY)
+    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $methods = [])
     {
         $this->name = $name;
         $this->path = $path;
@@ -102,6 +92,10 @@ class Route
      */
     public function getPath()
     {
+        if ($this->parentCollection !== null) {
+            return $this->parentCollection->getPrefix() . $this->path;
+        }
+
         return $this->path;
     }
 
@@ -181,25 +175,46 @@ class Route
      * @param null|string $host
      * @return Route
      */
-    public function setHost(?string $host): Route
+    public function setHost($host): Route
     {
         $this->host = $host;
         return $this;
     }
 
     /**
-     * @param int $methods
+     * @param string[] $methods
+     * @return Route
      */
-    public function setMethods(int $methods): void
+    public function setMethods(array $methods): Route
     {
         $this->methods = $methods;
+        return $this;
     }
 
     /**
-     * @return int
+     * @return string[]
      */
-    public function getMethods(): int
+    public function getMethods(): array
     {
         return $this->methods;
     }
+
+    /**
+     * @return RouteCollection|null
+     */
+    public function getParentCollection(): ?RouteCollection
+    {
+        return $this->parentCollection;
+    }
+
+    /**
+     * @param RouteCollection|null $parentCollection
+     * @return Route
+     */
+    public function setParentCollection(?RouteCollection $parentCollection): Route
+    {
+        $this->parentCollection = $parentCollection;
+        return $this;
+    }
+
 }

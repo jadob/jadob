@@ -64,8 +64,9 @@ class RouteTest extends TestCase
     public function testRouteMethods()
     {
         $route = new Route('route-with-many-methods');
-        $route->setMethods(Route::METHOD_GET | Route::METHOD_POST);
+        $route->setMethods(['GET', 'POST']);
 
-        $this->assertEquals(3, $route->getMethods());
+        $this->assertCount(2, $route->getMethods());
     }
+
 }

@@ -25,9 +25,8 @@ class RouterServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container
      * @param $config
-     * @return mixed|void
+     * @return \Closure[]
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      */
