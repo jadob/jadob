@@ -18,7 +18,7 @@ class Router
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var RouteCollection
@@ -28,17 +28,17 @@ class Router
     /**
      * @var Route
      */
-    private $currentRoute;
+    protected $currentRoute;
 
     /**
      * @var array
      */
-    private $globalParams = [];
+    protected $globalParams = [];
 
     /**
      * @var Request
      */
-    private $context;
+    protected $context;
 
     /**
      * @param RouteCollection $routeCollection
@@ -76,7 +76,6 @@ class Router
         $uri = $request->getPathInfo();
 
         foreach ($this->routeCollection as $routeKey => $route) {
-
             $path = $route->getPath();
             /** @var Route $route * */
             if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
