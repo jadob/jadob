@@ -27,6 +27,7 @@ Jadob uses PHPUnit and Phan to test the whole codebase.
 * `Jadob\Router`
 * Documentation
 * Default Event Listeners should be moved from `Jadob\EventListener` to `Jadob\Core`, because they are framework-specific stuff.
+* Service Providers Should be moved to `Jadob\Core` too
 
 ## Getting Started
 
