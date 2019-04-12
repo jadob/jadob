@@ -2,7 +2,9 @@
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Exception\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,36 +28,55 @@ class Router
     protected $routeCollection;
 
     /**
+     * @var string
+     */
+    protected $leftDelimiter = '{';
+
+    /**
+     * @var string
+     */
+    protected $rightDelimiter = '}';
+
+    /**
      * @var Route
      */
     protected $currentRoute;
 
     /**
+     * @deprecated
      * @var array
      */
     protected $globalParams = [];
 
     /**
-     * @var Request
+     * @var Context
      */
     protected $context;
 
     /**
      * @param RouteCollection $routeCollection
-     * @param Request|null $context
+     * @param Context|null $context
      */
-    public function __construct(RouteCollection $routeCollection, Request $context = null)
+    public function __construct(RouteCollection $routeCollection, ?Context $context = null)
     {
         $this->routeCollection = $routeCollection;
+
+        $this->config = [
+            'case_sensitive' => false
+        ];
 
         if ($context !== null) {
             $this->context = $context;
         } else {
-            $this->context = Request::createFromGlobals();
+            $this->context = Context::fromGlobals();
         }
     }
 
-
+    /**
+     * @param Route $route
+     * @param $host
+     * @return bool
+     */
     protected function hostMatches(Route $route, $host)
     {
         if ($route->getHost() === null) {
@@ -65,56 +86,69 @@ class Router
         return $route->getHost() === $host;
     }
 
+
     /**
-     *
-     * @param Request $request
+     * @param string $path
+     * @param string $method
      * @return Route
+     * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
      */
-    public function matchRequest(Request $request): Route
+    public function matchRoute(string $path, string $method)
     {
-        $uri = $request->getPathInfo();
+        $method = \strtoupper($method);
 
         foreach ($this->routeCollection as $routeKey => $route) {
-            $path = $route->getPath();
-            /** @var Route $route * */
-            if (isset($this->config['global_prefix']) && !$route->isIgnoreGlobalPrefix()) {
-                $path = $this->getRegex($this->config['global_prefix'] . $path);
-            } else {
-                $path = $this->getRegex($path);
-            }
+            /** @var Route $route */
+            $pathRegex = $this->getRegex($route->getPath());
+            //@TODO: maybe we should break here if $pathRegex === false?
 
-            $matches = [];
-
-            if ($path !== false && preg_match($path, $uri, $matches)
-                && $this->hostMatches($route, $request->getHost())
-
+            if ($pathRegex !== false
+                && preg_match($pathRegex, $path, $matches) > 0
+                && $this->hostMatches($route, $this->context->getHost())
             ) {
-                $params = array_intersect_key(
+
+                if (
+                    count(($routeMethods = $route->getMethods())) > 0
+                    && !\in_array($method, $routeMethods)
+                ) {
+                    throw new MethodNotAllowedException();
+                }
+
+                $parameters = array_intersect_key(
                     $matches, array_flip(array_filter(array_keys($matches), 'is_string'))
                 );
 
-                if (isset($this->config['locale_prefix']) && !$route->isIgnoreGlobalPrefix()) {
-                    $this->globalParams['_locale'] = $params['_locale'];
-                }
-
-                $route->setParams($params);
-                $this->currentRoute = $route;
+                $route->setParams($parameters);
 
                 return $route;
             }
+
         }
 
-        throw new RouteNotFoundException('No route matched for URI ' . $uri);
+        throw new RouteNotFoundException('No route matched for URI ' . $path);
+    }
+
+    /**
+     * @param Request $request
+     * @return Route
+     * @throws RouteNotFoundException
+     * @throws MethodNotAllowedException
+     */
+    public function matchRequest(Request $request): Route
+    {
+        return $this->matchRoute(
+            $request->getPathInfo(),
+            $request->getMethod()
+        );
     }
 
     /**
      * @param $pattern
      * @return bool|string
      */
-    public function getRegex($pattern)
+    protected function getRegex($pattern)
     {
-
         if (preg_match('/[^-:.\/_{}()a-zA-Z\d]/', $pattern)) {
             return false; // Invalid pattern
         }
@@ -208,6 +242,7 @@ class Router
     }
 
     /**
+     * @deprecated
      * @return array
      */
     public function getGlobalParams()
@@ -216,6 +251,7 @@ class Router
     }
 
     /**
+     * @deprecated
      * @return string
      */
     public function getGlobalParam($key)
@@ -224,6 +260,7 @@ class Router
     }
 
     /**
+     * @deprecated
      * @param array $globalParams
      * @return Router
      */
@@ -234,4 +271,35 @@ class Router
         return $this;
     }
 
+    /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->context;
+    }
+
+    /**
+     * @param Context $context
+     * @return Router
+     */
+    public function setContext(Context $context): Router
+    {
+        $this->context = $context;
+        return $this;
+    }
+
+    /**
+     * Allows to set custom route argument delimiters
+     * @param string $left
+     * @param string $right
+     * @return $this
+     */
+    public function setParameterDelimiters(string $left, string $right) {
+        $this->leftDelimiter = $left;
+        $this->rightDelimiter = $right;
+
+        return $this;
+    }
 }
+
