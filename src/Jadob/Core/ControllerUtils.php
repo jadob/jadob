@@ -6,6 +6,7 @@ use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ControllerUtils
@@ -84,6 +85,15 @@ class ControllerUtils
     public function createRedirectToRouteResponse($name, $params = [])
     {
         return new RedirectResponse($this->generateRoute($name, $params));
+    }
+
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->container->get('request');
     }
 
 }
