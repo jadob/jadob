@@ -18,6 +18,7 @@ class BCryptEncoder extends AbstractPasswordEncoder
     /**
      * BcryptEncoder constructor.
      * @param int $cost
+     * @throws \RuntimeException
      */
     public function __construct(int $cost)
     {
