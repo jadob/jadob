@@ -69,6 +69,8 @@ class Kernel
      */
     protected $logger;
 
+//    protected $dispatcher;
+
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
@@ -86,6 +88,7 @@ class Kernel
         $this->env = $env;
         $this->bootstrap = $bootstrap;
         $this->eventListener = new EventListener();
+//        $this->dispatcher = new Dispatcher($this);
         $this->logger = $this->initializeLogger();
         $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
 
@@ -113,9 +116,7 @@ class Kernel
 
         $this->container = $builder->build($this->config);
 
-        /** @var \Jadob\Router\Router $router */
-        $router = $this->container->get('router');
-        $route = $router->matchRequest($request);
+        $dispatcher = new Dispatcher($this->container);
 
         $beforeControllerEvent = new BeforeControllerEvent($request);
 
@@ -123,67 +124,22 @@ class Kernel
 
         $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
 
-        #@TODO: this part below should be refactored: controller dispatching should be moved to another class
         if ($beforeControllerEventResponse !== null) {
-            return $beforeControllerEventResponse;
+            $this->logger->debug('Received response from event listener, controller from route is not executed');
+            return $beforeControllerEventResponse->prepare($request);
         }
 
-        $controllerClass = $route->getController();
-
-        if ($controllerClass === null) {
-            throw new KernelException('Route ' . $route->getName() . ' should provide a valid FQCN or Closure, null given');
-        }
-
-        $autowiredController = $this->autowireControllerClass($controllerClass);
-
-        if (!method_exists($autowiredController, $route->getAction())) {
-            throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
-        }
-
-        $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
-
-        if (!($response instanceof Response)) {
-            throw new KernelException('Controller should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
-        }
+        $response = $dispatcher->executeRequest($request);
 
         $afterControllerEvent = new AfterControllerEvent($response);
 
         $this->eventListener->dispatchEvent($afterControllerEvent);
 
-        return $afterControllerEvent->getResponse();
-    }
-
-    /**
-     * @param $controllerClassName
-     * @return mixed
-     * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     * @throws KernelException
-     */
-    protected function autowireControllerClass($controllerClassName)
-    {
-        $reflection = new \ReflectionClass($controllerClassName);
-        $classConstructor = $reflection->getConstructor();
-        $arguments = [];
-
-        if ($classConstructor === null) {
-            return new $controllerClassName;
+        if ($afterControllerEvent->getResponse() !== null) {
+            return $afterControllerEvent->getResponse()->prepare($request);
         }
-
-        foreach ($classConstructor->getParameters() as $parameter) {
-            if (!$parameter->hasType()) {
-                throw new KernelException('Argument "' . $parameter->getName() . '" defined in ' . $controllerClassName . ' does not have any type.');
-            }
-
-            $type = (string)$parameter->getType();
-            if ($type === ContainerInterface::class) {
-                $arguments[] = $this->container;
-            } else {
-                $arguments[] = $this->container->findObjectByClassName($type);
-            }
-        }
-
-        return new $controllerClassName(...$arguments);
+        
+        return $response->prepare($request);
     }
 
     /**
