@@ -77,7 +77,7 @@ class Router
      * @param $host
      * @return bool
      */
-    protected function hostMatches(Route $route, $host)
+    protected function hostMatches(Route $route, $host): bool
     {
         if ($route->getHost() === null) {
             return true;
@@ -94,7 +94,7 @@ class Router
      * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
      */
-    public function matchRoute(string $path, string $method)
+    public function matchRoute(string $path, string $method): Route
     {
         $method = \strtoupper($method);
 
