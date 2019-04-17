@@ -57,8 +57,6 @@ class ContainerBuilder
             throw new ContainerBuildException('Config should be an array, ' . \gettype($config) . ' passed');
         }
 
-//        $this->registerServiceProviders($config);
-
         return $this->buildContainer($config);
     }
 
@@ -97,8 +95,6 @@ class ContainerBuilder
      */
     protected function buildContainer($config)
     {
-
-
         $services = [];
 
         foreach ($this->serviceProviders as $serviceProvider) {
