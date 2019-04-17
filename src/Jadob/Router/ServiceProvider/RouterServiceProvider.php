@@ -4,6 +4,7 @@ namespace Jadob\Router\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
+use Jadob\Router\Context;
 use Jadob\Router\Router;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
@@ -33,7 +34,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     public function register($config)
     {
         return ['router' => function (Container $container) use ($config) {
-            $router = new Router($config['routes'], $container->get('request'));
+            $router = new Router($config['routes'], Context::fromGlobals());
             $router->setGlobalParams([
                 '_locale' => 'en'
             ]);
