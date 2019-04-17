@@ -70,7 +70,7 @@ class Container implements ContainerInterface
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
-    public function getObjectsImplementing($interfaceClassName)
+    public function getObjectsImplementing(string $interfaceClassName): ?array
     {
         $objects = [];
 
@@ -98,8 +98,9 @@ class Container implements ContainerInterface
     /**
      * @param string $className FQCN of class that we need to find
      * @return mixed
+     * @throws ServiceNotFoundException
      */
-    public function findObjectByClassName($className)
+    public function findObjectByClassName(string $className)
     {
 
         if (\in_array($className, [ContainerInterface::class, self::class], true)) {
@@ -137,7 +138,7 @@ class Container implements ContainerInterface
      * @param $object
      * @return $this
      */
-    public function add($id, $object)
+    public function add(string $id, $object)
     {
 
         if ($object instanceof \Closure) {
@@ -153,7 +154,7 @@ class Container implements ContainerInterface
      * @param string $factoryName
      * @return mixed
      */
-    protected function instantiateFactory($factoryName)
+    protected function instantiateFactory(string $factoryName)
     {
         $this->services[$factoryName] = $this->factories[$factoryName]($this);
         unset($this->factories[$factoryName]);
@@ -166,7 +167,7 @@ class Container implements ContainerInterface
      * @param string $to
      * @return Container
      */
-    public function alias(string $from, string $to)
+    public function alias(string $from, string $to): Container
     {
 
         //factories will create different stuff each time so we need to instantiate them
