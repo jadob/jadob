@@ -25,7 +25,7 @@ Jadob uses PHPUnit and Phan to test the whole codebase.
 * [ ]  80%+ Code Coverage
 * [ ]  90%+ Code Coverage
 * [ ]  95%+ Code Coverage
-* [ ]  CRAP Index >= 10 for all classes
+* [ ]  CRAP Index >= 10 for all methods
 * [ ] `Jadob\Core`
 * [ ] `Jadob\Security`
 * [ ] `Jadob\Saml`
