@@ -301,5 +301,13 @@ class Router
 
         return $this;
     }
+
+    /**
+     * @return RouteCollection
+     */
+    public function getRouteCollection(): RouteCollection
+    {
+        return $this->routeCollection;
+    }
 }
 
