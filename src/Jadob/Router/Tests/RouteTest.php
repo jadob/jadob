@@ -3,6 +3,7 @@
 namespace Jadob\Router\Tests;
 
 use Jadob\Router\Route;
+use Jadob\Router\RouteCollection;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -67,6 +68,13 @@ class RouteTest extends TestCase
         $route->setMethods(['GET', 'POST']);
 
         $this->assertCount(2, $route->getMethods());
+    }
+
+    public function testParentCollection()
+    {
+        $collection = new RouteCollection();
+        $collection->addRoute($route = new Route('example1'));
+        $this->assertSame($collection, $route->getParentCollection());
     }
 
 }

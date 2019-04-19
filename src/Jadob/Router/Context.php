@@ -31,10 +31,26 @@ class Context
      */
     public static function fromGlobals()
     {
-        return (new self())
-            ->setHost($_SERVER['HTTP_HOST'] ?? null)
-            ->setPort($_SERVER['SERVER_PORT'] ?? null)
-            ->setSecure(isset($_SERVER['HTTPS']));
+
+        $context = new self();
+
+        $context->setSecure(isset($_SERVER['HTTPS']));
+
+        $host = $_SERVER['HTTP_HOST'] ?? null;
+
+        if (strpos($host, ':') === false) {
+            $context->setHost($host);
+            $context->setPort($_SERVER['SERVER_PORT'] ?? null);
+
+            return $context;
+        }
+
+        $explodedHost = \explode(':', $host);
+
+        $context->setHost($explodedHost[0]);
+        $context->setPort((int)$explodedHost[1]);
+
+        return $context;
     }
 
     /**

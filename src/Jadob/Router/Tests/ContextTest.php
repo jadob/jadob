@@ -40,4 +40,16 @@ class ContextTest extends TestCase
         $this->assertEquals('my.domain.com', $context->getHost());
         $this->assertEquals(8001, $context->getPort());
     }
+
+    public function testCheckingHttpHostHasAColon()
+    {
+        $_SERVER['HTTP_HOST'] = 'my.domain.com:8001';
+        $_SERVER['HTTPS'] = true;
+
+        $context = Context::fromGlobals();
+
+        $this->assertTrue($context->isSecure());
+        $this->assertEquals('my.domain.com', $context->getHost());
+        $this->assertEquals(8001, $context->getPort());
+    }
 }
