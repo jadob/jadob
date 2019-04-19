@@ -32,8 +32,8 @@ class Context
     public static function fromGlobals()
     {
         return (new self())
-            ->setHost($_SERVER['HTTP_HOST'])
-            ->setPort($_SERVER['SERVER_PORT'])
+            ->setHost($_SERVER['HTTP_HOST'] ?? null)
+            ->setPort($_SERVER['SERVER_PORT'] ?? null)
             ->setSecure(isset($_SERVER['HTTPS']));
     }
 
