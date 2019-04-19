@@ -62,7 +62,7 @@ class Application /**implements \ArrayAccess **/
      */
     public function __construct($config)
     {
-        $this->enviroment = $config['environment'] ?? 'prod';
+        $this->enviroment = $config['env'] ?? 'prod';
         $this->services = $config['services'] ?? [];
     }
 
@@ -71,10 +71,20 @@ class Application /**implements \ArrayAccess **/
         $route = new Route($path);
         $route->setPath($path);
         $route->setController($callback);
-        $route->setMethods(Route::METHOD_GET);
+        $route->setMethods(['GET']);
 
         $this->routes[] = $route;
         return $this;
+    }
+
+    public function post($path, $callback)
+    {
+
+    }
+
+    public function addRoute($methods, $path, $callback)
+    {
+
     }
 
 
@@ -95,19 +105,20 @@ class Application /**implements \ArrayAccess **/
                 $callback = $route->getController();
 
                 if (!($callback instanceof \Closure)) {
-                    $response = new JsonResponse([
-                        'error' => 'Controller should be Closure, ' . gettype($callback) . ' passed'
-                    ]);
+                    //@TODO: throw exception here
+//                    $response = new JsonResponse([
+//                        'error' => 'Controller should be Closure, ' . gettype($callback) . ' passed'
+//                    ]);
                 }
 
-                $callbackResponse = $callback();
+                $response = $callback();
 
-                if(\is_array($callbackResponse)) {
-                    $response = new JsonResponse($callbackResponse);
+                if(\is_array($response)) {
+                    $response = new JsonResponse($response);
                 }
 
-                if(\is_string($callbackResponse) || $callbackResponse === null) {
-                    $response = new Response($callbackResponse);
+                if(\is_string($response) || $response === null) {
+                    $response = new Response($response);
                 }
 
             }
@@ -116,20 +127,5 @@ class Application /**implements \ArrayAccess **/
         //execute after events
 
         $response->send();
-    }
-
-    /**
-     * @param int $bitmask
-     */
-    public function decodeMethodsBitmask($bitmask)
-    {
-
-    }
-
-    /**
-     * @param array $services
-     */
-    protected function buildContainer(array $services) {
-
     }
 }
