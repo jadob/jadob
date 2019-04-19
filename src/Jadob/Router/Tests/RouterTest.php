@@ -63,4 +63,90 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Route::class, $result);
     }
 
+
+    public function testRouteGenerating()
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+
+        $this->assertEquals('/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2]));
+
+    }
+
+    public function testFullRouteWithHttpAndCustomPortGenerating()
+    {
+
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 8001;
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+        $this->assertEquals('http://my.domain.com:8001/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+
+
+    }
+
+    public function testFullRouteWithHttpAndDefaultPortGenerating()
+    {
+
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 80;
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+        $this->assertEquals('http://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+
+
+    }
+
+    public function testFullRouteWithHttpsAndCustomPortGenerating()
+    {
+
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 9876;
+        $_SERVER['HTTPS'] = 'on';
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+        $this->assertEquals('https://my.domain.com:9876/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+    }
+
+    public function testFullRouteWithHttpsAndDefaultPortGenerating()
+    {
+
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 443;
+        $_SERVER['HTTPS'] = 'on';
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+        $this->assertEquals('https://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+
+    }
+
+    public function testFullRouteWithHttpAndHttpsPortGenerating()
+    {
+
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 443;
+//        $_SERVER['HTTPS'] = 'on';
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection);
+
+        $this->assertEquals('http://my.domain.com:443/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+
+    }
+
 }

@@ -212,7 +212,29 @@ class Router
                 }
 
                 if ($full) {
-                    return $this->context->getSchemeAndHttpHost() . $convertedPath;
+                    $scheme = 'http';
+
+                    if ($this->context->isSecure()) {
+                        $scheme = 'https';
+                    }
+
+                    $port = $this->context->getPort();
+
+                    if (
+                        !\in_array($port, [80, 443], true)
+                        || (!$this->context->isSecure() && $port === 443)
+                    ) {
+                        $port = ':' . $port;
+                    } else {
+                        $port = null;
+                    }
+
+                    return $scheme
+                        . '://'
+                        . $this->context->getHost()
+                        . $port
+                        . $convertedPath;
+
                 }
                 return $convertedPath;
             }
@@ -295,7 +317,8 @@ class Router
      * @param string $right
      * @return $this
      */
-    public function setParameterDelimiters(string $left, string $right) {
+    public function setParameterDelimiters(string $left, string $right)
+    {
         $this->leftDelimiter = $left;
         $this->rightDelimiter = $right;
 
