@@ -49,7 +49,7 @@ class Context
      * @param string $host
      * @return Context
      */
-    public function setHost(string $host): Context
+    public function setHost(?string $host): Context
     {
         $this->host = $host;
         return $this;
@@ -85,7 +85,7 @@ class Context
      * @param int $port
      * @return Context
      */
-    public function setPort(int $port): Context
+    public function setPort(?int $port): Context
     {
         $this->port = $port;
         return $this;
