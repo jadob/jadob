@@ -1,14 +1,15 @@
-<?php /** @var \Throwable $exception */ ?><!DOCTYPE html>
+<?php use Jadob\Core\Kernel;
+/** @var $exception Exception */?><!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <title>Exception Occured | Jadob <?= \Jadob\Core\Kernel::VERSION; ?></title>
+    <meta charset="utf-8">
+    <title><?= get_class($exception); ?> | Jadob Debugger</title>
+    <meta name="robots" content="noindex, nofollow">
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
-
         html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
         a, abbr, acronym, address, big, cite, code,
@@ -29,137 +30,183 @@
             font: inherit;
             vertical-align: baseline;
         }
-
         /* HTML5 display-role reset for older browsers */
         article, aside, details, figcaption, figure,
         footer, header, hgroup, menu, nav, section {
             display: block;
         }
-
         body {
             line-height: 1;
         }
-
         ol, ul {
             list-style: none;
         }
-
         blockquote, q {
             quotes: none;
         }
-
         blockquote:before, blockquote:after,
         q:before, q:after {
             content: '';
             content: none;
         }
-
         table {
             border-collapse: collapse;
             border-spacing: 0;
         }
-    </style>
-    <style>
-        body {
-            /*background: #EEEEEE;*/
-            color: #212121;
+        strong {
+            font-weight: 700;
         }
-        .error-container {
+        .error-wrapper {
+            padding-top: 15px;
             width: 60%;
             margin-right: auto;
             margin-left: auto;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-
-        .error-container .lenny {
-            text-align: center;
-            margin: 25px;
-        }
-        .error-container .content {
-            background: #FFFFFF;
-            margin-top: 25px;
+        .error-wrapper__header {
+            display: flex;
+            border-bottom: 1px solid #D2D7D3;
             padding-bottom: 10px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         }
-
-        .content .exception-info .exception-fqcn {
-            padding: 10px;
-            background: #F44236;
-            font-weight: 700;
+        .error-wrapper__header_metadata {
+            width: 75%;
+            float: left;
         }
-
-        .content .exception-info .exception-message {
+        .error-wrapper__header_metadata_exception-info {
+            color: #95A5A6;
+            font-size: 14px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .error-wrapper__header_metadata_exception-class {
             font-size: 24px;
-            /*background: #FFFFFF;*/
-            padding: 10px;
-            background: #E57373;
+            color: #212121;
             font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 10px;
         }
-
-        .content .stack-trace {
-            padding: 10px;
+        .error-wrapper__content_metadata_exception-message {
+            font-size: 32px;
+            color: #CF000F;
+            font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .error-wrapper__sad-emoticon_wrapper {
+            opacity: 0.3;
+            padding: 25px;
+            color: #D64541;
+            font-size: 70px;
+            display: block;
+        }
+        .error-wrapper__sad-emoticon_wrapper:hover {
+            opacity: 1;
+        }
+        .error-wrapper__content_stack-trace {
             display: grid;
         }
-
-        .content .stack-trace .trace-header {
-            font-size: 20px;
-        }
-
-        .content .stack-trace .row .number {
+        .error-wrapper__content_stack-trace-header {
+            font-size: 22px;
+            color: #212121;
             font-weight: 700;
-            width: 10%;
-            float: left;
-            clear: both;
-
+            margin-top: 15px;
+            margin-bottom: 10px;
         }
-
-        .content .stack-trace .row .file {
-            /*font-weight: 700;*/
-            width: 80%;
-            float: left;
-
+        .error-wrapper__footer {
+            padding-top: 10px;
+            border-top: 1px solid #D2D7D3;
+        }
+        .error-wrapper__footer-link {
+            font-size: 12px;
+            color: #95A5A6;
+            text-decoration: none;
+        }
+        .stack-trace {
+            width: 100%;
+        }
+        .stack-trace tr {
+            border-bottom: 1px solid #212121;
+        }
+        .stack-trace thead {
+            font-weight: 700;
+        }
+        .stack-trace td {
+            padding: 5px;
+        }
+        .stack-trace .key {
+            border-right: 1px dotted #95A5A6;
+        }
+        .no-message {
+            color: #95A5A6;
+            font-weight: 400;
         }
     </style>
 </head>
 <body>
-<div class="error-container">
-    <div class="lenny">ᕙ(⇀‸↼‶)ᕗ</div>
-    <main class="content">
-        <header class="navbar">
-            <div class="exception-info">
-
-                <h1 class="exception-message">
-                    <?= $exception->getMessage(); ?>
-                </h1>
-                <p class="exception-fqcn">
-                    <?= get_class($exception); ?> <br>
-                    Thrown in: <strong><?= $exception->getFile(); ?></strong>:<strong><?= $exception->getLine(); ?></strong>
-                </p>
-            </div>
-        </header>
-        <section class="stack-trace">
-            <h1 class="trace-header">Stack Trace:</h1>
-            <?php
-            $x = 0;
-            foreach ($exception->getTrace() as $item) { ?>
-                <?php $x++; ?>
-
-                <div class="row">
-                    <div class="number"><?= $x; ?></div>
-                    <div class="file">
-                        <div class="function-name">
-                            <?= $item['class']; ?><?= $item['type']; ?><?= $item['function']; ?>(
-                            <?php foreach ($item['args'] as $arg) { ?>
-                                <?= gettype($arg); ?><?php if (is_string($arg)) { ?>(<?= $arg; ?>)<?php } ?>
-                            <?php } ?>
-                            )
-                        </div>
-                        <p class="function-location">at <?= $item['file']; ?>:<?= $item['line']; ?></p>
-                    </div>
-                </div>
-            <?php } ?>
+<main class="error-wrapper">
+    <section class="error-wrapper__header">
+        <div class="error-wrapper__header_metadata">
+            <h2 class="error-wrapper__header_metadata_exception-class"><?= \get_class($exception); ?></h2>
+            <p class="error-wrapper__header_metadata_exception-info">File:
+                <strong><?= $exception->getFile(); ?></strong></p>
+            <p class="error-wrapper__header_metadata_exception-info">Line:
+                <strong><?= $exception->getLine(); ?></strong></p>
+            <p class="error-wrapper__header_metadata_exception-info">Code:
+                <strong><?= $exception->getCode(); ?></strong></p>
+        </div>
+        <section class="error-wrapper__sad-emoticon">
+            <span class="error-wrapper__sad-emoticon_wrapper">ಠ_ಠ</span>
         </section>
-    </main>
-    <footer class="footer"></footer>
-</div>
+    </section>
+    <section class="error-wrapper__content">
+        <h1 class="error-wrapper__content_metadata_exception-message">
+            <?php if(strlen($exception->getMessage()) > 0) { ?>
+                <?= $exception->getMessage(); ?>
+            <?php } else { ?>
+                <span class="no-message">This exception has no message.</span>
+            <?php }; ?>
+        </h1>
+        <section class="error-wrapper__content_stack-trace">
+            <h2 class="error-wrapper__content_stack-trace-header">
+                Stack Trace:
+            </h2>
+            <table class="stack-trace">
+                <thead>
+                <tr>
+                    <td class="key">No.</td>
+                    <td class="function">Method:</td>
+                    <td class="line">Line:</td>
+
+                </tr>
+                </thead>
+                <tbody>
+                <?php $stackTrace = $exception->getTrace();
+                $stepsCount = count($stackTrace);
+                foreach ($stackTrace as $element) { ?>
+                    <tr>
+                        <td class="key"><?= $stepsCount--; ?></td>
+                        <td class="function">
+                            <?php
+                            $fullFunctionCall = $element['function'];
+                            if (isset($element['class'])) {
+                                $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
+                            }
+                            ?>
+                            <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>)
+                        </td>
+                        <td> <?= $element['line'] ?? null ?></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    <footer class="error-wrapper__footer">
+        <a target="_blank"
+           class="error-wrapper__footer-link"
+           href="https://github.com/jadob/jadob">Jadob Framework <?= Kernel::VERSION ?> </a>
+    </footer>
+</main>
+
 </body>
 </html>
