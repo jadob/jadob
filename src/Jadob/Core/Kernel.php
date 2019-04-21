@@ -81,6 +81,10 @@ class Kernel
     {
         $env = strtolower($env);
 
+        $errorHandler = HandlerFactory::factory($env);
+        $errorHandler->registerErrorHandler();
+        $errorHandler->registerExceptionHandler();
+
         if (!\in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
@@ -94,9 +98,7 @@ class Kernel
 
         $this->addEvents();
 
-        $errorHandler = HandlerFactory::factory($env);
-        $errorHandler->registerErrorHandler();
-        $errorHandler->registerExceptionHandler();
+
     }
 
     /**
