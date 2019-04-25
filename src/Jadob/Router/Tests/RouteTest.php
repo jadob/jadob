@@ -17,7 +17,7 @@ class RouteTest extends TestCase
 
     public function testBasicRouteFeatures()
     {
-        $route = new Route('example-route-1');
+        $route = new Route('example-route-1', '/');
 
         $route
             ->setController('App\Controller\ApplicationController')
@@ -39,7 +39,7 @@ class RouteTest extends TestCase
 
     public function testRouteParams()
     {
-        $route = new Route('example-route-2');
+        $route = new Route('example-route-2', '/');
 
         $route
             ->setParams([
@@ -53,7 +53,7 @@ class RouteTest extends TestCase
     public function testRouteNameChanging()
     {
 
-        $route = new Route('example-route-3');
+        $route = new Route('example-route-3', '/');
 
         $this->assertEquals('example-route-3', $route->getName());
 
@@ -64,7 +64,7 @@ class RouteTest extends TestCase
 
     public function testRouteMethods()
     {
-        $route = new Route('route-with-many-methods');
+        $route = new Route('route-with-many-methods', '/');
         $route->setMethods(['GET', 'POST']);
 
         $this->assertCount(2, $route->getMethods());
@@ -73,8 +73,57 @@ class RouteTest extends TestCase
     public function testParentCollection()
     {
         $collection = new RouteCollection();
-        $collection->addRoute($route = new Route('example1'));
+        $collection->addRoute($route = new Route('example1', '/'));
         $this->assertSame($collection, $route->getParentCollection());
     }
 
+    public function testCreatingRouteFromArray()
+    {
+        $route = [
+            'path' => '/my/path/1',
+            'name' => 'my_example_path',
+            'controller' => '/My/Dummy/ControllerClass',
+            'action' => 'indexAction',
+            'methods' => ['GET', 'POST']
+        ];
+
+        $routeObject = Route::fromArray($route);
+
+        $this->assertEquals('/my/path/1', $routeObject->getPath());
+    }
+
+    /**
+     * @expectedException \Jadob\Router\Exception\RouterException
+     * @expectedExceptionMessage Missing "name" key in $data.
+     * @throws \Jadob\Router\Exception\RouterException
+     */
+    public function testCreatingRouteFromArrayWillBreakIfNoNamePassed()
+    {
+        $route = [
+            'path' => '/my/path/1',
+            'controller' => '/My/Dummy/ControllerClass',
+            'action' => 'indexAction',
+            'methods' => ['GET', 'POST']
+        ];
+
+        Route::fromArray($route);
+
+    }
+
+    /**
+     * @expectedException \Jadob\Router\Exception\RouterException
+     * @expectedExceptionMessage Missing "path" key in $data.
+     * @throws \Jadob\Router\Exception\RouterException
+     */
+    public function testCreatingRouteFromArrayWillBreakIfNoPathPassed()
+    {
+        $route = [
+            'name' => '/my/path/1',
+            'controller' => '/My/Dummy/ControllerClass',
+            'action' => 'indexAction',
+            'methods' => ['GET', 'POST']
+        ];
+
+        Route::fromArray($route);
+    }
 }
