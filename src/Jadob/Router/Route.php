@@ -53,13 +53,13 @@ class Route
 
     /**
      * @param string $name
-     * @param string|null $path
+     * @param string $path
      * @param string|null $controller
      * @param string|null $action
      * @param string|null $host
      * @param array $methods
      */
-    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, array $methods = [])
+    public function __construct($name, $path, $controller = null, $action = '__invoke', $host = null, array $methods = [])
     {
         $this->name = $name;
         $this->path = $path;
