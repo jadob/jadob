@@ -15,7 +15,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     {
         if (PHP_SAPI !== 'cli') {
             set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-                throw new \Error($errstr, $errno);
+                throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
             });
         }
     }
@@ -49,6 +49,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         }
         return 'unknown';
     }
+
     public static function parseParams($params)
     {
         $output = [];
