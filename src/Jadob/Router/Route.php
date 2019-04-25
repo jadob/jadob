@@ -57,9 +57,9 @@ class Route
      * @param string|null $controller
      * @param string|null $action
      * @param string|null $host
-     * @param int $methods
+     * @param array $methods
      */
-    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, $methods = [])
+    public function __construct($name, $path = null, $controller = null, $action = '__invoke', $host = null, array $methods = [])
     {
         $this->name = $name;
         $this->path = $path;
@@ -217,4 +217,8 @@ class Route
         return $this;
     }
 
+
+    public static function fromArray(array $data)
+    {
+    }
 }
