@@ -23,7 +23,7 @@ interface ServiceProviderInterface
 
     /**
      * Here you can define things that will be registered in Container.
-     * @param array|null $config
+     * @param array[]|null $config
      */
     public function register($config);
 
@@ -39,7 +39,6 @@ interface ServiceProviderInterface
      * @param Container $container
      * @param array|null $config the same config node as passed in register()
      * @return void
-     * @deprecated probably
      */
     public function onContainerBuild(Container $container, $config);
 
