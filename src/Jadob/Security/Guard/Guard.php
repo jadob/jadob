@@ -36,12 +36,19 @@ class Guard
     protected $currentGuardName;
 
     /**
+     * @var string[]
+     */
+    protected $excludedPaths = [];
+
+    /**
      * Guard constructor.
      * @param UserStorage $userStorage
+     * @param array $excludedPaths
      */
-    public function __construct(UserStorage $userStorage)
+    public function __construct(UserStorage $userStorage, array $excludedPaths = [])
     {
         $this->userStorage = $userStorage;
+        $this->excludedPaths = $excludedPaths;
     }
 
     /**
@@ -66,6 +73,10 @@ class Guard
         return $this;
     }
 
+    /**
+     * @param Request $request
+     * @return GuardAuthenticatorInterface|null
+     */
     public function matchRule(Request $request)
     {
         foreach ($this->guards as $guard) {
@@ -76,7 +87,6 @@ class Guard
 
         return null;
     }
-
 
     /**
      * @param Request $request
@@ -114,6 +124,38 @@ class Guard
 
         return null;
     }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function isRequestPathExcluded(Request $request): bool
+    {
+        return $this->isPathExcluded($request->getPathInfo());
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    public function isPathExcluded(string $path): bool
+    {
+        foreach ($this->excludedPaths as $excludedPathPattern) {
+
+            if (\strcasecmp($path, $excludedPathPattern) === 0) {
+                return true;
+            }
+
+            $excludedPathPattern = '@' . $excludedPathPattern . '@';
+
+            if (preg_match($excludedPathPattern, $path) !== 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * @return null|string
