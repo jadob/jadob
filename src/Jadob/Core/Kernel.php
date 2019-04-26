@@ -32,7 +32,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.0.60';
+    public const VERSION = '0.0.61';
 
     /**
      * @var array
