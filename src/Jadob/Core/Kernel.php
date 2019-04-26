@@ -140,7 +140,7 @@ class Kernel
         if ($afterControllerEvent->getResponse() !== null) {
             return $afterControllerEvent->getResponse()->prepare($request);
         }
-        
+
         return $response->prepare($request);
     }
 
@@ -204,7 +204,7 @@ class Kernel
 
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->add('event.listener', $this->eventListener);
-            $containerBuilder->add('bootstrap', $this->bootstrap);
+            $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add('kernel', $this);
             /** @TODO: how about creating an 'logger' service pointing to this.logger? */
             $containerBuilder->add('monolog', $this->logger);
