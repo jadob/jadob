@@ -4,7 +4,6 @@ namespace Jadob\Security\Guard\EventListener;
 
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
-use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Guard\Guard;
 
 /**
@@ -16,6 +15,9 @@ use Jadob\Security\Guard\Guard;
 class GuardRequestListener implements BeforeControllerEventListenerInterface
 {
 
+    /**
+     * @var bool
+     */
     protected $blockPropagation = false;
 
     /**
