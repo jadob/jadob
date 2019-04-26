@@ -5,6 +5,13 @@ namespace Jadob\TwigBridge\Twig\Extension;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated
+ * Class AssetExtension
+ * @package Jadob\TwigBridge\Twig\Extension
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class AssetExtension extends \Twig_Extension
 {
 
