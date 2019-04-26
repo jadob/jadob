@@ -210,4 +210,21 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
         return $this;
     }
 
+
+    /**
+     * @param array[] $data
+     * @return RouteCollection
+     * @throws Exception\RouterException
+     */
+    public static function fromArray(array $data)
+    {
+        $routeCollection = new self();
+
+        foreach ($data as $routeArray) {
+            $routeCollection->addRoute(Route::fromArray($routeArray));
+        }
+
+        return $routeCollection;
+    }
+
 }

@@ -39,6 +39,47 @@ class RouteCollectionTest extends TestCase
 
 
         $this->assertEquals($collection3['route_1']->getPath(), '/r3/r2/r1/resource.html');
+        $this->assertSame($collection3, $collection2->getParentCollection());
+        $this->assertSame($collection2, $collection1->getParentCollection());
+       // $this->assertNull($collection1->getParentCollection());
     }
 
+    public function testCreatingRouteCollectionFromArray()
+    {
+        $routes = [
+            [
+                'path' => '/my/path/1',
+                'name' => 'my_example_path',
+                'controller' => '/My/Dummy/ControllerClass',
+                'action' => 'indexAction',
+                'methods' => ['GET', 'POST']
+            ],
+            [
+                'path' => '/my/path/2',
+                'name' => 'my_example_path2',
+                'controller' => '/My/Dummy/ControllerClass',
+                'action' => 'indexAction2',
+                'methods' => ['GET', 'POST']
+            ],
+            [
+                'path' => '/my/path/3',
+                'name' => 'my_example_path3',
+                'controller' => '/My/Dummy/ControllerClass',
+                'action' => 'indexAction2',
+                'methods' => ['GET', 'POST']
+            ],
+            [
+                'path' => '/my/path/4',
+                'name' => 'my_example_path4',
+                'controller' => '/My/Dummy/ControllerClass',
+                'action' => 'indexAction2',
+                'methods' => ['GET', 'POST']
+            ],
+        ];
+
+        $routeCollection = RouteCollection::fromArray($routes);
+
+        $this->assertInstanceOf(Route::class, $routeCollection['my_example_path4']);
+        $this->assertEquals(4, $routeCollection->count());
+    }
 }
