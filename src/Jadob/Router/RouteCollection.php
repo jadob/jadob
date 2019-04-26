@@ -220,7 +220,11 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     {
         $routeCollection = new self();
 
-        foreach ($data as $routeArray) {
+        foreach ($data as $routeName => $routeArray) {
+            if(!isset($routeArray['name'])) {
+                $routeArray['name'] = $routeName;
+            }
+
             $routeCollection->addRoute(Route::fromArray($routeArray));
         }
 
