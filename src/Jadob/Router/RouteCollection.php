@@ -105,11 +105,11 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @return Route
+     * {@inheritdoc}
      */
-    public function rewind(): Route
+    public function rewind()
     {
-        return \reset($this->routes);
+        \reset($this->routes);
     }
 
     /**
