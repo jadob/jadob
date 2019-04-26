@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class ControllerUtils
+abstract class AbstractController
 {
 
     /**
@@ -36,7 +36,7 @@ class ControllerUtils
      * @param array $data
      * @return string
      */
-    public function renderTemplate($templateName, $data = [])
+    public function renderTemplate(string $templateName, array $data = []): string
     {
         return $this->container->get('twig')->render($templateName, $data);
     }
@@ -50,9 +50,9 @@ class ControllerUtils
     }
 
     /**
-     * @return UserInterface
+     * @return UserInterface|null
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->container->get('auth.user.storage')->getUser();
     }
@@ -61,7 +61,7 @@ class ControllerUtils
      * @param string $type
      * @param string $message
      */
-    public function addFlash($type, $message)
+    public function addFlash($type, $message): void
     {
         $this->container->get('session')->getFlashBag()->add($type, $message);
     }
@@ -70,9 +70,9 @@ class ControllerUtils
      * @param string $name
      * @param array $params
      * @param bool $full
-     * @return mixed
+     * @return string
      */
-    public function generateRoute($name, array $params = [], $full = false)
+    public function generateRoute($name, array $params = [], $full = false): string
     {
         return $this->container->get('router')->generateRoute($name, $params, $full);
     }
@@ -81,8 +81,9 @@ class ControllerUtils
      * @param string $name
      * @param array $params
      * @return RedirectResponse
+     * @throws \InvalidArgumentException
      */
-    public function createRedirectToRouteResponse($name, $params = [])
+    public function createRedirectToRouteResponse(string $name, array $params = []): RedirectResponse
     {
         return new RedirectResponse($this->generateRoute($name, $params));
     }
@@ -91,7 +92,7 @@ class ControllerUtils
     /**
      * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->container->get('request');
     }

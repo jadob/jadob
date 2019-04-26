@@ -5,10 +5,8 @@ namespace Jadob\Core\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\Core\ControllerUtils;
 use Jadob\Debug\Profiler\EventListener\ProfilerListener;
 use Jadob\EventListener\EventListener;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -37,10 +35,7 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     public function register($config)
     {
         return [
-            'session' => new Session(),
-            'controller.utils' => function (ContainerInterface $container) {
-                return new ControllerUtils($container);
-            }
+            'session' => new Session()
         ];
     }
 
