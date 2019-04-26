@@ -49,13 +49,18 @@ class Guard
      * @param string|null $name
      * @return Guard
      */
-    public function addGuard(GuardAuthenticatorInterface $authenticator, $name)
+    public function addGuard(GuardAuthenticatorInterface $authenticator, string $name)
     {
         $this->guards[$name] = $authenticator;
         return $this;
     }
 
-    public function addUserProvider(UserProviderInterface $userProvider, $name)
+    /**
+     * @param UserProviderInterface $userProvider
+     * @param $name
+     * @return $this
+     */
+    public function addUserProvider(UserProviderInterface $userProvider, string $name)
     {
         $this->userProviders[$name] = $userProvider;
         return $this;
@@ -128,21 +133,20 @@ class Guard
         return $this;
     }
 
-
     /**
      * @param $name
      * @return GuardAuthenticatorInterface
      */
-    public function getGuardByName($name)
+    public function getGuardByName(string $name)
     {
         return $this->guards[$name];
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return UserProviderInterface
      */
-    public function getProviderByName($name)
+    public function getProviderByName(string $name)
     {
         return $this->userProviders[$name];
     }

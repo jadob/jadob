@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class UserStorage
 {
-
     /**
      * @var string
      */
@@ -47,9 +46,8 @@ class UserStorage
      * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser($provider = null)
+    public function getUser(?string $provider = null)
     {
-
 
         if ($provider === null) {
             $provider = $this->currentProvider;
@@ -70,12 +68,11 @@ class UserStorage
      * @param null|string $provider
      * @return UserStorage
      */
-    public function setUser(UserInterface $user, $provider = null): UserStorage
+    public function setUser(UserInterface $user, ?string $provider = null): UserStorage
     {
         if ($provider === null) {
             $provider = $this->currentProvider;
         }
-
 
         $this->session->set(self::USER_SESSION_KEY . $provider, serialize($user));
         $this->user = $user;
@@ -99,6 +96,5 @@ class UserStorage
         $this->currentProvider = $currentProvider;
         return $this;
     }
-
 
 }
