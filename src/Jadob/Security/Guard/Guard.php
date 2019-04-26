@@ -142,10 +142,6 @@ class Guard
     {
         foreach ($this->excludedPaths as $excludedPathPattern) {
 
-            if (\strcasecmp($path, $excludedPathPattern) === 0) {
-                return true;
-            }
-
             $excludedPathPattern = '@' . $excludedPathPattern . '@';
 
             if (preg_match($excludedPathPattern, $path) !== 0) {

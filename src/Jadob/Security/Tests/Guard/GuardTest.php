@@ -26,7 +26,6 @@ class GuardTest extends TestCase
 
         $guard = new Guard(new UserStorage(new Session()), $excludedPaths);
 
-
         $this->assertTrue($guard->isPathExcluded('/login'));
         $this->assertTrue($guard->isPathExcluded('/page/stuff'));
         $this->assertTrue($guard->isPathExcluded('/page/stuff2.xml'));
@@ -34,7 +33,6 @@ class GuardTest extends TestCase
         $this->assertFalse($guard->isPathExcluded('/site/kinda-of-text'));
         $this->assertFalse($guard->isPathExcluded('/'));
         $this->assertFalse($guard->isPathExcluded('/register'));
-//        $this->assertFalse()
 
     }
 }
