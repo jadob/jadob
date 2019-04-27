@@ -14,12 +14,13 @@ class HandlerFactory
 {
     /**
      * @param $env
+     * @param LoggerInterface $logger
      * @return ErrorHandlerInterface
      */
-    public static function factory($env)
+    public static function factory($env, LoggerInterface $logger)
     {
         if ($env === 'dev') {
-            return new DevelopmentErrorHandler();
+            return new DevelopmentErrorHandler($logger);
         }
 
         return new ProductionErrorHandler();

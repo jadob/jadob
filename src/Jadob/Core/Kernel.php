@@ -69,8 +69,6 @@ class Kernel
      */
     protected $logger;
 
-//    protected $dispatcher;
-
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
@@ -79,21 +77,22 @@ class Kernel
      */
     public function __construct($env, BootstrapInterface $bootstrap)
     {
-        $env = strtolower($env);
-
-        $errorHandler = HandlerFactory::factory($env);
-        $errorHandler->registerErrorHandler();
-        $errorHandler->registerExceptionHandler();
 
         if (!\in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
 
+        $env = strtolower($env);
         $this->env = $env;
         $this->bootstrap = $bootstrap;
-        $this->eventListener = new EventListener();
-//        $this->dispatcher = new Dispatcher($this);
         $this->logger = $this->initializeLogger();
+
+        $errorHandler = HandlerFactory::factory($env, $this->logger);
+        $errorHandler->registerErrorHandler();
+        $errorHandler->registerExceptionHandler();
+
+        $this->eventListener = new EventListener();
+
         $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
 
         $this->addEvents();

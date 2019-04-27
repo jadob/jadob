@@ -2,6 +2,8 @@
 
 namespace Jadob\Debug\ErrorHandler;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Class DevelopmentErrorHandler
  * @package Jadob\Debug\ErrorHandler
@@ -10,6 +12,20 @@ namespace Jadob\Debug\ErrorHandler;
  */
 class DevelopmentErrorHandler implements ErrorHandlerInterface
 {
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * DevelopmentErrorHandler constructor.
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     public function registerErrorHandler()
     {
@@ -22,8 +38,15 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
     public function registerExceptionHandler()
     {
+        $logger = $this->logger;
+
         if (PHP_SAPI !== 'cli') {
-            set_exception_handler(function ($exception) {
+            set_exception_handler(function (\Throwable $exception) use ($logger) {
+                $logger->critical($exception->getMessage(), [
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTrace()
+                ]);
                 include __DIR__ . '/../templates/error_view.php';
             });
         }
