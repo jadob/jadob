@@ -45,7 +45,8 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
                 $logger->critical($exception->getMessage(), [
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
-                    'trace' => $exception->getTrace()
+                    'trace' => $exception->getTrace(),
+                    'type' => \get_class($exception)
                 ]);
                 include __DIR__ . '/../templates/error_view.php';
             });
