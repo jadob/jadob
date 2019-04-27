@@ -16,7 +16,7 @@ interface UserProviderInterface
      * @param $name
      * @return null|UserInterface
      */
-    public function getUserByUsername($name): ?UserInterface;
+    public function getUserByUsername(string $name): ?UserInterface;
 
     /**
      * @param $id
