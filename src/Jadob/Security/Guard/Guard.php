@@ -126,10 +126,11 @@ class Guard
     }
 
     /**
+     * Alias for isPathExcluded.
      * @param Request $request
      * @return bool
      */
-    public function isRequestPathExcluded(Request $request): bool
+    public function isRequestExcluded(Request $request): bool
     {
         return $this->isPathExcluded($request->getPathInfo());
     }

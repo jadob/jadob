@@ -41,6 +41,10 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
     {
         $guardResponse = $this->guard->execute($event->getRequest());
 
+        if($this->guard->isRequestExcluded($event->getRequest())) {
+            return;
+        }
+
         if ($guardResponse !== null) {
             $this->blockPropagation = true;
             $event->setResponse($guardResponse);
