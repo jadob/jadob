@@ -35,6 +35,11 @@ class Kernel
     public const VERSION = '0.0.61';
 
     /**
+     * @var string
+     */
+    public const EXPERIMENTAL_FEATURES_ENV = 'JADOB_ENABLE_EXPERIMENTAL_FEATURES';
+
+    /**
      * @var array
      */
     private $config;
@@ -68,6 +73,11 @@ class Kernel
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var StreamHandler
+     */
+    protected $fileStreamHandler;
 
     /**
      * @param string $env
@@ -111,6 +121,10 @@ class Kernel
      */
     public function execute(Request $request)
     {
+
+        if((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
+            $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists, experimental code can log some stuff');
+        }
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
@@ -206,8 +220,8 @@ class Kernel
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add('kernel', $this);
             /** @TODO: how about creating an 'logger' service pointing to this.logger? */
-            $containerBuilder->add('monolog', $this->logger);
-
+            $containerBuilder->add(LoggerInterface::class, $this->logger);
+            $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
 
             foreach ($services as $serviceName => $serviceObject) {
@@ -252,7 +266,7 @@ class Kernel
             $logLevel = Logger::INFO;
         }
 
-        $fileStreamHandler = new StreamHandler(
+        $this->fileStreamHandler = $fileStreamHandler = new StreamHandler(
             $this->bootstrap->getLogsDir() . '/' . $this->env . '.log',
             $logLevel
         );
