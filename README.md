@@ -1,5 +1,7 @@
 # jadob/jadob
 
+![Packagist](https://img.shields.io/packagist/l/jadob/jadob.svg)
+
 ## DISCLAIMER
 
 There is no production-ready version at this time. Use at your own risk.
