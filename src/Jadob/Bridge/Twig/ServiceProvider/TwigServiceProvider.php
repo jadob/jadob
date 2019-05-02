@@ -80,6 +80,6 @@ class TwigServiceProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        // TODO: Implement onContainerBuild() method.
+        $container->alias(Environment::class, 'twig');
     }
 }
