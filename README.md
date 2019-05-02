@@ -1,14 +1,17 @@
 # jadob/jadob
 
-## DISCLAIMER
-
-There is no production-ready version at this time. Use at your own risk.
 
 ## Introduction
 
 Jadob is a PHP7 application framework, based on Symfony and Zend Framework components. It comes with the most important
 stuff needed to start developing your PHP project.
-Jadob uses Twig for templating and Doctrine ORM for SQL databases support.
+Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB databases support.
+
+
+## Requirements
+
+- PHP 7.3 or higher
+ 
 
 ## Tests
 
@@ -16,9 +19,21 @@ Jadob uses PHPUnit and Phan to test the whole codebase.
 
 ``php-ast`` extension would be useful. 
 
+Enabling test suite:
+
+``vendor/bin/phpunit``
+
+## Experimental Features
+
+There are some "hidden" features which can be enabled by setting  ``JADOB_ENABLE_EXPERIMENTAL_FEATURES`` env to ``1``.
+These ones might break or be unstable, so you can use it at production servers at your own risk.
+
+Features can be unmarked as experimental when it will be unit-tested and considered stable.
+ 
+
 ## Things that need to be done before `1.0.0` release
 * [x]  30%+ Code Coverage
-* [ ]  40%+ Code Coverage
+* [x]  40%+ Code Coverage
 * [ ]  50%+ Code Coverage
 * [ ]  60%+ Code Coverage
 * [ ]  70%+ Code Coverage
