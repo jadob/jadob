@@ -5,6 +5,7 @@ namespace Jadob\Bridge\Twig\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\TwigBridge\Twig\Extension\PathExtension;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -81,5 +82,7 @@ class TwigServiceProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         $container->alias(Environment::class, 'twig');
+
+        $container->get(Environment::class)->addExtension(new PathExtension($container->get('router')));
     }
 }
