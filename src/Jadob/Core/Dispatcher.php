@@ -62,7 +62,7 @@ class Dispatcher
         $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
 
         if (!($response instanceof Response)) {
-            throw new KernelException('Controller should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
+            throw new KernelException('Controller '.\get_class($autowiredController).'#'.$route->getAction().' should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
         }
 
         return $response;
