@@ -39,8 +39,9 @@ class Dispatcher
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      * @throws KernelException
+     * @throws \ReflectionException
      */
-    public function executeRequest(Request $request)
+    public function executeRequest(Request $request): Response
     {
         /** @var Router $router */
         $router = $this->container->get('router');
@@ -55,7 +56,14 @@ class Dispatcher
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
 
-        if (!method_exists($autowiredController, $route->getAction())) {
+
+        $methodName = $route->getAction();
+
+        if($methodName === null && !\method_exists($autowiredController, '__invoke')) {
+            throw new KernelException('Controller '. $controllerClass.' does not have nor "action" key in routing or "__invoke" method.');
+        }
+
+        if (!method_exists($autowiredController, $methodName)) {
             throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
         }
 
