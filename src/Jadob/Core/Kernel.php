@@ -97,6 +97,10 @@ class Kernel
         $this->bootstrap = $bootstrap;
         $this->logger = $this->initializeLogger();
 
+        if((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
+            $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists. please double-test your app because new features may be unstable.');
+        }
+
         $errorHandler = HandlerFactory::factory($env, $this->logger);
         $errorHandler->registerErrorHandler();
         $errorHandler->registerExceptionHandler();
@@ -121,10 +125,6 @@ class Kernel
      */
     public function execute(Request $request)
     {
-
-        if((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
-            $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists, experimental code can log some stuff');
-        }
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
