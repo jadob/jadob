@@ -13,6 +13,7 @@ use Jadob\DoctrineDBALBridge\Logger\Psr3QueryLogger;
 use Psr\Container\ContainerInterface;
 
 /**
+ * @deprecated
  * Class DoctrineDBALServiceProvider
  * @package Jadob\DoctrineDBALBridge\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
