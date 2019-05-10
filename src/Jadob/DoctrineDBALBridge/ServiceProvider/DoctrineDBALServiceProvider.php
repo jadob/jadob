@@ -2,15 +2,8 @@
 
 namespace Jadob\DoctrineDBALBridge\ServiceProvider;
 
-use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Logging\DebugStack;
-use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\DoctrineDBALBridge\Logger\Psr3QueryLogger;
-use Psr\Container\ContainerInterface;
+use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
+
 
 /**
  * @deprecated
@@ -19,56 +12,10 @@ use Psr\Container\ContainerInterface;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class DoctrineDBALServiceProvider implements ServiceProviderInterface
-{
+class DoctrineDBALServiceProvider extends DoctrineDBALProvider {
 
-    /**
-     * @return string
-     */
-    public function getConfigNode()
+    public function __construct()
     {
-        return 'doctrine_dbal';
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param $config
-     * @throws \RuntimeException
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function register($config)
-    {
-
-        if (!isset($config['connections']) || \count($config['connections']) === 0) {
-            throw new \RuntimeException('You should provide at least one connection in config.doctrine_dbal node.');
-        }
-
-        $services['doctrine.dbal.event_manager'] = $eventManager = new EventManager();
-
-        $services['doctrine.dbal.config'] = function (ContainerInterface $container) {
-            $configObject = new Configuration();
-            $configObject->setSQLLogger(new Psr3QueryLogger($container->get('monolog')));
-            return $configObject;
-        };
-
-        foreach ($config['connections'] as $connectionName => $configuration) {
-            $services['doctrine.dbal.' . $connectionName] = function (ContainerInterface $container) use ($configuration, $eventManager) {
-                return DriverManager::getConnection(
-                    $configuration,
-                    $container->get('doctrine.dbal.config'),
-                    $eventManager
-                );
-            };
-
-        }
-
-        return $services;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onContainerBuild(Container $container, $config)
-    {
+        @trigger_error(\get_class($this).' is deprecated and will be removed soon. Please change DBAL provider to '. DoctrineDBALProvider::class. ' in your bootstrap file.', E_USER_DEPRECATED);
     }
 }
