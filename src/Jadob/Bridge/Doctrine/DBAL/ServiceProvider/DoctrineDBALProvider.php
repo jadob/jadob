@@ -7,6 +7,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -92,15 +93,16 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         if($container->has('console')) {
 
             $helperSet = new HelperSet([
-                'db' => $container->get('doctrine.dbal.default')
+                'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
             ]);
 
             /** @var Application $console */
             $console = $container->get('console');
 
+            $console->setHelperSet($helperSet);
             $console->addCommands([
-                new ReservedWordsCommand($helperSet),
-                new RunSqlCommand($helperSet)
+                new ReservedWordsCommand(),
+                new RunSqlCommand()
             ]);
         }
     }
