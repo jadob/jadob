@@ -3,6 +3,7 @@
 namespace Jadob\SymfonyTranslationBridge\Twig\Extension;
 
 use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationExtension
@@ -20,9 +21,9 @@ class TranslationExtension extends \Twig_Extension
 
     /**
      * TranslationExtension constructor.
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(Translator $translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
