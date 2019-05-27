@@ -122,7 +122,7 @@ class Container implements ContainerInterface
             }
         }
 
-        throw new ServiceNotFoundException('There is no service extendind/implementing ' . $className . ' class.');
+        throw new ServiceNotFoundException('There is no service extending/implementing ' . $className . ' class.');
     }
 
     /**
