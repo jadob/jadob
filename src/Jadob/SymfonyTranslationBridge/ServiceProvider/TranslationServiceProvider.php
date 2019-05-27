@@ -30,9 +30,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param ContainerBuilder $container
      * @param $config [] Config node
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     * @return array
      */
     public function register($config)
     {
@@ -49,7 +48,6 @@ class TranslationServiceProvider implements ServiceProviderInterface
             }
             return new LoggingTranslator($translator, $container->get(LoggerInterface::class));
         }];
-
     }
 
     /**
