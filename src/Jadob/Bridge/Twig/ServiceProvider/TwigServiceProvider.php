@@ -2,6 +2,7 @@
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
+use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
@@ -83,6 +84,29 @@ class TwigServiceProvider implements ServiceProviderInterface
     {
         $container->alias(Environment::class, 'twig');
 
-        $container->get(Environment::class)->addExtension(new PathExtension($container->get('router')));
+        /** @var Environment $twig */
+        $twig = $container->get(Environment::class);
+
+        //register mandatory extensions
+        $twig->addExtension(new PathExtension($container->get('router')));
+
+        //register additional extensions provided with framework
+        if(!isset($config['extensions'])) {
+            return;
+        }
+
+        $extensions = $config['extensions'];
+
+        if(isset($extensions['webpack_manifest'])) {
+
+            $webpackManifestConfig = $extensions['webpack_manifest'];
+
+            $manifestJsonLocation = $container->get(BootstrapInterface::class)->getRootDir()
+                .'/'.
+                $webpackManifestConfig['manifest_json_location'];
+
+            $manifest = \json_decode(\file_get_contents($manifestJsonLocation),true);
+            $twig->addExtension(new WebpackManifestAssetExtension($manifest));
+        }
     }
 }
