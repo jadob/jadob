@@ -13,8 +13,6 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
 /**
- * Class TwigServiceProvider
- * @package Jadob\Bridge\Twig\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -87,8 +85,10 @@ class TwigServiceProvider implements ServiceProviderInterface
         /** @var Environment $twig */
         $twig = $container->get(Environment::class);
 
-        //register mandatory extensions
-        $twig->addExtension(new PathExtension($container->get('router')));
+        //@TODO: fix referencing to router
+        if($container->has('router')) {
+            $twig->addExtension(new PathExtension($container->get('router')));
+        }
 
         //register additional extensions provided with framework
         if(!isset($config['extensions'])) {
