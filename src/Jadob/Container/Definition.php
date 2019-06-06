@@ -2,9 +2,12 @@
 
 namespace Jadob\Container;
 
-
 use Jadob\Container\Exception\ContainerBuildException;
 
+/**
+ * @author pizzaminded <miki@appvende.net>
+ * @license MIT
+ */
 class Definition
 {
     /**
@@ -30,10 +33,12 @@ class Definition
     /**
      * Definition constructor.
      * @param mixed $service
+     * @param bool $created
      */
-    public function __construct($service)
+    public function __construct($service, bool $created = false)
     {
         $this->service = $service;
+        $this->created = $created;
     }
 
     public function addMethodCall(string $methodName, array $arguments = [])
@@ -44,10 +49,10 @@ class Definition
         ];
 
         return $this;
-
     }
 
     /**
+     * Returns instantiated service and prevents recreating it. 
      * @param Container $container
      * @return mixed
      * @throws ContainerBuildException
@@ -68,6 +73,7 @@ class Definition
     }
 
     /**
+     * Creates an instance of service basing on passed configuration 
      * @param Container $container
      * @return mixed
      * @throws ContainerBuildException
