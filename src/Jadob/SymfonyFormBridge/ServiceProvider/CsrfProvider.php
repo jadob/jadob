@@ -32,7 +32,7 @@ class CsrfProvider implements ServiceProviderInterface
      * @param ContainerBuilder $container
      * @param array|null $config
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
         $container->add('symfony.csrf.token.manager', function (Container $container) {
             $csrfGenerator = new UriSafeTokenGenerator();

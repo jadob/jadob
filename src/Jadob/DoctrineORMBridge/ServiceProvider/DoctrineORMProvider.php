@@ -5,6 +5,7 @@ namespace Jadob\DoctrineORMBridge\ServiceProvider;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\BootstrapInterface;
 use Jadob\DoctrineORMBridge\Registry\ManagerRegistry;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -94,7 +96,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
         }
 
         $isDevMode = !$container->get('kernel')->isProduction();
-        $cacheDir = $container->get('bootstrap')->getCacheDir()
+        $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir()
             . '/'
             . $container->get('kernel')->getEnv()
             . '/doctrine';
@@ -121,7 +123,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
             foreach ($managerConfig['entity_paths'] as $path) {
                 //@TODO: trim beginning slash from any $path if present
-                $entityPaths[] = $container->get('bootstrap')->getRootDir() . '/' . $path;
+                $entityPaths[] = $container->get(BootstrapInterface::class)->getRootDir() . '/' . $path;
             }
 
             $configuration = new Configuration();
@@ -145,7 +147,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
             $entityManager = EntityManager::create(
                 $container->get('doctrine.dbal.' . $managerName),
                 $configuration,
-                $container->get('doctrine.dbal.event_manager')
+                $container->get(EventManager::class)
             );
 
             $managerRegistry->addObjectManager($entityManager, $managerName);

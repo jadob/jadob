@@ -20,15 +20,7 @@ class DoctrineODMProvider implements ServiceProviderInterface
         // TODO: Implement getConfigNode() method.
     }
 
-    /**
-     * Here you can define things that will be registered in Container.
-     * @param ContainerBuilder $container
-     * @param array|null $config
-     */
-    public function register(ContainerBuilder $container, $config)
-    {
-        // TODO: Implement register() method.
-    }
+
 
     /**
      * Stuff that's needed to be done after container is built.
@@ -46,5 +38,14 @@ class DoctrineODMProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         // TODO: Implement onContainerBuild() method.
+    }
+
+    /**
+     * Here you can define things that will be registered in Container.
+     * @param array[]|null $config
+     */
+    public function register($config)
+    {
+        // TODO: Implement register() method.
     }
 }
