@@ -38,17 +38,6 @@ class Router
     protected $rightDelimiter = '}';
 
     /**
-     * @var Route
-     */
-    protected $currentRoute;
-
-    /**
-     * @deprecated
-     * @var array
-     */
-    protected $globalParams = [];
-
-    /**
      * @var Context
      */
     protected $context;
@@ -180,19 +169,10 @@ class Router
      */
     public function generateRoute($name, array $params = [], $full = false)
     {
-
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
-                if (isset($this->config['locale_prefix']) && !$route->isIgnoreGlobalPrefix()) {
-                    $path = $this->config['locale_prefix'] . $route->getPath();
-                    $params = array_merge($params, $this->globalParams);
-
-                } else {
-                    $path = $route->getPath();
-                }
-
+                $path = $route->getPath();
                 $paramsToGET = [];
-
                 $convertedPath = $path;
                 foreach ($params as $key => $param) {
 
@@ -242,55 +222,6 @@ class Router
 
         throw new RouteNotFoundException('Route "' . $name . '" is not defined');
 
-    }
-
-    /**
-     * @return Route
-     */
-    public function getCurrentRoute(): Route
-    {
-        return $this->currentRoute;
-    }
-
-    /**
-     * @param Route $currentRoute
-     * @return Router
-     */
-    public function setCurrentRoute(Route $currentRoute): Router
-    {
-        $this->currentRoute = $currentRoute;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * @return array
-     */
-    public function getGlobalParams()
-    {
-        return $this->globalParams;
-    }
-
-    /**
-     * @deprecated
-     * @return string
-     */
-    public function getGlobalParam($key)
-    {
-        return $this->globalParams[$key];
-    }
-
-    /**
-     * @deprecated
-     * @param array $globalParams
-     * @return Router
-     */
-    public function setGlobalParams(array $globalParams)
-    {
-        $this->globalParams = $globalParams;
-
-        return $this;
     }
 
     /**
