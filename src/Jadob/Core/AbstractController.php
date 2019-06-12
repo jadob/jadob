@@ -2,6 +2,7 @@
 
 namespace Jadob\Core;
 
+use Jadob\Container\Container;
 use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\FormFactory;
@@ -9,8 +10,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class ControllerUtils
- * @package Jadob\Core
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -18,7 +17,7 @@ abstract class AbstractController
 {
 
     /**
-     * @var ContainerInterface
+     * @var Container
      */
     protected $container;
 
