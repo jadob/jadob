@@ -31,7 +31,7 @@ class PagerfantaProvider implements ServiceProviderInterface
      * @param array|null $config
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register( $config)
     {
         $container->add('pagerfanta.extension', function (Container $container) {
             return new PagerfantaExtension(

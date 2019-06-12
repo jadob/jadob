@@ -29,8 +29,19 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
     public function registerErrorHandler()
     {
+
+        $logger = $this->logger;
         if (PHP_SAPI !== 'cli') {
-            set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            \set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {
+
+                if($errno === \E_USER_DEPRECATED) {
+                    $context['file'] = $errfile;
+                    $context['line'] = $errline;
+                    $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
+                    $logger->warning($errstr, $context);
+                    return;
+                }
+
                 throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
             });
         }
@@ -41,7 +52,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         $logger = $this->logger;
 
         if (PHP_SAPI !== 'cli') {
-            set_exception_handler(function (\Throwable $exception) use ($logger) {
+            \set_exception_handler(function (\Throwable $exception) use ($logger) {
                 $logger->critical($exception->getMessage(), [
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
@@ -78,11 +89,11 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     {
         $output = [];
         if (!\is_array($params)) {
-            return htmlspecialchars(self::getVariableType($params));
+            return \htmlspecialchars(self::getVariableType($params));
         }
         foreach ($params as $param) {
-            $output[] = htmlspecialchars(self::getVariableType($param));
+            $output[] = \htmlspecialchars(self::getVariableType($param));
         }
-        return implode(',', $output);
+        return \implode(',', $output);
     }
 }

@@ -4,6 +4,7 @@ namespace Jadob\EventListener;
 
 /**
  * @TODO: this class should be called EventDispatcher to prevent misnaming and future errors
+ * @TODO: logging events
  * Class EventListener
  * @package Jadob\EventListener
  * @author pizzaminded <miki@appvende.net>
@@ -30,7 +31,6 @@ class EventListener
     public function addListener(EventListenerInterface $listener, $priority = 100): EventListener
     {
         $this->listeners[$priority][] = $listener;
-
         return $this;
     }
 

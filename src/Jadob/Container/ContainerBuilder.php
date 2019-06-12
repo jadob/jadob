@@ -98,7 +98,7 @@ class ContainerBuilder
         $services = [];
 
         foreach ($this->serviceProviders as $serviceProvider) {
-            $provider = new $serviceProvider;
+            $provider = new $serviceProvider();
 
             if (!($provider instanceof ServiceProviderInterface)) {
                 throw new ContainerException('Class ' . $serviceProvider . ' cannot be used as an service provider');

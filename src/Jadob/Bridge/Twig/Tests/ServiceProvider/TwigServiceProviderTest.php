@@ -2,6 +2,7 @@
 
 namespace Jadob\Bridge\Twig\Tests\ServiceProvider;
 
+use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Bridge\Twig\ServiceProvider\TwigServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Core\AbstractBootstrap;
@@ -107,5 +108,48 @@ class TwigServiceProviderTest extends TestCase
         $environment = $services[Environment::class]($container);
 
         $this->assertInstanceOf(Environment::class, $environment);
+    }
+
+
+    public function testOnContainerBuild()
+    {
+        $provider = new TwigServiceProvider();
+        $bootstrap = new Bootstrap();
+
+        $config = [
+            'cache' => true,
+            'strict_variables' => true,
+            'templates_paths' => [
+                'JadobTest' => '../../templates'
+            ],
+            'extensions' => [
+                'webpack_manifest' => [
+                    'manifest_json_location' => '../manifest.json'
+                ]
+            ]
+        ];
+
+
+        $services = $provider->register($config);
+
+        $container = new Container([BootstrapInterface::class => $bootstrap]);
+        $loader = $services[LoaderInterface::class]($container);
+
+        $container->add(LoaderInterface::class, $loader);
+        /** @var Environment $environment */
+        $environment = $services[Environment::class]($container);
+        $container->add(Environment::class, $environment);
+
+        $provider->onContainerBuild($container, $config);
+
+        $this->assertSame(
+            $container->get(Environment::class),
+            $container->get('twig')
+        );
+
+        $this->assertInstanceOf(
+            WebpackManifestAssetExtension::class,
+            $environment->getExtension(WebpackManifestAssetExtension::class)
+        );
     }
 }

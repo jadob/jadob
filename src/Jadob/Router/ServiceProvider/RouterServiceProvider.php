@@ -42,9 +42,6 @@ class RouterServiceProvider implements ServiceProviderInterface
             }
 
             $router = new Router($collection, Context::fromGlobals());
-            $router->setGlobalParams([
-                '_locale' => 'en'
-            ]);
 
             return $router;
         }];

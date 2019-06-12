@@ -40,6 +40,7 @@ class Dispatcher
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      * @throws KernelException
      * @throws \ReflectionException
+     * @throws \Jadob\Router\Exception\MethodNotAllowedException
      */
     public function executeRequest(Request $request): Response
     {
@@ -55,22 +56,25 @@ class Dispatcher
         }
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
-
-
         $methodName = $route->getAction();
 
-        if($methodName === null && !\method_exists($autowiredController, '__invoke')) {
-            throw new KernelException('Controller '. $controllerClass.' does not have nor "action" key in routing or "__invoke" method.');
+        //@TODO: refactor method name resolving
+        if ($methodName === null) {
+            if (\method_exists($autowiredController, '__invoke')) {
+                $methodName = '__invoke';
+            } else {
+                throw new KernelException('Controller ' . $controllerClass . ' does not have nor "action" key in routing or "__invoke" method.');
+            }
         }
 
-        if (!method_exists($autowiredController, $methodName)) {
+        if (!\method_exists($autowiredController, $methodName)) {
             throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
         }
 
-        $response = \call_user_func_array([$autowiredController, $route->getAction()], $route->getParams());
+        $response = \call_user_func_array([$autowiredController, $methodName], $route->getParams());
 
         if (!($response instanceof Response)) {
-            throw new KernelException('Controller '.\get_class($autowiredController).'#'.$route->getAction().' should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
+            throw new KernelException('Controller ' . \get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
         }
 
         return $response;

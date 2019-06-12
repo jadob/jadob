@@ -2,6 +2,8 @@
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\RouterException;
+
 /**
  * @package Jadob\Router
  * @author pizzaminded <miki@appvende.net>
@@ -221,6 +223,10 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
         $routeCollection = new self();
 
         foreach ($data as $routeName => $routeArray) {
+            if(\is_integer($routeName) && \is_string($routeArray)) {
+                throw new RouterException('Route "'.$routeArray.'" looks malformed. Please provide a valid array as a value for this route.');
+            }
+
             if(!isset($routeArray['name'])) {
                 $routeArray['name'] = $routeName;
             }

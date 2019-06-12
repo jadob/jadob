@@ -14,7 +14,6 @@ use Jadob\Security\Guard\Guard;
  */
 class GuardRequestListener implements BeforeControllerEventListenerInterface
 {
-
     /**
      * @var bool
      */
@@ -39,11 +38,11 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
      */
     public function onBeforeControllerEvent(BeforeControllerEvent $event): void
     {
-        $guardResponse = $this->guard->execute($event->getRequest());
-
         if($this->guard->isRequestExcluded($event->getRequest())) {
             return;
         }
+
+        $guardResponse = $this->guard->execute($event->getRequest());
 
         if ($guardResponse !== null) {
             $this->blockPropagation = true;

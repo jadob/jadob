@@ -63,6 +63,28 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Route::class, $result);
     }
 
+    public function testRouterWillMatchHostnames()
+    {
+        $_SERVER['HTTP_HOST'] = 'my.domain.com';
+        $_SERVER['SERVER_PORT'] = 8001;
+
+
+        $routeCollection = new RouteCollection(
+            null,
+            'my.domain.com'
+        );
+
+        $routeCollection->addRoute(new Route(
+            'get_user_stuff',
+            '/user/{id}/stuff'
+
+            ));
+        $router = new Router($routeCollection);
+        $result = $router->matchRoute('/user/1/stuff', 'GET');
+
+        $this->assertInstanceOf(Route::class, $result);
+    }
+
 
     public function testRouteGenerating()
     {

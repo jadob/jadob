@@ -17,6 +17,11 @@ class Container implements ContainerInterface
 {
 
     /**
+     * @var Definition[]
+     */
+    protected $definitions = [];
+
+    /**
      * Instantiated objects, ready to be used.
      * @var array
      */
@@ -66,7 +71,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * UNSTABLE, there will be some tests needed
+     * UNSTABLE, there will be some work needed
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
@@ -122,7 +127,7 @@ class Container implements ContainerInterface
             }
         }
 
-        throw new ServiceNotFoundException('There is no service extendind/implementing ' . $className . ' class.');
+        throw new ServiceNotFoundException('There is no service extending/implementing ' . $className . ' class.');
     }
 
     /**
@@ -136,10 +141,13 @@ class Container implements ContainerInterface
     /**
      * @param string $id
      * @param $object
-     * @return $this
+     * @return Definition
      */
     public function add(string $id, $object)
     {
+
+        $definition = new Definition($object);
+        $this->definitions[$id] = $definition;
 
         if ($object instanceof \Closure) {
             $this->factories[$id] = $object;
@@ -147,7 +155,7 @@ class Container implements ContainerInterface
             $this->services[$id] = $object;
         }
 
-        return $this;
+        return $definition;
     }
 
     /**

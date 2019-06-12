@@ -7,7 +7,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 
 /**
+ * Caution: this is an experimental feature. you can enable it by setting JADOB_ENABLE_EXPERIMENTAL_FEATURES env to 1.
+ *
  * Allows you to manage your EntityManagers when using more than one in your project.
+ * @internal until not tested
  * @package Jadob\DoctrineORMBridge\Registry
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
