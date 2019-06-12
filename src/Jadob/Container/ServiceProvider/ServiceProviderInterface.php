@@ -42,4 +42,14 @@ interface ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config);
 
+
+    /**
+     * Caution: this is an experimental feature. you can enable it by setting JADOB_ENABLE_EXPERIMENTAL_FEATURES env to 1.feeeaaef
+     * Returns a list of Providers that current provider is dependent from.
+     * These ones can be ignored or missing in Bootstrap#getServiceProviders().
+     * @return ServiceProviderInterface[]
+     */
+//    public function getParentProviders();
+
+
 }
