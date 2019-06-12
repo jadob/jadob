@@ -7,6 +7,7 @@ use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Guard\EventListener\GuardRequestListener;
 use Jadob\Security\Guard\Guard;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,8 +31,16 @@ class GuardProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function register($config)
+    public function register($config): array
     {
+        return [
+            Guard::class => function (ContainerInterface $container) use ($config) {
+                return new Guard(
+                    $container->get('auth.user.storage'),
+                    $config['security']['excluded_paths'] ?? []
+                );
+            }
+        ];
 
     }
 
@@ -43,7 +52,7 @@ class GuardProvider implements ServiceProviderInterface
         $security = $config['security'];
         $guards = $security['guards'];
 
-        $guardService = new Guard($container->get('auth.user.storage'));
+        $guardService = $container->get(Guard::class);
 
         foreach ($guards as $guardKey => $guard) {
             $guardService->addGuard($container->get($guard['service']), $guardKey);
