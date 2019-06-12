@@ -28,21 +28,20 @@ class CsrfProvider implements ServiceProviderInterface
     }
 
     /**
-     * Here you can define things that will be registered in Container.
-     * @param ContainerBuilder $container
-     * @param array|null $config
+     * {@inheritdoc}
      */
-    public function register(ContainerBuilder $container, $config)
+    public function register($config)
     {
-        $container->add('symfony.csrf.token.manager', function (Container $container) {
-            $csrfGenerator = new UriSafeTokenGenerator();
-            $csrfStorage = new SessionTokenStorage($container->get('session'));
-            return new CsrfTokenManager($csrfGenerator, $csrfStorage);
-        });
 
-        $container->add('symfony.forms.csrf.extension', function (Container $container) {
-            return new CsrfExtension($container->get('symfony.csrf.token.manager'));
-        });
+        return [
+            'symfony.csrf.token.manager' => function (Container $container) {
+                $csrfGenerator = new UriSafeTokenGenerator();
+                $csrfStorage = new SessionTokenStorage($container->get('session'));
+                return new CsrfTokenManager($csrfGenerator, $csrfStorage);
+            },
+            'symfony.forms.csrf.extension' => function (Container $container) {
+                return new CsrfExtension($container->get('symfony.csrf.token.manager'));
+            }];
     }
 
     /**
