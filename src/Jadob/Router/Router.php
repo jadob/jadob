@@ -137,10 +137,13 @@ class Router
      */
     public function matchRequest(Request $request): Route
     {
-        return $this->matchRoute(
+        $matchedRoute = $this->matchRoute(
             $request->getPathInfo(),
             $request->getMethod()
         );
+
+        $request->attributes->add($matchedRoute->getParams());
+        return $matchedRoute;
     }
 
     /**
