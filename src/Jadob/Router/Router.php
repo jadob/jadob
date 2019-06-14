@@ -64,11 +64,23 @@ class Router
     /**
      * @param Route $route
      * @param $host
+     * @param array $matchedAttributes
      * @return bool
      */
-    protected function hostMatches(Route $route, $host): bool
+    protected function hostMatches(Route $route, $host, array &$matchedAttributes): bool
     {
+
         if ($route->getHost() === null) {
+            return true;
+        }
+
+        $hostRegex = $this->getRegex($route->getHost());
+
+        if (
+            $hostRegex !== false
+            && preg_match($hostRegex, $host, $matches) > 0
+        ) {
+            $matchedAttributes = $this->transformMatchesToParameters($matches);
             return true;
         }
 
@@ -91,10 +103,11 @@ class Router
             /** @var Route $route */
             $pathRegex = $this->getRegex($route->getPath());
             //@TODO: maybe we should break here if $pathRegex === false?
+            $parameters = [];
 
             if ($pathRegex !== false
                 && preg_match($pathRegex, $path, $matches) > 0
-                && $this->hostMatches($route, $this->context->getHost())
+                && $this->hostMatches($route, $this->context->getHost(), $parameters)
             ) {
 
                 if (
@@ -104,9 +117,7 @@ class Router
                     throw new MethodNotAllowedException();
                 }
 
-                $parameters = array_intersect_key(
-                    $matches, array_flip(array_filter(array_keys($matches), 'is_string'))
-                );
+                $parameters = \array_merge($parameters, $this->transformMatchesToParameters($matches));
 
                 $route->setParams($parameters);
 
@@ -247,9 +258,14 @@ class Router
      * @param string $left
      * @param string $right
      * @return $this
+     * @throws RouterException
      */
     public function setParameterDelimiters(string $left, string $right)
     {
+        if ($left === '' || $right === '') {
+            throw new RouterException('Parameter delimiters cannot be blank');
+        }
+
         $this->leftDelimiter = $left;
         $this->rightDelimiter = $right;
 
@@ -262,6 +278,23 @@ class Router
     public function getRouteCollection(): RouteCollection
     {
         return $this->routeCollection;
+    }
+
+    /**
+     * @param array $matches
+     * @return array
+     */
+    protected function transformMatchesToParameters(array $matches): array
+    {
+        return array_intersect_key(
+            $matches,
+            array_flip(
+                array_filter(
+                    array_keys($matches),
+                    'is_string'
+                )
+            )
+        );
     }
 }
 
