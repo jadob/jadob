@@ -50,7 +50,9 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     {
         $route->setParentCollection($this);
 
-        $route->setHost($this->getHost());
+        if($route->getHost() === null) {
+            $route->setHost($this->getHost());
+        }
         $this->routes[$route->getName()] = $route;
         return $this;
     }
@@ -62,11 +64,13 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function addCollection(RouteCollection $collection): RouteCollection
     {
-
         $collection->setParentCollection($this);
 
         foreach ($collection as $route) {
-            $route->setHost($this->getHost());
+            if($route->getHost() === null) {
+                $route->setHost($this->getHost());
+            }
+
             $this->routes[$route->getName()] = $route;
         }
 
