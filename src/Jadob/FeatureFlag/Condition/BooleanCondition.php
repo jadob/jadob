@@ -3,8 +3,9 @@
 namespace Jadob\FeatureFlag\Condition;
 
 /**
- * Class BooleanCondition
- * @package Jadob\FeatureFlag\Condition
+ * You can use this class for creating boolean conditions in feature flags.
+ *
+ * Warning: this class assumes that condition must be equal true to make it enabled.
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -29,14 +30,16 @@ class BooleanCondition implements ConditionInterface
      * @param $conditions
      * @return bool
      */
-    public function verifyFeature($conditions)
+    public function verifyFeature($conditions): bool
     {
         return (bool)$conditions;
     }
 
-
-    public function getConditionKey()
+    /**
+     * @return string
+     */
+    public function getConditionKey(): string
     {
-        // TODO: Implement getConditionKey() method.
+        return $this->conditionKey;
     }
 }

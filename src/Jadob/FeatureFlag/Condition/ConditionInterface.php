@@ -10,8 +10,8 @@ namespace Jadob\FeatureFlag\Condition;
  */
 interface ConditionInterface
 {
-    public function verifyFeature($conditions);
+    public function verifyFeature($conditions): bool;
 
-    public function getConditionKey();
+    public function getConditionKey(): string;
 
 }
