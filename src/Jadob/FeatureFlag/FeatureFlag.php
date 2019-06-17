@@ -1,6 +1,8 @@
 <?php
 
 namespace Jadob\FeatureFlag;
+use Jadob\FeatureFlag\Condition\ConditionInterface;
+use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
 
 /**
  * Allows to enable/disable features in app depending on passed conditions.
@@ -30,8 +32,58 @@ namespace Jadob\FeatureFlag;
 class FeatureFlag
 {
 
-    public static function isEnabled($name)
+    /**
+     * @var ConditionInterface[]
+     */
+    protected $conditions;
+
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * FeatureFlag constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
+        $this->config = $config;
+    }
+
+    /**
+     * @param ConditionInterface $condition
+     * @return FeatureFlag
+     */
+    public function addCondition(ConditionInterface $condition): self
+    {
+        $this->conditions[$condition->getConditionKey()] = $condition;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     * @throws MissingFeatureRulesException
+     */
+    public function isEnabled($name): bool
+    {
+
+        if(!isset($this->config[$name])) {
+            throw new MissingFeatureRulesException('Feature "'.$name.'" is not defined.');
+        }
+
+        $rulesForFeature = $this->config[$name];
+
+        foreach ($rulesForFeature as $key => $value) {
+            $result = $this->conditions[$key]->verifyFeature($value);
+
+            if(!$result) {
+                return false;
+            }
+        }
+
+        return true;
 
     }
 }

@@ -4,6 +4,7 @@ namespace Jadob\FeatureFlag\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\FeatureFlag\FeatureFlag;
 
 /**
  * Class FeatureFlagProvider
@@ -19,7 +20,7 @@ class FeatureFlagProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-       return 'feature_flags';
+        return 'feature_flags';
     }
 
     /**
@@ -27,7 +28,9 @@ class FeatureFlagProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        // TODO: Implement register() method.
+        return [
+            FeatureFlag::class => new FeatureFlag($config)
+        ];
     }
 
     /**
