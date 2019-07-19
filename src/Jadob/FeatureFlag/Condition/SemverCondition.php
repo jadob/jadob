@@ -53,7 +53,7 @@ class SemverCondition implements ConditionInterface
 
     /**
      * SemverCondition constructor.
-     * @param string $conditionKey
+     * @param string $conditionKey - soon to be dropped
      * @param null|string $minVersion
      * @param null|string $maxVersion
      */
@@ -66,7 +66,21 @@ class SemverCondition implements ConditionInterface
 
     public function verifyFeature($conditions): bool
     {
-        // TODO: Implement verifyFeature() method.
+        //check only min version
+        if ($this->maxVersion === null && $this->minVersion !== null) {
+            //greater or equal
+            return \version_compare($conditions, $this->minVersion, 'ge');
+        }
+
+        //check only max version
+        if ($this->maxVersion !== null && $this->minVersion === null) {
+            //lower or equal
+            return \version_compare($conditions, $this->maxVersion, 'le');
+        }
+
+        //check both of them
+        return \version_compare($conditions, $this->minVersion, 'ge')
+            && \version_compare($conditions, $this->maxVersion, 'le');
     }
 
     /**
