@@ -41,9 +41,7 @@ class RouterServiceProvider implements ServiceProviderInterface
                 $collection = RouteCollection::fromArray($config['routes']);
             }
 
-            $router = new Router($collection, Context::fromGlobals());
-
-            return $router;
+            return new Router($collection, Context::fromGlobals());
         }];
 
     }
