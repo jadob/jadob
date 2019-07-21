@@ -11,6 +11,8 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\BootstrapInterface;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
@@ -47,9 +49,11 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         $services = [];
         $services[EventManager::class] = $eventManager = new EventManager();
 
+
         $services['doctrine.dbal.logger'] = function (ContainerInterface $container) {
             $logger = new Logger('doctrine_dbal');
-            $logger->pushHandler($container->get('logger.handler.default'));
+            $handler = new StreamHandler($container->get(BootstrapInterface::class)->getLogsDir() . '/dbal.log');
+            $logger->pushHandler($handler);
 
             return $logger;
         };
@@ -90,7 +94,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        if($container->has('console')) {
+        if ($container->has('console')) {
 
             $helperSet = new HelperSet([
                 'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
@@ -105,5 +109,25 @@ class DoctrineDBALProvider implements ServiceProviderInterface
                 new RunSqlCommand()
             ]);
         }
+    }
+
+
+    public function getDefaultConfiguration(): array
+    {
+        return [
+            /**
+             * DBAL logger configuration
+             */
+            'logging' => [
+                /**
+                 * If true, DBAL will log all queries to %LOG_DIR%/dbal.log file, otherwise it will use default logfile
+                 */
+                'use_external_file' => false,
+                /**
+                 * Pass all StreamHandler IDs from container that DBAL Logs will be sent too.
+                 */
+                'log_to' => []
+            ]
+        ];
     }
 }
