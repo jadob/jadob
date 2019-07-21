@@ -5,7 +5,10 @@ namespace Jadob\Container;
 use Jadob\Config\Config;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
+use Jadob\Container\ServiceProvider\ConfigSchemaValidatorProviderInterface;
+use Jadob\Container\ServiceProvider\DefaultConfigProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\Kernel;
 
 /**
  * Class ContainerBuilder
@@ -53,8 +56,6 @@ class ContainerBuilder
      */
     public function build(Config $config)
     {
-
-
         return $this->buildContainer($config);
     }
 
@@ -91,7 +92,7 @@ class ContainerBuilder
      * @return Container
      * @throws ContainerException
      */
-    protected function buildContainer(?Config $config = null)
+    protected function buildContainer(?Config $config = null, $validateConfigNodes = true)
     {
         //create empty config object
         if ($config === null) {
@@ -107,6 +108,21 @@ class ContainerBuilder
 
             $configNodeKey = $provider->getConfigNode();
             $configNode = $this->getConfigNode($config, $configNodeKey);
+
+            if (
+                $configNodeKey !== null
+                && $provider instanceof ConfigSchemaValidatorProviderInterface
+                && Kernel::experimentalFeaturesEnabled()
+            ) {
+                $configToValidate = [];
+
+                if ($provider instanceof DefaultConfigProviderInterface) {
+                    $configToValidate = \array_merge($provider->getDefaultConfig(), $configNode);
+                }
+
+                //@TODO: validate config node here
+
+            }
 
             $results = $provider->register($configNode);
 
@@ -124,7 +140,6 @@ class ContainerBuilder
 
 
         $container = new Container($this->services, $this->factories);
-
 
         foreach ($this->serviceProviders as $serviceProvider) {
             $provider = new $serviceProvider;
@@ -152,11 +167,11 @@ class ContainerBuilder
     protected function getConfigNode(Config $config, $configNodeKey)
     {
         if ($configNodeKey !== null && !$config->hasNode($configNodeKey)) {
-            throw new ContainerException('Could not find config node named "' . $configNodeKey.'"');
+            throw new ContainerException('Could not find config node named "' . $configNodeKey . '"');
         }
 
         //if provider does not needs any config, we can pass null then
-        if($configNodeKey === null) {
+        if ($configNodeKey === null) {
             return null;
         }
 
