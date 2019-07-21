@@ -57,6 +57,8 @@ Features can be unmarked as experimental when it will be unit-tested and conside
 * [ ] Service Providers Should be moved to `Jadob\Core` too.
 * [ ] All Bridges (`Jadob\DoctrineORMBridge`, `Jadob\SymfonyFormBridge`) should be moved do `Jadob\Bridge\*` namespace.
 
+For more, see [this gist](https://gist.github.com/pizzaminded/3c25c7e2d772e6f7aadf27e7602cd326).
+
 ## Getting Started
 
 @TODO
