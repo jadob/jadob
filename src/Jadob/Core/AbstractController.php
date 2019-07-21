@@ -5,6 +5,7 @@ namespace Jadob\Core;
 use Jadob\Container\Container;
 use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ abstract class AbstractController
      * @param array $data
      * @return string
      */
-    public function renderTemplate(string $templateName, array $data = []): string
+    protected function renderTemplate(string $templateName, array $data = []): string
     {
         return $this->container->get('twig')->render($templateName, $data);
     }
@@ -43,7 +44,7 @@ abstract class AbstractController
     /**
      * @return FormFactory
      */
-    public function getFormFactory(): FormFactory
+    protected function getFormFactory(): FormFactory
     {
         return $this->container->get('symfony.form.factory');
     }
@@ -51,19 +52,11 @@ abstract class AbstractController
     /**
      * @return UserInterface|null
      */
-    public function getUser(): ?UserInterface
+    protected function getUser(): ?UserInterface
     {
         return $this->container->get('auth.user.storage')->getUser();
     }
 
-    /**
-     * @param string $type
-     * @param string $message
-     */
-    public function addFlash($type, $message): void
-    {
-        $this->container->get('session')->getFlashBag()->add($type, $message);
-    }
 
     /**
      * @param string $name
@@ -71,7 +64,7 @@ abstract class AbstractController
      * @param bool $full
      * @return string
      */
-    public function generateRoute($name, array $params = [], $full = false): string
+    protected function generateRoute($name, array $params = [], $full = false): string
     {
         return $this->container->get('router')->generateRoute($name, $params, $full);
     }
@@ -82,7 +75,7 @@ abstract class AbstractController
      * @return RedirectResponse
      * @throws \InvalidArgumentException
      */
-    public function createRedirectToRouteResponse(string $name, array $params = []): RedirectResponse
+    protected function createRedirectToRouteResponse(string $name, array $params = []): RedirectResponse
     {
         return new RedirectResponse($this->generateRoute($name, $params));
     }
@@ -91,9 +84,30 @@ abstract class AbstractController
     /**
      * @return Request
      */
-    public function getRequest(): Request
+    protected function getRequest(): Request
     {
         return $this->container->get('request');
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     */
+    protected function get($id)
+    {
+        return $this->container->get($id);
+    }
+
+    /**
+     * @param $level
+     * @param $message
+     * @param array $context
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     */
+    protected function log($level, $message, array $context = [])
+    {
+        $this->container->get(LoggerInterface::class)->log($level, $message, $context);
     }
 
 }
