@@ -5,6 +5,7 @@ namespace Jadob\Security\Guard\EventListener;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\Security\Guard\Guard;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class GuardRequestListener
@@ -25,12 +26,18 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
     protected $guard;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * GuardRequestListener constructor.
      * @param Guard $guard
      */
-    public function __construct(Guard $guard)
+    public function __construct(Guard $guard, ?LoggerInterface $logger = null)
     {
         $this->guard = $guard;
+        $this->logger = $logger;
     }
 
     /**
@@ -38,7 +45,8 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
      */
     public function onBeforeControllerEvent(BeforeControllerEvent $event): void
     {
-        if($this->guard->isRequestExcluded($event->getRequest())) {
+        if ($this->guard->isRequestExcluded($event->getRequest())) {
+            $this->log('Current request is excluded, no guard will be used for this action.');
             return;
         }
 
@@ -56,5 +64,14 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
     public function isEventStoppingPropagation()
     {
         return $this->blockPropagation;
+    }
+
+    private function log(string $message, array $context = []): void
+    {
+        if ($this->logger === null) {
+            return;
+        }
+
+        $this->logger->info($message, $context);
     }
 }

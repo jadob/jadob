@@ -3,12 +3,11 @@
 namespace Jadob\Security\Guard\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Guard\EventListener\GuardRequestListener;
 use Jadob\Security\Guard\Guard;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class GuardProvider
@@ -61,7 +60,10 @@ class GuardProvider implements ServiceProviderInterface
 
         $container->add('guard', $guardService);
         $container->get('event.listener')->addListener(
-            new GuardRequestListener($guardService)
+            new GuardRequestListener(
+                $guardService,
+                $container->get(LoggerInterface::class)
+            )
             , 21);
     }
 }
