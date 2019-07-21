@@ -50,7 +50,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     {
         $route->setParentCollection($this);
 
-        if($route->getHost() === null) {
+        if ($route->getHost() === null) {
             $route->setHost($this->getHost());
         }
         $this->routes[$route->getName()] = $route;
@@ -67,7 +67,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
         $collection->setParentCollection($this);
 
         foreach ($collection as $route) {
-            if($route->getHost() === null) {
+            if ($route->getHost() === null) {
                 $route->setHost($this->getHost());
             }
 
@@ -227,11 +227,11 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
         $routeCollection = new self();
 
         foreach ($data as $routeName => $routeArray) {
-            if(\is_integer($routeName) && \is_string($routeArray)) {
-                throw new RouterException('Route "'.$routeArray.'" looks malformed. Please provide a valid array as a value for this route.');
+            if (\is_integer($routeName) && \is_string($routeArray)) {
+                throw new RouterException('Route "' . $routeArray . '" looks malformed. Please provide a valid array as a value for this route.');
             }
 
-            if(!isset($routeArray['name'])) {
+            if (!isset($routeArray['name'])) {
                 $routeArray['name'] = $routeName;
             }
 
