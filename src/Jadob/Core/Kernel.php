@@ -98,7 +98,7 @@ class Kernel
         $this->bootstrap = $bootstrap;
         $this->logger = $this->initializeLogger();
 
-        if ((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
+        if (self::experimentalFeaturesEnabled()) {
             $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists. please double-test your app because new features may be unstable.');
         }
 
@@ -287,6 +287,11 @@ class Kernel
         $logger->pushHandler($fileStreamHandler);
 
         return $logger;
+    }
+
+    public static function experimentalFeaturesEnabled(): bool
+    {
+        return (bool)getenv(self::EXPERIMENTAL_FEATURES_ENV);
     }
 
 }
