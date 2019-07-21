@@ -2,9 +2,11 @@
 
 namespace Jadob\EventListener;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+
 /**
  * @TODO: this class should be called EventDispatcher to prevent misnaming and future errors
- * @TODO: logging events
  * Class EventListener
  * @package Jadob\EventListener
  * @author pizzaminded <miki@appvende.net>
@@ -22,6 +24,20 @@ class EventListener
      * @var array
      */
     protected $events = [];
+
+    /**
+     * @var LoggerInterface|null
+     */
+    protected $logger;
+
+    /**
+     * EventListener constructor.
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(?LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * @param EventListenerInterface $listener
@@ -53,6 +69,7 @@ class EventListener
     public function dispatchEvent($argumentClass): void
     {
 
+        $this->log('Event class ' . \get_class($argumentClass) . ' has been dispatched');
         ksort($this->listeners);
         $eventClassName = \get_class($argumentClass);
 
@@ -64,18 +81,31 @@ class EventListener
         $interfaceToCheck = $eventInfo['interface'];
         $methodToCall = $eventInfo['method'];
 
-        foreach ($this->listeners as $eventsByPriority) {
+        foreach ($this->listeners as $priority => $eventsByPriority) {
+
+            $this->log('Dispatching events for priority ' . $priority);
             /** @var EventListenerInterface[] $eventsByPriority */
             foreach ($eventsByPriority as $eventListener) {
 
                 if (\in_array($interfaceToCheck, \class_implements($eventListener), true)) {
+                    $this->log('Calling ' . \get_class($eventListener) . '#' . $methodToCall);
                     $eventListener->$methodToCall($argumentClass);
 
                     if ($eventListener->isEventStoppingPropagation()) {
+                        $this->log('Class ' . \get_class($eventListener) . ' stopped event propagation, finishing event dispatching');
                         return;
                     }
                 }
             }
         }
+    }
+
+    private function log(string $message, array $context = []): void
+    {
+        if ($this->logger === null) {
+            return;
+        }
+
+        $this->logger->info($message, $context);
     }
 }
