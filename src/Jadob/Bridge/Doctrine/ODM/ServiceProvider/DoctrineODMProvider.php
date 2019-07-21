@@ -69,10 +69,10 @@ class DoctrineODMProvider implements ServiceProviderInterface
             $configuration->setAutoGenerateProxyClasses(Configuration::AUTOGENERATE_FILE_NOT_EXISTS);
             $configuration->setAutoGenerateHydratorClasses(Configuration::AUTOGENERATE_FILE_NOT_EXISTS);
 
-            $configuration->setProxyDir($bootstrap->getCacheDir() . '/DoctrineODM/Proxies');
+            $configuration->setProxyDir($bootstrap->getCacheDir() . '/doctrine/odm/Proxies');
             $configuration->setProxyNamespace('DoctrineODMProxies');
 
-            $configuration->setHydratorDir($bootstrap->getCacheDir() . '/DoctrineODM/Hydrators');
+            $configuration->setHydratorDir($bootstrap->getCacheDir() . '/doctrine/odm/Hydrators');
             $configuration->setHydratorNamespace('DoctrineODMHydrators');
 
             $configuration->setMetadataDriverImpl(
