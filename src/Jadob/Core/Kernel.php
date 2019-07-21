@@ -2,6 +2,7 @@
 
 namespace Jadob\Core;
 
+use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
@@ -32,7 +33,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.0.61';
+    public const VERSION = '0.0.62';
 
     /**
      * @var string
@@ -97,7 +98,7 @@ class Kernel
         $this->bootstrap = $bootstrap;
         $this->logger = $this->initializeLogger();
 
-        if((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
+        if ((int)getenv('JADOB_ENABLE_EXPERIMENTAL_FEATURES') === 1) {
             $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists. please double-test your app because new features may be unstable.');
         }
 
@@ -105,16 +106,19 @@ class Kernel
         $errorHandler->registerErrorHandler();
         $errorHandler->registerExceptionHandler();
 
-        $this->eventListener = new EventListener();
+        $this->eventListener = new EventListener($this->logger);
 
-        $this->config = include $this->bootstrap->getConfigDir() . '/config.php';
+        $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php'], 1);
 
         $this->addEvents();
-
 
     }
 
     /**
+     * @TODO: This one should be maybe more flexible (and shorter):
+     * - this method should be called "handle" and it should need some basic stuff that can be extracted from superglobals
+     * - handling HttpFoundation object should be realised via handleRequest(Request $request) which would be an alias for handle()
+     *
      * @param Request $request
      * @return Response
      * @throws KernelException
@@ -122,9 +126,16 @@ class Kernel
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      * @throws \ReflectionException
+     * @throws \Jadob\Container\Exception\ContainerBuildException
      */
     public function execute(Request $request)
     {
+
+        $this->logger->info('New request received', [
+            'method' => $request->getMethod(),
+            'path' => $request->getPathInfo(),
+            'query' => $request->query->all()
+        ]);
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
@@ -133,6 +144,7 @@ class Kernel
 
         $dispatcher = new Dispatcher($this->container);
 
+        //@TODO this one should be moved  to dispather and called after router to provide matched route
         $beforeControllerEvent = new BeforeControllerEvent($request);
 
         $this->eventListener->dispatchEvent($beforeControllerEvent);
@@ -146,6 +158,7 @@ class Kernel
 
         $response = $dispatcher->executeRequest($request);
 
+        //@TODO: this one should be moved to dispatcher & should be called after controller
         $afterControllerEvent = new AfterControllerEvent($response);
 
         $this->eventListener->dispatchEvent($afterControllerEvent);

@@ -2,6 +2,7 @@
 
 namespace Jadob\Container;
 
+use Jadob\Config\Config;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -50,12 +51,9 @@ class ContainerBuilder
      * @throws ContainerException
      * @throws ContainerBuildException
      */
-    public function build($config)
+    public function build(Config $config)
     {
 
-        if (!\is_array($config)) {
-            throw new ContainerBuildException('Config should be an array, ' . \gettype($config) . ' passed');
-        }
 
         return $this->buildContainer($config);
     }
@@ -93,9 +91,12 @@ class ContainerBuilder
      * @return Container
      * @throws ContainerException
      */
-    protected function buildContainer($config)
+    protected function buildContainer(?Config $config = null)
     {
-        $services = [];
+        //create empty config object
+        if ($config === null) {
+            $config = new Config();
+        }
 
         foreach ($this->serviceProviders as $serviceProvider) {
             $provider = new $serviceProvider();
@@ -142,19 +143,24 @@ class ContainerBuilder
     }
 
     /**
-     * @param mixed[] $config
+     * @param Config|null $config
      * @param string $configNodeKey
      * @return array|null
      *
      * @throws ContainerException
      */
-    protected function getConfigNode($config, $configNodeKey)
+    protected function getConfigNode(Config $config, $configNodeKey)
     {
-        if ($configNodeKey !== null && !isset($config[$configNodeKey])) {
-            throw new ContainerException('Could not find config node named ' . $configNodeKey);
+        if ($configNodeKey !== null && !$config->hasNode($configNodeKey)) {
+            throw new ContainerException('Could not find config node named "' . $configNodeKey.'"');
         }
 
-        return $config[$configNodeKey] ?? null;
+        //if provider does not needs any config, we can pass null then
+        if($configNodeKey === null) {
+            return null;
+        }
+
+        return $config->getNode($configNodeKey);
     }
 
     /**
