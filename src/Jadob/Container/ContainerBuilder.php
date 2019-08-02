@@ -29,12 +29,12 @@ class ContainerBuilder
     protected $factories = [];
 
     /**
-     * @var string[]
+     * @var ServiceProviderInterface[]
      */
     protected $registeredProviders = [];
 
     /**
-     * @var ServiceProviderInterface[]
+     * @var string[]
      */
     protected $serviceProviders = [];
 
