@@ -54,22 +54,12 @@ class ContainerBuilder
     }
 
     /**
-     * @deprecated
-     * @return Container
-     * @throws ContainerException
-     * @throws ContainerBuildException
-     */
-    public function build(Config $config)
-    {
-        return $this->buildContainer($config);
-    }
-
-    /**
-     * @param $config
+     * @param Config|null $config
+     * @param bool $validateConfigNodes
      * @return Container
      * @throws ContainerException
      */
-    public function buildContainer(?Config $config = null, $validateConfigNodes = true)
+    public function build(?Config $config = null, $validateConfigNodes = true)
     {
         //create empty config object
         if ($config === null) {
