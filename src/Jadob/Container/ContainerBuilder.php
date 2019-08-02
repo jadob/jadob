@@ -8,7 +8,6 @@ use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ConfigSchemaValidatorProviderInterface;
 use Jadob\Container\ServiceProvider\DefaultConfigProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\Core\Kernel;
 
 /**
  * Class ContainerBuilder
@@ -89,7 +88,6 @@ class ContainerBuilder
             if (
                 $configNodeKey !== null
                 && $provider instanceof ConfigSchemaValidatorProviderInterface
-                && Kernel::experimentalFeaturesEnabled()
             ) {
                 $configToValidate = [];
 
@@ -182,6 +180,7 @@ class ContainerBuilder
     }
 
     /**
+     * @deprecated
      * @param array $services
      * @return ContainerBuilder
      */
@@ -200,6 +199,7 @@ class ContainerBuilder
     }
 
     /**
+     * @deprecated
      * @param array $factories
      * @return ContainerBuilder
      */

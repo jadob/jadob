@@ -36,12 +36,13 @@ class Kernel
     public const VERSION = '0.0.62';
 
     /**
+     * @deprecated
      * @var string
      */
     public const EXPERIMENTAL_FEATURES_ENV = 'JADOB_ENABLE_EXPERIMENTAL_FEATURES';
 
     /**
-     * @var array
+     * @var Config
      */
     private $config;
 
@@ -98,6 +99,7 @@ class Kernel
         $this->bootstrap = $bootstrap;
         $this->logger = $this->initializeLogger();
 
+        //to be removed
         if (self::experimentalFeaturesEnabled()) {
             $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists. please double-test your app because new features may be unstable.');
         }
@@ -250,7 +252,7 @@ class Kernel
     /**
      * @return array
      */
-    public function getConfig(): array
+    public function getConfig()
     {
         return $this->config;
     }
@@ -289,6 +291,10 @@ class Kernel
         return $logger;
     }
 
+    /**
+     * @deprecated
+     * @return bool
+     */
     public static function experimentalFeaturesEnabled(): bool
     {
         return (bool)getenv(self::EXPERIMENTAL_FEATURES_ENV);
