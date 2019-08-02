@@ -68,4 +68,20 @@ class Config
     {
         return isset($this->nodes[$name]);
     }
+
+    /**
+     * Return all nodes as an array.
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $output = [];
+
+        foreach ($this->nodes as $nodeName => $node) {
+            $output[$nodeName] = $node;
+        }
+
+        return $output;
+
+    }
 }
