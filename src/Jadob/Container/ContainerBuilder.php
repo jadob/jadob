@@ -166,16 +166,6 @@ class ContainerBuilder
         return $this->services;
     }
 
-    /**
-     * @deprecated
-     * @param array $services
-     * @return ContainerBuilder
-     */
-    public function setServices(array $services): ContainerBuilder
-    {
-        $this->services = $services;
-        return $this;
-    }
 
     /**
      * @return array
@@ -183,17 +173,6 @@ class ContainerBuilder
     public function getFactories(): array
     {
         return $this->factories;
-    }
-
-    /**
-     * @deprecated
-     * @param array $factories
-     * @return ContainerBuilder
-     */
-    public function setFactories(array $factories): ContainerBuilder
-    {
-        $this->factories = $factories;
-        return $this;
     }
 
     /**
@@ -206,9 +185,9 @@ class ContainerBuilder
 
 
     /**
-     * @param string $provider
+     * @param string $providerClass
      * @return ServiceProviderInterface
-     * @throws ContainerException
+     * @throws ContainerBuildException
      */
     private function instantiateProvider(string $providerClass): ServiceProviderInterface
     {
