@@ -29,7 +29,12 @@ class ContainerBuilder
     protected $factories = [];
 
     /**
-     * @var array
+     * @var string[]
+     */
+    protected $registeredProviders = [];
+
+    /**
+     * @var ServiceProviderInterface[]
      */
     protected $serviceProviders = [];
 
@@ -238,5 +243,20 @@ class ContainerBuilder
     public function has($id)
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
+    }
+
+
+    /**
+     * @param string $provider
+     * @return ServiceProviderInterface
+     * @throws ContainerException
+     */
+    private function instantiateProvider(string $providerClass): ServiceProviderInterface
+    {
+        $provider = new $providerClass();
+
+        if (!($provider instanceof ServiceProviderInterface)) {
+            throw new ContainerException('Class ' . $provider . ' cannot be used as an service provider');
+        }
     }
 }
