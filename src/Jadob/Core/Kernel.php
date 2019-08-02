@@ -142,7 +142,7 @@ class Kernel
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
 
-        $this->container = $builder->build($this->config);
+        $this->container = $builder->build($this->config->toArray());
 
         $dispatcher = new Dispatcher($this->container);
 

@@ -108,7 +108,7 @@ class ContainerBuilder
     protected function getConfigNode(array $config, $configNodeKey): array
     {
         //TODO: Refactor
-        if ($configNodeKey !== null && !$config->hasNode($configNodeKey)) {
+        if ($configNodeKey !== null && !isset($config[$configNodeKey])) {
             throw new ContainerException('Could not find config node named "' . $configNodeKey . '"');
         }
 
@@ -117,7 +117,7 @@ class ContainerBuilder
             return null;
         }
 
-        return $config->getNode($configNodeKey);
+        return $config[$configNodeKey];
     }
 
     /**
