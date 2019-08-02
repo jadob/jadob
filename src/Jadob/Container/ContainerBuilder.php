@@ -54,6 +54,7 @@ class ContainerBuilder
     }
 
     /**
+     * @deprecated
      * @return Container
      * @throws ContainerException
      * @throws ContainerBuildException
@@ -68,7 +69,7 @@ class ContainerBuilder
      * @return Container
      * @throws ContainerException
      */
-    protected function buildContainer(?Config $config = null, $validateConfigNodes = true)
+    public function buildContainer(?Config $config = null, $validateConfigNodes = true)
     {
         //create empty config object
         if ($config === null) {
