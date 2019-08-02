@@ -5,8 +5,7 @@ namespace Jadob\Container;
 use Jadob\Config\Config;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
-use Jadob\Container\ServiceProvider\ConfigSchemaValidatorProviderInterface;
-use Jadob\Container\ServiceProvider\DefaultConfigProviderInterface;
+use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
 /**
@@ -27,10 +26,13 @@ class ContainerBuilder
      */
     protected $factories = [];
 
+
+    protected $registeredProviders = [];
+
     /**
      * @var ServiceProviderInterface[]
      */
-    protected $registeredProviders = [];
+    protected $instantiatedProviders = [];
 
     /**
      * @var string[]
@@ -54,50 +56,27 @@ class ContainerBuilder
     }
 
     /**
-     * @param Config|null $config
-     * @param bool $validateConfigNodes
+     * @param array $config
      * @return Container
      * @throws ContainerException
+     * @throws ContainerBuildException
      */
-    public function build(?Config $config = null, $validateConfigNodes = true)
+    public function build(array $config = [])
     {
-        //create empty config object
-        if ($config === null) {
-            $config = new Config();
-        }
-
         foreach ($this->serviceProviders as $serviceProvider) {
             $provider = $this->instantiateProvider($serviceProvider);
 
-            $configNodeKey = $provider->getConfigNode();
-            $configNode = $this->getConfigNode($config, $configNodeKey);
-
-            if (
-                $configNodeKey !== null
-                && $provider instanceof ConfigSchemaValidatorProviderInterface
-            ) {
-                $configToValidate = [];
-
-                if ($provider instanceof DefaultConfigProviderInterface) {
-                    $configToValidate = \array_merge($provider->getDefaultConfig(), $configNode);
-                }
-
-                //@TODO: validate config node here
-
-            }
-
-            $results = $provider->register($configNode);
-
-            if (\is_array($results)) {
-                foreach ($results as $serviceKey => $service) {
-
-                    if ($service instanceof \Closure) {
-                        $this->factories[$serviceKey] = $service;
-                    } else {
-                        $this->services[$serviceKey] = $service;
-                    }
+            /**
+             * If current provider relies on others, it possible to define them by implementing an interface to them.
+             * Then, parent classes will be registered before the current one
+             */
+            if ($provider instanceof ParentProviderInterface) {
+                foreach ($provider->getParentProviders() as $parentProvider) {
+                    $this->registerProvider($parentProvider, $config);
                 }
             }
+
+            $this->registerProvider($provider, $config);
         }
 
 
@@ -126,8 +105,9 @@ class ContainerBuilder
      *
      * @throws ContainerException
      */
-    protected function getConfigNode(Config $config, $configNodeKey)
+    protected function getConfigNode(array $config, $configNodeKey)
     {
+        //TODO: Refactor
         if ($configNodeKey !== null && !$config->hasNode($configNodeKey)) {
             throw new ContainerException('Could not find config node named "' . $configNodeKey . '"');
         }
@@ -197,6 +177,27 @@ class ContainerBuilder
             throw new ContainerBuildException('Class ' . $providerClass . ' cannot be used as an service provider');
         }
 
+        $this->instantiatedProviders[$providerClass] = $provider;
+
         return $provider;
+    }
+
+    private function registerProvider(ServiceProviderInterface $provider, array $config = [])
+    {
+        $configNodeKey = $provider->getConfigNode();
+        $configNode = $this->getConfigNode($config, $configNodeKey);
+
+        $results = $provider->register($configNode);
+
+        if (\is_array($results)) {
+            foreach ($results as $serviceKey => $service) {
+
+                if ($service instanceof \Closure) {
+                    $this->factories[$serviceKey] = $service;
+                } else {
+                    $this->services[$serviceKey] = $service;
+                }
+            }
+        }
     }
 }
