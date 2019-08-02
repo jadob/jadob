@@ -44,7 +44,7 @@ class ContainerBuilder
      * @param mixed $definition
      * @return $this
      */
-    public function add($serviceName, $definition)
+    public function add($serviceName, $definition): self
     {
         if ($definition instanceof \Closure) {
             $this->factories[$serviceName] = $definition;
@@ -61,7 +61,7 @@ class ContainerBuilder
      * @throws ContainerException
      * @throws ContainerBuildException
      */
-    public function build(array $config = [])
+    public function build(array $config = []): Container
     {
         foreach ($this->serviceProviders as $serviceProvider) {
             $provider = $this->instantiateProvider($serviceProvider);
@@ -105,7 +105,7 @@ class ContainerBuilder
      *
      * @throws ContainerException
      */
-    protected function getConfigNode(array $config, $configNodeKey)
+    protected function getConfigNode(array $config, $configNodeKey): array
     {
         //TODO: Refactor
         if ($configNodeKey !== null && !$config->hasNode($configNodeKey)) {
@@ -158,7 +158,7 @@ class ContainerBuilder
     /**
      * {@inheritdoc}
      */
-    public function has($id)
+    public function has($id): bool
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
     }
@@ -182,7 +182,7 @@ class ContainerBuilder
         return $provider;
     }
 
-    private function registerProvider(ServiceProviderInterface $provider, array $config = [])
+    private function registerProvider(ServiceProviderInterface $provider, array $config = []): void
     {
         $configNodeKey = $provider->getConfigNode();
         $configNode = $this->getConfigNode($config, $configNodeKey);
