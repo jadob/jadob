@@ -105,7 +105,7 @@ class ContainerBuilder
      *
      * @throws ContainerException
      */
-    protected function getConfigNode(array $config, $configNodeKey): array
+    protected function getConfigNode(array $config, $configNodeKey): ?array
     {
         //TODO: Refactor
         if ($configNodeKey !== null && !isset($config[$configNodeKey])) {
