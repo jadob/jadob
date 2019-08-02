@@ -65,34 +65,6 @@ class ContainerBuilder
     }
 
     /**
-     * @deprecated
-     * @param array $config framework configuration
-     * @return $this
-     * @throws ContainerException
-     */
-    public function registerServiceProviders(array $config)
-    {
-
-        foreach ($this->serviceProviders as $serviceProvider) {
-            /** @var ServiceProviderInterface $provider */
-            $provider = new $serviceProvider;
-
-            if (!($provider instanceof ServiceProviderInterface)) {
-                throw new ContainerException('Class ' . $serviceProvider . ' cannot be used as an service provider');
-            }
-
-            $configNodeKey = $provider->getConfigNode();
-            $configNode = $this->getConfigNode($config, $configNodeKey);
-
-
-            $provider->register($configNode);
-        }
-
-        return $this;
-    }
-
-
-    /**
      * @param $config
      * @return Container
      * @throws ContainerException
