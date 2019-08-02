@@ -67,11 +67,7 @@ class ContainerBuilder
         }
 
         foreach ($this->serviceProviders as $serviceProvider) {
-            $provider = new $serviceProvider();
-
-            if (!($provider instanceof ServiceProviderInterface)) {
-                throw new ContainerException('Class ' . $serviceProvider . ' cannot be used as an service provider');
-            }
+            $provider = $this->instantiateProvider($serviceProvider);
 
             $configNodeKey = $provider->getConfigNode();
             $configNode = $this->getConfigNode($config, $configNodeKey);
@@ -219,7 +215,9 @@ class ContainerBuilder
         $provider = new $providerClass();
 
         if (!($provider instanceof ServiceProviderInterface)) {
-            throw new ContainerException('Class ' . $provider . ' cannot be used as an service provider');
+            throw new ContainerBuildException('Class ' . $providerClass . ' cannot be used as an service provider');
         }
+
+        return $provider;
     }
 }
