@@ -97,7 +97,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
                  * Entity paths must be defined, otherwise there is no sense to load rest of ORM
                  */
                 if (!isset($managerConfig['entity_paths'])) {
-                    throw new \RuntimeException('Entity paths section in ' . $managerName . ' are not defined');
+                    throw new \RuntimeException('Entity paths section in "' . $managerName . '" manager are not defined');
                 }
 
                 foreach ($managerConfig['entity_paths'] as $path) {
