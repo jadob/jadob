@@ -26,9 +26,6 @@ class ContainerBuilder
      */
     protected $factories = [];
 
-
-    protected $registeredProviders = [];
-
     /**
      * @var ServiceProviderInterface[]
      */
@@ -104,6 +101,7 @@ class ContainerBuilder
      * @return array|null
      *
      * @throws ContainerException
+     * @throws ContainerBuildException
      */
     protected function getConfigNode(array $config, $configNodeKey): ?array
     {
@@ -117,7 +115,13 @@ class ContainerBuilder
             return null;
         }
 
-        return $config[$configNodeKey];
+        $output = $config[$configNodeKey];
+
+        if (!\is_array($output)) {
+            throw new ContainerBuildException('Invalid config passed to config node "' . $configNodeKey . '". Expected array, got ' . gettype($output));
+        }
+
+        return $output;
     }
 
     /**
