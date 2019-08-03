@@ -34,7 +34,7 @@ class TranslationExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('trans', [$this, 'translate'], ['is_safe' => 'html'])
+            new \Twig_SimpleFilter('trans', [$this, 'translate'], ['is_safe' => ['html']])
         ];
     }
 
