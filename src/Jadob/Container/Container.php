@@ -34,6 +34,11 @@ class Container implements ContainerInterface
     protected $factories = [];
 
     /**
+     * @var InterfaceInjector[]
+     */
+    protected $interfaceInjectors = [];
+
+    /**
      * Container constructor.
      * @param array|null $services
      * @param array|null $factories
@@ -48,7 +53,6 @@ class Container implements ContainerInterface
             $this->factories = $factories;
         }
     }
-
 
     /**
      * @param string $serviceName
@@ -119,6 +123,11 @@ class Container implements ContainerInterface
             }
         }
 
+        /**
+         * Probably there is an issue:
+         * When factory will request yet another service, it will be created and removed from $this->factories,
+         * BUT these ones are still present in current foreach
+         */
         foreach (\array_keys($this->factories) as $factoryName) {
             $service = $this->instantiateFactory($factoryName);
 
@@ -164,6 +173,12 @@ class Container implements ContainerInterface
      */
     protected function instantiateFactory(string $factoryName)
     {
+
+        //@TODO find why DoctrineDBALBridge breaks here
+        if(isset($this->services[$factoryName])) {
+            return $this->services[$factoryName];
+        }
+
         $this->services[$factoryName] = $this->factories[$factoryName]($this);
         unset($this->factories[$factoryName]);
         return $this->services[$factoryName];
@@ -188,5 +203,20 @@ class Container implements ContainerInterface
         }
 
         return $this;
+    }
+
+    public function addInterfaceInjection(string $interfaceToCheck, string $methodToCall, $serviceToInject)
+    {
+        $this->interfaceInjectors[] = new InterfaceInjector($interfaceToCheck, $methodToCall, $serviceToInject);
+        return $this;
+    }
+
+    public function injectInterface($service)
+    {
+        foreach ($this->interfaceInjectors as $injector) {
+            $service = $injector->inject($service);
+        }
+
+        return $service;
     }
 }
