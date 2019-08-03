@@ -43,7 +43,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     public function register($config)
     {
         if (!isset($config['connections']) || \count($config['connections']) === 0) {
-            throw new \RuntimeException('You should provide at least one connection in config.doctrine_dbal node.');
+            throw new \RuntimeException('You should provide at least one connection in "doctrine_dbal" config node.');
         }
 
         $services = [];
