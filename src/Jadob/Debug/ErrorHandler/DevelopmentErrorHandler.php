@@ -34,7 +34,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         if (PHP_SAPI !== 'cli') {
             \set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {
 
-                if($errno === \E_USER_DEPRECATED) {
+                if ($errno === \E_USER_DEPRECATED) {
                     $context['file'] = $errfile;
                     $context['line'] = $errline;
                     $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -51,8 +51,14 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     {
         $logger = $this->logger;
 
+
         if (PHP_SAPI !== 'cli') {
             \set_exception_handler(function (\Throwable $exception) use ($logger) {
+                http_response_code(500);
+                error_log(\get_class($exception) . ': ' . $exception->getMessage());
+                error_log('Stack Trace: ');
+                error_log($exception->getTraceAsString());
+
                 $logger->critical($exception->getMessage(), [
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
