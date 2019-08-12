@@ -1,0 +1,38 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+    <annotation>
+        <documentation>Config Validator for Jadob/Bridge/TwigBridge</documentation>
+    </annotation>
+
+    <element name="twig">
+
+        <complexType>
+            <sequence>
+                <element name="cache" type="boolean">
+                    <annotation>
+                        <documentation>
+                            Enables template caching. If true, Twig will store all of it's cache files in
+                            ${CACHE_DIR}/twig directory.
+                        </documentation>
+                    </annotation>
+                </element>
+                <element name="strict_variables" type="boolean">
+                    <annotation>
+                        <documentation>
+                            If true, Twig will throw an exception when it meet an invalid variables.
+                            It is recommended to set it to true, otherwise Twig will ignore the error and it will
+                            continue to render.
+                        </documentation>
+                    </annotation>
+                </element>
+                <element name="template_paths">
+                    <complexType>
+                        <sequence>
+                            <any/>
+                        </sequence>
+                        <attribute name="key" type="string"/>
+                    </complexType>
+                </element>
+            </sequence>
+        </complexType>
+    </element>
+</schema>

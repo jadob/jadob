@@ -2,6 +2,8 @@
 
 namespace Jadob\Config;
 
+use Jadob\Config\Exception\ConfigNodeNotFoundException;
+
 /**
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -38,7 +40,7 @@ class Config
             $configNodeName = \basename($file, '.php');
 
             //separates config files from current method for prevent variable leaking
-            $configResolver = static function($file, $parameters) {
+            $configResolver = static function ($file, $parameters) {
                 \extract($parameters);
                 /** @noinspection PhpIncludeInspection */
                 return include $file;
@@ -53,16 +55,21 @@ class Config
 
     /**
      * @param string $name
-     * @return mixed
+     * @return array
+     * @throws ConfigNodeNotFoundException
      */
-    public function getNode(string $name)
+    public function getNode(string $name): array
     {
-        return $this->nodes[$name];
+        if ($this->hasNode($name)) {
+            return $this->nodes[$name];
+        }
+
+        throw new ConfigNodeNotFoundException('Could not find node "' . $name . '".');
     }
 
     /**
      * @param string $name
-     * @param mixed $content - preferred any scalar value
+     * @param mixed $content - preferred array value
      * @return $this
      */
     public function addNode(string $name, $content)
@@ -94,6 +101,5 @@ class Config
         }
 
         return $output;
-
     }
 }
