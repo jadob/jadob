@@ -15,12 +15,18 @@ class Config
     protected $nodes = [];
 
     /**
-     * @param string $directory
-     * @param array $extensions
-     * @param int $level
+     * @param string $directory Directory to be scanned
+     * @param array $extensions Not implemented yet
+     * @param int $level How many subdirectories we need to scan?
+     * @param array $parameters Parameters that would be passed to config files
      * @return Config
      */
-    public function loadDirectory(string $directory, array $extensions = [], int $level = 1)
+    public function loadDirectory(
+        string $directory,
+        array $extensions = [],
+        int $level = 1,
+        array $parameters = []
+    )
     {
         //remove trailing slash
         $directory = \rtrim($directory, '/');
@@ -31,8 +37,14 @@ class Config
             //We assume that file name === config node name
             $configNodeName = \basename($file, '.php');
 
-            /** @noinspection PhpIncludeInspection */
-            $this->nodes[$configNodeName] = include $file;
+            //separates config files from current method for prevent variable leaking
+            $configResolver = static function($file, $parameters) {
+                \extract($parameters);
+                /** @noinspection PhpIncludeInspection */
+                return include $file;
+            };
+
+            $this->nodes[$configNodeName] = $configResolver($file, $parameters);
         }
 
 
