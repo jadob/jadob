@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation xml:lang="en">
+        <xs:documentation>Doctrine DBAL config schema used in Jadob Framework</xs:documentation>
+    </xs:annotation>
+    <xs:element name="doctrine_dbal">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="connections">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="xs:complexType" minOccurs="0">
+
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <!-- logging by default is not shown in config.php file as this part lives in dbal provider class -->
+                <xs:element name="logging">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="use_external_file" type="xs:boolean"/>
+                            <xs:element name="log_to" type="xs:complexType"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
