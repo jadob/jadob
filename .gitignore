@@ -2,3 +2,4 @@
 /vendor/
 /phan_result.txt
 /coverage/
+/composer.lock
