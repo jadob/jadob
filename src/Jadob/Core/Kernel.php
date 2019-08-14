@@ -7,6 +7,7 @@ use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
+use Jadob\Debug\Profiler\Profiler;
 use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
@@ -27,7 +28,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Kernel
 {
-
     /**
      * semver formatted framework version
      * @see https://semver.org/
@@ -82,6 +82,11 @@ class Kernel
     protected $fileStreamHandler;
 
     /**
+     * @var Profiler
+     */
+    protected $profiler;
+
+    /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
      * @throws KernelException
@@ -132,17 +137,23 @@ class Kernel
      */
     public function execute(Request $request)
     {
+        $requestId = substr(md5(mt_rand()), 0, 15);
 
+        $this->profiler = new Profiler($this->bootstrap->getCacheDir() . '/profiler', $requestId);
+        $this->profiler->addEntry('JADOB_REQUEST_TIME', $request->server->get('REQUEST_TIME'));
         $this->logger->info('New request received', [
             'method' => $request->getMethod(),
             'path' => $request->getPathInfo(),
-            'query' => $request->query->all()
+            'query' => $request->query->all(),
+            'request_id' => $requestId
         ]);
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
+        $builder->add('profiler', $this->profiler);
 
         $this->container = $builder->build($this->config->toArray());
+        $this->container->addParameter('request_id', $requestId);
 
         $dispatcher = new Dispatcher($this->container);
 
@@ -250,7 +261,7 @@ class Kernel
     }
 
     /**
-     * @return array
+     * @return Config
      */
     public function getConfig()
     {
@@ -300,4 +311,12 @@ class Kernel
         return (bool)getenv(self::EXPERIMENTAL_FEATURES_ENV);
     }
 
+    public function terminate()
+    {
+
+//        r(xdebug_get_profiler_filename());
+        $this->profiler->addEntry('JADOB_FINISH_TIME', microtime());
+        $this->profiler->collectXDebugCoverage();
+        $this->profiler->flush();
+    }
 }
