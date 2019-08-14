@@ -71,7 +71,11 @@ class Dispatcher
             throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
         }
 
-        $response = \call_user_func_array([$autowiredController, $methodName], $route->getParams());
+        //@TODO: check if method is accessible
+
+        $methodArguments = $this->resolveControllerMethodArguments($autowiredController, $methodName, $route->getParams());
+
+        $response = \call_user_func_array([$autowiredController, $methodName], $methodArguments);
 
         if (!($response instanceof Response)) {
             throw new KernelException('Controller ' . \get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
@@ -91,12 +95,15 @@ class Dispatcher
     {
         $reflection = new \ReflectionClass($controllerClassName);
         $classConstructor = $reflection->getConstructor();
-        $arguments = [];
 
+        /**
+         * There is no reasons for class autowiring when there is no constructor
+         */
         if ($classConstructor === null) {
             return new $controllerClassName;
         }
 
+        $arguments = [];
         foreach ($classConstructor->getParameters() as $parameter) {
             if (!$parameter->hasType()) {
                 throw new KernelException('Argument "' . $parameter->getName() . '" defined in ' . $controllerClassName . ' does not have any type.');
@@ -111,5 +118,49 @@ class Dispatcher
         }
 
         return new $controllerClassName(...$arguments);
+    }
+
+    /**
+     * Allows for inject container services directly to method.
+     *
+     * @param object $controllerClass instantiated controller class
+     * @param string $methodName method to be called later
+     * @param array $routerParams arguments resolved from route
+     * @return array
+     * @throws \ReflectionException
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     */
+    protected function resolveControllerMethodArguments($controllerClass, $methodName, array $routerParams)
+    {
+        $reflection = new \ReflectionMethod($controllerClass, $methodName);
+
+        $parameters = $reflection->getParameters();
+
+        //nothing to do here
+        if (\count($parameters) === 0) {
+            return [];
+        }
+
+        $output = [];
+        foreach ($parameters as $parameter) {
+            $name = $parameter->getName();
+            $type = $parameter->getType();
+
+            //assume that if current function argument is an route parameter if there is no type
+            if ($type === null && isset($routerParams[$name])) {
+                $output[$name] = $routerParams[$name];
+                continue;
+            }
+
+            //service requested
+            if ($type !== null && !$type->isBuiltin()) {
+                $output[$name] = $this->container->findObjectByClassName($type);
+                continue;
+            }
+
+            throw new \RuntimeException('Missing service or route param with name "'.$name.'"');
+        }
+
+        return $output;
     }
 }
