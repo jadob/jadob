@@ -36,7 +36,6 @@ class ContainerBuilderTest extends TestCase
 
         $container = $builder->build();
 
-        $this->assertInstanceOf(Container::class, $container);
         $this->assertInstanceOf(ExampleService::class, $container->get('a.1'));
         $this->assertInstanceOf(YetAnotherExampleService::class, $container->get('a.2'));
 
@@ -53,7 +52,6 @@ class ContainerBuilderTest extends TestCase
         $builder->setServiceProviders([AInvalidServiceProvider::class]);
 
         $container = $builder->build();
-
 
     }
 }
