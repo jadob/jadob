@@ -58,8 +58,11 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $environmentClosure = function (ContainerInterface $container) use ($config) {
             $cache = false;
-            if ($config['cache']) {
-                $cache = $container->get(BootstrapInterface::class)->getCacheDir() . '/twig';
+            if ($config['cache'] === true) {
+                $cache =
+                    $container->get(BootstrapInterface::class)->getCacheDir() .
+                    ($container->get('kernel')->isProduction() ? '/prod' : '/dev') .
+                    '/twig';
             }
 
             $options = [
