@@ -102,26 +102,26 @@ class TwigServiceProvider implements ServiceProviderInterface
         $twig = $container->get(Environment::class);
 
         //@TODO: fix referencing to router
-        if($container->has('router')) {
+        if ($container->has('router')) {
             $twig->addExtension(new PathExtension($container->get('router')));
         }
 
         //register additional extensions provided with framework
-        if(!isset($config['extensions'])) {
+        if (!isset($config['extensions'])) {
             return;
         }
 
         $extensions = $config['extensions'];
 
-        if(isset($extensions['webpack_manifest'])) {
+        if (isset($extensions['webpack_manifest'])) {
 
             $webpackManifestConfig = $extensions['webpack_manifest'];
 
             $manifestJsonLocation = $container->get(BootstrapInterface::class)->getRootDir()
-                .'/'.
+                . '/' .
                 $webpackManifestConfig['manifest_json_location'];
 
-            $manifest = \json_decode(\file_get_contents($manifestJsonLocation),true);
+            $manifest = \json_decode(\file_get_contents($manifestJsonLocation), true);
             $twig->addExtension(new WebpackManifestAssetExtension($manifest));
         }
     }
