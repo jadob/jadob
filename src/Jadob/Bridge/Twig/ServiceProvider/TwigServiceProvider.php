@@ -67,7 +67,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
             $options = [
                 'cache' => $cache,
-                'strict_variables' => $config['strict_variables']
+                'strict_variables' => $config['strict_variables'],
+                'auto_reload' => true
             ];
 
             $environment = new Environment(
