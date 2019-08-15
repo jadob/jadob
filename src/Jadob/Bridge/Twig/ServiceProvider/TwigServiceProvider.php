@@ -106,6 +106,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $twig->addExtension(new PathExtension($container->get('router')));
         }
 
+        $twig->addExtension(new DebugExtension());
+
         //register additional extensions provided with framework
         if (!isset($config['extensions'])) {
             return;
