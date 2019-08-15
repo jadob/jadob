@@ -140,6 +140,12 @@
             color: #95A5A6;
             font-weight: 400;
         }
+
+        .stack-trace .file-path {
+            padding-top: 5px;
+            color: #95A5A6;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -193,6 +199,11 @@
                             }
                             ?>
                             <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>)
+                            <p class="file-path">
+                                <?php if (isset($element['file'])) { ?>
+                                    <?= $element['file']; ?>
+                                <?php } ?>
+                            </p>
                         </td>
                         <td> <?= $element['line'] ?? null ?></td>
                     </tr>
