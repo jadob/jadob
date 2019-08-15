@@ -6,8 +6,12 @@ use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Core\Kernel;
+use Jadob\TwigBridge\Twig\Extension\DebugExtension;
 use Jadob\TwigBridge\Twig\Extension\PathExtension;
 use Psr\Container\ContainerInterface;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\TwigEngine;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -37,8 +41,16 @@ class TwigServiceProvider implements ServiceProviderInterface
             $loader = new FilesystemLoader();
             $loader->addPath(__DIR__ . '/../templates', 'Jadob');
 
+            $twigBridgeDirectory = dirname((new \ReflectionClass(TwigRenderer::class))->getFileName());
+            $formTemplatesDirectory = $twigBridgeDirectory . '/../Resources/views/Form';
+            $loader->addPath($formTemplatesDirectory, FilesystemLoader::MAIN_NAMESPACE);
+
             foreach ($config['templates_paths'] as $key => $path) {
-                $loader->addPath($container->get(BootstrapInterface::class)->getRootDir() . '/' . $path, $key);
+                if (\is_int($key)) {
+                    $key = FilesystemLoader::MAIN_NAMESPACE;
+                }
+
+                $loader->addPath($container->get(BootstrapInterface::class)->getRootDir() . '/' . \ltrim($path, '/'), $key);
             }
 
             return $loader;
