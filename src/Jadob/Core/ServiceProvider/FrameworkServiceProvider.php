@@ -8,6 +8,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Debug\Profiler\EventListener\ProfilerListener;
 use Jadob\EventListener\EventListener;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Configures any Framework related things.
@@ -35,7 +36,7 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     public function register($config)
     {
         return [
-            'session' => new Session()
+            SessionInterface::class => new Session()
         ];
     }
 
@@ -49,7 +50,10 @@ class FrameworkServiceProvider implements ServiceProviderInterface
             /** @var EventListener $eventListener */
             $eventListener = $container->get('event.listener');
 
-            $eventListener->addListener(new ProfilerListener());
+//            $eventListener->addListener(new ProfilerListener(
+//                $container->get('router'),
+//                $container->get('profiler')
+//            ));
 
         }
 
