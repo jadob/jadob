@@ -6,6 +6,7 @@ use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
+ * TODO: this one maybe should be called IdentityStorage
  * Class UserStorage
  * @package Jadob\Security\Auth
  * @author pizzaminded <miki@appvende.net>

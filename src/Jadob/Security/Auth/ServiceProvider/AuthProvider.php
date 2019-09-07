@@ -3,7 +3,6 @@
 namespace Jadob\Security\Auth\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\Command\GeneratePasswordHashCommand;
 use Jadob\Security\Auth\EventListener\UserRefreshListener;
@@ -11,8 +10,7 @@ use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\Console\Application;
 
 /**
- * Class AuthProvider
- * @package Jadob\Security\Auth\ServiceProvider
+ * @todo rewrite to use supervisors and identityproviders/ identitystorage
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
