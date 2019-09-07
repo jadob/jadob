@@ -1,12 +1,10 @@
 <?php
 
-namespace Jadob\EventListener\Event;
+namespace Jadob\Core\Event;
 
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AfterControllerEvent
- * @package Jadob\EventListener\Event
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -39,11 +37,9 @@ class AfterControllerEvent
      * @param Response $response
      * @return AfterControllerEvent
      */
-    public function setResponse(Response $response): AfterControllerEvent
+    public function setResponse(Response $response): self
     {
         $this->response = $response;
         return $this;
     }
-
-
 }
