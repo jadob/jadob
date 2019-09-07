@@ -28,14 +28,6 @@ Enabling test suite:
 
 ``vendor/bin/phpunit``
 
-## Experimental Features
-
-There are some "hidden" features which can be enabled by setting  ``JADOB_ENABLE_EXPERIMENTAL_FEATURES`` env to ``1``.
-These ones might break or be unstable, so you can use it at production servers at your own risk.
-
-Features can be unmarked as experimental when it will be unit-tested and considered stable.
- 
-
 ## Things that need to be done before `1.0.0` release
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
