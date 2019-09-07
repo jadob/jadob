@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Interface GuardAuthenticatorInterface
- * @package Jadob\Security\Guard
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */

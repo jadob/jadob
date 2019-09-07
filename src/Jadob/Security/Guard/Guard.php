@@ -8,8 +8,7 @@ use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class GuardDispatcher
- * @package Jadob\Security\Guard
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -64,7 +63,7 @@ class Guard
 
     /**
      * @param UserProviderInterface $userProvider
-     * @param $name
+     * @param string $name
      * @return $this
      */
     public function addUserProvider(UserProviderInterface $userProvider, string $name)

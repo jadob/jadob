@@ -10,8 +10,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class GuardProvider
- * @package Jadob\Security\Guard\ServiceProvider
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */

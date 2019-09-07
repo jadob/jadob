@@ -8,8 +8,7 @@ use Jadob\Security\Guard\Guard;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class GuardRequestListener
- * @package Jadob\Security\Guard\EventListener
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
