@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Silex/Lumen style microframework kernel.
+ * Express style microframework kernel.
  * If you want to quickly create APIs or microservices, this one will be better than creating app using Jadob\Core\Kernel.
  *
  * Jadob\Micro is an boilerplate which allows you to create things without being worried about configuration, defining
