@@ -6,8 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class BeforeControllerEvent
- * @package Jadob\EventListener\Event
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
