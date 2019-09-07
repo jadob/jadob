@@ -39,6 +39,11 @@ class Container implements ContainerInterface
     protected $interfaceInjectors = [];
 
     /**
+     * @var array
+     */
+    protected $parameters;
+
+    /**
      * Container constructor.
      * @param array|null $services
      * @param array|null $factories
@@ -218,5 +223,27 @@ class Container implements ContainerInterface
         }
 
         return $service;
+    }
+
+    /**
+     * @param string $key
+     * @param $value
+     */
+    public function addParameter(string $key, $value)
+    {
+        $this->parameters[$key] = $value;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getParameter(string $key)
+    {
+        if(!isset($this->parameters[$key])) {
+            throw new \RuntimeException('Could not find "'.$key.'" parameter');
+        }
+
+        return $this->parameters[$key];
     }
 }
