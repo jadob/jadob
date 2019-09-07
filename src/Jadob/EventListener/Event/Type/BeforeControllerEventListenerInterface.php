@@ -7,6 +7,7 @@ use Jadob\EventListener\EventListenerInterface;
 
 /**
  * Classes implementing this one will be executed after router, before controller executing.
+ * @deprecated
  * @package Jadob\EventListener\Event\Type
  * @author pizzaminded <miki@appvende.net>
  */

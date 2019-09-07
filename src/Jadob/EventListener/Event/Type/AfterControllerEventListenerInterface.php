@@ -6,8 +6,7 @@ use Jadob\EventListener\Event\AfterControllerEvent;
 use Jadob\EventListener\EventListenerInterface;
 
 /**
- * Interface AfterControllerEventListenerInterface
- * @package Jadob\EventListener\Event\Type
+ * @deprecated
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
