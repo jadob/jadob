@@ -7,6 +7,7 @@ use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -17,6 +18,7 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Validation;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 /**
  * Class SymfonyFormProvider
@@ -45,8 +47,17 @@ class SymfonyFormProvider implements ServiceProviderInterface
     {
 
         $validator = Validation::createValidatorBuilder();
-        
-        return ['symfony.validator' => $validator->getValidator()];
+
+        return [
+            'symfony.validator' => $validator->getValidator(),
+            'symfony.form.factory' => static function (Container $container) {
+                $formFactoryBuilder = Forms::createFormFactoryBuilder()
+                    ->addExtension(new HttpFoundationExtension())
+                    ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
+
+                return $formFactoryBuilder->getFormFactory();
+            }
+        ];
     }
 
     /**
@@ -54,40 +65,25 @@ class SymfonyFormProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-
-        $container->add('symfony.form.factory', function (Container $container) use ($config) {
+        if ($container->has('twig')) {
             /** @var \Twig\Environment $twig */
             $twig = $container->get('twig');
-
-            /** @var Translator $translator */
-            $translator = $container->get('translator');
-
             $formEngine = new TwigRendererEngine($config['forms'], $twig);
-            $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+
+            $twig->addRuntimeLoader(new FactoryRuntimeLoader([
                 FormRenderer::class => function () use ($formEngine) {
                     return new FormRenderer($formEngine);
                 },
             ]));
 
             $twig->addExtension(new FormExtension());
-
             $twig->addExtension(
                 new TranslationExtension(
                     $container->get('translator')
                 )
             );
-
-            $formFactoryBuilder = Forms::createFormFactoryBuilder()
-                ->addExtension(new HttpFoundationExtension())
-                ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
+        }
 
 
-//            $formExtensions = $container->getObjectsImplementing(FormExtensionInterface::class);
-
-//            r($formExtensions);
-
-
-            return $formFactoryBuilder->getFormFactory();
-        });
     }
 }
