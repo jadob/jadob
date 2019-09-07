@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
+ * @deprecated in favor of Jadob\EventDispatcher
  * @TODO: this class should be called EventDispatcher to prevent misnaming and future errors
  * Class EventListener
  * @package Jadob\EventListener
