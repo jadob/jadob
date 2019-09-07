@@ -3,6 +3,7 @@
 namespace Jadob\EventListener;
 
 /**
+ * @deprecated
  * Interface EventInterface
  * @package Jadob\EventListener
  * @author pizzaminded <miki@appvende.net>
