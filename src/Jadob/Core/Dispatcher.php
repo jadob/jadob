@@ -4,8 +4,10 @@ namespace Jadob\Core;
 
 use Jadob\Container\Container;
 use Jadob\Core\Exception\KernelException;
+use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,12 +26,22 @@ class Dispatcher
     protected $container;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * Dispatcher constructor.
      * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, ?EventDispatcherInterface $eventDispatcher = null)
     {
         $this->container = $container;
+
+        if($eventDispatcher === null) {
+            $this->eventDispatcher = new EventDispatcher();
+        }
+
     }
 
     /**
