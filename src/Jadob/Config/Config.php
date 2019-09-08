@@ -41,7 +41,10 @@ class Config
 
             //separates config files from current method for prevent variable leaking
             $configResolver = static function ($file, $parameters) {
+                //@TODO remove this one as this may be hard for unit testing
                 \extract($parameters);
+
+
                 /** @noinspection PhpIncludeInspection */
                 return include $file;
             };
