@@ -51,6 +51,14 @@ class BeforeControllerEvent implements StoppableEventInterface
     }
 
     /**
+     * @return Response|null
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function isPropagationStopped(): bool
