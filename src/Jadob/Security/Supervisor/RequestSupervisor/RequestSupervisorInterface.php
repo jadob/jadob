@@ -75,4 +75,12 @@ interface RequestSupervisorInterface
 
     public function verifyClientCredentials(): bool;
 
+    /**
+     * Called as first method.
+     * Please keep in mind that supervisor will return FIRST requestsupervisor that returns true in this method.
+     * Be strict with your request handling.
+     * @param Request $request
+     * @return bool
+     */
+    public function supports(Request $request): bool;
 }
