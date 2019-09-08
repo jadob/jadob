@@ -33,7 +33,7 @@ interface ServiceProviderInterface
      * - This one gets container as a first argument, so, you can e.g. get all services implementing SomeCoolInterface,
      * and inject them somewhere
      * (example 1: using Twig, you can register all extensions)
-     * (example 2: EventListener registers all Listeners here)
+     * (example 2: EventDispatcher registers all Listeners here)
      * - You can add new services of course
      *
      * @param Container $container
@@ -44,7 +44,7 @@ interface ServiceProviderInterface
 
 
     /**
-     * Caution: this is an experimental feature. you can enable it by setting JADOB_ENABLE_EXPERIMENTAL_FEATURES env to 1.feeeaaef
+     * Caution: this is an experimental feature.
      * Returns a list of Providers that current provider is dependent from.
      * These ones can be ignored or missing in Bootstrap#getServiceProviders().
      * @return ServiceProviderInterface[]
