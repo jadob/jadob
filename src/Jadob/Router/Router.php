@@ -45,14 +45,18 @@ class Router
     /**
      * @param RouteCollection $routeCollection
      * @param Context|null $context
+     * @param array $config
      */
-    public function __construct(RouteCollection $routeCollection, ?Context $context = null)
+    public function __construct(RouteCollection $routeCollection, ?Context $context = null, array $config = [])
     {
         $this->routeCollection = $routeCollection;
 
-        $this->config = [
-            'case_sensitive' => false
+        $defaultConfig = [
+            'case_sensitive' => false,
+            'optional_locale' => false,
         ];
+
+        $this->config = \array_merge($defaultConfig, $config);
 
         if ($context !== null) {
             $this->context = $context;
@@ -298,6 +302,16 @@ class Router
                 )
             )
         );
+    }
+
+    /**
+     * @param Route $route
+     * @return $this
+     */
+    public function addRoute(Route $route): Router
+    {
+        $this->routeCollection->addRoute($route);
+        return $this;
     }
 }
 
