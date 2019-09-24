@@ -16,7 +16,6 @@ class WebpackManifestAssetExtensionTest extends TestCase
     {
         $extension = new WebpackManifestAssetExtension([]);
 
-        /** @var iterable $functions */
         $functions = $extension->getFunctions();
         /** @var \Twig_SimpleFunction $function */
         $function = reset($functions);
@@ -33,7 +32,6 @@ class WebpackManifestAssetExtensionTest extends TestCase
             'styles.css' => 'styles.1234qwer.css'
         ]);
 
-        /** @var iterable $functions */
         $functions = $extension->getFunctions();
         /** @var \Twig_SimpleFunction $function */
         $function = reset($functions);

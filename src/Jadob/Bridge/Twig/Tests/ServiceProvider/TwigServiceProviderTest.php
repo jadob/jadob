@@ -7,6 +7,7 @@ use Jadob\Bridge\Twig\ServiceProvider\TwigServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Core\AbstractBootstrap;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Core\Kernel;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
@@ -102,6 +103,7 @@ class TwigServiceProviderTest extends TestCase
         ]);
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
+        $container->add('kernel',new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
@@ -133,6 +135,7 @@ class TwigServiceProviderTest extends TestCase
         $services = $provider->register($config);
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
+        $container->add('kernel',new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
