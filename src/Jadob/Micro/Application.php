@@ -37,7 +37,7 @@ class Application /**implements \ArrayAccess **/
      * Micro uses the same codebase as Jadob so both will have the same versions.
      * @var string;
      */
-    public const VERSION = '0.0.61';
+    public const VERSION = '0.0.63';
 
     /**
      * @var ContainerInterface
