@@ -102,7 +102,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
                 foreach ($managerConfig['entity_paths'] as $path) {
                     //@TODO: trim beginning slash from any $path if present
-                    $entityPaths[] = $container->get(BootstrapInterface::class)->getRootDir() . '/' . $path;
+                    $entityPaths[] = $container->get(BootstrapInterface::class)->getRootDir() . '/' . ltrim($path,'/');
                 }
 
                 $configuration = new Configuration();
