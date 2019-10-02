@@ -7,7 +7,6 @@ Configuration reference
 ## All possible parameters
 
 ````php
-
 <?php
 
 return [
