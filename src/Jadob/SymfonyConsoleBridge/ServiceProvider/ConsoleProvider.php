@@ -30,7 +30,7 @@ class ConsoleProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        if (strtolower(php_sapi_name()) === 'cli') {
+        if (strtolower(PHP_SAPI) === 'cli') {
             return ['console' => new Application('Jadob', Kernel::VERSION)];
         }
     }
