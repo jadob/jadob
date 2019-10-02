@@ -3,6 +3,7 @@
 namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
@@ -13,25 +14,53 @@ class SupervisorListener implements ListenerProviderInterface
 {
 
     /**
-     * @param object $event
-     *   An event for which to return the relevant listeners.
-     * @return iterable[callable]
-     *   An iterable (array, iterator, or generator) of callables.  Each
-     *   callable MUST be type-compatible with $event.
+     * @var Supervisor
+     */
+    protected $supervisor;
+
+    /**
+     * SupervisorListener constructor.
+     * @param Supervisor $supervisor
+     */
+    public function __construct(Supervisor $supervisor)
+    {
+        $this->supervisor = $supervisor;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getListenersForEvent(object $event): iterable
     {
         if ($event instanceof BeforeControllerEvent) {
             return [
-                [$this, 'onBeforeRequest']
+                [$this, 'onBeforeController']
             ];
         }
 
         return [];
     }
 
-    public function onBeforeRequest(BeforeControllerEvent $event): BeforeControllerEvent
+    public function onBeforeController(BeforeControllerEvent $event): BeforeControllerEvent
     {
+        $supervisor = $this->supervisor->matchRequestSupervisor($event->getRequest());
+        if($supervisor === null && $this->supervisor->isBlockingUnsecuredRequests()) {
+            //@TODO emit exception
+        }
+
+        //1. Check if this is an authentication attempt:
+        if($supervisor->isAuthenticationRequest($event->getRequest())) {
+            //2. Handle Authentication
+            $credentials = $supervisor->extractCredentialsFromRequest($event->getRequest());
+
+
+
+            return;
+        }
+
+        //3. User is not logged in, but supervisor allows unauthenticated user to enter
+        //4. User is not logged in and supervisor wants user to be authenticated
+        //5. User is logged in, there is nothing to do
 
     }
 

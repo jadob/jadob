@@ -49,6 +49,7 @@ class Supervisor
     }
 
     /**
+     * to be deprecated probably
      * @return bool
      */
     public function isBlockingUnsecuredRequests()
