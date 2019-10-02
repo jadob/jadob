@@ -8,6 +8,7 @@ use Jadob\Security\Auth\Command\GeneratePasswordHashCommand;
 use Jadob\Security\Auth\EventListener\UserRefreshListener;
 use Jadob\Security\Auth\UserStorage;
 use Symfony\Component\Console\Application;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @todo rewrite to use supervisors and identityproviders/ identitystorage
@@ -32,7 +33,7 @@ class AuthProvider implements ServiceProviderInterface
     {
         return [
             'auth.user.storage' => function (Container $container) {
-                return new UserStorage($container->get('session'));
+                return new UserStorage($container->get(SessionInterface::class));
             }
         ];
     }
