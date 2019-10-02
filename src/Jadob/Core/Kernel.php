@@ -218,6 +218,7 @@ class Kernel
         return $this->env;
     }
 
+    //@TODO create Jadob/Core/EventDispatcherFactory and move all these things to new class
     protected function addEvents()
     {
         $this->eventListener->addEvent(
@@ -269,6 +270,7 @@ class Kernel
     }
 
     /**
+     * @deprecated probably
      * @param array $config
      * @return Kernel
      */
@@ -311,6 +313,7 @@ class Kernel
         return (bool)getenv(self::EXPERIMENTAL_FEATURES_ENV);
     }
 
+    //@TODO: if prod, do not collect profiler data, disallow xdebug features if xdebug is not installed
     public function terminate()
     {
 

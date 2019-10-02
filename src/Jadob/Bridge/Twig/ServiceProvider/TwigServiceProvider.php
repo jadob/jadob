@@ -6,17 +6,16 @@ use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\Core\Kernel;
 use Jadob\TwigBridge\Twig\Extension\DebugExtension;
 use Jadob\TwigBridge\Twig\Extension\PathExtension;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
-use Symfony\Bridge\Twig\TwigEngine;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
 /**
+ * @TODO This class should be named TwigProvider (according to other providers name conventions)
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -39,8 +38,13 @@ class TwigServiceProvider implements ServiceProviderInterface
     {
         $loaderClosure = function (ContainerInterface $container) use ($config) {
             $loader = new FilesystemLoader();
+
+            //Adds Jadob namespace with some predefined templates (forms, alerts)
             $loader->addPath(__DIR__ . '/../templates', 'Jadob');
 
+            //@TODO: create some in-framework forms and remove twigbridge
+            //@TODO after refactoring, add some doc about integrating with twig-bridge
+            //Integrates with symfony/twig-bridge for default symfony forms
             $twigBridgeDirectory = dirname((new \ReflectionClass(TwigRenderer::class))->getFileName());
             $formTemplatesDirectory = $twigBridgeDirectory . '/../Resources/views/Form';
             $loader->addPath($formTemplatesDirectory, FilesystemLoader::MAIN_NAMESPACE);
@@ -49,7 +53,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if (\is_int($key)) {
                     $key = FilesystemLoader::MAIN_NAMESPACE;
                 }
-
                 $loader->addPath($container->get(BootstrapInterface::class)->getRootDir() . '/' . \ltrim($path, '/'), $key);
             }
 
@@ -58,6 +61,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $environmentClosure = function (ContainerInterface $container) use ($config) {
             $cache = false;
+            //@TODO remove "=== true" phrase
             if ($config['cache'] === true) {
                 $cache =
                     $container->get(BootstrapInterface::class)->getCacheDir() .
@@ -106,6 +110,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $twig->addExtension(new PathExtension($container->get('router')));
         }
 
+        //@TODO this one should be disabled on prod
         $twig->addExtension(new DebugExtension());
 
         //register additional extensions provided with framework
@@ -115,6 +120,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $extensions = $config['extensions'];
 
+        //@TODO documentation
         if (isset($extensions['webpack_manifest'])) {
 
             $webpackManifestConfig = $extensions['webpack_manifest'];
