@@ -170,7 +170,7 @@ class Dispatcher
                 continue;
             }
 
-            throw new \RuntimeException('Missing service or route param with name "'.$name.'"');
+            throw new \RuntimeException('Missing service or route parameter with name "'.$name.'"');
         }
 
         return $output;

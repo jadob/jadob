@@ -205,7 +205,7 @@ class Kernel
     /**
      * @return bool
      */
-    public function isProduction()
+    public function isProduction(): bool
     {
         return $this->env === 'prod';
     }
@@ -235,6 +235,7 @@ class Kernel
 
     /**
      * @return ContainerBuilder
+     * @throws KernelException
      */
     public function getContainerBuilder(): ContainerBuilder
     {
@@ -242,6 +243,9 @@ class Kernel
             /** @var array $services */
             $services = include $this->bootstrap->getConfigDir() . '/services.php';
 
+            if(!\is_array($services)) {
+                throw new KernelException('services.php has missing return statement or returned value is not an array');
+            }
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->add('event.listener', $this->eventListener);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
