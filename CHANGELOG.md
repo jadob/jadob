@@ -8,9 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [DoctrineORMBridge] Replaced ArrayCache with FilesystemCache
 - [Guard] component has been deprecated, use [Supervisor] instead
+- [TwigBridge] PathExtension and DebugExtension has been moved to ``Jadob\Bridge\Twig`` namespace.
 
 ### Added
 - Added [Supervisor] Component
+
+### Removed
+- [TwigBridge] AssetExtension has been removed.
+- Dropped ``Jadob\TwigBridge`` namespace.
 
 ## [0.0.61] - 2019-04-26
 

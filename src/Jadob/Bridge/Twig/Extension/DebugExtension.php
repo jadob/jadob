@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jadob\TwigBridge\Twig\Extension;
+namespace Jadob\Bridge\Twig\Extension;
 
 /**
  * Class DebugExtension
