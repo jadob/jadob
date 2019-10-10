@@ -4,19 +4,26 @@ namespace Jadob\EventDispatcher;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
+ * @TODO: enable timestamp collecting via constructor arguments?
  * @see https://www.php-fig.org/psr/psr-14/
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class EventDispatcher implements EventDispatcherInterface
 {
-
     /**
      * @var ListenerProviderInterface[]
      */
     protected $listeners = [];
+
+    /**
+     * @TODO maybe SplObjectStorage?
+     * @var Timestamp[]
+     */
+    protected $timestamps = [];
 
     /**
      * Provide all relevant listeners with an event to process.
@@ -30,9 +37,26 @@ class EventDispatcher implements EventDispatcherInterface
      */
     public function dispatch(object $event)
     {
-        // TODO: Implement dispatch() method.
-    }
+        $this->timestamps[] = new Timestamp(
+            \get_class($event),
+            \microtime(true),
+            \spl_object_hash($event)
+        );
 
+        foreach ($this->listeners as $listener) {
+            $eventsFromListener = $listener->getListenersForEvent($event);
+            foreach ($eventsFromListener as $singleListener) {
+                $singleListener($event);
+
+                if($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                    //@TODO log that event dispatching has been interrupted
+                    return $event;
+                }
+            }
+        }
+
+        return $event;
+    }
 
     /**
      * @param ListenerProviderInterface $provider
