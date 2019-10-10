@@ -3,8 +3,11 @@
 namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\Security\Auth\UserStorage;
+use Jadob\Security\Exception\UserNotFoundException;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use function get_class;
 
 /**
  * @author pizzaminded <miki@appvende.net>
@@ -19,12 +22,19 @@ class SupervisorListener implements ListenerProviderInterface
     protected $supervisor;
 
     /**
+     * @var UserStorage
+     */
+    protected $userStorage;
+
+    /**
      * SupervisorListener constructor.
      * @param Supervisor $supervisor
+     * @param UserStorage $userStorage
      */
-    public function __construct(Supervisor $supervisor)
+    public function __construct(Supervisor $supervisor, UserStorage $userStorage)
     {
         $this->supervisor = $supervisor;
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -43,19 +53,52 @@ class SupervisorListener implements ListenerProviderInterface
 
     public function onBeforeController(BeforeControllerEvent $event): BeforeControllerEvent
     {
-        $supervisor = $this->supervisor->matchRequestSupervisor($event->getRequest());
-        if($supervisor === null && $this->supervisor->isBlockingUnsecuredRequests()) {
+        $requestSupervisor = $this->supervisor->matchRequestSupervisor($event->getRequest());
+        if ($requestSupervisor === null && $this->supervisor->isBlockingUnsecuredRequests()) {
             //@TODO emit exception
         }
 
+        //At first, handle stateless
+        if ($requestSupervisor->isStateless()) {
+            $credentials = $requestSupervisor->extractCredentialsFromRequest($event->getRequest());
+
+            //break if no credentials found
+            if ($credentials === null || $credentials === false) {
+                //@TODO add exception message
+                throw new UserNotFoundException();
+            }
+
+            $userProvider = $this->supervisor->getUserProviderForSupervisor($requestSupervisor);
+            $user = $requestSupervisor->getIdentityFromProvider($credentials, $userProvider);
+
+            if($user === null) {
+                //@TODO add exception message
+                throw new UserNotFoundException();
+            }
+
+            if(!$requestSupervisor->verifyIdentity($user, $credentials)) {
+                //@TODO create new exception for this
+                throw new UserNotFoundException();
+            }
+
+            $this->userStorage->setCurrentProvider(get_class($requestSupervisor));
+            $this->userStorage->setUser($user, get_class($requestSupervisor));
+            $response = $requestSupervisor->handleAuthenticationSuccess($event->getRequest(), $user);
+
+            if($response !== null) {
+                $event->setResponse($response);
+            }
+
+            return $event;
+        }
+
         //1. Check if this is an authentication attempt:
-        if($supervisor->isAuthenticationRequest($event->getRequest())) {
+        if ($requestSupervisor->isAuthenticationRequest($event->getRequest())) {
             //2. Handle Authentication
-            $credentials = $supervisor->extractCredentialsFromRequest($event->getRequest());
+            $credentials = $requestSupervisor->extractCredentialsFromRequest($event->getRequest());
 
 
-
-            return;
+            return $event;
         }
 
         //3. User is not logged in, but supervisor allows unauthenticated user to enter
