@@ -6,7 +6,7 @@ use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\TwigBridge\Twig\Extension\DebugExtension;
+use Jadob\Bridge\Twig\Extension\DebugExtension;
 use Jadob\Bridge\Twig\Extension\PathExtension;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
