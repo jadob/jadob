@@ -2,6 +2,7 @@
 
 namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
+use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -37,6 +38,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
     }
 
     /**
+     * @TODO add support for multiple cache types
      * {@inheritdoc}
      * @throws \ReflectionException
      */
@@ -49,43 +51,18 @@ class DoctrineORMProvider implements ServiceProviderInterface
             throw new \RuntimeException('There is no "managers" section in config.doctrine_orm node.');
         }
 
-        /**
-         * Add cache to ORM.
-         * @TODO: add some cache types
-         */
-        if (isset($config['cache'])) {
-
-            if (!isset($config['cache']['type'])) {
-                throw new \RuntimeException('Cache type is not provided.');
-            }
-
-            $cacheConfig = $config['cache'];
-
-
-//@TODO: find some better way for this as this is freaking necessary
-//            switch (strtolower($cacheConfig['type'])) {
-//                case 'array':
-//                default:
-//
-//                    break;
-//            }
-        }
-
-        $cache = new ArrayCache();
-
         $this->registerAnnotations();
-
         $services = [];
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
 
-            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container) use ($cache, $managerName, $managerConfig) {
+            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container) use ($managerName, $managerConfig) {
 
                 $isDevMode = !$container->get('kernel')->isProduction();
                 $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir()
                     . '/'
                     . $container->get('kernel')->getEnv()
-                    . '/doctrine';
+                    . '/doctrine/'.$managerName;
 
                 /**
                  * Paths should be relative, beginning from project root dir.
@@ -100,18 +77,23 @@ class DoctrineORMProvider implements ServiceProviderInterface
                     throw new \RuntimeException('Entity paths section in "' . $managerName . '" manager are not defined');
                 }
 
+                $metadataCache = new FilesystemCache($managerName.'/metadata');
+                $hydrationCache = new FilesystemCache($managerName.'/hydration');
+                $queryCache = new FilesystemCache($managerName.'/query');
+                $annotationCache = new FilesystemCache($managerName.'/annotation');
+
                 foreach ($managerConfig['entity_paths'] as $path) {
                     //@TODO: trim beginning slash from any $path if present
                     $entityPaths[] = $container->get(BootstrapInterface::class)->getRootDir() . '/' . ltrim($path,'/');
                 }
 
                 $configuration = new Configuration();
-                $configuration->setMetadataCacheImpl($isDevMode ? new ArrayCache() : $cache);
-                $configuration->setHydrationCacheImpl($isDevMode ? new ArrayCache() : $cache);
-                $configuration->setQueryCacheImpl($isDevMode ? new ArrayCache() : $cache);
+                $configuration->setMetadataCacheImpl($metadataCache);
+                $configuration->setHydrationCacheImpl($hydrationCache);
+                $configuration->setQueryCacheImpl($queryCache);
                 $configuration->setMetadataDriverImpl(
                     new AnnotationDriver(
-                        new CachedReader(new AnnotationReader(), $cache),
+                        new CachedReader(new AnnotationReader(), $annotationCache),
                         $entityPaths
                     )
                 );
