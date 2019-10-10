@@ -65,6 +65,7 @@ class UserStorage
     }
 
     /**
+     * @TODO there should be some parameter for defining stateless things
      * @param UserInterface $user
      * @param null|string $provider
      * @return UserStorage

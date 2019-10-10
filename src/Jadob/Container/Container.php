@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Class Container
- * @TODO: maybe some arrayaccess?
+ * @TODO: maybe some arrayaccess? Fixed services?
  * @package Jadob\Container
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
@@ -34,6 +34,13 @@ class Container implements ContainerInterface
     protected $factories = [];
 
     /**
+     * If true, adding new services/aliases will throw an exception.
+     * @var bool
+     */
+    protected $locked = false;
+
+    /**
+     * @deprecated
      * @var InterfaceInjector[]
      */
     protected $interfaceInjectors = [];
@@ -178,7 +185,6 @@ class Container implements ContainerInterface
      */
     protected function instantiateFactory(string $factoryName)
     {
-
         //@TODO find why DoctrineDBALBridge breaks here
         if(isset($this->services[$factoryName])) {
             return $this->services[$factoryName];
@@ -210,12 +216,24 @@ class Container implements ContainerInterface
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @param string $interfaceToCheck
+     * @param string $methodToCall
+     * @param $serviceToInject
+     * @return $this
+     */
     public function addInterfaceInjection(string $interfaceToCheck, string $methodToCall, $serviceToInject)
     {
         $this->interfaceInjectors[] = new InterfaceInjector($interfaceToCheck, $methodToCall, $serviceToInject);
         return $this;
     }
 
+    /**
+     * @deprecated
+     * @param $service
+     * @return mixed
+     */
     public function injectInterface($service)
     {
         foreach ($this->interfaceInjectors as $injector) {
