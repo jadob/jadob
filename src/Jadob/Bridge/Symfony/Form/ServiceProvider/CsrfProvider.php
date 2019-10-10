@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\SymfonyFormBridge\ServiceProvider;
+namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
@@ -11,8 +11,6 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 /**
- * Class CsrfProvider
- * @package Jadob\SymfonyFormBridge\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */

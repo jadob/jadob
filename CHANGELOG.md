@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [DoctrineORMBridge] Replaced ArrayCache with FilesystemCache
 - [Guard] component has been deprecated, use [Supervisor] instead
 - [TwigBridge] PathExtension and DebugExtension has been moved to ``Jadob\Bridge\Twig`` namespace.
+- [SymfonyFormBridge] has been moved to ``Jadob\Bridge\Symfony\Form`` namespace.
 
 ### Added
 - Added [Supervisor] Component
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - [TwigBridge] AssetExtension has been removed.
 - Dropped ``Jadob\TwigBridge`` namespace.
+- Dropped ``Jadob\SymfonyFormBridge`` namespace.
 
 ## [0.0.61] - 2019-04-26
 

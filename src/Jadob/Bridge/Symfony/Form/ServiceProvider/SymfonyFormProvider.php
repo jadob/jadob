@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\SymfonyFormBridge\ServiceProvider;
+namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
@@ -21,10 +21,8 @@ use Symfony\Component\Validator\Validation;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 /**
- * Class SymfonyFormProvider
- * @package Jadob\SymfonyFormBridge\ServiceProvider
  * @author pizzaminded <miki@appvende.net>
- * @license proprietary
+ * @license MIT
  */
 class SymfonyFormProvider implements ServiceProviderInterface
 {
@@ -34,7 +32,7 @@ class SymfonyFormProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'sf_forms';
+        return 'forms';
     }
 
     /**
