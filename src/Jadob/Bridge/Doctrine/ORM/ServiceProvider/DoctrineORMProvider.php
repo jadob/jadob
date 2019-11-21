@@ -2,14 +2,14 @@
 
 namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Jadob\Container\Container;
@@ -52,12 +52,23 @@ class DoctrineORMProvider implements ServiceProviderInterface
             throw new RuntimeException('There is no "managers" section in config.doctrine_orm node.');
         }
 
-        $this->registerAnnotations();
+        $annotationsRegistered = false;
         $services = [];
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
 
-            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container) use ($managerName, $managerConfig) {
+            $services['doctrine.orm.' . $managerName] = static function (ContainerInterface $container) use (
+                $managerName,
+                $managerConfig,
+                &$annotationsRegistered
+            ) {
+
+                //TODO remove if it will keep breaking
+                if (!$annotationsRegistered) {
+                    $annotationsRegistered = true;
+                    $this->registerAnnotations();
+                }
+
                 $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir()
                     . '/'
                     . $container->get('kernel')->getEnv()
