@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Core;
 
 use Jadob\Config\Config;
@@ -137,7 +139,7 @@ class Kernel
      */
     public function execute(Request $request)
     {
-        $requestId = substr(md5(mt_rand()), 0, 15);
+        $requestId = substr(md5((string)mt_rand()), 0, 15);
 
         $this->profiler = new Profiler($this->bootstrap->getCacheDir() . '/profiler', $requestId);
         $this->profiler->addEntry('JADOB_REQUEST_TIME', $request->server->get('REQUEST_TIME'));
