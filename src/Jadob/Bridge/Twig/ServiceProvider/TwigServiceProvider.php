@@ -2,18 +2,20 @@
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
+use Jadob\Bridge\Twig\Extension\DebugExtension;
+use Jadob\Bridge\Twig\Extension\PathExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\Bridge\Twig\Extension\DebugExtension;
-use Jadob\Bridge\Twig\Extension\PathExtension;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
+use function file_get_contents;
+use function json_decode;
 
 /**
  * @TODO This class should be named TwigProvider (according to other providers name conventions)
@@ -62,8 +64,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $environmentClosure = function (ContainerInterface $container) use ($config) {
             $cache = false;
-            //@TODO remove "=== true" phrase
-            if ($config['cache'] === true) {
+
+            if ($config['cache']) {
                 $cache =
                     $container->get(BootstrapInterface::class)->getCacheDir() .
                     ($container->get('kernel')->isProduction() ? '/prod' : '/dev') .
@@ -130,7 +132,11 @@ class TwigServiceProvider implements ServiceProviderInterface
                 . '/' .
                 $webpackManifestConfig['manifest_json_location'];
 
-            $manifest = \json_decode(\file_get_contents($manifestJsonLocation), true);
+            $manifest = json_decode(
+                file_get_contents($manifestJsonLocation),
+                true,
+                512,
+                JSON_THROW_ON_ERROR);
             $twig->addExtension(new WebpackManifestAssetExtension($manifest));
         }
     }
