@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -22,9 +24,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 
 /**
- * Class DoctrineORMProvider
- * @package Jadob\Bridge\Doctrine\ORM\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * Adds Doctrine ORM features to Jadob Framework.
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DoctrineORMProvider implements ServiceProviderInterface
@@ -33,7 +34,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode()
+    public function getConfigNode(): string
     {
         return 'doctrine_orm';
     }
@@ -41,7 +42,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
     /**
      * @TODO add support for multiple cache types
      * {@inheritdoc}
-     * @throws ReflectionException
      */
     public function register($config)
     {
@@ -57,11 +57,12 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
 
-            $services['doctrine.orm.' . $managerName] = static function (ContainerInterface $container) use (
+            $services['doctrine.orm.' . $managerName] = static function (ContainerInterface $container)
+            use (
                 $managerName,
                 $managerConfig,
                 &$annotationsRegistered
-            ) {
+            ): EntityManager {
 
                 //TODO remove if it will keep breaking
                 if (!$annotationsRegistered) {
@@ -111,9 +112,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
                 $configuration->setProxyDir($cacheDir . '/Doctrine/ORM/Proxies');
                 $configuration->setAutoGenerateProxyClasses(true);
 
-                /**
-                 * Build EntityManager
-                 */
                 return EntityManager::create(
                     $container->get('doctrine.dbal.' . $managerName),
                     $configuration,
