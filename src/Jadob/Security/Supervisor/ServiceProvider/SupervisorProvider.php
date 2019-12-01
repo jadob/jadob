@@ -4,6 +4,10 @@ namespace Jadob\Security\Supervisor\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Security\Supervisor\EventListener\SupervisorListener;
+use Jadob\Security\Supervisor\Supervisor;
+use Psr\Container\ContainerInterface;
 
 class SupervisorProvider implements ServiceProviderInterface
 {
@@ -24,7 +28,21 @@ class SupervisorProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        // TODO: Implement register() method.
+        return [
+            Supervisor::class => function (ContainerInterface $container) use ($config) {
+
+                $supervisor = new Supervisor();
+                foreach ($config['supervisors'] as $supervisorName => $supervisorConfig) {
+                    $supervisor->addRequestSupervisor(
+                        $supervisorName,
+                        $container->get($supervisorConfig['service']),
+                        $container->get($supervisorConfig['provider'])
+                    );
+                }
+
+                return $supervisor;
+            }
+        ];
     }
 
     /**
@@ -42,6 +60,11 @@ class SupervisorProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        // TODO: Implement onContainerBuild() method.
+        $container->get(EventDispatcher::class)->addListener(
+            new SupervisorListener(
+                $container->get(Supervisor::class),
+                $container->get('auth.user.storage')
+            )
+        );
     }
 }

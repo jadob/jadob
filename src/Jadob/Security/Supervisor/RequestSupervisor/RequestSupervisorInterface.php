@@ -2,6 +2,8 @@
 
 namespace Jadob\Security\Supervisor\RequestSupervisor;
 
+use Jadob\Security\Auth\User\UserInterface;
+use Jadob\Security\Auth\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,6 +37,7 @@ interface RequestSupervisorInterface
     /**
      * Extracts client credentials from request object.
      * Called on each request when stateless. Otherwise, called only when isAuthenticationRequest() returns true.
+     * If false or null returned, a UserNotFoundException will be thrown.
      *
      * @param Request $request
      * @return string|array|false
@@ -45,11 +48,13 @@ interface RequestSupervisorInterface
      * Called when Authentication process will finish successfully.
      * Using this method you can intercept the request and eg. redirect user to another page. If null returned,
      * Supervisor will continue the request.
+     * When stateless, method is called but returned Response is ignored.
      *
-     * Return value is ignored when stateless.
+     * @param Request $request
+     * @param UserInterface $user
      * @return Response|null
      */
-    public function handleAuthenticationSuccess(): ?Response;
+    public function handleAuthenticationSuccess(Request $request, UserInterface $user): ?Response;
 
     /**
      * Called when Authentication process will break for some reasons.
@@ -69,11 +74,14 @@ interface RequestSupervisorInterface
     /**
      * This is a place, where you can throw UserNotFoundException.
      *
+     * @param $credentials
+     * @param UserProviderInterface $userProvider
      * @return mixed
      */
-    public function getClientFromProvider();
+    public function getIdentityFromProvider($credentials, UserProviderInterface $userProvider): ?UserInterface;
 
-    public function verifyClientCredentials(): bool;
+    //@TODO add documentation
+    public function verifyIdentity(UserInterface $user, $credentials): bool;
 
     /**
      * Called as first method.

@@ -2,6 +2,7 @@
 
 namespace Jadob\Security\Supervisor;
 
+use Jadob\Security\Auth\UserProviderInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,6 +29,11 @@ class Supervisor
     protected $requestSupervisors = [];
 
     /**
+     * @var UserProviderInterface[]
+     */
+    protected $userProviders = [];
+
+    /**
      * @param Request $request
      * @return RequestSupervisorInterface|null
      */
@@ -42,12 +48,18 @@ class Supervisor
         return null;
     }
 
-
-    public function addRequestSupervisor(RequestSupervisorInterface $requestSupervisor)
+    //@todo refactor
+    public function addRequestSupervisor(string $name, RequestSupervisorInterface $requestSupervisor, UserProviderInterface $userProvider)
     {
-        $this->requestSupervisors[] = $requestSupervisor;
+        $this->requestSupervisors[$name] = $requestSupervisor;
+        $this->userProviders[\spl_object_hash($requestSupervisor)] = $userProvider;
     }
 
+    //@TODO refactor
+    public function getUserProviderForSupervisor(RequestSupervisorInterface $supervisor)
+    {
+        return $this->userProviders[\spl_object_hash($supervisor)];
+    }
     /**
      * to be deprecated probably
      * @return bool
@@ -56,6 +68,4 @@ class Supervisor
     {
         return $this->unsecuredRequestPolicy === self::POLICY_UNSECURED_BLOCK;
     }
-
-
 }
