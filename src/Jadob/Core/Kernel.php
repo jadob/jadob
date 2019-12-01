@@ -12,6 +12,7 @@ use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Debug\Profiler\Profiler;
 use Jadob\Core\Event\AfterControllerEvent;
 use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
@@ -64,9 +65,15 @@ class Kernel
     private $bootstrap;
 
     /**
+     * @deprecated to be replaced with eventDispatcher
      * @var EventListener
      */
     protected $eventListener;
+
+    /**
+     * @var EventDispatcher
+     */
+    protected $eventDispatcher;
 
     /**
      * @var ContainerBuilder
@@ -116,6 +123,7 @@ class Kernel
         $errorHandler->registerExceptionHandler();
 
         $this->eventListener = new EventListener($this->logger);
+        $this->eventDispatcher = new EventDispatcher();
 
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php'], 1);
 
@@ -162,7 +170,7 @@ class Kernel
         //@TODO this one should be moved  to dispather and called after router to provide matched route
         $beforeControllerEvent = new BeforeControllerEvent($request);
 
-        $this->eventListener->dispatchEvent($beforeControllerEvent);
+        $this->eventDispatcher->dispatch($beforeControllerEvent);
 
         $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
 
@@ -250,6 +258,7 @@ class Kernel
             }
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->add('event.listener', $this->eventListener);
+            $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add('kernel', $this);
             /** @TODO: how about creating an 'logger' service pointing to this.logger? */
