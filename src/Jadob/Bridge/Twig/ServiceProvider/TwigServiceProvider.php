@@ -10,7 +10,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -48,7 +48,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             //@TODO: create some in-framework forms and remove twigbridge
             //@TODO after refactoring, add some doc about integrating with twig-bridge
             //Integrates with symfony/twig-bridge for default symfony forms
-            $twigBridgeDirectory = dirname((new ReflectionClass(TwigRenderer::class))->getFileName());
+            $twigBridgeDirectory = dirname((new ReflectionClass(TwigRendererEngine::class))->getFileName());
             $formTemplatesDirectory = $twigBridgeDirectory . '/../Resources/views/Form';
             $loader->addPath($formTemplatesDirectory, FilesystemLoader::MAIN_NAMESPACE);
 
