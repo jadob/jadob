@@ -3,6 +3,7 @@
 namespace Jadob\Container;
 
 use Jadob\Config\Config;
+use Jadob\Container\Event\ServiceAddedEvent;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
@@ -37,12 +38,32 @@ class ContainerBuilder
     protected $serviceProviders = [];
 
     /**
+     * @var ContainerEventListener
+     */
+    protected $eventListener;
+
+    public function __construct(?ContainerEventListener $eventListener = null)
+    {
+        $this->eventListener = $eventListener;
+    }
+
+
+    protected function emit(object $event)
+    {
+        if ($this->eventListener !== null) {
+            $this->eventListener->emit($event);
+        }
+    }
+
+    /**
      * @param string $serviceName
      * @param mixed $definition
      * @return $this
      */
     public function add($serviceName, $definition): self
     {
+        $this->emit(new ServiceAddedEvent($serviceName));
+
         if ($definition instanceof \Closure) {
             $this->factories[$serviceName] = $definition;
             return $this;
@@ -73,6 +94,9 @@ class ContainerBuilder
                 }
             }
 
+            /**
+             * @TODO check if provider was registered few lines above
+             */
             $this->registerProvider($provider, $config);
         }
 
