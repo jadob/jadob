@@ -44,16 +44,6 @@ class AuthProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
 
-        $container
-            ->get('event.listener')
-            ->addListener(
-                new UserRefreshListener(
-                    $container->get('guard'),
-                    $container->get('auth.user.storage')
-                ), 22
-            );
-
-
         if ($container->has('console')) {
             /** @var Application $console */
             $console = $container->get('console');
