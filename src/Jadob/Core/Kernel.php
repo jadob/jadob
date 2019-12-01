@@ -125,7 +125,7 @@ class Kernel
         $this->eventListener = new EventListener($this->logger);
         $this->eventDispatcher = new EventDispatcher();
 
-        $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php'], 1);
+        $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
 
         $this->addEvents();
 
@@ -139,13 +139,13 @@ class Kernel
      * @param Request $request
      * @return Response
      * @throws KernelException
-     * @throws \Jadob\Container\Exception\ContainerException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws ContainerException
+     * @throws ServiceNotFoundException
+     * @throws RouteNotFoundException
      * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ContainerBuildException
+     * @throws ContainerBuildException
      */
-    public function execute(Request $request)
+    public function execute(Request $request): Response
     {
         $requestId = substr(md5((string)mt_rand()), 0, 15);
 
@@ -253,7 +253,7 @@ class Kernel
             /** @var array $services */
             $services = include $this->bootstrap->getConfigDir() . '/services.php';
 
-            if(!\is_array($services)) {
+            if (!\is_array($services)) {
                 throw new KernelException('services.php has missing return statement or returned value is not an array');
             }
             $containerBuilder = new ContainerBuilder();
@@ -285,9 +285,9 @@ class Kernel
     }
 
     /**
-     * @deprecated probably
      * @param array $config
      * @return Kernel
+     * @deprecated probably
      */
     public function setConfig(array $config): Kernel
     {
@@ -297,8 +297,8 @@ class Kernel
 
     /**
      * Creates and preconfigures a monolog instance.
-     * @throws \Exception
      * @return Logger
+     * @throws \Exception
      */
     public function initializeLogger()
     {
@@ -322,6 +322,7 @@ class Kernel
     /**
      * @deprecated
      * @return bool
+     * @deprecated
      */
     public static function experimentalFeaturesEnabled(): bool
     {
