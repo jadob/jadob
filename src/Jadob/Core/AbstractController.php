@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Environment;
 
 /**
  * @author pizzaminded <miki@appvende.net>
@@ -38,7 +39,7 @@ abstract class AbstractController
      */
     protected function renderTemplate(string $templateName, array $data = []): string
     {
-        return $this->container->get('twig')->render($templateName, $data);
+        return $this->container->get(Environment::class)->render($templateName, $data);
     }
 
     /**
