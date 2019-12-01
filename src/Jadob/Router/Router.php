@@ -1,17 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Router;
 
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\RouterException;
 use Symfony\Component\HttpFoundation\Request;
+use function array_filter;
+use function array_flip;
+use function array_intersect_key;
+use function array_keys;
+use function array_merge;
+use function count;
+use function http_build_query;
+use function in_array;
+use function is_array;
+use function preg_match;
+use function str_replace;
+use function strtoupper;
 
 /**
- * Class Router
- * Service name: router
- * @package Jadob\Router
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Router
@@ -56,7 +67,7 @@ class Router
             'optional_locale' => false,
         ];
 
-        $this->config = \array_merge($defaultConfig, $config);
+        $this->config = array_merge($defaultConfig, $config);
 
         if ($context !== null) {
             $this->context = $context;
@@ -101,7 +112,7 @@ class Router
      */
     public function matchRoute(string $path, string $method): Route
     {
-        $method = \strtoupper($method);
+        $method = strtoupper($method);
 
         foreach ($this->routeCollection as $routeKey => $route) {
             /** @var Route $route */
@@ -116,12 +127,12 @@ class Router
 
                 if (
                     count(($routeMethods = $route->getMethods())) > 0
-                    && !\in_array($method, $routeMethods)
+                    && !in_array($method, $routeMethods, true)
                 ) {
                     throw new MethodNotAllowedException();
                 }
 
-                $parameters = \array_merge($parameters, $this->transformMatchesToParameters($matches));
+                $parameters = array_merge($parameters, $this->transformMatchesToParameters($matches));
 
                 $route->setParams($parameters);
 
@@ -195,7 +206,7 @@ class Router
                 foreach ($params as $key => $param) {
 
                     $isFound = 0;
-                    if (!\is_array($param)) {
+                    if (!is_array($param)) {
                         $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
                     };
 
@@ -204,7 +215,7 @@ class Router
                     }
                 }
 
-                if (\count($paramsToGET) !== 0) {
+                if (count($paramsToGET) !== 0) {
                     $convertedPath .= '?';
                     $convertedPath .= http_build_query($paramsToGET);
                 }
@@ -219,7 +230,7 @@ class Router
                     $port = $this->context->getPort();
 
                     if (
-                        !\in_array($port, [80, 443], true)
+                        !in_array($port, [80, 443], true)
                         || (!$this->context->isSecure() && $port === 443)
                     ) {
                         $port = ':' . $port;
@@ -267,7 +278,7 @@ class Router
      * @return $this
      * @throws RouterException
      */
-    public function setParameterDelimiters(string $left, string $right)
+    public function setParameterDelimiters(string $left, string $right): self
     {
         if ($left === '' || $right === '') {
             throw new RouterException('Parameter delimiters cannot be blank');

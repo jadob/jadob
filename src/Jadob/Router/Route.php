@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Router;
 
 use Jadob\Router\Exception\RouterException;
 
 /**
- * Class Route
- * @package Jadob\Router
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Route
@@ -150,7 +150,7 @@ class Route
     /**
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
@@ -159,7 +159,7 @@ class Route
      * @param array $params
      * @return Route
      */
-    public function setParams($params)
+    public function setParams($params): Route
     {
         $this->params = $params;
         return $this;

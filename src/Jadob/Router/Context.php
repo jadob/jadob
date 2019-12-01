@@ -3,8 +3,6 @@
 namespace Jadob\Router;
 
 /**
- * Class Context
- * @package Jadob\Router
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
