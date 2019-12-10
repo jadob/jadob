@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Url;
 
 /**
+ * TODO maybe comply with UriInterface?
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
@@ -27,6 +30,16 @@ class Url
      * @var string
      */
     protected $path;
+
+    /**
+     * @var string
+     */
+    protected $query;
+
+    /**
+     * @var bool
+     */
+    protected $changed = false;
 
     /**
      * Url constructor.
@@ -55,6 +68,10 @@ class Url
         if (isset($output['path'])) {
             $this->path = $output['path'];
         }
+
+        if (isset($output['query'])) {
+            $this->query = $output['query'];
+        }
     }
 
     /**
@@ -62,7 +79,7 @@ class Url
      */
     public function build(): string
     {
-        throw new \Exception('not implemented yet');
+        return $this->scheme.'://'.$this->host.$this->path.'?'.$this->query;
     }
 
     /**
@@ -71,7 +88,7 @@ class Url
      */
     public function __toString()
     {
-        if ($this->url !== null) {
+        if ($this->url !== null && !$this->changed) {
             return (string)$this->url;
         }
 
@@ -81,6 +98,7 @@ class Url
 
     public function setHost(string $host)
     {
+        $this->changed = true;
         $this->host = $host;
     }
 
@@ -104,6 +122,7 @@ class Url
      */
     public function setScheme(string $scheme): Url
     {
+        $this->changed = true;
         $this->scheme = $scheme;
         return $this;
     }
@@ -122,6 +141,7 @@ class Url
      */
     public function setPath(string $path): Url
     {
+        $this->changed = true;
         $this->path = $path;
         return $this;
     }
