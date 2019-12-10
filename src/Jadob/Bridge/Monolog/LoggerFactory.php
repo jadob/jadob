@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Monolog;
 
 use Monolog\Handler\HandlerInterface;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
+ * Creates Logger instance.
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 class LoggerFactory
 {
@@ -31,28 +35,32 @@ class LoggerFactory
      */
     protected $handlers = [];
 
+    /**
+     * LoggerFactory constructor.
+     * @param string $channel
+     * @param bool $deferred
+     */
     public function __construct(string $channel, bool $deferred = false)
     {
         $this->channel = $channel;
         $this->deferred = $deferred;
     }
 
+    /**
+     * @param HandlerInterface $handler
+     * @return $this
+     */
     public function withHandler(HandlerInterface $handler)
     {
-
-    }
-    public function addStream(string $stream, int $logLevel): LoggerFactory
-    {
-        $this->streams[] = [
-            'stream' => $stream,
-            'logLevel' => $logLevel
-        ];
-
+        $this->handlers[] = $handler;
         return $this;
     }
 
-    public function create()
+    /**
+     * @return LoggerInterface
+     */
+    public function create(): LoggerInterface
     {
-
+        return new Logger($this->channel, $this->handlers);
     }
 }
