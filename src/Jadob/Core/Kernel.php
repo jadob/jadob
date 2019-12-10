@@ -4,24 +4,35 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Exception;
+use Jadob\Bridge\Monolog\LoggerFactory;
 use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
+use Jadob\Container\Exception\ContainerBuildException;
+use Jadob\Container\Exception\ContainerException;
+use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Core\Event\AfterControllerEvent;
+use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Debug\Profiler\Profiler;
-use Jadob\Core\Event\AfterControllerEvent;
-use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
+use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function fastcgi_finish_request;
+use function file_exists;
+use function function_exists;
+use function in_array;
+use function is_array;
 
 /**
  * Class Kernel
@@ -99,12 +110,12 @@ class Kernel
      * @param string $env
      * @param BootstrapInterface $bootstrap
      * @throws KernelException
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct($env, BootstrapInterface $bootstrap, bool $deferLogs = false)
     {
 
-        if (!\in_array($env, ['dev', 'prod'], true)) {
+        if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
 
@@ -137,15 +148,15 @@ class Kernel
      * @throws ContainerException
      * @throws ServiceNotFoundException
      * @throws RouteNotFoundException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws ContainerBuildException
      */
     public function execute(Request $request): Response
     {
         $requestId = substr(md5((string)mt_rand()), 0, 15);
 
-        $this->profiler = new Profiler($this->bootstrap->getCacheDir() . '/profiler', $requestId);
-        $this->profiler->addEntry('JADOB_REQUEST_TIME', $request->server->get('REQUEST_TIME'));
+//        $this->profiler = new Profiler($this->bootstrap->getCacheDir() . '/profiler', $requestId);
+//        $this->profiler->addEntry('JADOB_REQUEST_TIME', $request->server->get('REQUEST_TIME'));
         $this->logger->info('New request received', [
             'method' => $request->getMethod(),
             'path' => $request->getPathInfo(),
@@ -155,7 +166,7 @@ class Kernel
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
-        $builder->add('profiler', $this->profiler);
+//        $builder->add('profiler', $this->profiler);
 
         $this->container = $builder->build($this->config->toArray());
         $this->container->addParameter('request_id', $requestId);
@@ -191,7 +202,7 @@ class Kernel
     /**
      * @return Container
      */
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->container;
     }
@@ -199,13 +210,13 @@ class Kernel
     /**
      * @return string
      */
-    public function getEnv()
+    public function getEnv(): string
     {
         return $this->env;
     }
 
     //@TODO create Jadob/Core/EventDispatcherFactory and move all these things to new class
-    protected function addEvents()
+    protected function addEvents(): void
     {
         $this->eventListener->addEvent(
             BeforeControllerEvent::class,
@@ -226,21 +237,28 @@ class Kernel
     public function getContainerBuilder(): ContainerBuilder
     {
         if ($this->containerBuilder === null) {
+            $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
+            if (!file_exists($servicesFile)) {
+                //TODO named exception constructors?
+                throw new KernelException('There is no services.php file in your config dir.');
+            }
             /** @var array $services */
-            $services = include $this->bootstrap->getConfigDir() . '/services.php';
+            /** @noinspection PhpIncludeInspection */
+            $services = include $servicesFile;
 
-            if (!\is_array($services)) {
+            if (!is_array($services)) {
+                //TODO named exception constructors?
                 throw new KernelException('services.php has missing return statement or returned value is not an array');
             }
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->add('event.listener', $this->eventListener);
             $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
-            $containerBuilder->add('kernel', $this);
-            /** @TODO: how about creating an 'logger' service pointing to this.logger? */
+            $containerBuilder->add(Kernel::class, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
+            $containerBuilder->add(Config::class, $this->config);
 
             foreach ($services as $serviceName => $serviceObject) {
                 $containerBuilder->add($serviceName, $serviceObject);
@@ -273,36 +291,34 @@ class Kernel
 
     /**
      * Creates and preconfigures a monolog instance.
-     * @return Logger
-     * @throws \Exception
+     * @return LoggerInterface
+     * @throws Exception
      */
-    public function initializeLogger()
+    protected function initializeLogger(): LoggerInterface
     {
-        $logger = new Logger('app');
-
-        $logLevel = Logger::DEBUG;
+        $logLevel = LogLevel::DEBUG;
         if ($this->env === 'prod') {
-            $logLevel = Logger::INFO;
+            $logLevel = LogLevel::INFO;
         }
 
-        $this->fileStreamHandler = $fileStreamHandler = new StreamHandler(
+        $this->fileStreamHandler = new StreamHandler(
             $this->bootstrap->getLogsDir() . '/' . $this->env . '.log',
             $logLevel
         );
 
-        $logger->pushHandler($fileStreamHandler);
+        $factory = new LoggerFactory('app', $this->deferLogs);
+        $factory->withHandler($this->fileStreamHandler);
 
-        return $logger;
+        return $factory->create();
     }
 
 
     //@TODO: if prod, do not collect profiler data, disallow xdebug features if xdebug is not installed
-    public function terminate()
+    public function terminate(): void
     {
-
-//        r(xdebug_get_profiler_filename());
-        $this->profiler->addEntry('JADOB_FINISH_TIME', microtime());
-        $this->profiler->collectXDebugCoverage();
-        $this->profiler->flush();
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
     }
+
 }
