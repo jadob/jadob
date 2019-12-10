@@ -36,7 +36,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.0.63';
+    public const VERSION = '0.0.64';
 
     /**
      * @deprecated
