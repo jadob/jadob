@@ -39,10 +39,10 @@ class Kernel
     public const VERSION = '0.0.64';
 
     /**
-     * @deprecated
-     * @var string
+     * If true, application log will be saved while destructing objects
+     * @var bool
      */
-    public const EXPERIMENTAL_FEATURES_ENV = 'JADOB_ENABLE_EXPERIMENTAL_FEATURES';
+    protected $deferLogs = false;
 
     /**
      * @var Config
@@ -101,7 +101,7 @@ class Kernel
      * @throws KernelException
      * @throws \Exception
      */
-    public function __construct($env, BootstrapInterface $bootstrap)
+    public function __construct($env, BootstrapInterface $bootstrap, bool $deferLogs = false)
     {
 
         if (!\in_array($env, ['dev', 'prod'], true)) {
@@ -111,12 +111,8 @@ class Kernel
         $env = strtolower($env);
         $this->env = $env;
         $this->bootstrap = $bootstrap;
+        $this->deferLogs = $deferLogs;
         $this->logger = $this->initializeLogger();
-
-        //to be removed
-        if (self::experimentalFeaturesEnabled()) {
-            $this->logger->info('JADOB_ENABLE_EXPERIMENTAL_FEATURES flag exists. please double-test your app because new features may be unstable.');
-        }
 
         $errorHandler = HandlerFactory::factory($env, $this->logger);
         $errorHandler->registerErrorHandler();
@@ -128,7 +124,6 @@ class Kernel
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
 
         $this->addEvents();
-
     }
 
     /**
@@ -199,25 +194,6 @@ class Kernel
     public function getContainer()
     {
         return $this->container;
-    }
-
-    /**
-     * @param ContainerInterface $container
-     * @return Kernel
-     */
-    public function setContainer(ContainerInterface $container)
-    {
-        $this->container = $container;
-        return $this;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isProduction(): bool
-    {
-        return $this->env === 'prod';
     }
 
     /**
@@ -319,15 +295,6 @@ class Kernel
         return $logger;
     }
 
-    /**
-     * @deprecated
-     * @return bool
-     * @deprecated
-     */
-    public static function experimentalFeaturesEnabled(): bool
-    {
-        return (bool)getenv(self::EXPERIMENTAL_FEATURES_ENV);
-    }
 
     //@TODO: if prod, do not collect profiler data, disallow xdebug features if xdebug is not installed
     public function terminate()
