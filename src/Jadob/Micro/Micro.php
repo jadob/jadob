@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Micro;
 
+use Closure;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Http\Middleware\DispatcherMiddleware;
 use Jadob\Http\Middleware\ErrorHandlerMiddleware;
@@ -17,7 +18,6 @@ use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
@@ -25,7 +25,13 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use function array_merge;
+use function count;
+use function get_class;
+use function is_array;
+use function is_string;
+use function spl_object_hash;
 
 /**
  * Express style microframework kernel.
@@ -37,8 +43,7 @@ use function array_merge;
  * Which features arent included in Micro?
  * - Path generator - you pass only path, methods, and callback. you have to generate routes by yourself.
  * - Bootstrap class it is not needed here.
- * @package Jadob\Micro
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @see docs/components/micro/introduction.md
  * @license MIT
  */
@@ -53,43 +58,59 @@ class Micro /**implements \ArrayAccess **/
     /**
      * @var ContainerInterface
      */
-    protected ?ContainerInterface $container;
+    protected $container;
 
-    protected ContainerBuilder $containerBuilder;
+    /**
+     * @var ContainerBuilder
+     */
+    protected $containerBuilder;
 
     /**
      * @var string (dev|prod)
      */
-    protected string $enviroment = 'prod';
+    protected $enviroment = 'prod';
 
+    /**
+     * @var MiddlewareInterface[]
+     */
+    protected $middlewares = [];
 
-    protected array $middlewares = [];
-    protected array $config = [];
+    /**
+     * @var array[]
+     */
+    protected $config = [];
 
-    protected array $middlewarePrefixes = [];
-
-    protected array $deferedClosures = [];
+    /**
+     * @var array<string,string>
+     */
+    protected $middlewarePrefixes = [];
 
     /**
      * @var array
      */
-    protected array $services;
+    protected $services;
 
     /**
      * @var Router
      */
-    protected Router $router;
+    protected $router;
 
     /**
-     * Application constructor.
      * @param array $config
      */
     public function __construct($config = [])
     {
         $this->container = null; //Typed property must not be accessed before initialization
         $this->containerBuilder = new ContainerBuilder();
-        $config['providers'] ??= [];
-        $config['services'] ??= [];
+
+        if (!isset($config['providers'])) {
+            $config['providers'] = [];
+        }
+
+        if (!isset($config['services'])) {
+            $config['services'] = [];
+        }
+
         $this->config = $config;
 
         $this->containerBuilder->setServiceProviders($config['providers']);
@@ -105,11 +126,11 @@ class Micro /**implements \ArrayAccess **/
     public function get($path, $callback)
     {
         $route = new Route($path, $path);
-//        $route->setPath($path);
         $route->setController($callback);
         $route->setMethods(['GET']);
 
         $this->router->getRouteCollection()->addRoute($route);
+
         return $this;
     }
 
@@ -120,15 +141,15 @@ class Micro /**implements \ArrayAccess **/
      */
     public function addRoute(string $path, callable $action, ?array $methods = [])
     {
-        if (\count($methods) === 0) {
+        if (count($methods) === 0) {
             $methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
         }
 
         $route = new Route($path, $path);
         $route->setController($action);
         $route->setMethods($methods);
-
         $this->router->getRouteCollection()->addRoute($route);
+
         return $this;
 
     }
@@ -154,7 +175,7 @@ class Micro /**implements \ArrayAccess **/
              * There is a spl_object_hash instead because its mandatory to match condition with single middleware.
              * Passing FQCN will override other instances of given FQCN
              */
-            $this->middlewarePrefixes[\spl_object_hash($middleware)] = $prefix;
+            $this->middlewarePrefixes[spl_object_hash($middleware)] = $prefix;
         }
 
         $this->middlewares[] = $middleware;
@@ -190,14 +211,14 @@ class Micro /**implements \ArrayAccess **/
 
     /**
      * Return RFC7807 Compliant Error response
-     * @param \Throwable $e
+     * @param Throwable $e
      * @return JsonResponse
      */
-    protected function handleErrorResponse(\Throwable $e)
+    protected function handleErrorResponse(Throwable $e)
     {
 
         $content['status'] = Response::HTTP_INTERNAL_SERVER_ERROR;
-        $content['title'] = \get_class($e);
+        $content['title'] = get_class($e);
         $content['detail'] = $e->getMessage();
         $content['trace'] = $e->getTrace();
 
@@ -225,16 +246,16 @@ class Micro /**implements \ArrayAccess **/
             return $this->handleErrorResponse($e);
         }
 
-        /** @var \Closure $callback */
+        /** @var Closure $callback */
         $callback = $route->getController();
 
         $response = $callback();
 
-        if (\is_array($response)) {
+        if (is_array($response)) {
             $response = new JsonResponse($response);
         }
 
-        if (\is_string($response) || $response === null) {
+        if (is_string($response) || $response === null) {
             $response = new Response($response);
         }
 
