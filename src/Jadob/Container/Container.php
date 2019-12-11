@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Container;
 
+use Closure;
 use Jadob\Container\Exception\ServiceNotFoundException;
-
 use Psr\Container\ContainerInterface;
+use RuntimeException;
+use function array_keys;
+use function in_array;
 
 /**
- * Class Container
  * @TODO: maybe some arrayaccess? Fixed services?
  * @package Jadob\Container
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Container implements ContainerInterface
@@ -38,12 +42,6 @@ class Container implements ContainerInterface
      * @var bool
      */
     protected $locked = false;
-
-    /**
-     * @deprecated
-     * @var InterfaceInjector[]
-     */
-    protected $interfaceInjectors = [];
 
     /**
      * @var array
@@ -87,6 +85,22 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @param string $factoryName
+     * @return mixed
+     */
+    protected function instantiateFactory(string $factoryName)
+    {
+        //@TODO find why DoctrineDBALBridge breaks here
+        if (isset($this->services[$factoryName])) {
+            return $this->services[$factoryName];
+        }
+
+        $this->services[$factoryName] = $this->factories[$factoryName]($this);
+        unset($this->factories[$factoryName]);
+        return $this->services[$factoryName];
+    }
+
+    /**
      * UNSTABLE, there will be some work needed
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
@@ -101,7 +115,7 @@ class Container implements ContainerInterface
             }
         }
 
-        foreach (\array_keys($this->factories) as $factoryName) {
+        foreach (array_keys($this->factories) as $factoryName) {
             $service = $this->instantiateFactory($factoryName);
 
             if ($service instanceof $interfaceClassName) {
@@ -123,8 +137,7 @@ class Container implements ContainerInterface
      */
     public function findObjectByClassName(string $className)
     {
-
-        if (\in_array($className, [ContainerInterface::class, self::class], true)) {
+        if (in_array($className, [ContainerInterface::class, self::class], true)) {
             return $this;
         }
 
@@ -140,7 +153,7 @@ class Container implements ContainerInterface
          * When factory will request yet another service, it will be created and removed from $this->factories,
          * BUT these ones are still present in current foreach
          */
-        foreach (\array_keys($this->factories) as $factoryName) {
+        foreach (array_keys($this->factories) as $factoryName) {
             $service = $this->instantiateFactory($factoryName);
 
             if ($service instanceof $className) {
@@ -170,7 +183,7 @@ class Container implements ContainerInterface
         $definition = new Definition($object);
         $this->definitions[$id] = $definition;
 
-        if ($object instanceof \Closure) {
+        if ($object instanceof Closure) {
             $this->factories[$id] = $object;
         } else {
             $this->services[$id] = $object;
@@ -178,23 +191,6 @@ class Container implements ContainerInterface
 
         return $definition;
     }
-
-    /**
-     * @param string $factoryName
-     * @return mixed
-     */
-    protected function instantiateFactory(string $factoryName)
-    {
-        //@TODO find why DoctrineDBALBridge breaks here
-        if(isset($this->services[$factoryName])) {
-            return $this->services[$factoryName];
-        }
-
-        $this->services[$factoryName] = $this->factories[$factoryName]($this);
-        unset($this->factories[$factoryName]);
-        return $this->services[$factoryName];
-    }
-
 
     /**
      * @param string $from
@@ -217,33 +213,6 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @deprecated
-     * @param string $interfaceToCheck
-     * @param string $methodToCall
-     * @param $serviceToInject
-     * @return $this
-     */
-    public function addInterfaceInjection(string $interfaceToCheck, string $methodToCall, $serviceToInject)
-    {
-        $this->interfaceInjectors[] = new InterfaceInjector($interfaceToCheck, $methodToCall, $serviceToInject);
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     * @param $service
-     * @return mixed
-     */
-    public function injectInterface($service)
-    {
-        foreach ($this->interfaceInjectors as $injector) {
-            $service = $injector->inject($service);
-        }
-
-        return $service;
-    }
-
-    /**
      * @param string $key
      * @param $value
      */
@@ -258,8 +227,8 @@ class Container implements ContainerInterface
      */
     public function getParameter(string $key)
     {
-        if(!isset($this->parameters[$key])) {
-            throw new \RuntimeException('Could not find "'.$key.'" parameter');
+        if (!isset($this->parameters[$key])) {
+            throw new RuntimeException('Could not find "' . $key . '" parameter');
         }
 
         return $this->parameters[$key];
