@@ -200,7 +200,6 @@ class Kernel
         return $this->env;
     }
 
-
     /**
      * @return ContainerBuilder
      * @throws KernelException
@@ -229,7 +228,7 @@ class Kernel
             $containerBuilder = new ContainerBuilder($listener);
             $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
-            $containerBuilder->add(Kernel::class, $this);
+            $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
