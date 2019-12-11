@@ -28,6 +28,7 @@ Enabling test suite:
 
 ``vendor/bin/phpunit``
 
+
 ## Things that need to be done before `1.0.0` release
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
@@ -48,8 +49,8 @@ Enabling test suite:
 * [ ] Default Event Listeners should be moved from `Jadob\EventListener` to `Jadob\Core`, because they are framework-specific stuff.
 * [ ] Service Providers Should be moved to `Jadob\Core` too.
 * [ ] All Bridges (`Jadob\DoctrineORMBridge`, `Jadob\SymfonyFormBridge`) should be moved do `Jadob\Bridge\*` namespace.
+* [ ] Custom CSRF Extension to Forms 
 
-For more, see [this gist](https://gist.github.com/pizzaminded/3c25c7e2d772e6f7aadf27e7602cd326).
 
 ## Getting Started
 

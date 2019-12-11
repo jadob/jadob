@@ -5,11 +5,15 @@ namespace Jadob\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
+use Psr\Log\LoggerInterface;
+use function get_class;
+use function microtime;
+use function spl_object_hash;
 
 /**
  * @TODO: enable timestamp collecting via constructor arguments?
  * @see https://www.php-fig.org/psr/psr-14/
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class EventDispatcher implements EventDispatcherInterface
@@ -26,36 +30,65 @@ class EventDispatcher implements EventDispatcherInterface
     protected $timestamps = [];
 
     /**
-     * Provide all relevant listeners with an event to process.
-     *
-     * @param object $event
-     *   The object to process.
-     *
-     * @return object
-     *   The Event that was passed, now modified by listeners.
+     * @var LoggerInterface|null
+     */
+    protected $logger;
+
+    /**
+     * EventDispatcher constructor.
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(?LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * {@inheritDoc}
      * @see https://www.php-fig.org/psr/psr-14/#dispatcher
      */
     public function dispatch(object $event)
     {
+        $className = get_class($event);
         $this->timestamps[] = new Timestamp(
-            \get_class($event),
-            \microtime(true),
-            \spl_object_hash($event)
+            $className,
+            microtime(true),
+            spl_object_hash($event)
         );
 
+        $handlersCount = 0;
         foreach ($this->listeners as $listener) {
             $eventsFromListener = $listener->getListenersForEvent($event);
+
             foreach ($eventsFromListener as $singleListener) {
                 $singleListener($event);
+                $handlersCount++;
 
-                if($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
-                    //@TODO log that event dispatching has been interrupted
+                if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                    $this->log(
+                        'Event ' . $className . ' propagation has been stopped by ' . get_class($singleListener)
+                        . ' listener. Event has been consumed by ' . $handlersCount . ' listeners.'
+                    );
                     return $event;
                 }
             }
         }
 
+        $this->log('Event ' . $className . ' has been consumed by ' . $handlersCount . ' listeners without interrupting.');
         return $event;
+    }
+
+    /**
+     * @param string $message
+     * @param array $context
+     */
+    private function log(string $message, array $context = []): void
+    {
+        if ($this->logger === null) {
+            return;
+        }
+
+        $this->logger->info($message, $context);
     }
 
     /**

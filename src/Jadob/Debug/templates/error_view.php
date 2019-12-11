@@ -141,23 +141,23 @@
             text-decoration: none;
         }
 
-        .stack-trace {
+        .table {
             width: 100%;
         }
 
-        .stack-trace tr {
+        .table tr {
             border-bottom: 1px solid #212121;
         }
 
-        .stack-trace thead {
+        .table thead {
             font-weight: 700;
         }
 
-        .stack-trace td {
+        .table td {
             padding: 5px;
         }
 
-        .stack-trace .key {
+        .table .key {
             border-right: 1px dotted #95A5A6;
         }
 
@@ -166,7 +166,7 @@
             font-weight: 400;
         }
 
-        .stack-trace .file-path {
+        .table .file-path {
             padding-top: 5px;
             color: #95A5A6;
             font-size: 12px;
@@ -201,7 +201,7 @@
             <h2 class="error-wrapper__content_stack-trace-header">
                 Stack Trace:
             </h2>
-            <table class="stack-trace">
+            <table class="table">
                 <thead>
                 <tr>
                     <td class="key">No.</td>
@@ -241,12 +241,12 @@
     </section>
     <section class="container-dump">
         <h2 class="error-wrapper__content_stack-trace-header">Container Event dump:</h2>
-        <table>
+        <table class="table">
             <thead>
             <tr>
-                <td>ID</td>
-                <td>Timestamp</td>
-                <td>Event</td>
+                <td class="key">ID</td>
+                <td class="key">Timestamp</td>
+                <td class="key">Event</td>
                 <td>Payload</td>
             </tr>
             </thead>
@@ -254,9 +254,9 @@
             $id = 1;
             foreach (\Jadob\Container\ContainerEventListener::$events as $timestamp => $event) { ?>
                 <tr>
-                    <td><?= $id++ ?></td>
-                    <td><?= $timestamp ?></td>
-                    <td><?= get_class($event) ?></td>
+                    <td class="key"><?= $id++ ?></td>
+                    <td class="key"><?= $timestamp ?></td>
+                    <td class="key"><?= get_class($event) ?></td>
                     <td>
                         <?php
                         if (method_exists($event, 'getPayload')) { ?>

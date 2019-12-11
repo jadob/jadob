@@ -3,6 +3,8 @@
 namespace Jadob\Container;
 
 use Jadob\Config\Config;
+use Jadob\Container\Event\ContainerBuildStartedEvent;
+use Jadob\Container\Event\ProviderRegistrationStartedEvent;
 use Jadob\Container\Event\ServiceAddedEvent;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
@@ -81,7 +83,9 @@ class ContainerBuilder
      */
     public function build(array $config = []): Container
     {
+        $this->emit(new ContainerBuildStartedEvent());
         foreach ($this->serviceProviders as $serviceProvider) {
+            $this->emit(new ProviderRegistrationStartedEvent($serviceProvider));
             $provider = $this->instantiateProvider($serviceProvider);
 
             /**

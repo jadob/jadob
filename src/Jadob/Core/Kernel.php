@@ -9,6 +9,7 @@ use Jadob\Bridge\Monolog\LoggerFactory;
 use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
+use Jadob\Container\ContainerEventListener;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -18,8 +19,6 @@ use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Debug\Profiler\Profiler;
 use Jadob\EventDispatcher\EventDispatcher;
-use Jadob\EventListener\Event\Type\AfterControllerEventListenerInterface;
-use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\EventListener\EventListener;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
@@ -76,12 +75,6 @@ class Kernel
     private $bootstrap;
 
     /**
-     * @deprecated to be replaced with eventDispatcher
-     * @var EventListener
-     */
-    protected $eventListener;
-
-    /**
      * @var EventDispatcher
      */
     protected $eventDispatcher;
@@ -129,12 +122,8 @@ class Kernel
         $errorHandler->registerErrorHandler();
         $errorHandler->registerExceptionHandler();
 
-        $this->eventListener = new EventListener($this->logger);
         $this->eventDispatcher = new EventDispatcher();
-
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
-
-        $this->addEvents();
     }
 
     /**
@@ -190,7 +179,7 @@ class Kernel
         //@TODO: this one should be moved to dispatcher & should be called after controller
         $afterControllerEvent = new AfterControllerEvent($response);
 
-        $this->eventListener->dispatchEvent($afterControllerEvent);
+        $this->eventDispatcher->dispatch($afterControllerEvent);
 
         if ($afterControllerEvent->getResponse() !== null) {
             return $afterControllerEvent->getResponse()->prepare($request);
@@ -215,20 +204,6 @@ class Kernel
         return $this->env;
     }
 
-    //@TODO create Jadob/Core/EventDispatcherFactory and move all these things to new class
-    protected function addEvents(): void
-    {
-        $this->eventListener->addEvent(
-            BeforeControllerEvent::class,
-            BeforeControllerEventListenerInterface::class,
-            'onBeforeControllerEvent');
-
-        $this->eventListener->addEvent(
-            AfterControllerEvent::class,
-            AfterControllerEventListenerInterface::class,
-            'onAfterControllerEvent'
-        );
-    }
 
     /**
      * @return ContainerBuilder
@@ -250,8 +225,7 @@ class Kernel
                 //TODO named exception constructors?
                 throw new KernelException('services.php has missing return statement or returned value is not an array');
             }
-            $containerBuilder = new ContainerBuilder();
-            $containerBuilder->add('event.listener', $this->eventListener);
+            $containerBuilder = new ContainerBuilder(new ContainerEventListener());
             $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(Kernel::class, $this);
@@ -279,17 +253,6 @@ class Kernel
     }
 
     /**
-     * @param array $config
-     * @return Kernel
-     * @deprecated probably
-     */
-    public function setConfig(array $config): Kernel
-    {
-        $this->config = $config;
-        return $this;
-    }
-
-    /**
      * Creates and preconfigures a monolog instance.
      * @return LoggerInterface
      * @throws Exception
@@ -312,13 +275,13 @@ class Kernel
         return $factory->create();
     }
 
-
     //@TODO: if prod, do not collect profiler data, disallow xdebug features if xdebug is not installed
     public function terminate(): void
     {
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
+
     }
 
 }

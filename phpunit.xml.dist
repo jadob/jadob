@@ -8,11 +8,11 @@
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
         colors="true">
-    <!--<logging>-->
-        <!--<log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>-->
+<!--    <logging>-->
+<!--        <log type="coverage-html" target="coverage" lowUpperBound="35" highLowerBound="70"/>-->
         <!--<log type="coverage-clover" target="qa_report/phpunit/coverage.xml"/>-->
         <!--<log type="junit" target="qa_report/phpunit/logfile.xml"/>-->
-    <!--</logging>-->
+<!--    </logging>-->
     <testsuites>
         <testsuite name="Jadob Framework Test Suite">
             <directory>./src/Jadob/*/Tests/</directory>
