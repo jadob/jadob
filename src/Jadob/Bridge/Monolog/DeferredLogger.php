@@ -8,20 +8,19 @@ use Monolog\Logger;
 
 class DeferredLogger extends Logger
 {
-
     protected $recordStack = [];
 
 
     /**
      * {@inheritDoc}
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord(int $level, string $message, array $context = array()): bool
     {
         //save timestamo
         //store it
     }
 
-    public function close()
+    public function close(): void
     {
 
         //probably parent::reset() should be called here
