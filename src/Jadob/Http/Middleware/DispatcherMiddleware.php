@@ -17,12 +17,12 @@ class DispatcherMiddleware implements MiddlewareInterface
     /**
      * @var Router
      */
-    protected Router $router;
+    protected $router;
 
     /**
      * @var ContainerInterface
      */
-    protected ContainerInterface $container;
+    protected $container;
 
     /**
      * DispatcherMiddleware constructor.
