@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\PagerfantaBridge\Twig\Extension;
 
 use Jadob\Router\Router;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\View\TwitterBootstrap3View;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class PagerfantaProvider
  * @package Jadob\PagerfantaBridge\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class PagerfantaExtension extends \Twig_Extension
+class PagerfantaExtension extends AbstractExtension
 {
     /**
      * @var Request
@@ -37,12 +41,12 @@ class PagerfantaExtension extends \Twig_Extension
     }
 
     /**
-     * @return \Twig_SimpleFunction[]
+     * @return array|TwigFunction[]
      */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('pagerfanta', [$this, 'createPaginator'], ['is_safe' => ['html']])
+            new TwigFunction('pagerfanta', [$this, 'createPaginator'], ['is_safe' => ['html']])
         ];
     }
 

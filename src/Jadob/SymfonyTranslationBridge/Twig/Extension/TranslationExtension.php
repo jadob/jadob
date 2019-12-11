@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\SymfonyTranslationBridge\Twig\Extension;
 
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Class TranslationExtension
@@ -11,11 +15,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class TranslationExtension extends \Twig_Extension
+class TranslationExtension extends AbstractExtension
 {
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
@@ -34,16 +38,17 @@ class TranslationExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('trans', [$this, 'translate'], ['is_safe' => ['html']])
+            new TwigFilter('trans', [$this, 'translate'], ['is_safe' => ['html']])
         ];
     }
 
+
     /**
-     * @param string $string
+     * TODO trans() method has more arguments than one
+     * @param $string
      * @return string
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function translate($string)
+    public function translate($string): string
     {
         return $this->translator->trans($string);
     }

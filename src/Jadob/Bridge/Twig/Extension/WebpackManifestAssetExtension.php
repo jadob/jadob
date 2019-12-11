@@ -2,12 +2,15 @@
 
 namespace Jadob\Bridge\Twig\Extension;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+
 /**
  * @see https://www.npmjs.com/package/webpack-manifest-plugin
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class WebpackManifestAssetExtension extends  \Twig_Extension
+class WebpackManifestAssetExtension extends AbstractExtension
 {
     /**
      * @var string[]
@@ -29,7 +32,7 @@ class WebpackManifestAssetExtension extends  \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('asset_from_manifest', [$this, 'getAssetFromManifest'])
+            new TwigFunction('asset_from_manifest', [$this, 'getAssetFromManifest'])
         ];
     }
 

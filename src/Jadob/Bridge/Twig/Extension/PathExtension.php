@@ -3,6 +3,8 @@
 namespace Jadob\Bridge\Twig\Extension;
 
 use Jadob\Router\Router;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class PathExtension
@@ -10,7 +12,7 @@ use Jadob\Router\Router;
  * @author pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class PathExtension extends \Twig_Extension
+class PathExtension extends AbstractExtension
 {
 
     /**
@@ -33,8 +35,8 @@ class PathExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('path', [$this, 'path'], ['is_safe' => ['html'],]),
-            new \Twig_SimpleFunction('url', [$this, 'url'], ['is_safe' => ['html'],]),
+            new TwigFunction('path', [$this, 'path'], ['is_safe' => ['html'],]),
+            new TwigFunction('url', [$this, 'url'], ['is_safe' => ['html'],]),
         ];
     }
 

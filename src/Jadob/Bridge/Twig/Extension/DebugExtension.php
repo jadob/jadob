@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Extension;
+
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class DebugExtension
  * @package Jadob\Debug\Twig\Extension
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class DebugExtension extends \Twig_Extension
+class DebugExtension extends AbstractExtension
 {
     /**
      * @return array
@@ -17,7 +21,7 @@ class DebugExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('r', [$this, 'debug'], ['is_safe' => ['html'],]),
+            new TwigFunction('r', [$this, 'debug'], ['is_safe' => ['html'],]),
         ];
     }
 
