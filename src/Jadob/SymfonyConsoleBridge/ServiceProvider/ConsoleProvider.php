@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\SymfonyConsoleBridge\ServiceProvider;
 
 use Jadob\Container\Container;
@@ -25,8 +27,8 @@ class ConsoleProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Container $container
      * @param null $config
+     * @return array
      */
     public function register($config)
     {
