@@ -6,8 +6,9 @@ use Jadob\Core\AbstractBootstrap;
 
 /**
  * Class Bootstrap
+ *
  * @package Jadob\Core\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Bootstrap extends AbstractBootstrap
@@ -22,6 +23,7 @@ class Bootstrap extends AbstractBootstrap
 
     /**
      * Returns array of Service providers that will be load while framework bootstrapping.
+     *
      * @return array
      */
     public function getServiceProviders(): array

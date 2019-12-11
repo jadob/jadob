@@ -4,8 +4,9 @@ namespace Jadob\Security\Encoder;
 
 /**
  * Class BcryptEncoder
+ *
  * @package Jadob\Security\Encoder
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class BCryptEncoder extends AbstractPasswordEncoder
@@ -17,7 +18,8 @@ class BCryptEncoder extends AbstractPasswordEncoder
 
     /**
      * BcryptEncoder constructor.
-     * @param int $cost
+     *
+     * @param  int $cost
      * @throws \RuntimeException
      */
     public function __construct(int $cost)
@@ -31,20 +33,22 @@ class BCryptEncoder extends AbstractPasswordEncoder
     }
 
     /**
-     * @param string $raw
-     * @param string $salt
+     * @param  string $raw
+     * @param  string $salt
      * @return bool|string
      */
     public function encode($raw, $salt = null)
     {
-        return \password_hash($raw, \PASSWORD_BCRYPT, [
+        return \password_hash(
+            $raw, \PASSWORD_BCRYPT, [
             'cost' => $this->cost
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param string $raw
-     * @param string $hash
+     * @param  string $raw
+     * @param  string $hash
      * @return bool
      */
     public function compare($raw, $hash)

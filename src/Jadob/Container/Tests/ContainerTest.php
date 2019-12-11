@@ -8,8 +8,9 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Class ContainerTest
+ *
  * @package Jadob\Container\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license proprietary
  */
 class ContainerTest extends TestCase
@@ -27,9 +28,11 @@ class ContainerTest extends TestCase
 
     public function testFactoriesAliasing()
     {
-        $container = new Container([], ['dummy' => function () {
-            return new \stdClass();
-        }]);
+        $container = new Container(
+            [], ['dummy' => function () {
+                return new \stdClass();
+            }]
+        );
         $container->alias('dummy', 'dummy1');
 
         $this->assertSame($container->get('dummy'), $container->get('dummy1'));
@@ -38,9 +41,11 @@ class ContainerTest extends TestCase
     public function testAccessingFactories()
     {
 
-        $container = new Container(['dummy1' => new \stdClass()], ['dummy2' => function () {
-            return new \stdClass();
-        }]);
+        $container = new Container(
+            ['dummy1' => new \stdClass()], ['dummy2' => function () {
+                return new \stdClass();
+            }]
+        );
 
         $this->assertTrue($container->has('dummy1'));
         $this->assertTrue($container->has('dummy2'));
@@ -72,9 +77,11 @@ class ContainerTest extends TestCase
 
     public function testGettingServicesByItsClassName()
     {
-        $container = new Container([], ['dummy2' => function () {
-            return new DummyClass();
-        }]);
+        $container = new Container(
+            [], ['dummy2' => function () {
+                return new DummyClass();
+            }]
+        );
 
         $container->add('dummy', new \stdClass());
 

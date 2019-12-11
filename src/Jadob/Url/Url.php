@@ -6,7 +6,8 @@ namespace Jadob\Url;
 
 /**
  * TODO maybe comply with UriInterface?
- * @author pizzaminded <miki@appvende.net>
+ *
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Url
@@ -43,6 +44,7 @@ class Url
 
     /**
      * Url constructor.
+     *
      * @param string|null $url
      */
     public function __construct(?string $url = null)
@@ -84,6 +86,7 @@ class Url
 
     /**
      * Shorthand for build()
+     *
      * @return string
      */
     public function __toString()
@@ -117,7 +120,7 @@ class Url
     }
 
     /**
-     * @param string $scheme
+     * @param  string $scheme
      * @return Url
      */
     public function setScheme(string $scheme): Url
@@ -136,7 +139,7 @@ class Url
     }
 
     /**
-     * @param string $path
+     * @param  string $path
      * @return Url
      */
     public function setPath(string $path): Url

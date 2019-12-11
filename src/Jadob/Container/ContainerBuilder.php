@@ -16,8 +16,9 @@ use function is_array;
 
 /**
  * Class ContainerBuilder
+ *
  * @package Jadob\Container
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class ContainerBuilder
@@ -61,8 +62,8 @@ class ContainerBuilder
     }
 
     /**
-     * @param string $serviceName
-     * @param mixed $definition
+     * @param  string $serviceName
+     * @param  mixed  $definition
      * @return $this
      */
     public function add($serviceName, $definition): self
@@ -79,7 +80,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param array $config
+     * @param  array $config
      * @return Container
      * @throws ContainerException
      * @throws ContainerBuildException
@@ -128,8 +129,8 @@ class ContainerBuilder
     }
 
     /**
-     * @param array $config
-     * @param string $configNodeKey
+     * @param  array  $config
+     * @param  string $configNodeKey
      * @return array|null
      *
      * @throws ContainerBuildException
@@ -157,7 +158,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param ServiceProviderInterface[] $serviceProviders
+     * @param  ServiceProviderInterface[] $serviceProviders
      * @return ContainerBuilder
      */
     public function setServiceProviders(array $serviceProviders): ContainerBuilder
@@ -185,7 +186,7 @@ class ContainerBuilder
 
 
     /**
-     * @param string $providerClass
+     * @param  string $providerClass
      * @return ServiceProviderInterface
      * @throws ContainerBuildException
      */

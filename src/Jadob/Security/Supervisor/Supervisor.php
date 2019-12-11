@@ -7,7 +7,7 @@ use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Supervisor
@@ -19,6 +19,7 @@ class Supervisor
 
     /**
      * How supervisor should behave when no RequestSupervisor matched for request?
+     *
      * @var int
      */
     protected $unsecuredRequestPolicy;
@@ -34,7 +35,7 @@ class Supervisor
     protected $userProviders = [];
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return RequestSupervisorInterface|null
      */
     public function matchRequestSupervisor(Request $request): ?RequestSupervisorInterface
@@ -62,6 +63,7 @@ class Supervisor
     }
     /**
      * to be deprecated probably
+     *
      * @return bool
      */
     public function isBlockingUnsecuredRequests()

@@ -12,9 +12,9 @@ use function array_keys;
 use function in_array;
 
 /**
- * @TODO: maybe some arrayaccess? Fixed services?
+ * @TODO:   maybe some arrayaccess? Fixed services?
  * @package Jadob\Container
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Container implements ContainerInterface
@@ -27,18 +27,21 @@ class Container implements ContainerInterface
 
     /**
      * Instantiated objects, ready to be used.
+     *
      * @var array
      */
     protected $services = [];
 
     /**
      * Closures, arrays, components that can be used to instantiate a new service.
+     *
      * @var array
      */
     protected $factories = [];
 
     /**
      * If true, adding new services/aliases will throw an exception.
+     *
      * @var bool
      */
     protected $locked = false;
@@ -50,6 +53,7 @@ class Container implements ContainerInterface
 
     /**
      * Container constructor.
+     *
      * @param array|null $services
      * @param array|null $factories
      */
@@ -65,7 +69,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $serviceName
+     * @param  string $serviceName
      * @return mixed
      * @throws ServiceNotFoundException
      */
@@ -85,7 +89,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $factoryName
+     * @param  string $factoryName
      * @return mixed
      */
     protected function instantiateFactory(string $factoryName)
@@ -102,7 +106,8 @@ class Container implements ContainerInterface
 
     /**
      * UNSTABLE, there will be some work needed
-     * @param string $interfaceClassName FQCN of interface that need to be verified
+     *
+     * @param  string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
     public function getObjectsImplementing(string $interfaceClassName): ?array
@@ -131,7 +136,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $className FQCN of class that we need to find
+     * @param  string $className FQCN of class that we need to find
      * @return mixed
      * @throws ServiceNotFoundException
      */
@@ -173,8 +178,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $id
-     * @param $object
+     * @param  string $id
+     * @param  $object
      * @return Definition
      */
     public function add(string $id, $object)
@@ -193,8 +198,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $from
-     * @param string $to
+     * @param  string $from
+     * @param  string $to
      * @return Container
      */
     public function alias(string $from, string $to): Container
@@ -222,7 +227,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function getParameter(string $key)

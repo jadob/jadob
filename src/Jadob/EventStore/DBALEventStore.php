@@ -15,7 +15,7 @@ use function get_class;
 use function time;
 
 /**
- * @TODO this one should be EventStorage related, and EventStore should be separated
+ * @TODO    this one should be EventStorage related, and EventStore should be separated
  * Class DBALEventStore
  * @package Jadob\EventStore
  */
@@ -23,12 +23,14 @@ class DBALEventStore implements EventStoreInterface
 {
     /**
      * Wszystkie Eventy trzymane są w jednej tabeli
+     *
      * @var int
      */
     public const STRATEGY_ALL_IN_ONE = 1;
 
     /**
      * Każdy strumień zdarzeń ma swoją osobną tabelę
+     *
      * @var int
      */
     public const STRATEGY_ONE_PER_STREAM = 2;
@@ -36,6 +38,7 @@ class DBALEventStore implements EventStoreInterface
     /**
      * Tworzy osobne tabele dla każdego typu agregatu
      * eg. dla klasy KOT bedzie osobna tabela, dla klasy PIES osobna itp.
+     *
      * @var int
      */
     public const STRATEGY_ONE_PER_TYPE = 3;
@@ -67,8 +70,9 @@ class DBALEventStore implements EventStoreInterface
 
     /**
      * DBALEventStore constructor.
-     * @param Connection $connection
-     * @param LoggerInterface $logger
+     *
+     * @param Connection             $connection
+     * @param LoggerInterface        $logger
      * @param ProjectionManager|null $projectionManager
      */
     public function __construct(
@@ -76,8 +80,7 @@ class DBALEventStore implements EventStoreInterface
         LoggerInterface $logger,
         ?ProjectionManager $projectionManager = null,
         ?EventDispatcher $eventDispatcher = null
-    )
-    {
+    ) {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->payloadSerializer = new PayloadSerializer();
@@ -88,9 +91,11 @@ class DBALEventStore implements EventStoreInterface
     protected function createSchema(Schema $schema): void
     {
         $table = $schema->createTable('event_store');
-        $table->addColumn('id', Type::INTEGER, [
+        $table->addColumn(
+            'id', Type::INTEGER, [
             'autoincrement' => true
-        ]);
+            ]
+        );
     }
 
     public function saveAggregateRoot(AbstractAggregateRoot $aggregateRoot)
@@ -105,11 +110,13 @@ class DBALEventStore implements EventStoreInterface
         $this->connection->beginTransaction();
 
         if (!$aggregateExists) {
-            $this->connection->insert('aggregates', [
+            $this->connection->insert(
+                'aggregates', [
                 'aggregate_type' => $aggregateType,
                 'aggregate_id' => $aggregateId,
                 'created_timestamp' => $timestamp
-            ]);
+                ]
+            );
         }
 
         foreach ($events as $event) {
@@ -121,12 +128,14 @@ class DBALEventStore implements EventStoreInterface
             //TODO: Timestamp
             //TODO: zdarzenia do jednej tabeli, informacje o agregatach do drugiej, snapshoty do trzeciej
             //@TODO Bulk inserts? ID eventu nie jest nam tutaj do szczescia potrzebne
-            $this->connection->insert('aggregate_events', [
+            $this->connection->insert(
+                'aggregate_events', [
                 'aggregate_id' => $aggregateId,
                 'event_type' => $eventType,
                 'aggregate_version' => $eventVersion,
                 'payload' => $payload
-            ]);
+                ]
+            );
         }
         $this->connection->commit();
 
@@ -153,7 +162,7 @@ class DBALEventStore implements EventStoreInterface
     }
 
     /**
-     * @param string $streamName
+     * @param  string $streamName
      * @return AbstractDomainEvent[]
      */
     public function getStream(string $streamName): array

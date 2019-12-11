@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @deprecated - remove when better space for session will be found
  * Configures any Framework related things.
  * Class FrameworkServiceProvider
- * @package Jadob\Core\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @package    Jadob\Core\ServiceProvider
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
 class FrameworkServiceProvider implements ServiceProviderInterface
 {
@@ -28,7 +28,7 @@ class FrameworkServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param $config
+     * @param  $config
      * @return mixed|void
      */
     public function register($config)

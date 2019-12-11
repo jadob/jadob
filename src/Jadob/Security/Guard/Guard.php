@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @deprecated
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
 class Guard
 {
@@ -41,8 +41,9 @@ class Guard
 
     /**
      * Guard constructor.
+     *
      * @param UserStorage $userStorage
-     * @param array $excludedPaths
+     * @param array       $excludedPaths
      */
     public function __construct(UserStorage $userStorage, array $excludedPaths = [])
     {
@@ -51,8 +52,8 @@ class Guard
     }
 
     /**
-     * @param GuardAuthenticatorInterface $authenticator
-     * @param string|null $name
+     * @param  GuardAuthenticatorInterface $authenticator
+     * @param  string|null                 $name
      * @return Guard
      */
     public function addGuard(GuardAuthenticatorInterface $authenticator, string $name)
@@ -62,8 +63,8 @@ class Guard
     }
 
     /**
-     * @param UserProviderInterface $userProvider
-     * @param string $name
+     * @param  UserProviderInterface $userProvider
+     * @param  string                $name
      * @return $this
      */
     public function addUserProvider(UserProviderInterface $userProvider, string $name)
@@ -73,7 +74,7 @@ class Guard
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return GuardAuthenticatorInterface|null
      */
     public function matchRule(Request $request)
@@ -88,7 +89,7 @@ class Guard
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return \Symfony\Component\HttpFoundation\Response|null
      */
     public function execute(Request $request)
@@ -126,7 +127,8 @@ class Guard
 
     /**
      * Alias for isPathExcluded.
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return bool
      */
     public function isRequestExcluded(Request $request): bool
@@ -135,7 +137,7 @@ class Guard
     }
 
     /**
-     * @param string $path
+     * @param  string $path
      * @return bool
      */
     public function isPathExcluded(string $path): bool
@@ -162,7 +164,7 @@ class Guard
     }
 
     /**
-     * @param null|string $currentGuardName
+     * @param  null|string $currentGuardName
      * @return Guard
      */
     public function setCurrentGuardName(?string $currentGuardName): Guard
@@ -172,7 +174,7 @@ class Guard
     }
 
     /**
-     * @param $name
+     * @param  $name
      * @return GuardAuthenticatorInterface
      */
     public function getGuardByName(string $name)
@@ -181,7 +183,7 @@ class Guard
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return UserProviderInterface
      */
     public function getProviderByName(string $name)

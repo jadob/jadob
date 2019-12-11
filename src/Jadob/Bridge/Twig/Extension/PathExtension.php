@@ -8,8 +8,9 @@ use Twig\TwigFunction;
 
 /**
  * Class PathExtension
+ *
  * @package Jadob\TwigBridge\Twig\Extension
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class PathExtension extends AbstractExtension
@@ -22,6 +23,7 @@ class PathExtension extends AbstractExtension
 
     /**
      * PathExtension constructor.
+     *
      * @param Router $router
      */
     public function __construct(Router $router)
@@ -41,8 +43,8 @@ class PathExtension extends AbstractExtension
     }
 
     /**
-     * @param $path
-     * @param $params
+     * @param  $path
+     * @param  $params
      * @return string
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      */
@@ -52,8 +54,8 @@ class PathExtension extends AbstractExtension
     }
 
     /**
-     * @param $path
-     * @param $params
+     * @param  $path
+     * @param  $params
      * @return string
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      */

@@ -8,8 +8,9 @@ use Jadob\FeatureFlag\FeatureFlag;
 
 /**
  * Class FeatureFlagProvider
+ *
  * @package Jadob\FeatureFlag\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class FeatureFlagProvider implements ServiceProviderInterface

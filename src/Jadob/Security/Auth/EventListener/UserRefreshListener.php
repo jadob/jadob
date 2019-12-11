@@ -10,11 +10,12 @@ use Jadob\Security\Guard\Guard;
 
 /**
  * Class UserRefreshListener
+ *
  * @package Jadob\Security\Auth\EventListener
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
-class UserRefreshListener implements BeforeControllerEventListenerInterface
+class UserRefreshListener //implements BeforeControllerEventListenerInterface
 {
 
     /**
@@ -29,7 +30,8 @@ class UserRefreshListener implements BeforeControllerEventListenerInterface
 
     /**
      * UserRefreshListener constructor.
-     * @param Guard $guard
+     *
+     * @param Guard       $guard
      * @param UserStorage $storage
      */
     public function __construct(Guard $guard, UserStorage $storage)
@@ -39,7 +41,7 @@ class UserRefreshListener implements BeforeControllerEventListenerInterface
     }
 
     /**
-     * @param BeforeControllerEvent $event
+     * @param  BeforeControllerEvent $event
      * @return void
      */
     public function onBeforeControllerEvent(BeforeControllerEvent $event): void
@@ -53,7 +55,9 @@ class UserRefreshListener implements BeforeControllerEventListenerInterface
             $this->guard->getCurrentGuardName()
         );
 
-        /** @var RefreshableUserInterface $oldUser */
+        /**
+ * @var RefreshableUserInterface $oldUser 
+*/
         $oldUser = $this->storage->getUser();
 
         if($oldUser instanceof RefreshableUserInterface) {

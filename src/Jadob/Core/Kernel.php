@@ -34,14 +34,16 @@ use function is_array;
 
 /**
  * Class Kernel
+ *
  * @package Jadob\Core
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Kernel
 {
     /**
      * semver formatted framework version
+     *
      * @see https://semver.org/
      * @var string
      */
@@ -49,6 +51,7 @@ class Kernel
 
     /**
      * If true, application log will be saved while destructing objects
+     *
      * @var bool
      */
     protected $deferLogs = false;
@@ -99,8 +102,8 @@ class Kernel
     protected $profiler;
 
     /**
-     * @param string $env
-     * @param BootstrapInterface $bootstrap
+     * @param  string             $env
+     * @param  BootstrapInterface $bootstrap
      * @throws KernelException
      * @throws Exception
      */
@@ -130,7 +133,7 @@ class Kernel
      * - this method should be called "handle" and it should need some basic stuff that can be extracted from superglobals
      * - handling HttpFoundation object should be realised via handleRequest(Request $request) which would be an alias for handle()
      *
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws KernelException
      * @throws ContainerException
@@ -143,12 +146,14 @@ class Kernel
     {
         $requestId = substr(md5((string)mt_rand()), 0, 15);
 
-        $this->logger->info('New request received', [
+        $this->logger->info(
+            'New request received', [
             'method' => $request->getMethod(),
             'path' => $request->getPathInfo(),
             'query' => $request->query->all(),
             'request_id' => $requestId
-        ]);
+            ]
+        );
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
@@ -212,8 +217,12 @@ class Kernel
                 //TODO named exception constructors?
                 throw new KernelException('There is no services.php file in your config dir.');
             }
-            /** @var array $services */
-            /** @noinspection PhpIncludeInspection */
+            /**
+ * @var array $services 
+*/
+            /**
+ * @noinspection PhpIncludeInspection 
+*/
             $services = include $servicesFile;
 
             if (!is_array($services)) {
@@ -254,6 +263,7 @@ class Kernel
 
     /**
      * Creates and preconfigures a monolog instance.
+     *
      * @return LoggerInterface
      * @throws Exception
      */

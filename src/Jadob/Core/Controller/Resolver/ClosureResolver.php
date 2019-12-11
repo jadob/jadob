@@ -3,7 +3,7 @@
 namespace Jadob\Core\Controller;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class ClosureResolver

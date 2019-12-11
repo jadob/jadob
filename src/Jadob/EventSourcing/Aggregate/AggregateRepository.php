@@ -12,6 +12,7 @@ use function json_decode;
 
 /**
  * Class AggregateRepository
+ *
  * @package Jadob\EventSourcing\Aggregate
  */
 class AggregateRepository
@@ -35,8 +36,9 @@ class AggregateRepository
 
     /**
      * AggregateRepository constructor.
+     *
      * @param EventStoreInterface $eventStore
-     * @param string $aggregateType
+     * @param string              $aggregateType
      */
     public function __construct(EventStoreInterface $eventStore, string $aggregateType)
     {
@@ -66,7 +68,9 @@ class AggregateRepository
         //Pooznaczaj wszystkie pobrane zdarzenia jako zacommitowane
         foreach ($events as $eventArray) {
             //recreate event
-            /** @var AbstractDomainEvent $eventFqcn */
+            /**
+ * @var AbstractDomainEvent $eventFqcn 
+*/
             $eventFqcn = $eventArray['event_type'];
 
             $event = $eventFqcn::fromArray(json_decode($eventArray['payload'], true, 512, JSON_THROW_ON_ERROR));
@@ -87,7 +91,9 @@ class AggregateRepository
         }
 
         //Odtwórz agregat
-        /** @var AbstractAggregateRoot $aggregateFqcn */
+        /**
+ * @var AbstractAggregateRoot $aggregateFqcn 
+*/
         $aggregateFqcn = $this->aggregateType;
 
         //@TODO extract version from $events

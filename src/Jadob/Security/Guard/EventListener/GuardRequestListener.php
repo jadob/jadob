@@ -9,10 +9,10 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @deprecated
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
-class GuardRequestListener implements BeforeControllerEventListenerInterface
+class GuardRequestListener //implements BeforeControllerEventListenerInterface
 {
     /**
      * @var bool
@@ -31,6 +31,7 @@ class GuardRequestListener implements BeforeControllerEventListenerInterface
 
     /**
      * GuardRequestListener constructor.
+     *
      * @param Guard $guard
      */
     public function __construct(Guard $guard, ?LoggerInterface $logger = null)

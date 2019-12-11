@@ -23,10 +23,9 @@ use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
  *      ]
  * ]
  *
- *
- * @see https://martinfowler.com/articles/feature-toggles.html
+ * @see     https://martinfowler.com/articles/feature-toggles.html
  * @package Jadob\FeatureFlag
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class FeatureFlag
@@ -44,6 +43,7 @@ class FeatureFlag
 
     /**
      * FeatureFlag constructor.
+     *
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -52,7 +52,7 @@ class FeatureFlag
     }
 
     /**
-     * @param ConditionInterface $condition
+     * @param  ConditionInterface $condition
      * @return FeatureFlag
      */
     public function addCondition(ConditionInterface $condition): self
@@ -62,7 +62,7 @@ class FeatureFlag
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return bool
      * @throws MissingFeatureRulesException
      */

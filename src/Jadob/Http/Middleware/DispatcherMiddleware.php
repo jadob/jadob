@@ -26,7 +26,8 @@ class DispatcherMiddleware implements MiddlewareInterface
 
     /**
      * DispatcherMiddleware constructor.
-     * @param Router $router
+     *
+     * @param Router             $router
      * @param ContainerInterface $container
      */
     public function __construct(Router $router, ContainerInterface $container)
@@ -50,7 +51,9 @@ class DispatcherMiddleware implements MiddlewareInterface
         );
 
         $controller = $route->getController();
-        /** @var ResponseInterface $response */
+        /**
+ * @var ResponseInterface $response 
+*/
         $response = $controller($request);
 
         return $response;

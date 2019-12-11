@@ -6,7 +6,7 @@ use Jadob\Container\Container;
 
 /**
  * @package Jadob\Core\Controller
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class ControllerClassResolver
@@ -20,6 +20,7 @@ class ControllerClassResolver
 
     /**
      * ControllerClassResolver constructor.
+     *
      * @param Container $container
      * @param $controller
      */

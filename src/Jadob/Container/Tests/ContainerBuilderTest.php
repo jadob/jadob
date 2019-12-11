@@ -42,7 +42,7 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \Jadob\Container\Exception\ContainerBuildException
+     * @expectedException        \Jadob\Container\Exception\ContainerBuildException
      * @expectedExceptionMessage
      */
     public function testBuildWillBreakWhenInvalidProviderPasser()

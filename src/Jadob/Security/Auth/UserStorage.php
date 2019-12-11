@@ -8,8 +8,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * TODO: this one maybe should be called IdentityStorage
  * Class UserStorage
+ *
  * @package Jadob\Security\Auth
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class UserStorage
@@ -36,6 +37,7 @@ class UserStorage
 
     /**
      * UserStorage constructor.
+     *
      * @param SessionInterface $session
      */
     public function __construct(SessionInterface $session)
@@ -44,7 +46,7 @@ class UserStorage
     }
 
     /**
-     * @param null|string $provider
+     * @param  null|string $provider
      * @return UserInterface
      */
     public function getUser(?string $provider = null)
@@ -65,9 +67,9 @@ class UserStorage
     }
 
     /**
-     * @TODO there should be some parameter for defining stateless things
-     * @param UserInterface $user
-     * @param null|string $provider
+     * @TODO   there should be some parameter for defining stateless things
+     * @param  UserInterface $user
+     * @param  null|string   $provider
      * @return UserStorage
      */
     public function setUser(UserInterface $user, ?string $provider = null): UserStorage
@@ -90,7 +92,7 @@ class UserStorage
     }
 
     /**
-     * @param string $currentProvider
+     * @param  string $currentProvider
      * @return UserStorage
      */
     public function setCurrentProvider($currentProvider): UserStorage

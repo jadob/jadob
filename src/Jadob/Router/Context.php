@@ -3,7 +3,7 @@
 namespace Jadob\Router;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Context
@@ -60,7 +60,7 @@ class Context
     }
 
     /**
-     * @param string $host
+     * @param  string $host
      * @return Context
      */
     public function setHost(?string $host): Context
@@ -78,7 +78,7 @@ class Context
     }
 
     /**
-     * @param bool $secure
+     * @param  bool $secure
      * @return Context
      */
     public function setSecure(bool $secure): Context
@@ -96,7 +96,7 @@ class Context
     }
 
     /**
-     * @param int $port
+     * @param  int $port
      * @return Context
      */
     public function setPort(?int $port): Context

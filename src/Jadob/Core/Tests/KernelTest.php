@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class KernelTest
+ *
  * @package Jadob\Core\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class KernelTest extends TestCase

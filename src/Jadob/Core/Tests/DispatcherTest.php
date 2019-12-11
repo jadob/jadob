@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @package Jadob\Core\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class ExampleController
@@ -31,8 +31,9 @@ class ExampleController
 
 /**
  * Class DispatcherTest
+ *
  * @package Jadob\Core\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class DispatcherTest extends TestCase
@@ -54,11 +55,11 @@ class DispatcherTest extends TestCase
         $container = new Container();
 
         $invalidRoute = new Route('example_route_1', '/invalid', null);
-//        $validRouteWithClosure = new Route('example_route_2', '/valid/1', function () {
-//            return new Response('ok');
-//        });
-//
-//        $validRouteWithClass = new Route('example_route_3', '/valid/2', ExampleController::class);
+        //        $validRouteWithClosure = new Route('example_route_2', '/valid/1', function () {
+        //            return new Response('ok');
+        //        });
+        //
+        //        $validRouteWithClass = new Route('example_route_3', '/valid/2', ExampleController::class);
 
 
         $collection = new RouteCollection();

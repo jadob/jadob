@@ -6,8 +6,9 @@ use Jadob\Container\Container;
 
 /**
  * Class AbstractServiceProvider
+ *
  * @package Jadob\Container\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 abstract class AbstractServiceProvider implements ServiceProviderInterface

@@ -11,8 +11,9 @@ use Symfony\Component\Console\Application;
 
 /**
  * Adds symfony/console functionality to framework.
- * @see https://symfony.com/doc/3.4/components/console.html
- * @author pizzaminded <miki@appvende.net>
+ *
+ * @see     https://symfony.com/doc/3.4/components/console.html
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class ConsoleProvider implements ServiceProviderInterface
@@ -27,7 +28,7 @@ class ConsoleProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param null $config
+     * @param  null $config
      * @return array
      */
     public function register($config)

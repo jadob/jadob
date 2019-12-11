@@ -22,7 +22,7 @@ use function str_replace;
 use function strtoupper;
 
 /**
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Router
@@ -55,8 +55,8 @@ class Router
 
     /**
      * @param RouteCollection $routeCollection
-     * @param Context|null $context
-     * @param array $config
+     * @param Context|null    $context
+     * @param array           $config
      */
     public function __construct(RouteCollection $routeCollection, ?Context $context = null, array $config = [])
     {
@@ -77,9 +77,9 @@ class Router
     }
 
     /**
-     * @param Route $route
-     * @param $host
-     * @param array $matchedAttributes
+     * @param  Route $route
+     * @param  $host
+     * @param  array $matchedAttributes
      * @return bool
      */
     protected function hostMatches(Route $route, $host, array &$matchedAttributes): bool
@@ -91,8 +91,7 @@ class Router
 
         $hostRegex = $this->getRegex($route->getHost());
 
-        if (
-            $hostRegex !== false
+        if ($hostRegex !== false
             && preg_match($hostRegex, $host, $matches) > 0
         ) {
             $matchedAttributes = $this->transformMatchesToParameters($matches);
@@ -104,8 +103,8 @@ class Router
 
 
     /**
-     * @param string $path
-     * @param string $method
+     * @param  string $path
+     * @param  string $method
      * @return Route
      * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
@@ -115,7 +114,9 @@ class Router
         $method = strtoupper($method);
 
         foreach ($this->routeCollection as $routeKey => $route) {
-            /** @var Route $route */
+            /**
+ * @var Route $route 
+*/
             $pathRegex = $this->getRegex($route->getPath());
             //@TODO: maybe we should break here if $pathRegex === false?
             $parameters = [];
@@ -125,8 +126,7 @@ class Router
                 && $this->hostMatches($route, $this->context->getHost(), $parameters)
             ) {
 
-                if (
-                    count(($routeMethods = $route->getMethods())) > 0
+                if (count(($routeMethods = $route->getMethods())) > 0
                     && !in_array($method, $routeMethods, true)
                 ) {
                     throw new MethodNotAllowedException();
@@ -145,7 +145,7 @@ class Router
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Route
      * @throws RouteNotFoundException
      * @throws MethodNotAllowedException
@@ -162,7 +162,7 @@ class Router
     }
 
     /**
-     * @param $pattern
+     * @param  $pattern
      * @return bool|string
      */
     protected function getRegex($pattern)
@@ -174,8 +174,8 @@ class Router
         $allowedParamChars = '[a-zA-Z0-9\.\_\-]+';
         // Create capture group for '{parameter}'
         $parsedPattern = preg_replace(
-            '/{(' . $allowedParamChars . ')}/', # Replace "{parameter}"
-            '(?<$1>' . $allowedParamChars . ')', # with "(?<parameter>[a-zA-Z0-9\_\-]+)"
+            '/{(' . $allowedParamChars . ')}/', // Replace "{parameter}"
+            '(?<$1>' . $allowedParamChars . ')', // with "(?<parameter>[a-zA-Z0-9\_\-]+)"
             $pattern
         );
 
@@ -190,9 +190,9 @@ class Router
     }
 
     /**
-     * @param $name
-     * @param $params
-     * @param bool $full
+     * @param  $name
+     * @param  $params
+     * @param  bool $full
      * @return mixed|string
      * @throws RouteNotFoundException
      */
@@ -229,8 +229,7 @@ class Router
 
                     $port = $this->context->getPort();
 
-                    if (
-                        !in_array($port, [80, 443], true)
+                    if (!in_array($port, [80, 443], true)
                         || (!$this->context->isSecure() && $port === 443)
                     ) {
                         $port = ':' . $port;
@@ -262,7 +261,7 @@ class Router
     }
 
     /**
-     * @param Context $context
+     * @param  Context $context
      * @return Router
      */
     public function setContext(Context $context): Router
@@ -273,8 +272,9 @@ class Router
 
     /**
      * Allows to set custom route argument delimiters
-     * @param string $left
-     * @param string $right
+     *
+     * @param  string $left
+     * @param  string $right
      * @return $this
      * @throws RouterException
      */
@@ -299,7 +299,7 @@ class Router
     }
 
     /**
-     * @param array $matches
+     * @param  array $matches
      * @return array
      */
     protected function transformMatchesToParameters(array $matches): array
@@ -316,7 +316,7 @@ class Router
     }
 
     /**
-     * @param Route $route
+     * @param  Route $route
      * @return $this
      */
     public function addRoute(Route $route): Router

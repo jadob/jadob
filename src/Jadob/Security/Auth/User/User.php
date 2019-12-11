@@ -4,8 +4,9 @@ namespace Jadob\Security\Auth\User;
 
 /**
  * Example User object, that can be used in your app.
+ *
  * @package Jadob\Security\Auth\User
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class User implements UserInterface
@@ -28,9 +29,10 @@ class User implements UserInterface
 
     /**
      * User constructor.
+     *
      * @param string $username
      * @param string $password
-     * @param array $roles
+     * @param array  $roles
      */
     public function __construct($username, $password, $roles = [])
     {
@@ -48,7 +50,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param string[] $roles
+     * @param  string[] $roles
      * @return User
      */
     public function setRoles(array $roles): User
@@ -66,7 +68,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $username
+     * @param  string $username
      * @return User
      */
     public function setUsername(string $username): User
@@ -84,7 +86,7 @@ class User implements UserInterface
     }
 
     /**
-     * @param string $password
+     * @param  string $password
      * @return User
      */
     public function setPassword(string $password): User

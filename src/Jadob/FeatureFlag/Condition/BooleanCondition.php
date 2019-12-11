@@ -6,7 +6,8 @@ namespace Jadob\FeatureFlag\Condition;
  * You can use this class for creating boolean conditions in feature flags.
  *
  * Warning: this class assumes that condition must be equal true to make it enabled.
- * @author pizzaminded <miki@appvende.net>
+ *
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class BooleanCondition implements ConditionInterface
@@ -19,6 +20,7 @@ class BooleanCondition implements ConditionInterface
 
     /**
      * BooleanCondition constructor.
+     *
      * @param string $conditionKey
      */
     public function __construct(string $conditionKey)
@@ -27,7 +29,7 @@ class BooleanCondition implements ConditionInterface
     }
 
     /**
-     * @param $conditions
+     * @param  $conditions
      * @return bool
      */
     public function verifyFeature($conditions): bool

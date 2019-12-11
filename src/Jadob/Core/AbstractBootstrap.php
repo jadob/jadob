@@ -9,7 +9,7 @@ namespace Jadob\Core;
  * but you can override this to your own needs.
  *
  * @package Jadob\Core
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 abstract class AbstractBootstrap implements BootstrapInterface

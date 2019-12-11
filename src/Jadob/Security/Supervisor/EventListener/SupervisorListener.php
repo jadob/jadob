@@ -10,7 +10,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use function get_class;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class SupervisorListener implements ListenerProviderInterface
@@ -28,7 +28,8 @@ class SupervisorListener implements ListenerProviderInterface
 
     /**
      * SupervisorListener constructor.
-     * @param Supervisor $supervisor
+     *
+     * @param Supervisor  $supervisor
      * @param UserStorage $userStorage
      */
     public function __construct(Supervisor $supervisor, UserStorage $userStorage)

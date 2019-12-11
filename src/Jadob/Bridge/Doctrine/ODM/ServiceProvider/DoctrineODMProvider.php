@@ -26,8 +26,9 @@ use Symfony\Component\Console\Application;
 
 /**
  * Class DoctrineODMProvider
+ *
  * @package Jadob\Bridge\Doctrine\ODM\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class DoctrineODMProvider implements ServiceProviderInterface
@@ -43,6 +44,7 @@ class DoctrineODMProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \ReflectionException
      */
     public function register($config)
@@ -54,7 +56,7 @@ class DoctrineODMProvider implements ServiceProviderInterface
 
         $services = [];
 
-        $vendorDirPath = \dirname((new \ReflectionClass(AnnotationRegistry::class))->getFileName(),7);
+        $vendorDirPath = \dirname((new \ReflectionClass(AnnotationRegistry::class))->getFileName(), 7);
 
         $classLoader = include $vendorDirPath.'/autoload.php';
         AnnotationRegistry::registerLoader([$classLoader, 'loadClass']);
@@ -90,7 +92,7 @@ class DoctrineODMProvider implements ServiceProviderInterface
             $fullDocumentPaths = [];
 
             foreach ($documentPaths as $documentPath) {
-                $fullDocumentPaths[] = $container->get(BootstrapInterface::class)->getRootDir().'/'.ltrim($documentPath,'/');
+                $fullDocumentPaths[] = $container->get(BootstrapInterface::class)->getRootDir().'/'.ltrim($documentPath, '/');
             }
 
             return AnnotationDriver::create($fullDocumentPaths);
@@ -126,12 +128,15 @@ class DoctrineODMProvider implements ServiceProviderInterface
         if($container->has('console')) {
             $odmHelper = new DocumentManagerHelper($container->get(DocumentManager::class));
 
-            /** @var Application $console */
+            /**
+ * @var Application $console 
+*/
             $console = $container->get('console');
 
             $console->getHelperSet()->set($odmHelper, 'documentManager');
 
-            $console->addCommands([
+            $console->addCommands(
+                [
                 new CreateCommand(),
                 new DropCommand(),
                 new ShardCommand(),
@@ -141,7 +146,8 @@ class DoctrineODMProvider implements ServiceProviderInterface
                 new GeneratePersistentCollectionsCommand(),
                 new GenerateProxiesCommand(),
                 new QueryCommand()
-            ]);
+                ]
+            );
 
 
         }

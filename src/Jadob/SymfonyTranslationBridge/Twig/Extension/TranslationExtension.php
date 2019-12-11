@@ -11,8 +11,9 @@ use Twig\TwigFilter;
 
 /**
  * Class TranslationExtension
+ *
  * @package Jadob\SymfonyTranslationBridge\Twig\Extension
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class TranslationExtension extends AbstractExtension
@@ -25,6 +26,7 @@ class TranslationExtension extends AbstractExtension
 
     /**
      * TranslationExtension constructor.
+     *
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
@@ -45,7 +47,8 @@ class TranslationExtension extends AbstractExtension
 
     /**
      * TODO trans() method has more arguments than one
-     * @param $string
+     *
+     * @param  $string
      * @return string
      */
     public function translate($string): string

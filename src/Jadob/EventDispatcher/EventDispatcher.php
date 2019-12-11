@@ -13,8 +13,8 @@ use function microtime;
 use function spl_object_hash;
 
 /**
- * @see https://www.php-fig.org/psr/psr-14/
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @see     https://www.php-fig.org/psr/psr-14/
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class EventDispatcher implements EventDispatcherInterface
@@ -26,7 +26,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * @TODO maybe SplObjectStorage?
-     * @var Timestamp[]
+     * @var  Timestamp[]
      */
     protected $timestamps = [];
 
@@ -37,6 +37,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * EventDispatcher constructor.
+     *
      * @param LoggerInterface|null $logger
      */
     public function __construct(?LoggerInterface $logger = null)
@@ -46,6 +47,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * {@inheritDoc}
+     *
      * @see https://www.php-fig.org/psr/psr-14/#dispatcher
      */
     public function dispatch(object $event)
@@ -81,7 +83,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * @param string $message
-     * @param array $context
+     * @param array  $context
      */
     private function log(string $message, array $context = []): void
     {
@@ -93,7 +95,7 @@ class EventDispatcher implements EventDispatcherInterface
     }
 
     /**
-     * @param ListenerProviderInterface $provider
+     * @param  ListenerProviderInterface $provider
      * @return $this
      */
     public function addListener(ListenerProviderInterface $provider): EventDispatcher

@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @deprecated to be replaced with Event Dispatcher
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  */
 class ProjectionManager
 {
@@ -44,7 +44,8 @@ class ProjectionManager
                 $type = $firstParam->getType();
                 if ($type !== null
                     && !$type->isBuiltin()
-                    && $firstParam->getClass()->name === $eventType) {
+                    && $firstParam->getClass()->name === $eventType
+                ) {
                     $listener->$methodName($event);
                     $projectionsNotified++;
                 }

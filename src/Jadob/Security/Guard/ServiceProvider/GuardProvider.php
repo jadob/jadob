@@ -11,8 +11,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @deprecated
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
 class GuardProvider implements ServiceProviderInterface
 {
@@ -62,7 +62,8 @@ class GuardProvider implements ServiceProviderInterface
             new GuardRequestListener(
                 $guardService,
                 $container->get(LoggerInterface::class)
-            )
-            , 21);
+            ),
+            21
+        );
     }
 }

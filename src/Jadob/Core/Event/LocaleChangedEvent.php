@@ -3,7 +3,7 @@
 namespace Jadob\Core\Event;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class LocaleChangedEvent
@@ -15,6 +15,7 @@ class LocaleChangedEvent
 
     /**
      * LocaleChangedEvent constructor.
+     *
      * @param string $newLocale
      */
     public function __construct(string $newLocale)

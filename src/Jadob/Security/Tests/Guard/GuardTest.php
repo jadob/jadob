@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class GuardTest
+ *
  * @package Jadob\Security\Tests\Guard
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class GuardTest extends TestCase

@@ -7,10 +7,11 @@ use Psr\Log\LogLevel;
 
 /**
  * Logs all PHP related events/errors/exceptions to file.
+ *
  * @deprecated
- * @package Jadob\Debug
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @package    Jadob\Debug
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
 class ErrorLogger extends LogLevel implements LoggerInterface
 {
@@ -26,6 +27,7 @@ class ErrorLogger extends LogLevel implements LoggerInterface
 
     /**
      * Psr3FileLogger constructor.
+     *
      * @param $filePath
      */
     public function __construct($filePath)

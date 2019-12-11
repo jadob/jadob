@@ -7,8 +7,9 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class Psr3QueryLogger
+ *
  * @package Jadob\Bridge\Doctrine\DBAL\Logger
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Psr3QueryLogger implements SQLLogger
@@ -26,6 +27,7 @@ class Psr3QueryLogger implements SQLLogger
 
     /**
      * Psr3QueryLogger constructor.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -37,9 +39,9 @@ class Psr3QueryLogger implements SQLLogger
     /**
      * Logs a SQL statement somewhere.
      *
-     * @param string $sql The SQL to be executed.
-     * @param mixed[]|null $params The SQL parameters.
-     * @param int[]|string[]|null $types The SQL parameter types.
+     * @param string              $sql    The SQL to be executed.
+     * @param mixed[]|null        $params The SQL parameters.
+     * @param int[]|string[]|null $types  The SQL parameter types.
      *
      * @return void
      */

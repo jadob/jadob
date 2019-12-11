@@ -12,10 +12,12 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class Bootstrap extends AbstractBootstrap {
+class Bootstrap extends AbstractBootstrap
+{
 
     /**
      * Returns project root directory.
+     *
      * @return string
      */
     public function getRootDir(): string
@@ -25,6 +27,7 @@ class Bootstrap extends AbstractBootstrap {
 
     /**
      * Returns array of Service providers that will be load while framework bootstrapping.
+     *
      * @return array
      */
     public function getServiceProviders(): array
@@ -35,8 +38,9 @@ class Bootstrap extends AbstractBootstrap {
 
 /**
  * Class TwigServiceProviderTest
+ *
  * @package Jadob\Bridge\Twig\Tests\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class TwigServiceProviderTest extends TestCase
@@ -56,7 +60,8 @@ class TwigServiceProviderTest extends TestCase
         $provider = new TwigServiceProvider();
         $bootstrap = new Bootstrap();
 
-        $services = $provider->register([
+        $services = $provider->register(
+            [
             'cache' => false,
             'strict_variables' => true,
             'templates_paths' => [
@@ -66,7 +71,8 @@ class TwigServiceProviderTest extends TestCase
                 'test1' => 'test1',
                 'test2' => 'test2'
             ]
-        ]);
+            ]
+        );
 
         $this->assertCount(2, $services);
         $this->assertInstanceOf(\Closure::class, $services[LoaderInterface::class]);
@@ -90,7 +96,8 @@ class TwigServiceProviderTest extends TestCase
         $provider = new TwigServiceProvider();
         $bootstrap = new Bootstrap();
 
-        $services = $provider->register([
+        $services = $provider->register(
+            [
             'cache' => true,
             'strict_variables' => true,
             'templates_paths' => [
@@ -100,10 +107,11 @@ class TwigServiceProviderTest extends TestCase
                 'test1' => 'test1',
                 'test2' => 'test2'
             ]
-        ]);
+            ]
+        );
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
-        $container->add('kernel',new Kernel('prod', $bootstrap));
+        $container->add('kernel', new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
@@ -135,11 +143,13 @@ class TwigServiceProviderTest extends TestCase
         $services = $provider->register($config);
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
-        $container->add('kernel',new Kernel('prod', $bootstrap));
+        $container->add('kernel', new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
-        /** @var Environment $environment */
+        /**
+ * @var Environment $environment 
+*/
         $environment = $services[Environment::class]($container);
         $container->add(Environment::class, $environment);
 

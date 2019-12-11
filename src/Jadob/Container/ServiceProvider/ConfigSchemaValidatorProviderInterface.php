@@ -6,7 +6,7 @@ namespace Jadob\Container\ServiceProvider;
  * It allows to validate configuration passed to providers.
  * If Service Provider class does not implements this one, validation will be skipped.
  *
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 interface ConfigSchemaValidatorProviderInterface

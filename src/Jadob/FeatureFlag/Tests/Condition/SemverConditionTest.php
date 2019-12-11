@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class SemverConditionTest
+ *
  * @package Jadob\FeatureFlag\Tests\Condition
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class SemverConditionTest extends TestCase

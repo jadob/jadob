@@ -20,8 +20,9 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class DoctrineDBALProvider
+ *
  * @package Jadob\Bridge\Doctrine\DBAL\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class DoctrineDBALProvider implements ServiceProviderInterface
@@ -37,6 +38,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \RuntimeException
      */
@@ -89,6 +91,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      * @throws \Symfony\Component\Console\Exception\LogicException
      */
@@ -96,18 +99,24 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     {
         if ($container->has('console')) {
 
-            $helperSet = new HelperSet([
+            $helperSet = new HelperSet(
+                [
                 'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
-            ]);
+                ]
+            );
 
-            /** @var Application $console */
+            /**
+ * @var Application $console 
+*/
             $console = $container->get('console');
 
             $console->setHelperSet($helperSet);
-            $console->addCommands([
+            $console->addCommands(
+                [
                 new ReservedWordsCommand(),
                 new RunSqlCommand()
-            ]);
+                ]
+            );
         }
     }
 

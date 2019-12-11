@@ -5,7 +5,7 @@ namespace Jadob\Core\Event;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class AfterControllerEvent
@@ -18,6 +18,7 @@ class AfterControllerEvent
 
     /**
      * AfterControllerEvent constructor.
+     *
      * @param Response $response
      */
     public function __construct(Response $response)
@@ -34,7 +35,7 @@ class AfterControllerEvent
     }
 
     /**
-     * @param Response $response
+     * @param  Response $response
      * @return AfterControllerEvent
      */
     public function setResponse(Response $response): self

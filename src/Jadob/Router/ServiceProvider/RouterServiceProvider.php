@@ -11,8 +11,9 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
 /**
  * Class RouterServiceProvider
+ *
  * @package Jadob\Router\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class RouterServiceProvider implements ServiceProviderInterface
@@ -27,7 +28,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param $config
+     * @param  $config
      * @return \Closure[]
      * @throws \Jadob\Router\Exception\RouterException
      * @throws \Psr\Container\NotFoundExceptionInterface

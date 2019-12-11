@@ -11,8 +11,8 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * @todo rewrite to use supervisors and identityproviders/ identitystorage
- * @author pizzaminded <miki@appvende.net>
+ * @todo    rewrite to use supervisors and identityproviders/ identitystorage
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class AuthProvider implements ServiceProviderInterface
@@ -45,7 +45,9 @@ class AuthProvider implements ServiceProviderInterface
     {
 
         if ($container->has('console')) {
-            /** @var Application $console */
+            /**
+ * @var Application $console 
+*/
             $console = $container->get('console');
 
             $console->add(new GeneratePasswordHashCommand());

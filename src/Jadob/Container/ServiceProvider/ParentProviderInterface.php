@@ -3,7 +3,7 @@
 namespace Jadob\Container\ServiceProvider;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 interface ParentProviderInterface

@@ -17,7 +17,7 @@ class ConfigTest extends TestCase
     }
 
     /**
-     * @expectedException \Jadob\Config\Exception\ConfigNodeNotFoundException
+     * @expectedException        \Jadob\Config\Exception\ConfigNodeNotFoundException
      * @expectedExceptionMessage Could not find node "missing".
      */
     public function testConfigWillBreakIfNoNodeFound()
@@ -33,10 +33,12 @@ class ConfigTest extends TestCase
     {
         $config = new Config();
 
-        $config->loadDirectory(__DIR__ . '/includes/2', [], 1, [
+        $config->loadDirectory(
+            __DIR__ . '/includes/2', [], 1, [
             'bax' => 'bax',
             'baz' => 'baz'
-        ]);
+            ]
+        );
 
         $node =  $config->getNode('with_parameter');
         $this->assertEquals('bax', $node['bax']);

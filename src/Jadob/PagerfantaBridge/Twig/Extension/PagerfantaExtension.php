@@ -13,8 +13,9 @@ use Twig\TwigFunction;
 
 /**
  * Class PagerfantaProvider
+ *
  * @package Jadob\PagerfantaBridge\ServiceProvider
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class PagerfantaExtension extends AbstractExtension
@@ -31,8 +32,9 @@ class PagerfantaExtension extends AbstractExtension
 
     /**
      * PagerfantaExtension constructor.
+     *
      * @param Request $request
-     * @param Router $router
+     * @param Router  $router
      */
     public function __construct(Request $request, Router $router)
     {
@@ -51,7 +53,7 @@ class PagerfantaExtension extends AbstractExtension
     }
 
     /**
-     * @param Pagerfanta $pagerfanta
+     * @param  Pagerfanta $pagerfanta
      * @return mixed
      */
     public function createPaginator(Pagerfanta $pagerfanta)
@@ -62,7 +64,7 @@ class PagerfantaExtension extends AbstractExtension
     }
 
     /**
-     * @param $page
+     * @param  $page
      * @return mixed|string
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      */

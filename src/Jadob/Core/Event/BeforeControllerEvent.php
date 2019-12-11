@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class BeforeControllerEvent implements StoppableEventInterface
@@ -24,6 +24,7 @@ class BeforeControllerEvent implements StoppableEventInterface
 
     /**
      * BeforeControllerEvent constructor.
+     *
      * @param Request $request
      */
     public function __construct(Request $request)

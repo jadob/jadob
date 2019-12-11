@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class RouteTest
+ *
  * @package Jadob\Router\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class RouteTest extends TestCase
@@ -23,10 +24,12 @@ class RouteTest extends TestCase
             ->setController('App\Controller\ApplicationController')
             ->setAction('hello')
             ->setPath('/path/1/2/3')
-            ->setParams([
+            ->setParams(
+                [
                 '_param1' => 'value1',
                 'param2' => 'value2'
-            ]);
+                ]
+            );
 
         $this->assertEquals('example-route-1', $route->getName());
         $this->assertEquals('hello', $route->getAction());
@@ -42,10 +45,12 @@ class RouteTest extends TestCase
         $route = new Route('example-route-2', '/');
 
         $route
-            ->setParams([
+            ->setParams(
+                [
                 '_param1' => 'value1',
                 'param2' => 'value2'
-            ]);
+                ]
+            );
 
         $this->assertCount(2, $route->getParams());
     }
@@ -93,9 +98,9 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @expectedException \Jadob\Router\Exception\RouterException
+     * @expectedException        \Jadob\Router\Exception\RouterException
      * @expectedExceptionMessage Missing "name" key in $data.
-     * @throws \Jadob\Router\Exception\RouterException
+     * @throws                   \Jadob\Router\Exception\RouterException
      */
     public function testCreatingRouteFromArrayWillBreakIfNoNamePassed()
     {
@@ -111,9 +116,9 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @expectedException \Jadob\Router\Exception\RouterException
+     * @expectedException        \Jadob\Router\Exception\RouterException
      * @expectedExceptionMessage Missing "path" key in $data.
-     * @throws \Jadob\Router\Exception\RouterException
+     * @throws                   \Jadob\Router\Exception\RouterException
      */
     public function testCreatingRouteFromArrayWillBreakIfNoPathPassed()
     {

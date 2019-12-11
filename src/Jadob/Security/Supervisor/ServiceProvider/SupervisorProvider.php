@@ -15,6 +15,7 @@ class SupervisorProvider implements ServiceProviderInterface
     /**
      * returns Config node name that will be passed as $config in register() method.
      * return null if no config needed.
+     *
      * @return string|null
      */
     public function getConfigNode()
@@ -24,6 +25,7 @@ class SupervisorProvider implements ServiceProviderInterface
 
     /**
      * Here you can define things that will be registered in Container.
+     *
      * @param array[]|null $config
      */
     public function register($config)
@@ -54,8 +56,8 @@ class SupervisorProvider implements ServiceProviderInterface
      * (example 2: EventListener registers all Listeners here)
      * - You can add new services of course
      *
-     * @param Container $container
-     * @param array|null $config the same config node as passed in register()
+     * @param  Container  $container
+     * @param  array|null $config    the same config node as passed in register()
      * @return void
      */
     public function onContainerBuild(Container $container, $config)

@@ -31,6 +31,7 @@ class RequestHandler implements RequestHandlerInterface
 
     /**
      * RequestHandler constructor.
+     *
      * @param array $middlewares
      * @param array $prefixConditions
      */
@@ -44,7 +45,8 @@ class RequestHandler implements RequestHandlerInterface
      * Handles a request and produces a response.
      *
      * May call other collaborating code to generate the response.
-     * @param ServerRequestInterface $request
+     *
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface

@@ -6,7 +6,7 @@ use Jadob\Router\Exception\RouterException;
 
 /**
  * @package Jadob\Router
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class RouteCollection implements \ArrayAccess, \Iterator, \Countable
@@ -33,6 +33,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
 
     /**
      * RouteCollection constructor.
+     *
      * @param string|null $prefix
      * @param string|null $host
      */
@@ -43,7 +44,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param Route $route
+     * @param  Route $route
      * @return $this
      */
     public function addRoute(Route $route)
@@ -59,7 +60,8 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
 
     /**
      * Merges passed $collection with current object.
-     * @param RouteCollection $collection
+     *
+     * @param  RouteCollection $collection
      * @return RouteCollection
      */
     public function addCollection(RouteCollection $collection): RouteCollection
@@ -167,7 +169,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param null|string $host
+     * @param  null|string $host
      * @return RouteCollection
      */
     public function setHost(?string $host): RouteCollection
@@ -189,7 +191,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param null|string $prefix
+     * @param  null|string $prefix
      * @return RouteCollection
      */
     public function setPrefix(?string $prefix): RouteCollection
@@ -207,7 +209,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param RouteCollection $parentCollection
+     * @param  RouteCollection $parentCollection
      * @return RouteCollection
      */
     public function setParentCollection(RouteCollection $parentCollection): RouteCollection
@@ -218,7 +220,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
 
 
     /**
-     * @param array[] $data
+     * @param  array[] $data
      * @return RouteCollection
      * @throws Exception\RouterException
      */

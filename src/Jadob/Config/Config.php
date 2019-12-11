@@ -5,7 +5,7 @@ namespace Jadob\Config;
 use Jadob\Config\Exception\ConfigNodeNotFoundException;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Config
@@ -17,10 +17,10 @@ class Config
     protected $nodes = [];
 
     /**
-     * @param string $directory Directory to be scanned
-     * @param array $extensions Not implemented yet
-     * @param int $level How many subdirectories we need to scan?
-     * @param array $parameters Parameters that would be passed to config files
+     * @param  string $directory  Directory to be scanned
+     * @param  array  $extensions Not implemented yet
+     * @param  int    $level      How many subdirectories we need to scan?
+     * @param  array  $parameters Parameters that would be passed to config files
      * @return Config
      */
     public function loadDirectory(
@@ -28,8 +28,7 @@ class Config
         array $extensions = [],
         int $level = 1,
         array $parameters = []
-    )
-    {
+    ) {
         //remove trailing slash
         $directory = \rtrim($directory, '/');
         $subdirectoriesToScan = \str_repeat('/*', $level);
@@ -45,7 +44,9 @@ class Config
                 \extract($parameters);
 
 
-                /** @noinspection PhpIncludeInspection */
+                /**
+ * @noinspection PhpIncludeInspection 
+*/
                 return include $file;
             };
 
@@ -57,7 +58,7 @@ class Config
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return array
      * @throws ConfigNodeNotFoundException
      */
@@ -71,8 +72,8 @@ class Config
     }
 
     /**
-     * @param string $name
-     * @param mixed $content - preferred array value
+     * @param  string $name
+     * @param  mixed  $content - preferred array value
      * @return $this
      */
     public function addNode(string $name, $content)
@@ -83,7 +84,7 @@ class Config
     }
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return bool
      */
     public function hasNode(string $name): bool
@@ -93,6 +94,7 @@ class Config
 
     /**
      * Return all nodes as an array.
+     *
      * @return array
      */
     public function toArray(): array

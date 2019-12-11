@@ -1,9 +1,11 @@
 <?php use Jadob\Core\Kernel;
-/** @var $exception Exception */?><!DOCTYPE html>
+/**
+ * @var $exception Exception 
+*/?><!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title><?= get_class($exception); ?> | Jadob Debugger</title>
+    <title><?php echo get_class($exception); ?> | Jadob Debugger</title>
     <meta name="robots" content="noindex, nofollow">
     <style>
         /* http://meyerweb.com/eric/tools/css/reset/
@@ -177,13 +179,13 @@
 <main class="error-wrapper">
     <section class="error-wrapper__header">
         <div class="error-wrapper__header_metadata">
-            <h2 class="error-wrapper__header_metadata_exception-class"><?= \get_class($exception); ?></h2>
+            <h2 class="error-wrapper__header_metadata_exception-class"><?php echo \get_class($exception); ?></h2>
             <p class="error-wrapper__header_metadata_exception-info">File:
-                <strong><?= $exception->getFile(); ?></strong></p>
+                <strong><?php echo $exception->getFile(); ?></strong></p>
             <p class="error-wrapper__header_metadata_exception-info">Line:
-                <strong><?= $exception->getLine(); ?></strong></p>
+                <strong><?php echo $exception->getLine(); ?></strong></p>
             <p class="error-wrapper__header_metadata_exception-info">Code:
-                <strong><?= $exception->getCode(); ?></strong></p>
+                <strong><?php echo $exception->getCode(); ?></strong></p>
         </div>
         <section class="error-wrapper__sad-emoticon">
             <span class="error-wrapper__sad-emoticon_wrapper">ಠ_ಠ</span>
@@ -192,7 +194,7 @@
     <section class="error-wrapper__content">
         <h1 class="error-wrapper__content_metadata_exception-message">
             <?php if (strlen($exception->getMessage()) > 0) { ?>
-                <?= $exception->getMessage(); ?>
+                <?php echo $exception->getMessage(); ?>
             <?php } else { ?>
                 <span class="no-message">This exception has no message.</span>
             <?php }; ?>
@@ -215,7 +217,7 @@
                 $stepsCount = count($stackTrace);
                 foreach ($stackTrace as $element) { ?>
                     <tr>
-                        <td class="key"><?= $stepsCount--; ?></td>
+                        <td class="key"><?php echo $stepsCount--; ?></td>
                         <td class="function">
                             <?php
                             $fullFunctionCall = $element['function'];
@@ -223,16 +225,16 @@
                                 $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
                             }
                             ?>
-                            <?= $fullFunctionCall ?>
-                            (<?= \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>
+                            <?php echo $fullFunctionCall ?>
+                            (<?php echo \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>
                             )
                             <p class="file-path">
                                 <?php if (isset($element['file'])) { ?>
-                                    <?= $element['file']; ?>
+                                    <?php echo $element['file']; ?>
                                 <?php } ?>
                             </p>
                         </td>
-                        <td> <?= $element['line'] ?? null ?></td>
+                        <td> <?php echo $element['line'] ?? null ?></td>
                     </tr>
                 <?php } ?>
                 </tbody>
@@ -254,13 +256,13 @@
             $id = 1;
             foreach (\Jadob\Container\ContainerEventListener::$events as $timestamp => $event) { ?>
                 <tr>
-                    <td class="key"><?= $id++ ?></td>
-                    <td class="key"><?= $timestamp ?></td>
-                    <td class="key"><?= get_class($event) ?></td>
+                    <td class="key"><?php echo $id++ ?></td>
+                    <td class="key"><?php echo $timestamp ?></td>
+                    <td class="key"><?php echo get_class($event) ?></td>
                     <td>
                         <?php
                         if (method_exists($event, 'getPayload')) { ?>
-                            <?= $event->getPayload() ?>
+                            <?php echo $event->getPayload() ?>
                         <?php } ?>
                     </td>
                 </tr>
@@ -270,7 +272,7 @@
     <footer class="error-wrapper__footer">
         <a target="_blank"
            class="error-wrapper__footer-link"
-           href="https://github.com/jadob/jadob">Jadob Framework <?= Kernel::VERSION ?> </a>
+           href="https://github.com/jadob/jadob">Jadob Framework <?php echo Kernel::VERSION ?> </a>
     </footer>
 </main>
 

@@ -6,8 +6,8 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * @see https://www.npmjs.com/package/webpack-manifest-plugin
- * @author pizzaminded <miki@appvende.net>
+ * @see     https://www.npmjs.com/package/webpack-manifest-plugin
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class WebpackManifestAssetExtension extends AbstractExtension
@@ -19,6 +19,7 @@ class WebpackManifestAssetExtension extends AbstractExtension
 
     /**
      * WebpackManifestAssetExtension constructor.
+     *
      * @param string[] $manifest
      */
     public function __construct(array $manifest)
@@ -37,7 +38,7 @@ class WebpackManifestAssetExtension extends AbstractExtension
     }
 
     /**
-     * @param string $assetName
+     * @param  string $assetName
      * @return string
      */
     public function getAssetFromManifest(string $assetName): string

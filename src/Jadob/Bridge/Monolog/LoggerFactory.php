@@ -10,7 +10,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Creates Logger instance.
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ *
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class LoggerFactory
@@ -37,8 +38,9 @@ class LoggerFactory
 
     /**
      * LoggerFactory constructor.
+     *
      * @param string $channel
-     * @param bool $deferred
+     * @param bool   $deferred
      */
     public function __construct(string $channel, bool $deferred = false)
     {
@@ -47,7 +49,7 @@ class LoggerFactory
     }
 
     /**
-     * @param HandlerInterface $handler
+     * @param  HandlerInterface $handler
      * @return $this
      */
     public function withHandler(HandlerInterface $handler)

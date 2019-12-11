@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 abstract class AbstractController
@@ -25,6 +25,7 @@ abstract class AbstractController
 
     /**
      * ControllerUtils constructor.
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -33,8 +34,8 @@ abstract class AbstractController
     }
 
     /**
-     * @param string $templateName
-     * @param array $data
+     * @param  string $templateName
+     * @param  array  $data
      * @return string
      */
     protected function renderTemplate(string $templateName, array $data = []): string
@@ -60,9 +61,9 @@ abstract class AbstractController
 
 
     /**
-     * @param string $name
-     * @param array $params
-     * @param bool $full
+     * @param  string $name
+     * @param  array  $params
+     * @param  bool   $full
      * @return string
      */
     protected function generateRoute($name, array $params = [], $full = false): string
@@ -71,8 +72,8 @@ abstract class AbstractController
     }
 
     /**
-     * @param string $name
-     * @param array $params
+     * @param  string $name
+     * @param  array  $params
      * @return RedirectResponse
      * @throws \InvalidArgumentException
      */
@@ -91,7 +92,7 @@ abstract class AbstractController
     }
 
     /**
-     * @param $id
+     * @param  $id
      * @return mixed
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
@@ -101,9 +102,9 @@ abstract class AbstractController
     }
 
     /**
-     * @param $level
-     * @param $message
-     * @param array $context
+     * @param  $level
+     * @param  $message
+     * @param  array $context
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     protected function log($level, $message, array $context = [])

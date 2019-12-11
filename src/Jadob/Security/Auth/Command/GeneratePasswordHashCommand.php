@@ -8,8 +8,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class GeneratePasswordHashCommand
+ *
  * @package Jadob\Security\Auth\Command
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class GeneratePasswordHashCommand extends Command

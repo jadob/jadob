@@ -13,8 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Dispatcher
+ *
  * @package Jadob\Core
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class Dispatcher
@@ -32,6 +33,7 @@ class Dispatcher
 
     /**
      * Dispatcher constructor.
+     *
      * @param Container $container
      */
     public function __construct(Container $container, ?EventDispatcherInterface $eventDispatcher = null)
@@ -45,7 +47,7 @@ class Dispatcher
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \InvalidArgumentException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
@@ -56,7 +58,9 @@ class Dispatcher
      */
     public function executeRequest(Request $request): Response
     {
-        /** @var Router $router */
+        /**
+ * @var Router $router 
+*/
         $router = $this->container->get('router');
 
         $route = $router->matchRequest($request);
@@ -97,7 +101,7 @@ class Dispatcher
     }
 
     /**
-     * @param $controllerClassName
+     * @param  $controllerClassName
      * @return mixed
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
@@ -135,9 +139,9 @@ class Dispatcher
     /**
      * Allows for inject container services directly to method.
      *
-     * @param object $controllerClass instantiated controller class
-     * @param string $methodName method to be called later
-     * @param array $routerParams arguments resolved from route
+     * @param  object $controllerClass instantiated controller class
+     * @param  string $methodName      method to be called later
+     * @param  array  $routerParams    arguments resolved from route
      * @return array
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException

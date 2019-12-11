@@ -28,7 +28,8 @@ class EventDispatcher
                 $type = $firstParam->getType();
                 if ($type !== null
                     && !$type->isBuiltin()
-                    && $firstParam->getClass()->name === $eventType) {
+                    && $firstParam->getClass()->name === $eventType
+                ) {
                     $listener->$methodName($event);
                 }
             }

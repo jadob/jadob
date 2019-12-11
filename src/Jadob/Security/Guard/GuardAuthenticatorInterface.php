@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @deprecated
- * @author pizzaminded <miki@appvende.net>
- * @license MIT
+ * @author     pizzaminded <miki@appvende.net>
+ * @license    MIT
  */
 interface GuardAuthenticatorInterface
 {
@@ -22,6 +22,7 @@ interface GuardAuthenticatorInterface
      *
      * DO NOT CHECK IF USER IS LOGGED IN THIS METHOD!11
      * If request will be matched, getUserFromProvider() will be called anyway.
+     *
      * @return bool
      */
     public function requestMatches(Request $request);
@@ -32,7 +33,7 @@ interface GuardAuthenticatorInterface
      *
      * Warning: returning NULL means that user is not logged and createNotLoggedInResponse will be called.
      *
-     * @param Request $request
+     * @param  Request $request
      * @return mixed
      */
     public function extractCredentialsFromRequest(Request $request);
@@ -45,7 +46,8 @@ interface GuardAuthenticatorInterface
      * When getUserFromProvider() will throw an UserNotFound or return null|not an UserInterface instance, it will be passed
      * as an argument.
      * This action will be called if current guard matches but there is no user object in UserStorage
-     * @param UserNotFoundException|null $exception
+     *
+     * @param  UserNotFoundException|null $exception
      * @return Response
      */
     public function createNotLoggedInResponse(?UserNotFoundException $exception = null): Response;
@@ -54,7 +56,7 @@ interface GuardAuthenticatorInterface
      * When extractCredentialsFromRequest() or verifyCredentials() throw InvalidCredentialsException, this method will
      * be called.
      *
-     * @param InvalidCredentialsException|null $exception
+     * @param  InvalidCredentialsException|null $exception
      * @return Response
      */
     public function createInvalidCredentialsResponse(?InvalidCredentialsException $exception = null): Response;

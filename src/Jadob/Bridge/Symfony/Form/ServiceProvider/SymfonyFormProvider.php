@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Validation;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class SymfonyFormProvider implements ServiceProviderInterface
@@ -37,6 +37,7 @@ class SymfonyFormProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
@@ -64,15 +65,21 @@ class SymfonyFormProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         if ($container->has('twig')) {
-            /** @var \Twig\Environment $twig */
+            /**
+ * @var \Twig\Environment $twig 
+*/
             $twig = $container->get('twig');
             $formEngine = new TwigRendererEngine($config['forms'], $twig);
 
-            $twig->addRuntimeLoader(new FactoryRuntimeLoader([
-                FormRenderer::class => function () use ($formEngine) {
-                    return new FormRenderer($formEngine);
-                },
-            ]));
+            $twig->addRuntimeLoader(
+                new FactoryRuntimeLoader(
+                    [
+                    FormRenderer::class => function () use ($formEngine) {
+                        return new FormRenderer($formEngine);
+                    },
+                    ]
+                )
+            );
 
             $twig->addExtension(new FormExtension());
             $twig->addExtension(

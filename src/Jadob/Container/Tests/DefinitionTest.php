@@ -11,8 +11,9 @@ use Psr\Container\ContainerInterface;
 
 /**
  * Class DefinitionTest
+ *
  * @package Jadob\Container\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class DefinitionTest extends TestCase
@@ -31,7 +32,9 @@ class DefinitionTest extends TestCase
         $definition = new Definition($factory);
 
         $definition->addMethodCall('setService', [$example]);
-        /** @var YetAnotherExampleService $createdService */
+        /**
+ * @var YetAnotherExampleService $createdService 
+*/
         $createdService = $definition->create($container);
 
         $this->assertInstanceOf(YetAnotherExampleService::class, $createdService);

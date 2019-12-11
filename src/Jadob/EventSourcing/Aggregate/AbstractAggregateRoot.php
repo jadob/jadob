@@ -13,6 +13,7 @@ abstract class AbstractAggregateRoot
     /**
      * //todo maybe private?
      * #TODO rename to aggregateVersion
+     *
      * @var int
      */
     protected $_version = 0;
@@ -24,14 +25,15 @@ abstract class AbstractAggregateRoot
 
     /**
      * //todo maybe private?
+     *
      * @var string
      */
     protected $aggregateId;
 
     /**
-     * @param string $aggregateId
-     * @param int $version
-     * @param array $events
+     * @param  string $aggregateId
+     * @param  int    $version
+     * @param  array  $events
      * @return AbstractAggregateRoot
      * @throws \ReflectionException
      */
@@ -39,13 +41,17 @@ abstract class AbstractAggregateRoot
     {
 
         $reflection = new \ReflectionClass(\get_called_class());
-        /** @var AbstractAggregateRoot $self */
+        /**
+ * @var AbstractAggregateRoot $self 
+*/
         $self = $reflection->newInstanceWithoutConstructor();
         $self->aggregateId = $aggregateId;
         $self->_version = $version;
 
         foreach ($events as $event) {
-            /** @var AbstractDomainEvent $event */
+            /**
+ * @var AbstractDomainEvent $event 
+*/
             $self->apply($event);
         }
 

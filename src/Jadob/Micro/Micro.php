@@ -43,14 +43,18 @@ use function spl_object_hash;
  * Which features arent included in Micro?
  * - Path generator - you pass only path, methods, and callback. you have to generate routes by yourself.
  * - Bootstrap class it is not needed here.
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
- * @see docs/components/micro/introduction.md
+ *
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @see     docs/components/micro/introduction.md
  * @license MIT
  */
-class Micro /**implements \ArrayAccess **/
+class Micro /**
+* implements \ArrayAccess 
+**/
 {
     /**
      * Micro uses the same codebase as Jadob so both will have the same versions.
+     *
      * @var string;
      */
     public const VERSION = '0.0.63';
@@ -135,9 +139,10 @@ class Micro /**implements \ArrayAccess **/
     }
 
     /**
-     * @param string $path URI for current action
-     * @param callable $action Controller that will be called after all middlewares
-     * @param array|null $methods HTTP Methods that action supports (if omitted, route will be matched for all)
+     * @param  string     $path    URI for current action
+     * @param  callable   $action  Controller that will be called after all middlewares
+     * @param  array|null $methods HTTP Methods that action supports (if omitted, route will be matched for all)
+     * @return Micro
      */
     public function addRoute(string $path, callable $action, ?array $methods = [])
     {
@@ -157,16 +162,18 @@ class Micro /**implements \ArrayAccess **/
 
     /**
      * @param MiddlewareInterface $middleware
-     * @param string|null $prefix Path prefix the middleware will work
-     *
-     * Example:
-     * 1. In this cases all request with paths that begins with "/top-secret" will be handled with AuthenticationMiddleware
-     * $micro->use(new AuthenticationMiddleware(), '/top-secret');
-     *
-     * 2. Middleware will work with each request:
-     * $micro->use(new LoggerMiddleware(), null);
-     * $micro->use(new LoggerMiddleware(), '/');
-     *
+     * @param string|null         $prefix     Path prefix the middleware will work
+     *                                        Example: 1. In this cases all
+     *                                        request with paths that begins with
+     *                                        "/top-secret" will be handled with
+     *                                        AuthenticationMiddleware
+     *                                        $micro->use(new
+     *                                        AuthenticationMiddleware(),
+     *                                        '/top-secret'); 2. Middleware will
+     *                                        work with each request:
+     *                                        $micro->use(new LoggerMiddleware(),
+     *                                        null); $micro->use(new
+     *                                        LoggerMiddleware(), '/');
      */
     public function use(MiddlewareInterface $middleware, ?string $prefix = null): void
     {
@@ -211,7 +218,8 @@ class Micro /**implements \ArrayAccess **/
 
     /**
      * Return RFC7807 Compliant Error response
-     * @param Throwable $e
+     *
+     * @param  Throwable $e
      * @return JsonResponse
      */
     protected function handleErrorResponse(Throwable $e)
@@ -225,14 +233,16 @@ class Micro /**implements \ArrayAccess **/
         $response = new JsonResponse($content, Response::HTTP_INTERNAL_SERVER_ERROR);
         $response->headers->set('Content-Type', 'application/problem+json');
         $response->setEncodingOptions(
-            $response->getEncodingOptions() | JSON_PRETTY_PRINT/**| JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE **/
+            $response->getEncodingOptions() | JSON_PRETTY_PRINT/**
+            * | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE 
+            **/
         );
 
         return $response;
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return JsonResponse|Response
      */
     public function handleRequest(Request $request)
@@ -246,7 +256,9 @@ class Micro /**implements \ArrayAccess **/
             return $this->handleErrorResponse($e);
         }
 
-        /** @var Closure $callback */
+        /**
+ * @var Closure $callback 
+*/
         $callback = $route->getController();
 
         $response = $callback();

@@ -18,8 +18,8 @@ use function file_get_contents;
 use function json_decode;
 
 /**
- * @TODO This class should be named TwigProvider (according to other providers name conventions)
- * @author pizzaminded <miki@appvende.net>
+ * @TODO    This class should be named TwigProvider (according to other providers name conventions)
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class TwigServiceProvider implements ServiceProviderInterface
@@ -35,6 +35,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Twig\Error\LoaderError
      */
     public function register($config)
@@ -105,7 +106,9 @@ class TwigServiceProvider implements ServiceProviderInterface
     {
         $container->alias(Environment::class, 'twig');
 
-        /** @var Environment $twig */
+        /**
+ * @var Environment $twig 
+*/
         $twig = $container->get(Environment::class);
 
         //@TODO: fix referencing to router
@@ -136,7 +139,8 @@ class TwigServiceProvider implements ServiceProviderInterface
                 file_get_contents($manifestJsonLocation),
                 true,
                 512,
-                JSON_THROW_ON_ERROR);
+                JSON_THROW_ON_ERROR
+            );
             $twig->addExtension(new WebpackManifestAssetExtension($manifest));
         }
     }

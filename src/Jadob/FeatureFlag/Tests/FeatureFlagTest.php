@@ -42,8 +42,8 @@ class FeatureFlagTest extends TestCase
     }
 
     /**
-     * @expectedException \Jadob\FeatureFlag\Exception\MissingFeatureRulesException
-     * @expectedExceptionMessage  Feature "missing" is not defined.
+     * @expectedException        \Jadob\FeatureFlag\Exception\MissingFeatureRulesException
+     * @expectedExceptionMessage Feature "missing" is not defined.
      */
     public function testBasicFeatureFlagButFeatureIsMissing()
     {

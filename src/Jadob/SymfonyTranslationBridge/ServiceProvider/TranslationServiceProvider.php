@@ -14,8 +14,9 @@ use Symfony\Component\Translation\Translator;
 
 /**
  * Class TranslationServiceProvider
+ *
  * @package Jadob\SymfonyTranslationBridge\ServiceProvider
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class TranslationServiceProvider implements ServiceProviderInterface
@@ -30,7 +31,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param $config [] Config node
+     * @param  $config [] Config node
      * @return array
      */
     public function register($config)
@@ -52,6 +53,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
     public function onContainerBuild(Container $container, $config)

@@ -6,8 +6,9 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class DevelopmentErrorHandler
+ *
  * @package Jadob\Debug\ErrorHandler
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class DevelopmentErrorHandler implements ErrorHandlerInterface
@@ -20,6 +21,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
     /**
      * DevelopmentErrorHandler constructor.
+     *
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -32,18 +34,20 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
         $logger = $this->logger;
         if (PHP_SAPI !== 'cli') {
-            \set_error_handler(function ($errno, $errstr, $errfile, $errline) use ($logger) {
+            \set_error_handler(
+                function ($errno, $errstr, $errfile, $errline) use ($logger) {
 
-                if ($errno === \E_USER_DEPRECATED) {
-                    $context['file'] = $errfile;
-                    $context['line'] = $errline;
-                    $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
-                    $logger->warning($errstr, $context);
-                    return;
+                    if ($errno === \E_USER_DEPRECATED) {
+                        $context['file'] = $errfile;
+                        $context['line'] = $errline;
+                        $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
+                        $logger->warning($errstr, $context);
+                        return;
+                    }
+
+                    throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
                 }
-
-                throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
-            });
+            );
         }
     }
 
@@ -53,20 +57,24 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
 
         if (PHP_SAPI !== 'cli') {
-            \set_exception_handler(function (\Throwable $exception) use ($logger) {
-                http_response_code(500);
-                error_log(\get_class($exception) . ': ' . $exception->getMessage());
-                error_log('Stack Trace: ');
-                error_log($exception->getTraceAsString());
+            \set_exception_handler(
+                function (\Throwable $exception) use ($logger) {
+                    http_response_code(500);
+                    error_log(\get_class($exception) . ': ' . $exception->getMessage());
+                    error_log('Stack Trace: ');
+                    error_log($exception->getTraceAsString());
 
-                $logger->critical($exception->getMessage(), [
-                    'file' => $exception->getFile(),
-                    'line' => $exception->getLine(),
-                    'trace' => $exception->getTrace(),
-                    'type' => \get_class($exception)
-                ]);
-                include __DIR__ . '/../templates/error_view.php';
-            });
+                    $logger->critical(
+                        $exception->getMessage(), [
+                        'file' => $exception->getFile(),
+                        'line' => $exception->getLine(),
+                        'trace' => $exception->getTrace(),
+                        'type' => \get_class($exception)
+                        ]
+                    );
+                    include __DIR__ . '/../templates/error_view.php';
+                }
+            );
         }
     }
 

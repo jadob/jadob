@@ -8,8 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class RouteCollectionTest
+ *
  * @package Jadob\Router\Tests
- * @author pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <miki@appvende.net>
  * @license MIT
  */
 class RouteCollectionTest extends TestCase
@@ -41,7 +42,7 @@ class RouteCollectionTest extends TestCase
         $this->assertEquals($collection3['route_1']->getPath(), '/r3/r2/r1/resource.html');
         $this->assertSame($collection3, $collection2->getParentCollection());
         $this->assertSame($collection2, $collection1->getParentCollection());
-       // $this->assertNull($collection1->getParentCollection());
+        // $this->assertNull($collection1->getParentCollection());
     }
 
     public function testCreatingRouteCollectionFromArray()
