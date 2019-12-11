@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\EventDispatcher;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -11,7 +13,6 @@ use function microtime;
 use function spl_object_hash;
 
 /**
- * @TODO: enable timestamp collecting via constructor arguments?
  * @see https://www.php-fig.org/psr/psr-14/
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
