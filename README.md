@@ -17,18 +17,6 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 
 - PHP 7.3 or higher
  
-
-## Tests
-
-Jadob uses PHPUnit and Phan to test the whole codebase. 
-
-``php-ast`` extension would be useful. 
-
-Enabling test suite:
-
-``vendor/bin/phpunit``
-
-
 ## Things that need to be done before `1.0.0` release
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
@@ -50,6 +38,24 @@ Enabling test suite:
 * [ ] Service Providers Should be moved to `Jadob\Core` too.
 * [ ] All Bridges (`Jadob\DoctrineORMBridge`, `Jadob\SymfonyFormBridge`) should be moved do `Jadob\Bridge\*` namespace.
 * [ ] Custom CSRF Extension to Forms 
+
+
+
+## Testing
+
+Jadob uses PHPUnit for unit test, Phan for static analysis and PHP_CodeSniffer with Doctrine standard 
+for code standards maintaining. There is no framework-specified standards, the best practices from 
+these three tools should apply. 
+
+``php-ast`` extension and disabled XDebug would be useful as Phan without it is really slow.
+
+Running full Testing suite:
+
+``vendor/bin/phpunit``
+
+``vendor/bin/phan``
+
+``vendor/bin/phpcs --standard=Doctrine src``
 
 
 ## Getting Started
