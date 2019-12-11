@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Jadob\Router\Exception;
 
 /**
- * Class RouteNotFoundException
- * @package Jadob\Router\Exception
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class RouteNotFoundException extends \Exception

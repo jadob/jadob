@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Router\Exception;
 
 /**
- * Class RouterException
- * @package Jadob\Router\Exception
- * @author pizzaminded <miki@appvende.net>
- * @license proprietary
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
-class RouterException extends \Error
+class RouterException extends \Exception
 {
 
 }
