@@ -8,7 +8,7 @@ namespace Jadob\Http\Message;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Response implements ResponseInterface
+class PsrResponse implements ResponseInterface
 {
 
     /**
