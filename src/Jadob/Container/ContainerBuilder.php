@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Container;
 
-use Jadob\Config\Config;
 use Jadob\Container\Event\ContainerBuildStartedEvent;
+use Jadob\Container\Event\ProviderRegisteredEvent;
 use Jadob\Container\Event\ProviderRegistrationStartedEvent;
 use Jadob\Container\Event\ServiceAddedEvent;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use function is_array;
 
 /**
  * Class ContainerBuilder
@@ -102,6 +105,7 @@ class ContainerBuilder
              * @TODO check if provider was registered few lines above
              */
             $this->registerProvider($provider, $config);
+            $this->emit(new ProviderRegisteredEvent($serviceProvider));
         }
 
 
@@ -124,12 +128,12 @@ class ContainerBuilder
     }
 
     /**
-     * @param Config|null $config
+     * @param array $config
      * @param string $configNodeKey
      * @return array|null
      *
-     * @throws ContainerException
      * @throws ContainerBuildException
+     * @throws ContainerException
      */
     protected function getConfigNode(array $config, $configNodeKey): ?array
     {
@@ -145,19 +149,11 @@ class ContainerBuilder
 
         $output = $config[$configNodeKey];
 
-        if (!\is_array($output)) {
+        if (!is_array($output)) {
             throw new ContainerBuildException('Invalid config passed to config node "' . $configNodeKey . '". Expected array, got ' . gettype($output));
         }
 
         return $output;
-    }
-
-    /**
-     * @return array
-     */
-    public function getServiceProviders(): array
-    {
-        return $this->serviceProviders;
     }
 
     /**
@@ -168,14 +164,6 @@ class ContainerBuilder
     {
         $this->serviceProviders = $serviceProviders;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getServices(): array
-    {
-        return $this->services;
     }
 
 
@@ -221,9 +209,9 @@ class ContainerBuilder
 
         $results = $provider->register($configNode);
 
-        if (\is_array($results)) {
+        if (is_array($results)) {
             foreach ($results as $serviceKey => $service) {
-               $this->add($serviceKey, $service);
+                $this->add($serviceKey, $service);
             }
         }
     }
