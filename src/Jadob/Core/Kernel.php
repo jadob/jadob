@@ -19,7 +19,6 @@ use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Debug\Profiler\Profiler;
 use Jadob\EventDispatcher\EventDispatcher;
-use Jadob\EventListener\EventListener;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
@@ -144,8 +143,6 @@ class Kernel
     {
         $requestId = substr(md5((string)mt_rand()), 0, 15);
 
-//        $this->profiler = new Profiler($this->bootstrap->getCacheDir() . '/profiler', $requestId);
-//        $this->profiler->addEntry('JADOB_REQUEST_TIME', $request->server->get('REQUEST_TIME'));
         $this->logger->info('New request received', [
             'method' => $request->getMethod(),
             'path' => $request->getPathInfo(),
@@ -155,7 +152,6 @@ class Kernel
 
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
-//        $builder->add('profiler', $this->profiler);
 
         $this->container = $builder->build($this->config->toArray());
         $this->container->addParameter('request_id', $requestId);
@@ -225,7 +221,12 @@ class Kernel
                 //TODO named exception constructors?
                 throw new KernelException('services.php has missing return statement or returned value is not an array');
             }
-            $containerBuilder = new ContainerBuilder(new ContainerEventListener());
+
+            $listener = null;
+            if ($this->env !== 'prod') {
+                $listener = new ContainerEventListener();
+            }
+            $containerBuilder = new ContainerBuilder($listener);
             $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(Kernel::class, $this);
