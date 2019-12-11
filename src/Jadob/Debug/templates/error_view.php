@@ -30,32 +30,40 @@
             font: inherit;
             vertical-align: baseline;
         }
+
         /* HTML5 display-role reset for older browsers */
         article, aside, details, figcaption, figure,
         footer, header, hgroup, menu, nav, section {
             display: block;
         }
+
         body {
             line-height: 1;
         }
+
         ol, ul {
             list-style: none;
         }
+
         blockquote, q {
             quotes: none;
         }
+
         blockquote:before, blockquote:after,
         q:before, q:after {
             content: '';
             content: none;
         }
+
         table {
             border-collapse: collapse;
             border-spacing: 0;
         }
+
         strong {
             font-weight: 700;
         }
+
         .error-wrapper {
             padding-top: 15px;
             width: 60%;
@@ -63,21 +71,25 @@
             margin-left: auto;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
+
         .error-wrapper__header {
             display: flex;
             border-bottom: 1px solid #D2D7D3;
             padding-bottom: 10px;
         }
+
         .error-wrapper__header_metadata {
             width: 75%;
             float: left;
         }
+
         .error-wrapper__header_metadata_exception-info {
             color: #95A5A6;
             font-size: 14px;
             padding-top: 5px;
             padding-bottom: 5px;
         }
+
         .error-wrapper__header_metadata_exception-class {
             font-size: 24px;
             color: #212121;
@@ -85,6 +97,7 @@
             margin-top: 15px;
             margin-bottom: 10px;
         }
+
         .error-wrapper__content_metadata_exception-message {
             font-size: 32px;
             color: #CF000F;
@@ -92,6 +105,7 @@
             margin-top: 15px;
             margin-bottom: 20px;
         }
+
         .error-wrapper__sad-emoticon_wrapper {
             opacity: 0.3;
             padding: 25px;
@@ -99,12 +113,15 @@
             font-size: 70px;
             display: block;
         }
+
         .error-wrapper__sad-emoticon_wrapper:hover {
             opacity: 1;
         }
+
         .error-wrapper__content_stack-trace {
             display: grid;
         }
+
         .error-wrapper__content_stack-trace-header {
             font-size: 22px;
             color: #212121;
@@ -112,30 +129,38 @@
             margin-top: 15px;
             margin-bottom: 10px;
         }
+
         .error-wrapper__footer {
             padding-top: 10px;
             border-top: 1px solid #D2D7D3;
         }
+
         .error-wrapper__footer-link {
             font-size: 12px;
             color: #95A5A6;
             text-decoration: none;
         }
+
         .stack-trace {
             width: 100%;
         }
+
         .stack-trace tr {
             border-bottom: 1px solid #212121;
         }
+
         .stack-trace thead {
             font-weight: 700;
         }
+
         .stack-trace td {
             padding: 5px;
         }
+
         .stack-trace .key {
             border-right: 1px dotted #95A5A6;
         }
+
         .no-message {
             color: #95A5A6;
             font-weight: 400;
@@ -166,7 +191,7 @@
     </section>
     <section class="error-wrapper__content">
         <h1 class="error-wrapper__content_metadata_exception-message">
-            <?php if(strlen($exception->getMessage()) > 0) { ?>
+            <?php if (strlen($exception->getMessage()) > 0) { ?>
                 <?= $exception->getMessage(); ?>
             <?php } else { ?>
                 <span class="no-message">This exception has no message.</span>
@@ -198,7 +223,9 @@
                                 $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
                             }
                             ?>
-                            <?= $fullFunctionCall ?>(<?= \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>)
+                            <?= $fullFunctionCall ?>
+                            (<?= \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>
+                            )
                             <p class="file-path">
                                 <?php if (isset($element['file'])) { ?>
                                     <?= $element['file']; ?>
@@ -211,6 +238,34 @@
                 </tbody>
             </table>
         </section>
+    </section>
+    <section class="container-dump">
+        <h2 class="error-wrapper__content_stack-trace-header">Container Event dump:</h2>
+        <table>
+            <thead>
+            <tr>
+                <td>ID</td>
+                <td>Timestamp</td>
+                <td>Event</td>
+                <td>Payload</td>
+            </tr>
+            </thead>
+            <?php
+            $id = 1;
+            foreach (\Jadob\Container\ContainerEventListener::$events as $timestamp => $event) { ?>
+                <tr>
+                    <td><?= $id++ ?></td>
+                    <td><?= $timestamp ?></td>
+                    <td><?= get_class($event) ?></td>
+                    <td>
+                        <?php
+                        if (method_exists($event, 'getPayload')) { ?>
+                            <?= $event->getPayload() ?>
+                        <?php } ?>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
     </section>
     <footer class="error-wrapper__footer">
         <a target="_blank"
