@@ -223,12 +223,7 @@ class ContainerBuilder
 
         if (\is_array($results)) {
             foreach ($results as $serviceKey => $service) {
-
-                if ($service instanceof \Closure) {
-                    $this->factories[$serviceKey] = $service;
-                } else {
-                    $this->services[$serviceKey] = $service;
-                }
+               $this->add($serviceKey, $service);
             }
         }
     }
