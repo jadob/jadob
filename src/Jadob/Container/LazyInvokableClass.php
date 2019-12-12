@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use function func_get_args;
+
 /**
  * Set somewhere, instantiate when needed.
  * Works only with callable classes as this object exposes only __invoke() method from child class.
@@ -29,6 +31,6 @@ class LazyInvokableClass
         //@TODO if present in container, run them
         //@TODO if not present, autowire
         $childClass = $this->container->get($this->class);
-        return $childClass(...$args);
+        return $childClass(...func_get_args());
     }
 }
