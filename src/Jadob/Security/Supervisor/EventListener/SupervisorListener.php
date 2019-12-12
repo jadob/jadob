@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
@@ -10,7 +12,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use function get_class;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class SupervisorListener implements ListenerProviderInterface
@@ -55,13 +57,18 @@ class SupervisorListener implements ListenerProviderInterface
     public function onBeforeController(BeforeControllerEvent $event): BeforeControllerEvent
     {
         $requestSupervisor = $this->supervisor->matchRequestSupervisor($event->getRequest());
+
         if ($requestSupervisor === null && $this->supervisor->isBlockingUnsecuredRequests()) {
-            //@TODO emit exception
+            throw new \RuntimeException('No requestsupervisor found &  supervisor is blocking unsecured requests');
         }
+        //if supervisor is null and is allowed to unsecure, return
+
 
         //At first, handle stateless
         if ($requestSupervisor->isStateless()) {
             $credentials = $requestSupervisor->extractCredentialsFromRequest($event->getRequest());
+
+            //TODO check if null|string|array returned
 
             //break if no credentials found
             if ($credentials === null || $credentials === false) {
