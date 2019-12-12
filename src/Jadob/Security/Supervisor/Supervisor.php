@@ -22,7 +22,7 @@ class Supervisor
      *
      * @var int
      */
-    protected $unsecuredRequestPolicy;
+    protected $unsecuredRequestPolicy = self::POLICY_UNSECURED_BLOCK;
 
     /**
      * @var RequestSupervisorInterface[]
