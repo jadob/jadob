@@ -114,8 +114,8 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         if ($variable === null) {
             return 'null';
         }
-        if (\is_scalar($variable)) {
-            return $variable;
+        if (is_scalar($variable)) {
+            return (string)$variable;
         }
         if (is_object($variable)) {
             return get_class($variable);
