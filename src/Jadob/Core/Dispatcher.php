@@ -4,6 +4,8 @@ namespace Jadob\Core;
 
 use InvalidArgumentException;
 use Jadob\Container\Container;
+use Jadob\Container\Exception\AutowiringException;
+use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
@@ -11,8 +13,17 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function call_user_func_array;
+use function count;
+use function get_class;
+use function gettype;
+use function method_exists;
 
 /**
  * Class Dispatcher
@@ -35,13 +46,20 @@ class Dispatcher
     protected $eventDispatcher;
 
     /**
+     * @var array
+     */
+    protected $config;
+
+    /**
      * Dispatcher constructor.
      *
+     * @param array $config
      * @param Container $container
      * @param EventDispatcherInterface|null $eventDispatcher
      */
-    public function __construct(Container $container, ?EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(array $config, Container $container, ?EventDispatcherInterface $eventDispatcher = null)
     {
+        $this->config = $config;
         $this->container = $container;
 
         if ($eventDispatcher === null) {
@@ -51,20 +69,20 @@ class Dispatcher
     }
 
     /**
-     * @param  Request $request
+     * @param Request $request
      * @return Response
-     * @throws \InvalidArgumentException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws InvalidArgumentException
+     * @throws ServiceNotFoundException
+     * @throws RouteNotFoundException
      * @throws KernelException
-     * @throws \ReflectionException
-     * @throws \Jadob\Router\Exception\MethodNotAllowedException
+     * @throws ReflectionException
+     * @throws MethodNotAllowedException
      */
     public function executeRequest(Request $request): Response
     {
         /**
- * @var Router $router 
-*/
+         * @var Router $router
+         */
         $router = $this->container->get('router');
 
         $route = $router->matchRequest($request);
@@ -113,7 +131,9 @@ class Dispatcher
      */
     protected function autowireControllerClass($controllerClassName)
     {
-        $reflection = new \ReflectionClass($controllerClassName);
+        $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
+
+        $reflection = new ReflectionClass($controllerClassName);
         $classConstructor = $reflection->getConstructor();
 
         /**
@@ -133,7 +153,16 @@ class Dispatcher
             if ($type === ContainerInterface::class) {
                 $arguments[] = $this->container;
             } else {
-                $arguments[] = $this->container->findObjectByClassName($type);
+                //TODO Refactor or move to another method
+                try {
+                    $arguments[] = $this->container->findObjectByClassName($type);
+                } catch (ServiceNotFoundException $exception) {
+                    if ($autowireEnabled) {
+                        $arguments[] = $this->container->autowire($type);
+                    } else {
+                        throw  $exception;
+                    }
+                }
             }
         }
 
@@ -147,17 +176,19 @@ class Dispatcher
      * @param string $methodName method to be called later
      * @param array $routerParams arguments resolved from route
      * @return array
-     * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws ReflectionException
+     * @throws ServiceNotFoundException
+     * @throws AutowiringException
      */
     protected function resolveControllerMethodArguments($controllerClass, $methodName, array $routerParams): array
     {
-        $reflection = new \ReflectionMethod($controllerClass, $methodName);
+        $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
+        $reflection = new ReflectionMethod($controllerClass, $methodName);
 
         $parameters = $reflection->getParameters();
 
         //nothing to do here
-        if (\count($parameters) === 0) {
+        if (count($parameters) === 0) {
             return [];
         }
 
@@ -174,7 +205,16 @@ class Dispatcher
 
             //service requested
             if ($type !== null && !$type->isBuiltin()) {
-                $output[$name] = $this->container->findObjectByClassName($type);
+                //TODO Refactor or move to another method
+                try {
+                    $output[$name] = $this->container->findObjectByClassName($type);
+                } catch (ServiceNotFoundException $exception) {
+                    if ($autowireEnabled) {
+                        $output[$name] = $this->container->autowire($type);
+                    } else {
+                        throw $exception;
+                    }
+                }
                 continue;
             }
 

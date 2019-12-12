@@ -17,7 +17,6 @@ use Jadob\Core\Event\AfterControllerEvent;
 use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
-use Jadob\Debug\Profiler\Profiler;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
@@ -159,10 +158,13 @@ class Kernel
         $builder = $this->getContainerBuilder();
         $builder->add('request', $request);
 
-        $this->container = $builder->build($this->config->toArray());
+        $configArray = $this->config->toArray();
+        $this->container = $builder->build($configArray);
         $this->container->addParameter('request_id', $requestId);
 
-        $dispatcher = new Dispatcher($this->container);
+
+        $dispatcherConfig = $configArray['framework']['dispatcher'];
+        $dispatcher = new Dispatcher($dispatcherConfig, $this->container);
 
         //@TODO this one should be moved  to dispather and called after router to provide matched route
         $beforeControllerEvent = new BeforeControllerEvent($request);
