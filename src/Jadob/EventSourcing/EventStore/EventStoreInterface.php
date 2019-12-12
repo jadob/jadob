@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore;
+namespace Jadob\EventSourcing\EventStore;
 
 use Jadob\EventSourcing\AbstractDomainEvent;
 use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;

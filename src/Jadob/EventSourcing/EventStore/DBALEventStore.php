@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore;
+namespace Jadob\EventSourcing\EventStore;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;

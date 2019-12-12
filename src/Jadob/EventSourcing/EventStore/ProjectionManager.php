@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore;
+namespace Jadob\EventSourcing\EventStore;
 
 use Psr\Log\LoggerInterface;
 
 /**
  * @deprecated to be replaced with Event Dispatcher
  * @author     pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 class ProjectionManager
 {

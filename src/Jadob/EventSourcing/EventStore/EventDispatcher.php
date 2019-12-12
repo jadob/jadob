@@ -1,22 +1,34 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Jadob\EventStore;
+namespace Jadob\EventSourcing\EventStore;
+
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use function get_class;
+
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 class EventDispatcher
 {
 
     protected $listeners = [];
 
+    /**
+     * @param object $event
+     * @throws ReflectionException
+     */
     public function emit(object $event)
     {
-        $eventType = \get_class($event);
+        $eventType = get_class($event);
         foreach ($this->listeners as $listener) {
-            $listenerReflection = new \ReflectionClass($listener);
-            foreach ($listenerReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            $listenerReflection = new ReflectionClass($listener);
+            foreach ($listenerReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $paramsCount = $method->getNumberOfParameters();
                 if ($paramsCount > 1) {
                     continue; //only one argument allowed so far
@@ -36,7 +48,7 @@ class EventDispatcher
         }
     }
 
-    public function addListener(object $listener)
+    public function addListener(object $listener): void
     {
         $this->listeners[] = $listener;
     }

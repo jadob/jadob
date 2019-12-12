@@ -97,13 +97,8 @@ class Kernel
     protected $fileStreamHandler;
 
     /**
-     * @var Profiler
-     */
-    protected $profiler;
-
-    /**
-     * @param  string             $env
-     * @param  BootstrapInterface $bootstrap
+     * @param string $env
+     * @param BootstrapInterface $bootstrap
      * @throws KernelException
      * @throws Exception
      */
@@ -133,7 +128,7 @@ class Kernel
      * - this method should be called "handle" and it should need some basic stuff that can be extracted from superglobals
      * - handling HttpFoundation object should be realised via handleRequest(Request $request) which would be an alias for handle()
      *
-     * @param  Request $request
+     * @param Request $request
      * @return Response
      * @throws KernelException
      * @throws ContainerException
@@ -148,10 +143,10 @@ class Kernel
 
         $this->logger->info(
             'New request received', [
-            'method' => $request->getMethod(),
-            'path' => $request->getPathInfo(),
-            'query' => $request->query->all(),
-            'request_id' => $requestId
+                'method' => $request->getMethod(),
+                'path' => $request->getPathInfo(),
+                'query' => $request->query->all(),
+                'request_id' => $requestId
             ]
         );
 
@@ -221,11 +216,11 @@ class Kernel
                 throw new KernelException('There is no services.php file in your config dir.');
             }
             /**
- * @var array $services 
-*/
+             * @var array $services
+             */
             /**
- * @noinspection PhpIncludeInspection 
-*/
+             * @noinspection PhpIncludeInspection
+             */
             $services = include $servicesFile;
 
             if (!is_array($services)) {

@@ -98,14 +98,14 @@ class Dispatcher
 
         //@TODO: refactor method name resolving
         if ($methodName === null) {
-            if (\method_exists($autowiredController, '__invoke')) {
+            if (method_exists($autowiredController, '__invoke')) {
                 $methodName = '__invoke';
             } else {
                 throw new KernelException('Controller ' . $controllerClass . ' does not have nor "action" key in routing or "__invoke" method.');
             }
         }
 
-        if (!\method_exists($autowiredController, $methodName)) {
+        if (!method_exists($autowiredController, $methodName)) {
             throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
         }
 
@@ -113,10 +113,10 @@ class Dispatcher
 
         $methodArguments = $this->resolveControllerMethodArguments($autowiredController, $methodName, $route->getParams());
 
-        $response = \call_user_func_array([$autowiredController, $methodName], $methodArguments);
+        $response = call_user_func_array([$autowiredController, $methodName], $methodArguments);
 
         if (!($response instanceof Response)) {
-            throw new KernelException('Controller ' . \get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . \gettype($response) . ' returned');
+            throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
         }
 
         return $response;
@@ -125,9 +125,10 @@ class Dispatcher
     /**
      * @param  $controllerClassName
      * @return mixed
-     * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws ReflectionException
+     * @throws ServiceNotFoundException
      * @throws KernelException
+     * @throws AutowiringException
      */
     protected function autowireControllerClass($controllerClassName)
     {
