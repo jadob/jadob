@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Micro] Renamed from ``Application`` to ``Micro``, rewritten to comply with PSR Requests and Middlewares
 
 ### Fixed
-- [Router] now iterates through all methods, and throws ``MethodNotAllowedException`` only if no path supporting given method is found (9d90b200d)
+- [Router] now iterates through all methods, and throws ``MethodNotAllowedException`` only if no path supporting given method is found (commit 9d90b20)
 
 
 ## [0.0.63] 
