@@ -55,8 +55,8 @@ class Router
 
     /**
      * @param RouteCollection $routeCollection
-     * @param Context|null    $context
-     * @param array           $config
+     * @param Context|null $context
+     * @param array $config
      */
     public function __construct(RouteCollection $routeCollection, ?Context $context = null, array $config = [])
     {
@@ -77,20 +77,19 @@ class Router
     }
 
     /**
-     * @param  Route $route
+     * @param Route $route
      * @param  $host
-     * @param  array $matchedAttributes
+     * @param array $matchedAttributes
      * @return bool
      */
     protected function hostMatches(Route $route, $host, array &$matchedAttributes): bool
     {
-
+        //route does not rely on hosts
         if ($route->getHost() === null) {
             return true;
         }
 
         $hostRegex = $this->getRegex($route->getHost());
-
         if ($hostRegex !== false
             && preg_match($hostRegex, $host, $matches) > 0
         ) {
@@ -103,8 +102,8 @@ class Router
 
 
     /**
-     * @param  string $path
-     * @param  string $method
+     * @param string $path
+     * @param string $method
      * @return Route
      * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
@@ -136,11 +135,10 @@ class Router
                 }
 
                 $parameters = array_merge($parameters, $this->transformMatchesToParameters($matches));
-
                 $route->setParams($parameters);
-
                 return $route;
             }
+        }
 
         if (count($availableMethodsFound) > 0) {
             //TODO Pass methods here
@@ -151,7 +149,7 @@ class Router
     }
 
     /**
-     * @param  Request $request
+     * @param Request $request
      * @return Route
      * @throws RouteNotFoundException
      * @throws MethodNotAllowedException
@@ -198,7 +196,7 @@ class Router
     /**
      * @param  $name
      * @param  $params
-     * @param  bool $full
+     * @param bool $full
      * @return mixed|string
      * @throws RouteNotFoundException
      */
@@ -214,7 +212,7 @@ class Router
                     $isFound = 0;
                     if (!is_array($param)) {
                         $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
-                    };
+                    }
 
                     if ($isFound === 0) {
                         $paramsToGET[$key] = $param;
@@ -267,7 +265,7 @@ class Router
     }
 
     /**
-     * @param  Context $context
+     * @param Context $context
      * @return Router
      */
     public function setContext(Context $context): Router
@@ -279,8 +277,8 @@ class Router
     /**
      * Allows to set custom route argument delimiters
      *
-     * @param  string $left
-     * @param  string $right
+     * @param string $left
+     * @param string $right
      * @return $this
      * @throws RouterException
      */
@@ -305,7 +303,7 @@ class Router
     }
 
     /**
-     * @param  array $matches
+     * @param array $matches
      * @return array
      */
     protected function transformMatchesToParameters(array $matches): array
@@ -322,7 +320,7 @@ class Router
     }
 
     /**
-     * @param  Route $route
+     * @param Route $route
      * @return $this
      */
     public function addRoute(Route $route): Router
