@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
 
 use Doctrine\Common\EventManager;
@@ -8,6 +10,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\DBAL\Types\Type;
 use Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -46,6 +49,13 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     {
         if (!isset($config['connections']) || \count($config['connections']) === 0) {
             throw new \RuntimeException('You should provide at least one connection in "doctrine_dbal" config node.');
+        }
+
+
+        if(isset($config['types'])) {
+            foreach ($config['types'] as $name => $class) {
+                Type::addType($name, $class);
+            }
         }
 
         $services = [];
