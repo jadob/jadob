@@ -34,10 +34,15 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
         $logger = $this->logger;
         if (PHP_SAPI !== 'cli') {
-            \set_error_handler(
-                function ($errno, $errstr, $errfile, $errline) use ($logger) {
+            set_error_handler(
+                static function ($errno, $errstr, $errfile, $errline) use ($logger) {
+                    if ($errno === E_USER_DEPRECATED || $errno === E_DEPRECATED) {
+                        $message = 'Deprecated: ' . $errstr;
 
-                    if ($errno === \E_USER_DEPRECATED) {
+                        /** @noinspection NotOptimalIfConditionsInspection */
+                        if ($errno === E_USER_DEPRECATED) {
+                            $message = 'User Deprecated: ' . $errstr;
+                        }
                         $context['file'] = $errfile;
                         $context['line'] = $errline;
                         $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -45,7 +50,9 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
                         return;
                     }
 
-                    throw new \ErrorException($errstr, $errno, 1, $errfile, $errline);
+                    //According to documentation, it is intended to use error number as a severity
+                    //@see https://www.php.net/manual/en/errorexception.construct.php
+                    throw new ErrorException($errstr, $errno, $errno, $errfile, $errline);
                 }
             );
         }
