@@ -112,11 +112,12 @@ class Router
     public function matchRoute(string $path, string $method): Route
     {
         $method = strtoupper($method);
+        $availableMethodsFound = [];
 
         foreach ($this->routeCollection as $routeKey => $route) {
             /**
- * @var Route $route 
-*/
+             * @var Route $route
+             */
             $pathRegex = $this->getRegex($route->getPath());
             //@TODO: maybe we should break here if $pathRegex === false?
             $parameters = [];
@@ -129,7 +130,9 @@ class Router
                 if (count(($routeMethods = $route->getMethods())) > 0
                     && !in_array($method, $routeMethods, true)
                 ) {
-                    throw new MethodNotAllowedException();
+                    $availableMethodsFound[] = $method;
+                    //break later if no given method found
+                    continue;
                 }
 
                 $parameters = array_merge($parameters, $this->transformMatchesToParameters($matches));
@@ -139,6 +142,9 @@ class Router
                 return $route;
             }
 
+        if (count($availableMethodsFound) > 0) {
+            //TODO Pass methods here
+            throw new MethodNotAllowedException();
         }
 
         throw new RouteNotFoundException('No route matched for URI ' . $path);
