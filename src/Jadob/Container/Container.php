@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Jadob\Container;
 
 use Closure;
+use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
+use ReflectionException;
 use RuntimeException;
 use function array_keys;
 use function in_array;
@@ -69,7 +71,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $serviceName
+     * @param string $serviceName
      * @return mixed
      * @throws ServiceNotFoundException
      */
@@ -89,7 +91,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $factoryName
+     * @param string $factoryName
      * @return mixed
      */
     protected function instantiateFactory(string $factoryName)
@@ -107,7 +109,7 @@ class Container implements ContainerInterface
     /**
      * UNSTABLE, there will be some work needed
      *
-     * @param  string $interfaceClassName FQCN of interface that need to be verified
+     * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
     public function getObjectsImplementing(string $interfaceClassName): ?array
@@ -136,7 +138,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $className FQCN of class that we need to find
+     * @param string $className FQCN of class that we need to find
      * @return mixed
      * @throws ServiceNotFoundException
      */
@@ -178,7 +180,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $id
+     * @param string $id
      * @param  $object
      * @return Definition
      */
@@ -198,8 +200,8 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $from
-     * @param  string $to
+     * @param string $from
+     * @param string $to
      * @return Container
      */
     public function alias(string $from, string $to): Container
@@ -227,7 +229,7 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param  string $key
+     * @param string $key
      * @return mixed
      */
     public function getParameter(string $key)
@@ -237,5 +239,29 @@ class Container implements ContainerInterface
         }
 
         return $this->parameters[$key];
+    }
+
+    /**
+     *
+     * @param string $className
+     * @return object
+     * @throws AutowiringException
+     * @throws ReflectionException
+     */
+    public function autowire(string $className): object
+    {
+        if (!\class_exists($className)) {
+            throw new AutowiringException('Unable to autowire class "' . $className . '", as it does not exists.');
+        }
+        $classReflection = new \ReflectionClass($className);
+
+        //no dependencies required, we can just instantiate them and return
+        if ($classReflection->getConstructor() === null) {
+            $object = new $className();
+            $this->add($className, $object);
+            return $object;
+        }
+
+        throw new AutowiringException('Unable to autowire class "' . $className . '", missing implementation for classes that have constructors.');
     }
 }
