@@ -1,11 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Debug\ErrorHandler;
 
+use ErrorException;
 use Psr\Log\LoggerInterface;
+use Throwable;
+use function debug_backtrace;
+use function error_log;
+use function get_class;
+use function htmlspecialchars;
+use function http_response_code;
+use function implode;
+use function is_array;
+use function is_object;
+use function is_resource;
+use function is_scalar;
+use function set_error_handler;
+use function set_exception_handler;
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+use const E_DEPRECATED;
+use const E_USER_DEPRECATED;
+use const PHP_SAPI;
 
 /**
- * Class DevelopmentErrorHandler
+ * TODO Separate logger for deprecations?
  *
  * @package Jadob\Debug\ErrorHandler
  * @author  pizzaminded <miki@appvende.net>
@@ -31,8 +51,8 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
     public function registerErrorHandler()
     {
-
         $logger = $this->logger;
+
         if (PHP_SAPI !== 'cli') {
             set_error_handler(
                 static function ($errno, $errstr, $errfile, $errline) use ($logger) {
@@ -45,8 +65,8 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
                         }
                         $context['file'] = $errfile;
                         $context['line'] = $errline;
-                        $context['stacktrace'] = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
-                        $logger->warning($errstr, $context);
+                        $context['stacktrace'] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                        $logger->warning($message, $context);
                         return;
                     }
 
@@ -61,22 +81,20 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     public function registerExceptionHandler()
     {
         $logger = $this->logger;
-
-
         if (PHP_SAPI !== 'cli') {
-            \set_exception_handler(
-                function (\Throwable $exception) use ($logger) {
+            set_exception_handler(
+                static function (Throwable $exception) use ($logger) {
                     http_response_code(500);
-                    error_log(\get_class($exception) . ': ' . $exception->getMessage());
+                    error_log(get_class($exception) . ': ' . $exception->getMessage());
                     error_log('Stack Trace: ');
                     error_log($exception->getTraceAsString());
 
                     $logger->critical(
                         $exception->getMessage(), [
-                        'file' => $exception->getFile(),
-                        'line' => $exception->getLine(),
-                        'trace' => $exception->getTrace(),
-                        'type' => \get_class($exception)
+                            'file' => $exception->getFile(),
+                            'line' => $exception->getLine(),
+                            'trace' => $exception->getTrace(),
+                            'type' => get_class($exception)
                         ]
                     );
                     include __DIR__ . '/../templates/error_view.php';
@@ -86,6 +104,11 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     }
 
 
+    /**
+     * TODO Move to another class
+     * @param $variable
+     * @return string
+     */
     public static function getVariableType($variable)
     {
         if ($variable === null) {
@@ -94,27 +117,32 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         if (\is_scalar($variable)) {
             return $variable;
         }
-        if (\is_object($variable)) {
-            return \get_class($variable);
+        if (is_object($variable)) {
+            return get_class($variable);
         }
-        if (\is_array($variable)) {
+        if (is_array($variable)) {
             return 'array';
         }
-        if (\is_resource($variable)) {
+        if (is_resource($variable)) {
             return 'resource';
         }
         return 'unknown';
     }
 
+    /**
+     * TODO Move to another class
+     * @param $params
+     * @return string
+     */
     public static function parseParams($params)
     {
         $output = [];
-        if (!\is_array($params)) {
-            return \htmlspecialchars(self::getVariableType($params));
+        if (!is_array($params)) {
+            return htmlspecialchars(self::getVariableType($params));
         }
         foreach ($params as $param) {
-            $output[] = \htmlspecialchars(self::getVariableType($param));
+            $output[] = htmlspecialchars(self::getVariableType($param));
         }
-        return \implode(',', $output);
+        return implode(',', $output);
     }
 }
