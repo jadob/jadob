@@ -6,6 +6,7 @@ namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
@@ -17,6 +18,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Core\Kernel;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
 use RuntimeException;
@@ -57,7 +59,7 @@ class DoctrineORMProvider implements ServiceProviderInterface
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
 
-            $services['doctrine.orm.' . $managerName] = static function (ContainerInterface $container)
+            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container)
             use (
                 $managerName,
                 $managerConfig,
@@ -70,9 +72,11 @@ class DoctrineORMProvider implements ServiceProviderInterface
                     $this->registerAnnotations();
                 }
 
+                $isProd = $container->get(Kernel::class)->getEnv() === 'prod';
+
                 $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir()
                     . '/'
-                    . $container->get('kernel')->getEnv()
+                    . $container->get(Kernel::class)->getEnv()
                     . '/doctrine/' . $managerName;
 
                 /**
@@ -93,9 +97,16 @@ class DoctrineORMProvider implements ServiceProviderInterface
                 $queryCache = new FilesystemCache($cacheDir . '/query');
                 $annotationCache = new FilesystemCache($cacheDir . '/annotation');
 
+                if (!$isProd) {
+                    $metadataCache = new ArrayCache();
+                    $annotationCache = new ArrayCache();
+                }
+
                 foreach ($managerConfig['entity_paths'] as $path) {
                     $entityPaths[] = $container->get(BootstrapInterface::class)->getRootDir() . '/' . ltrim($path, '/');
                 }
+
+
 
                 $configuration = new Configuration();
                 $configuration->setMetadataCacheImpl($metadataCache);
@@ -103,8 +114,8 @@ class DoctrineORMProvider implements ServiceProviderInterface
                 $configuration->setQueryCacheImpl($queryCache);
                 $configuration->setMetadataDriverImpl(
                     new AnnotationDriver(
-                        new CachedReader(new AnnotationReader(), $annotationCache),
-                        $entityPaths
+                        new CachedReader(new AnnotationReader(), $annotationCache, !$isProd),
+                        $entityPaths,
                     )
                 );
 
