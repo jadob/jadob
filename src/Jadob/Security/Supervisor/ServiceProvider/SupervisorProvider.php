@@ -1,20 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Security\Supervisor\ServiceProvider;
 
 use Jadob\Container\Container;
+use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Security\Supervisor\EventListener\SupervisorListener;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\Container\ContainerInterface;
 
+/**
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
+ */
 class SupervisorProvider implements ServiceProviderInterface
 {
 
     /**
-     * returns Config node name that will be passed as $config in register() method.
-     * return null if no config needed.
+     * {@inheritDoc}
      *
      * @return string|null
      */
@@ -27,18 +33,19 @@ class SupervisorProvider implements ServiceProviderInterface
      * Here you can define things that will be registered in Container.
      *
      * @param array[]|null $config
+     * @return array
      */
     public function register($config)
     {
         return [
-            Supervisor::class => function (ContainerInterface $container) use ($config) {
+            Supervisor::class => static function (ContainerInterface $container) use ($config) {
 
                 $supervisor = new Supervisor();
                 foreach ($config['supervisors'] as $supervisorName => $supervisorConfig) {
                     $supervisor->addRequestSupervisor(
                         $supervisorName,
                         $container->get($supervisorConfig['service']),
-                        $container->get($supervisorConfig['provider'])
+                        $container->get($supervisorConfig['user_provider'])
                     );
                 }
 
@@ -48,17 +55,12 @@ class SupervisorProvider implements ServiceProviderInterface
     }
 
     /**
-     * Stuff that's needed to be done after container is built.
-     * What can you do using these method?
-     * - This one gets container as a first argument, so, you can e.g. get all services implementing SomeCoolInterface,
-     * and inject them somewhere
-     * (example 1: using Twig, you can register all extensions)
-     * (example 2: EventListener registers all Listeners here)
-     * - You can add new services of course
+     * {@inheritDoc}
      *
-     * @param  Container  $container
-     * @param  array|null $config    the same config node as passed in register()
+     * @param Container $container
+     * @param array|null $config the same config node as passed in register()
      * @return void
+     * @throws ServiceNotFoundException
      */
     public function onContainerBuild(Container $container, $config)
     {
