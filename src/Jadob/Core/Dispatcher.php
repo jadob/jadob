@@ -2,9 +2,12 @@
 
 namespace Jadob\Core;
 
+use InvalidArgumentException;
 use Jadob\Container\Container;
 use Jadob\Core\Exception\KernelException;
 use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Router\Exception\MethodNotAllowedException;
+use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -35,12 +38,13 @@ class Dispatcher
      * Dispatcher constructor.
      *
      * @param Container $container
+     * @param EventDispatcherInterface|null $eventDispatcher
      */
     public function __construct(Container $container, ?EventDispatcherInterface $eventDispatcher = null)
     {
         $this->container = $container;
 
-        if($eventDispatcher === null) {
+        if ($eventDispatcher === null) {
             $this->eventDispatcher = new EventDispatcher();
         }
 
@@ -139,14 +143,14 @@ class Dispatcher
     /**
      * Allows for inject container services directly to method.
      *
-     * @param  object $controllerClass instantiated controller class
-     * @param  string $methodName      method to be called later
-     * @param  array  $routerParams    arguments resolved from route
+     * @param object $controllerClass instantiated controller class
+     * @param string $methodName method to be called later
+     * @param array $routerParams arguments resolved from route
      * @return array
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      */
-    protected function resolveControllerMethodArguments($controllerClass, $methodName, array $routerParams)
+    protected function resolveControllerMethodArguments($controllerClass, $methodName, array $routerParams): array
     {
         $reflection = new \ReflectionMethod($controllerClass, $methodName);
 
@@ -174,9 +178,8 @@ class Dispatcher
                 continue;
             }
 
-            throw new \RuntimeException('Missing service or route parameter with name "'.$name.'"');
+            throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
         }
-
         return $output;
     }
 }
