@@ -21,6 +21,7 @@ use Jadob\Debug\Profiler\Profiler;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
@@ -292,6 +293,11 @@ class Kernel
             fastcgi_finish_request();
         }
 
+    }
+
+    public function setContainer(ContainerInterface $container)
+    {
+        $this->container = $container;
     }
 
 }
