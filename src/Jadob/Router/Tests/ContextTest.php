@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  * Class ContextTest
  *
  * @package Jadob\Router\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ContextTest extends TestCase

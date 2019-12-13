@@ -19,7 +19,7 @@ use function json_decode;
 
 /**
  * @TODO    This class should be named TwigProvider (according to other providers name conventions)
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class TwigServiceProvider implements ServiceProviderInterface

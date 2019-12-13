@@ -40,7 +40,7 @@ class Bootstrap extends AbstractBootstrap
  * Class TwigServiceProviderTest
  *
  * @package Jadob\Bridge\Twig\Tests\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class TwigServiceProviderTest extends TestCase

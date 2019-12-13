@@ -6,7 +6,7 @@ namespace Jadob\FeatureFlag\Condition;
  * Interface ConditionInterface
  *
  * @package Jadob\FeatureFlag\Condition
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 interface ConditionInterface

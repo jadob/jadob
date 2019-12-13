@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @package Jadob\Core\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ExampleController
@@ -33,7 +33,7 @@ class ExampleController
  * Class DispatcherTest
  *
  * @package Jadob\Core\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DispatcherTest extends TestCase

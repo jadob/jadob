@@ -11,7 +11,7 @@ use Jadob\PagerfantaBridge\Twig\Extension\PagerfantaExtension;
  * Class PagerfantaProvider
  *
  * @package Jadob\PagerfantaBridge\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class PagerfantaProvider implements ServiceProviderInterface

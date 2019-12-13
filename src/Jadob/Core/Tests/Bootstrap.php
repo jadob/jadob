@@ -8,7 +8,7 @@ use Jadob\Core\AbstractBootstrap;
  * Class Bootstrap
  *
  * @package Jadob\Core\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Bootstrap extends AbstractBootstrap

@@ -6,7 +6,7 @@ use Jadob\Container\Container;
 
 /**
  * @package Jadob\Core\Controller
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ControllerClassResolver

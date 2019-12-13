@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
  * Class ContainerTest
  *
  * @package Jadob\Container\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license proprietary
  */
 class ContainerTest extends TestCase

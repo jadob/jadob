@@ -5,7 +5,7 @@ namespace Jadob\Core\Event;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class AfterControllerEvent

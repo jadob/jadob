@@ -6,7 +6,7 @@ namespace Jadob\Debug\ErrorHandler;
  * Interface ErrorHandlerInterface
  *
  * @package Jadob\Debug\ErrorHandler
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 interface ErrorHandlerInterface

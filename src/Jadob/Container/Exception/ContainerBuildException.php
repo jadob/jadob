@@ -6,7 +6,7 @@ namespace Jadob\Container\Exception;
  * Class ContainerBuildException
  *
  * @package Jadob\Container\Exception
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ContainerBuildException extends \Exception

@@ -6,7 +6,7 @@ namespace Jadob\Container\ServiceProvider;
  * Experimental Feature
  * Provides default configuration which can be overriden by user and later used to execute current provider.
  *
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 interface DefaultConfigProviderInterface

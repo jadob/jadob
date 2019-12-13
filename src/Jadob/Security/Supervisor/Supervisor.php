@@ -7,7 +7,7 @@ use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Supervisor

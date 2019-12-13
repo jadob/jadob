@@ -6,7 +6,7 @@ namespace Jadob\Security\Auth\User;
  * Example User object, that can be used in your app.
  *
  * @package Jadob\Security\Auth\User
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class User implements UserInterface

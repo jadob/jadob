@@ -25,7 +25,7 @@ use Symfony\Component\Console\Helper\HelperSet;
  * Class DoctrineDBALProvider
  *
  * @package Jadob\Bridge\Doctrine\DBAL\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DoctrineDBALProvider implements ServiceProviderInterface

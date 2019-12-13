@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * Class RouterTest
  *
  * @package Jadob\Router\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class RouterTest extends TestCase

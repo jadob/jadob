@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
  * Class Psr3QueryLogger
  *
  * @package Jadob\Bridge\Doctrine\DBAL\Logger
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Psr3QueryLogger implements SQLLogger

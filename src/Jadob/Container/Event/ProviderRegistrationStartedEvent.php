@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by pizzaminded <miki@appvende.net>
- * User: mikolajczajkowsky
- * Date: 11.12.2019
- * Time: 02:27
- */
+
+declare(strict_types=1);
 
 namespace Jadob\Container\Event;
 

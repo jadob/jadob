@@ -3,7 +3,7 @@
 namespace Jadob\Core\Event;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class LocaleChangedEvent

@@ -7,7 +7,7 @@ namespace Jadob\Url;
 /**
  * TODO maybe comply with UriInterface?
  *
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Url

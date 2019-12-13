@@ -25,7 +25,7 @@ use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
  *
  * @see     https://martinfowler.com/articles/feature-toggles.html
  * @package Jadob\FeatureFlag
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class FeatureFlag

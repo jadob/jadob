@@ -31,7 +31,7 @@ namespace Jadob\FeatureFlag\Condition;
  * This condition relies on built-in \version_compare function
  *
  * @see     https://www.php.net/manual/en/function.version-compare.php
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class SemverCondition implements ConditionInterface

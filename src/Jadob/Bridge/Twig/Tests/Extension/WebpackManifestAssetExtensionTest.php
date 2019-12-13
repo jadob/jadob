@@ -6,7 +6,7 @@ use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class WebpackManifestAssetExtensionTest extends TestCase

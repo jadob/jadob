@@ -36,7 +36,7 @@ use function is_array;
  * Class Kernel
  *
  * @package Jadob\Core
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Kernel

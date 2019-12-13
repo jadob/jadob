@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @deprecated
- * @author     pizzaminded <miki@appvende.net>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license    MIT
  */
 class GuardProvider implements ServiceProviderInterface

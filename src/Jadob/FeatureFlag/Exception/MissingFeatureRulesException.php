@@ -3,7 +3,7 @@
 namespace Jadob\FeatureFlag\Exception;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class MissingFeatureRulesException extends \Error

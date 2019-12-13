@@ -16,7 +16,7 @@ use Symfony\Component\Translation\Translator;
  * Class TranslationServiceProvider
  *
  * @package Jadob\SymfonyTranslationBridge\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class TranslationServiceProvider implements ServiceProviderInterface

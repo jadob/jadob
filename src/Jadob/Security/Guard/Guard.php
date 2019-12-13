@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @deprecated
- * @author     pizzaminded <miki@appvende.net>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license    MIT
  */
 class Guard

@@ -13,7 +13,7 @@ use Twig\TwigFilter;
  * Class TranslationExtension
  *
  * @package Jadob\SymfonyTranslationBridge\Twig\Extension
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class TranslationExtension extends AbstractExtension

@@ -7,7 +7,7 @@ namespace Jadob\Security\Auth\User;
  * When your User class needs to be refreshed, just implement this one.
  *
  * @package Jadob\Security\Auth\User
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 interface RefreshableUserInterface

@@ -8,7 +8,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * Class ServiceNotFoundException
  *
  * @package Jadob\Container\Exception
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ServiceNotFoundException extends \Exception implements NotFoundExceptionInterface

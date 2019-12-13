@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  * Class BcryptEncoderTest
  *
  * @package Jadob\Security\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class BCryptEncoderTest extends TestCase

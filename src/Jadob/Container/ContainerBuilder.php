@@ -18,7 +18,7 @@ use function is_array;
  * Class ContainerBuilder
  *
  * @package Jadob\Container
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ContainerBuilder

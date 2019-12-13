@@ -7,7 +7,7 @@ namespace Jadob\FeatureFlag\Condition;
  *
  * Warning: this class assumes that condition must be equal true to make it enabled.
  *
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class BooleanCondition implements ConditionInterface

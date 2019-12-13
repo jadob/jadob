@@ -28,7 +28,7 @@ use const PHP_SAPI;
  * TODO Separate logger for deprecations?
  *
  * @package Jadob\Debug\ErrorHandler
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DevelopmentErrorHandler implements ErrorHandlerInterface

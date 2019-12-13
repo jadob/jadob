@@ -6,7 +6,7 @@ namespace Jadob\Security\Encoder;
  * Class BcryptEncoder
  *
  * @package Jadob\Security\Encoder
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class BCryptEncoder extends AbstractPasswordEncoder

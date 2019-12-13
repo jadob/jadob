@@ -3,7 +3,7 @@
 namespace Jadob\Config\Exception;
 
 /**
- * @author pizzaminded <miki@appvende.net>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  */
 class ConfigNodeNotFoundException extends \Error
 {

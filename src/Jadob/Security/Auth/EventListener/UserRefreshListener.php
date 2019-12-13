@@ -12,7 +12,7 @@ use Jadob\Security\Guard\Guard;
  * Class UserRefreshListener
  *
  * @package Jadob\Security\Auth\EventListener
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class UserRefreshListener //implements BeforeControllerEventListenerInterface

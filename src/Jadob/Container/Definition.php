@@ -5,7 +5,7 @@ namespace Jadob\Container;
 use Jadob\Container\Exception\ContainerBuildException;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Definition

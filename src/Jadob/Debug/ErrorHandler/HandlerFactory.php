@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
  * Class HandlerFactory
  *
  * @package Jadob\Debug\ErrorHandler
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class HandlerFactory

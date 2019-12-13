@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @todo    rewrite to use supervisors and identityproviders/ identitystorage
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class AuthProvider implements ServiceProviderInterface

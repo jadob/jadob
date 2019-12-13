@@ -28,7 +28,7 @@ use Symfony\Component\Console\Application;
  * Class DoctrineODMProvider
  *
  * @package Jadob\Bridge\Doctrine\ODM\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DoctrineODMProvider implements ServiceProviderInterface

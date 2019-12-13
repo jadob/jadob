@@ -6,7 +6,7 @@ namespace Jadob\Security\Exception;
  * Class InvalidCredentialsException
  *
  * @package Jadob\Security\Exception
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class InvalidCredentialsException extends \Error

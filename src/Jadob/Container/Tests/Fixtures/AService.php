@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by pizzaminded <miki@appvende.net>
+ * Created by pizzaminded <mikolajczajkowsky@gmail.com>
  * User: mikolajczajkowsky
  * Date: 2019-08-02
  * Time: 18:14

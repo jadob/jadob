@@ -6,7 +6,7 @@ use Jadob\Router\Exception\RouterException;
 
 /**
  * @package Jadob\Router
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class RouteCollection implements \ArrayAccess, \Iterator, \Countable

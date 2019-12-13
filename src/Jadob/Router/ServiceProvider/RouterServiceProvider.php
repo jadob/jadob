@@ -13,7 +13,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
  * Class RouterServiceProvider
  *
  * @package Jadob\Router\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class RouterServiceProvider implements ServiceProviderInterface

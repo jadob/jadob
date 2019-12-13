@@ -10,7 +10,7 @@ use Twig\TwigFunction;
  * Class PathExtension
  *
  * @package Jadob\TwigBridge\Twig\Extension
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class PathExtension extends AbstractExtension

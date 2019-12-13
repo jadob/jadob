@@ -8,7 +8,7 @@ use Jadob\Security\Auth\User\UserInterface;
  * Interface UserProviderInterface
  *
  * @package Jadob\Security\Auth
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  */
 interface UserProviderInterface
 {

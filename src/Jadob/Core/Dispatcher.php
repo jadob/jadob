@@ -29,7 +29,7 @@ use function method_exists;
  * Class Dispatcher
  *
  * @package Jadob\Core
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Dispatcher

@@ -7,7 +7,7 @@ use Twig\TwigFunction;
 
 /**
  * @see     https://www.npmjs.com/package/webpack-manifest-plugin
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class WebpackManifestAssetExtension extends AbstractExtension

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 abstract class AbstractController

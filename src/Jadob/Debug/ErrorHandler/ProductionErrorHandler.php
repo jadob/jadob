@@ -3,7 +3,7 @@
 namespace Jadob\Debug\ErrorHandler;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ProductionErrorHandler implements ErrorHandlerInterface

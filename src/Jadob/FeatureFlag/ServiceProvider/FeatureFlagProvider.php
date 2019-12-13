@@ -10,7 +10,7 @@ use Jadob\FeatureFlag\FeatureFlag;
  * Class FeatureFlagProvider
  *
  * @package Jadob\FeatureFlag\ServiceProvider
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class FeatureFlagProvider implements ServiceProviderInterface

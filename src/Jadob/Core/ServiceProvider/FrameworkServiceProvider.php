@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * Configures any Framework related things.
  * Class FrameworkServiceProvider
  * @package    Jadob\Core\ServiceProvider
- * @author     pizzaminded <miki@appvende.net>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license    MIT
  */
 class FrameworkServiceProvider implements ServiceProviderInterface

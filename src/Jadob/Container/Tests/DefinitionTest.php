@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
  * Class DefinitionTest
  *
  * @package Jadob\Container\Tests
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class DefinitionTest extends TestCase

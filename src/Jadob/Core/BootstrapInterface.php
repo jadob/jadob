@@ -7,7 +7,7 @@ namespace Jadob\Core;
  * This one must be implemented by your Bootstrap class.
  *
  * @package Jadob\Core
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  */
 interface BootstrapInterface
 {

@@ -10,7 +10,7 @@ use Psr\Log\LogLevel;
  *
  * @deprecated
  * @package    Jadob\Debug
- * @author     pizzaminded <miki@appvende.net>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license    MIT
  */
 class ErrorLogger extends LogLevel implements LoggerInterface

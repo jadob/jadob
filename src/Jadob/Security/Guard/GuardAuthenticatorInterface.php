@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @deprecated
- * @author     pizzaminded <miki@appvende.net>
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license    MIT
  */
 interface GuardAuthenticatorInterface

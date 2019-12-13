@@ -3,7 +3,7 @@
 namespace Jadob\Security\Auth\Provider;
 
 /**
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ChainedIdentityProvider

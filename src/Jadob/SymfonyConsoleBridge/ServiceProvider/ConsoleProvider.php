@@ -13,7 +13,7 @@ use Symfony\Component\Console\Application;
  * Adds symfony/console functionality to framework.
  *
  * @see     https://symfony.com/doc/3.4/components/console.html
- * @author  pizzaminded <miki@appvende.net>
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ConsoleProvider implements ServiceProviderInterface
