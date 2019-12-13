@@ -36,6 +36,10 @@ class EventStoreProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
+        if (!isset($config['connection_name'])) {
+            throw new \RuntimeException('Missing connection_name option in event_store configuration. ');
+        }
+
         return [
             ProjectionManager::class => function (ContainerInterface $container) use ($config) {
                 return new ProjectionManager($container->get(LoggerInterface::class));
@@ -51,10 +55,7 @@ class EventStoreProvider implements ServiceProviderInterface
                     $separateLogger = (bool)$config['separate_logger'];
                 }
 
-                if (isset($config['connection_name'])) {
-                    $connectionName = $config['connection_name'];
-                }
-
+                $connectionName = $config['connection_name'];
                 $connection = $container->get('doctrine.dbal.' . $connectionName);
 
                 if ($separateLogger) {
