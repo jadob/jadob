@@ -5,43 +5,56 @@ declare(strict_types=1);
 namespace Jadob\EventSourcing\EventStore;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\DBALException;
 use Jadob\EventSourcing\AbstractDomainEvent;
 use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
+use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
+use Jadob\EventSourcing\EventStore\Storage\DBALConnectionUtility;
 use PDO;
 use Psr\Log\LoggerInterface;
+use ReflectionException;
+use Throwable;
+use function count;
 use function get_class;
-use function time;
+use function str_replace;
 
 /**
- * @TODO    this one should be EventStorage related, and EventStore should be separated
- * Class DBALEventStore
- * @package Jadob\EventStore
+ * @TODO   this one should be EventStorage related, and EventStore should be separated
+ * @author takbardzoimiki <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 class DBALEventStore implements EventStoreInterface
 {
     /**
-     * Wszystkie Eventy trzymane są w jednej tabeli
+     * unsupported Yet
+     * All events are stored in single table.
      *
      * @var int
      */
     public const STRATEGY_ALL_IN_ONE = 1;
 
     /**
-     * Każdy strumień zdarzeń ma swoją osobną tabelę
+     * Each aggregate lives in his own tables.
      *
      * @var int
      */
     public const STRATEGY_ONE_PER_STREAM = 2;
 
     /**
-     * Tworzy osobne tabele dla każdego typu agregatu
-     * eg. dla klasy KOT bedzie osobna tabela, dla klasy PIES osobna itp.
+     * Unsupported yet
+     * There is a table for each aggregate *type*.
+     *
+     * eg. There will be a one table for CAT Aggregate, and another for RABBIT Aggregate.
      *
      * @var int
      */
     public const STRATEGY_ONE_PER_TYPE = 3;
+
+    /**
+     * How does the table with aggregates information is called
+     * @var string
+     */
+    public const DEFAULT_METADATA_TABLE_NAME = 'aggregates_metadata';
 
     /**
      * @var Connection
@@ -69,52 +82,59 @@ class DBALEventStore implements EventStoreInterface
     protected $payloadSerializer;
 
     /**
+     * @var DBALConnectionUtility
+     */
+    protected $utility;
+
+    /**
      * DBALEventStore constructor.
      *
-     * @param Connection             $connection
-     * @param LoggerInterface        $logger
+     * @param Connection $connection
+     * @param LoggerInterface $logger
      * @param ProjectionManager|null $projectionManager
+     * @param EventDispatcher|null $eventDispatcher
      */
     public function __construct(
         Connection $connection,
         LoggerInterface $logger,
         ?ProjectionManager $projectionManager = null,
         ?EventDispatcher $eventDispatcher = null
-    ) {
+    )
+    {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->payloadSerializer = new PayloadSerializer();
         $this->projectionManager = $projectionManager ?? new ProjectionManager();
         $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
+        $this->utility = new DBALConnectionUtility($connection);
     }
 
-    protected function createSchema(Schema $schema): void
-    {
-        $table = $schema->createTable('event_store');
-        $table->addColumn(
-            'id', Type::INTEGER, [
-            'autoincrement' => true
-            ]
-        );
-    }
-
+    /**
+     * @param AbstractAggregateRoot $aggregateRoot
+     * @throws EventStoreException
+     * @throws DBALException
+     * @throws ReflectionException
+     */
     public function saveAggregateRoot(AbstractAggregateRoot $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
         $aggregateType = get_class($aggregateRoot);
-        $timestamp = time();
+        $timestamp = (new \DateTime())->format('Y-m-d H:i:s');
 
+        $this->ensureAggregatesMetadataTableExists();
+        $this->ensureThereIsATableForAggregate($aggregateId);
 
         $aggregateExists = $this->hasAggregateMetadata($aggregateId);
         $this->connection->beginTransaction();
 
         if (!$aggregateExists) {
             $this->connection->insert(
-                'aggregates', [
-                'aggregate_type' => $aggregateType,
-                'aggregate_id' => $aggregateId,
-                'created_timestamp' => $timestamp
+                self::DEFAULT_METADATA_TABLE_NAME,
+                [
+                    'aggregate_type' => $aggregateType,
+                    'aggregate_id' => $aggregateId,
+                    'timestamp' => $timestamp
                 ]
             );
         }
@@ -125,26 +145,36 @@ class DBALEventStore implements EventStoreInterface
             $payload = $this->payloadSerializer->serialize($event->toArray());
 
             //TODO: LOCK TABLES na czas insertu?
-            //TODO: Timestamp
-            //TODO: zdarzenia do jednej tabeli, informacje o agregatach do drugiej, snapshoty do trzeciej
-            //@TODO Bulk inserts? ID eventu nie jest nam tutaj do szczescia potrzebne
+            //@TODO Bulk inserts? event id isnt needed
             $this->connection->insert(
-                'aggregate_events', [
-                'aggregate_id' => $aggregateId,
-                'event_type' => $eventType,
-                'aggregate_version' => $eventVersion,
-                'payload' => $payload
+                'aggregate_' . $this->fixTableName($aggregateId),
+                [
+                    'event_type' => $eventType,
+                    'aggregate_version' => $eventVersion,
+                    'payload' => $payload,
+                    'timestamp' => $timestamp
                 ]
             );
         }
-        $this->connection->commit();
+
+        try {
+            $this->connection->commit();
+        } catch (Throwable $e) {
+            $this->connection->rollBack();
+            throw new EventStoreException(
+                'An exception occured during aggregate commit: ' . $e->getMessage() . '. call getPrevious() on this to get more information',
+                0,
+                $e
+            );
+        }
+
+        //update snapshot here
 
         foreach ($events as $event) {
-            //TODO wywalic projection manager, wklejac drugi event dispatcher poniewaz dla obu logika bedzie taka sama
+            //TODO drop ProjectionManager as a separate class and replace it with another EventDispatcher instance
             $this->projectionManager->emit($event);
             $this->eventDispatcher->emit($event);
         }
-        //emit event to other dispatchers
 
     }
 
@@ -152,17 +182,17 @@ class DBALEventStore implements EventStoreInterface
     {
         $qb = $this->connection->createQueryBuilder()
             ->select('*')
-            ->from('aggregates')
+            ->from(self::DEFAULT_METADATA_TABLE_NAME)
             ->where('aggregate_id = :uuid')
             ->setParameter('uuid', $aggregateId);
 
         $result = $qb->execute()->fetchAll(PDO::FETCH_ASSOC);
 
-        return \count($result) !== 0;
+        return count($result) !== 0;
     }
 
     /**
-     * @param  string $streamName
+     * @param string $streamName
      * @return AbstractDomainEvent[]
      */
     public function getStream(string $streamName): array
@@ -171,11 +201,48 @@ class DBALEventStore implements EventStoreInterface
         //@TODO sortowanie po wersji
         $qb = $this->connection->createQueryBuilder()
             ->select('*')
-            ->from('aggregate_events')
+            ->from(self::DEFAULT_METADATA_TABLE_NAME)
             ->where('aggregate_id = :uuid')
             ->orderBy('aggregate_version')
             ->setParameter('uuid', $streamName);
 
         return $qb->execute()->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    /**
+     * Checks only for table existence, not for his structure nor data.
+     * If not present in schema, it will be created (see DBALConnectionUtility::createMetadataTable())
+     *
+     * @throws DBALException
+     */
+    protected function ensureAggregatesMetadataTableExists(): void
+    {
+        $exists = $this->utility->metadataTableExists();
+
+        if (!$exists) {
+            $this->utility->createMetadataTable();
+        }
+    }
+
+    /**
+     * @param string $aggregateId
+     * @throws DBALException
+     */
+    public function ensureThereIsATableForAggregate(string $aggregateId): void
+    {
+        $aggregateId = $this->fixTableName($aggregateId);
+        $tableName = 'aggregate_' . $aggregateId;
+        $exists = $this->utility->aggregateTableExists($tableName);
+
+        if (!$exists) {
+            $this->utility->createAggregateTable($tableName);
+        }
+    }
+
+
+    public function fixTableName($tableName)
+    {
+        return str_replace('-', '_', $tableName);
     }
 }
