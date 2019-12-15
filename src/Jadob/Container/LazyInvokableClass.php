@@ -28,9 +28,12 @@ class LazyInvokableClass
 
     public function __invoke($args)
     {
-        //@TODO if present in container, run them
-        //@TODO if not present, autowire
-        $childClass = $this->container->get($this->class);
+        if ($this->container->has($this->class)) {
+            $childClass = $this->container->get($this->class);
+        } else {
+            $childClass = $this->container->autowire($this->class);
+        }
+
         return $childClass(...func_get_args());
     }
 }
