@@ -91,6 +91,8 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Turns a factory into service.
+     *
      * @param string $factoryName
      * @return mixed
      */
@@ -138,6 +140,9 @@ class Container implements ContainerInterface
     }
 
     /**
+     * A has() on steroids.
+     * Checks the services and factories by it's type, not the name.
+     *
      * @param string $className FQCN of class that we need to find
      * @return mixed
      * @throws ServiceNotFoundException
@@ -242,6 +247,7 @@ class Container implements ContainerInterface
     }
 
     /**
+     * Creates new instance of object with dependencies that currently have been stored in container
      *
      * @param string $className
      * @return object
@@ -262,6 +268,34 @@ class Container implements ContainerInterface
             return $object;
         }
 
-        throw new AutowiringException('Unable to autowire class "' . $className . '", missing implementation for classes that have constructors.');
+        $constructor = $classReflection->getConstructor();
+        $arguments = $constructor->getParameters();
+        $argumentsToInject = [];
+
+        foreach ($arguments as $argument) {
+            //no nulls allowed
+            if ($argument->getType() === null) {
+                //TODO Named constructors
+                throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
+            }
+
+            //only user defined classes allowed so far
+            if ($argument->getType()->isBuiltin()) {
+                //TODO Named constructors
+                throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built in type argument');
+            }
+
+            $argumentClass = (string)$argument->getType();
+            try {
+                $argumentsToInject[] = $this->findObjectByClassName($argumentClass);
+            } catch (ServiceNotFoundException $exception) {
+                //TODO Named constructors
+                throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
+            }
+        }
+
+        $service = new $className(...$argumentsToInject);
+        $this->add($className, $service);
+        return $service;
     }
 }
