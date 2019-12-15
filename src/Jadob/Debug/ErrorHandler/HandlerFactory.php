@@ -24,6 +24,6 @@ class HandlerFactory
             return new DevelopmentErrorHandler($logger);
         }
 
-        return new ProductionErrorHandler();
+        return new ProductionErrorHandler($logger);
     }
 }

@@ -64,9 +64,6 @@ class ProductionErrorHandler implements ErrorHandlerInterface
                             'type' => get_class($exception)
                         ]
                     );
-
-                    exit;
-
                 }
             );
         }
