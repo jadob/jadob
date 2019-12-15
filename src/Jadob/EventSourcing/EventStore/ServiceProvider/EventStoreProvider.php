@@ -42,15 +42,18 @@ class EventStoreProvider implements ServiceProviderInterface
 
         return [
             ProjectionManager::class => function (ContainerInterface $container) use ($config) {
-                return new ProjectionManager($container->get(LoggerInterface::class));
+                    $projectionManager = new ProjectionManager($container->get(LoggerInterface::class));
+                    foreach ($config['projections'] as $projectionService) {
+                        $projectionManager->addProjection($container->get($projectionService));
+                    }
+
+                return $projectionManager;
             },
-            EventDispatcher::class => function (ContainerInterface $container) use ($config) {
+            EventDispatcher::class => function (ContainerInterface $container) {
                 return new EventDispatcher();
             },
             EventStoreInterface::class => function (ContainerInterface $container) use ($config) {
                 $separateLogger = true;
-                $connectionName = 'default';
-
                 if (isset($config['separate_logger'])) {
                     $separateLogger = (bool)$config['separate_logger'];
                 }
