@@ -198,8 +198,11 @@ class Dispatcher
             $name = $parameter->getName();
             $type = $parameter->getType();
 
-            //assume that if current function argument is an route parameter if there is no type
-            if ($type === null && isset($routerParams[$name])) {
+            if (
+                isset($routerParams[$name])
+                //assuming that router param has builtin type defined, or does not defined at all
+                && ($type === null || ($type !== null && $type->isBuiltin()))
+            ) {
                 $output[$name] = $routerParams[$name];
                 continue;
             }
