@@ -4,6 +4,7 @@ namespace Jadob\Core\Tests;
 
 use Jadob\Container\Container;
 use Jadob\Core\Dispatcher;
+use Jadob\Core\Exception\KernelException;
 use Jadob\Router\Route;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
@@ -41,27 +42,25 @@ class DispatcherTest extends TestCase
 
     public function setUp()
     {
-
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['SERVER_PORT'] = 8000;
     }
 
     /**
-     * @expectedException \Jadob\Core\Exception\KernelException
+     * @throws KernelException
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Jadob\Router\Exception\MethodNotAllowedException
+     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws \ReflectionException
      */
     public function testDispatcherWillThrowExceptionIfControllerWillBeNull()
     {
+        $this->expectException(KernelException::class);
+        $this->expectExceptionMessage('Route "example_route_1" should provide a valid FQCN or Closure, null given');
 
         $container = new Container();
 
         $invalidRoute = new Route('example_route_1', '/invalid', null);
-        //        $validRouteWithClosure = new Route('example_route_2', '/valid/1', function () {
-        //            return new Response('ok');
-        //        });
-        //
-        //        $validRouteWithClass = new Route('example_route_3', '/valid/2', ExampleController::class);
-
-
         $collection = new RouteCollection();
 
         $collection->addRoute($invalidRoute);
@@ -71,10 +70,9 @@ class DispatcherTest extends TestCase
 
         $request = Request::create('/invalid');
 
-        $dispatcher = new Dispatcher($container);
+        $dispatcher = new Dispatcher([], $container);
 
         $dispatcher->executeRequest($request);
     }
-
 
 }
