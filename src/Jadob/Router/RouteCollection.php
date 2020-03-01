@@ -2,14 +2,23 @@
 
 namespace Jadob\Router;
 
+use ArrayAccess;
+use Countable;
+use Iterator;
 use Jadob\Router\Exception\RouterException;
+use function count;
+use function is_integer;
+use function is_string;
+use function key;
+use function next;
+use function reset;
 
 /**
  * @package Jadob\Router
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class RouteCollection implements \ArrayAccess, \Iterator, \Countable
+class RouteCollection implements ArrayAccess, Iterator, Countable
 {
     /**
      * @var string|null
@@ -44,7 +53,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param  Route $route
+     * @param Route $route
      * @return $this
      */
     public function addRoute(Route $route)
@@ -61,7 +70,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     /**
      * Merges passed $collection with current object.
      *
-     * @param  RouteCollection $collection
+     * @param RouteCollection $collection
      * @return RouteCollection
      */
     public function addCollection(RouteCollection $collection): RouteCollection
@@ -117,7 +126,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function rewind()
     {
-        \reset($this->routes);
+        reset($this->routes);
     }
 
     /**
@@ -141,7 +150,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function next()
     {
-        return \next($this->routes);
+        return next($this->routes);
     }
 
     /**
@@ -149,7 +158,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function valid(): bool
     {
-        return \key($this->routes) !== null;
+        return key($this->routes) !== null;
     }
 
     /**
@@ -157,7 +166,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
      */
     public function count()
     {
-        return \count($this->routes);
+        return count($this->routes);
     }
 
     /**
@@ -169,7 +178,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param  null|string $host
+     * @param null|string $host
      * @return RouteCollection
      */
     public function setHost(?string $host): RouteCollection
@@ -191,7 +200,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param  null|string $prefix
+     * @param null|string $prefix
      * @return RouteCollection
      */
     public function setPrefix(?string $prefix): RouteCollection
@@ -209,7 +218,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
     }
 
     /**
-     * @param  RouteCollection $parentCollection
+     * @param RouteCollection $parentCollection
      * @return RouteCollection
      */
     public function setParentCollection(RouteCollection $parentCollection): RouteCollection
@@ -220,7 +229,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
 
 
     /**
-     * @param  array[] $data
+     * @param array[] $data
      * @return RouteCollection
      * @throws Exception\RouterException
      */
@@ -229,7 +238,7 @@ class RouteCollection implements \ArrayAccess, \Iterator, \Countable
         $routeCollection = new self();
 
         foreach ($data as $routeName => $routeArray) {
-            if (\is_integer($routeName) && \is_string($routeArray)) {
+            if (is_integer($routeName) && is_string($routeArray)) {
                 throw new RouterException('Route "' . $routeArray . '" looks malformed. Please provide a valid array as a value for this route.');
             }
 

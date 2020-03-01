@@ -11,6 +11,10 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Container\ContainerInterface;
 
+/**
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
+ */
 class DispatcherMiddleware implements MiddlewareInterface
 {
 
@@ -51,9 +55,7 @@ class DispatcherMiddleware implements MiddlewareInterface
         );
 
         $controller = $route->getController();
-        /**
- * @var ResponseInterface $response 
-*/
+        /** @var ResponseInterface $response */
         $response = $controller($request);
 
         return $response;
