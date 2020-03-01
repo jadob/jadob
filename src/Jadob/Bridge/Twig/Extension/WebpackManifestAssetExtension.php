@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Extension;
 
+use RuntimeException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -28,7 +30,7 @@ class WebpackManifestAssetExtension extends AbstractExtension
     }
 
     /**
-     * @return \Twig\TwigFunction[]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
@@ -38,16 +40,17 @@ class WebpackManifestAssetExtension extends AbstractExtension
     }
 
     /**
-     * @param  string $assetName
+     * @param string $assetName
      * @return string
+     * @throws RuntimeException
      */
     public function getAssetFromManifest(string $assetName): string
     {
 
-        if(isset($this->manifest[$assetName])) {
+        if (isset($this->manifest[$assetName])) {
             return $this->manifest[$assetName];
         }
 
-        throw new \RuntimeException('Could not find "'.$assetName.'" in webpack manifest file');
+        throw new RuntimeException('Could not find "' . $assetName . '" in webpack manifest file');
     }
 }
