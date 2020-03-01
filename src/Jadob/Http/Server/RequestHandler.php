@@ -55,7 +55,6 @@ class RequestHandler implements RequestHandlerInterface
         $this->currentMiddleware++;
         $middlewareToHandle = $this->middlewares[$this->currentMiddleware];
 
-        error_log('before: '.$this->currentMiddleware);
         /**
          * Path prefix verification
          */
@@ -77,7 +76,6 @@ class RequestHandler implements RequestHandlerInterface
         }
 
         $this->currentMiddleware--;
-        error_log('after: '.$this->currentMiddleware);
         return $response;
     }
 }
