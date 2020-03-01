@@ -77,6 +77,7 @@ class Dispatcher
      * @throws KernelException
      * @throws ReflectionException
      * @throws MethodNotAllowedException
+     * @throws AutowiringException
      */
     public function executeRequest(Request $request): Response
     {
@@ -90,7 +91,7 @@ class Dispatcher
         $controllerClass = $route->getController();
 
         if ($controllerClass === null) {
-            throw new KernelException('Route ' . $route->getName() . ' should provide a valid FQCN or Closure, null given');
+            throw KernelException::invalidControllerPassed($route->getName());
         }
 
         $autowiredController = $this->autowireControllerClass($controllerClass);

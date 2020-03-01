@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core\Exception;
 
@@ -7,9 +8,17 @@ namespace Jadob\Core\Exception;
  *
  * @package Jadob\Core\Exception
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license proprietary
+ * @license MIT
  */
 class KernelException extends \Exception
 {
+    /**
+     * @param string $routeName
+     * @return KernelException
+     */
+    public static function invalidControllerPassed(string $routeName)
+    {
+        return new self('Route "' . $routeName . '" should provide a valid FQCN or Closure, null given');
+    }
 
 }
