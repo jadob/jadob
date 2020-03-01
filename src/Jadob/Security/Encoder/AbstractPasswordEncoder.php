@@ -3,6 +3,7 @@
 namespace Jadob\Security\Encoder;
 
 /**
+ * @deprecated
  * Class AbstractPasswordEncoder
  *
  * @package Jadob\Security\Encoder
