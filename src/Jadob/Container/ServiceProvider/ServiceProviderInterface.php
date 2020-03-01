@@ -3,7 +3,7 @@
 namespace Jadob\Container\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
+use Jadob\Container\Exception\ServiceNotFoundException;
 
 /**
  * @TODO:   Maybe we should add here 'getDefaultConfiguration' method, which will be merged with user-defined config?
@@ -40,6 +40,7 @@ interface ServiceProviderInterface
      *
      * @param  Container  $container
      * @param  array|null $config    the same config node as passed in register()
+     * @throws ServiceNotFoundException
      * @return void
      */
     public function onContainerBuild(Container $container, $config);
