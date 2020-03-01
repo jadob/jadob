@@ -49,12 +49,19 @@ abstract class AbstractAggregateRoot
 
         foreach ($events as $event) {
             /** @var AbstractDomainEvent $event */
+            $event->setAggregateId($aggregateId);
+            $event->setAggregateVersion($event['_version']);
+            unset($event['_version']);
             $self->apply($event);
         }
 
         return $self;
     }
 
+    /**
+     * Modifies the state of aggregate.
+     * @param object $event received from recordThat() or while aggregate reconstitution
+     */
     abstract protected function apply(object $event): void;
 
     /**
