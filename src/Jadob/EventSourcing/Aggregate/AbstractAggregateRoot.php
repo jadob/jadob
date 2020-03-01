@@ -3,20 +3,23 @@
 declare(strict_types=1);
 
 namespace Jadob\EventSourcing\Aggregate;
+
 use Jadob\EventSourcing\AbstractDomainEvent;
+use ReflectionClass;
+use ReflectionException;
+use function get_called_class;
 
 /**
- * @author pizzaminded <miki@perkuma.com>
+ * Base class for aggregate roots.
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 abstract class AbstractAggregateRoot
 {
     /**
-     * //todo maybe private?
-     * #TODO rename to aggregateVersion
-     *
      * @var int
      */
-    protected $_version = 0;
+    private $aggregateVersion = 0;
 
     /**
      * @var AbstractDomainEvent[]
@@ -24,34 +27,28 @@ abstract class AbstractAggregateRoot
     protected $recordedEvents = [];
 
     /**
-     * //todo maybe private?
-     *
      * @var string
      */
-    protected $aggregateId;
+    private $aggregateId;
 
     /**
-     * @param  string $aggregateId
-     * @param  int    $version
-     * @param  array  $events
+     *
+     * @param string $aggregateId
+     * @param int $version
+     * @param array $events
      * @return AbstractAggregateRoot
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function recreate(string $aggregateId, int $version, array $events): AbstractAggregateRoot
     {
-
-        $reflection = new \ReflectionClass(\get_called_class());
-        /**
- * @var AbstractAggregateRoot $self 
-*/
+        $reflection = new ReflectionClass(get_called_class());
+        /** * @var AbstractAggregateRoot $self */
         $self = $reflection->newInstanceWithoutConstructor();
         $self->aggregateId = $aggregateId;
-        $self->_version = $version;
+        $self->aggregateVersion = $version;
 
         foreach ($events as $event) {
-            /**
- * @var AbstractDomainEvent $event 
-*/
+            /** @var AbstractDomainEvent $event */
             $self->apply($event);
         }
 
@@ -60,6 +57,9 @@ abstract class AbstractAggregateRoot
 
     abstract protected function apply(object $event): void;
 
+    /**
+     * @return string
+     */
     public function getAggregateId(): string
     {
         return $this->aggregateId;
@@ -75,14 +75,17 @@ abstract class AbstractAggregateRoot
         return $events;
     }
 
+    /**
+     * @param object $event
+     */
     final protected function recordThat(object $event): void
     {
-        $this->_version++; //increment aggregate version
-        $this->recordedEvents[$this->_version] = $event; //add event to recorded events
+        $this->aggregateVersion++;
+        $this->recordedEvents[$this->aggregateVersion] = $event;
 
         if ($event instanceof AbstractDomainEvent) {
             $event->setAggregateId($this->getAggregateId());
-            $event->setAggregateVersion($this->_version);
+            $event->setAggregateVersion($this->aggregateVersion);
         }
 
         $this->apply($event); //send to apply() so user can handle the state change
