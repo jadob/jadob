@@ -90,6 +90,10 @@ class TwigServiceProviderTest extends TestCase
 
     }
 
+    /**
+     * @throws \Jadob\Core\Exception\KernelException
+     * @throws \Twig\Error\LoaderError
+     */
     public function testServicesRegisteringWithCache()
     {
 
@@ -111,7 +115,7 @@ class TwigServiceProviderTest extends TestCase
         );
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
-        $container->add('kernel', new Kernel('prod', $bootstrap));
+        $container->add(Kernel::class, new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
@@ -121,6 +125,11 @@ class TwigServiceProviderTest extends TestCase
     }
 
 
+    /**
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws \Jadob\Core\Exception\KernelException
+     * @throws \Twig\Error\LoaderError
+     */
     public function testOnContainerBuild()
     {
         $provider = new TwigServiceProvider();
@@ -143,7 +152,7 @@ class TwigServiceProviderTest extends TestCase
         $services = $provider->register($config);
 
         $container = new Container([BootstrapInterface::class => $bootstrap]);
-        $container->add('kernel', new Kernel('prod', $bootstrap));
+        $container->add(Kernel::class, new Kernel('prod', $bootstrap));
         $loader = $services[LoaderInterface::class]($container);
 
         $container->add(LoaderInterface::class, $loader);
