@@ -3,7 +3,7 @@
 namespace Jadob\Bridge\Twig\Tests\ServiceProvider;
 
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
-use Jadob\Bridge\Twig\ServiceProvider\TwigServiceProvider;
+use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
 use Jadob\Core\AbstractBootstrap;
 use Jadob\Core\BootstrapInterface;
@@ -48,7 +48,7 @@ class TwigServiceProviderTest extends TestCase
 
     public function testGettingConfigNode()
     {
-        $provider = new TwigServiceProvider();
+        $provider = new TwigProvider();
 
         $this->assertEquals('twig', $provider->getConfigNode());
     }
@@ -57,7 +57,7 @@ class TwigServiceProviderTest extends TestCase
     public function testServicesRegisteringWithoutCache()
     {
 
-        $provider = new TwigServiceProvider();
+        $provider = new TwigProvider();
         $bootstrap = new Bootstrap();
 
         $services = $provider->register(
@@ -97,7 +97,7 @@ class TwigServiceProviderTest extends TestCase
     public function testServicesRegisteringWithCache()
     {
 
-        $provider = new TwigServiceProvider();
+        $provider = new TwigProvider();
         $bootstrap = new Bootstrap();
 
         $services = $provider->register(
@@ -132,7 +132,7 @@ class TwigServiceProviderTest extends TestCase
      */
     public function testOnContainerBuild()
     {
-        $provider = new TwigServiceProvider();
+        $provider = new TwigProvider();
         $bootstrap = new Bootstrap();
 
         $config = [

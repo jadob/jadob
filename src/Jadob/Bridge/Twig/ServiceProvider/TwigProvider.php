@@ -8,21 +8,22 @@ use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Core\Kernel;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Twig\Environment;
+use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use function file_get_contents;
 use function json_decode;
 
 /**
- * @TODO    This class should be named TwigProvider (according to other providers name conventions)
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class TwigServiceProvider implements ServiceProviderInterface
+class TwigProvider implements ServiceProviderInterface
 {
 
     /**
@@ -40,7 +41,7 @@ class TwigServiceProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        $loaderClosure = function (ContainerInterface $container) use ($config) {
+        $loaderClosure = static function (ContainerInterface $container) use ($config) {
             $loader = new FilesystemLoader();
 
             //Adds Jadob namespace with some predefined templates (forms, alerts)
@@ -63,14 +64,15 @@ class TwigServiceProvider implements ServiceProviderInterface
             return $loader;
         };
 
-        $environmentClosure = function (ContainerInterface $container) use ($config) {
+        $environmentClosure = static function (ContainerInterface $container) use ($config) {
             $cache = false;
 
             if ($config['cache']) {
                 $cache =
-                    $container->get(BootstrapInterface::class)->getCacheDir() .
-                    ($container->get('kernel')->isProduction() ? '/prod' : '/dev') .
-                    '/twig';
+                    $container->get(BootstrapInterface::class)->getCacheDir()
+                    . '/'
+                    . $container->get(Kernel::class)->getEnv()
+                    . '/twig';
             }
 
             $options = [
@@ -104,12 +106,12 @@ class TwigServiceProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
+        //@TODO: drop 'twig' alias
         $container->alias(Environment::class, 'twig');
 
-        /**
- * @var Environment $twig 
-*/
+        /** @var Environment $twig */
         $twig = $container->get(Environment::class);
+
 
         //@TODO: fix referencing to router
         if ($container->has('router')) {
@@ -132,8 +134,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $webpackManifestConfig = $extensions['webpack_manifest'];
 
             $manifestJsonLocation = $container->get(BootstrapInterface::class)->getRootDir()
-                . '/' .
-                $webpackManifestConfig['manifest_json_location'];
+                . '/'
+                . $webpackManifestConfig['manifest_json_location'];
 
             $manifest = json_decode(
                 file_get_contents($manifestJsonLocation),
@@ -142,6 +144,13 @@ class TwigServiceProvider implements ServiceProviderInterface
                 JSON_THROW_ON_ERROR
             );
             $twig->addExtension(new WebpackManifestAssetExtension($manifest));
+        }
+
+        //Register user-defined extensions:
+        $extensions = $container->getObjectsImplementing(AbstractExtension::class);
+        foreach ($extensions as $extension) {
+            //TODO: check if addExtensions() does not override currently added extensions and use it for lower complexity
+            $twig->addExtension($extension);
         }
     }
 }
