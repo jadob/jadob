@@ -10,6 +10,7 @@ use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ContainerEventListener;
+use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -18,12 +19,14 @@ use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function fastcgi_finish_request;
@@ -130,12 +133,14 @@ class Kernel
      *
      * @param Request $request
      * @return Response
-     * @throws KernelException
-     * @throws ContainerException
-     * @throws ServiceNotFoundException
-     * @throws RouteNotFoundException
-     * @throws ReflectionException
      * @throws ContainerBuildException
+     * @throws ContainerException
+     * @throws KernelException
+     * @throws ReflectionException
+     * @throws RouteNotFoundException
+     * @throws ServiceNotFoundException
+     * @throws AutowiringException
+     * @throws MethodNotAllowedException
      */
     public function execute(Request $request): Response
     {
@@ -181,10 +186,10 @@ class Kernel
         $this->eventDispatcher->dispatch($afterControllerEvent);
 
         if ($afterControllerEvent->getResponse() !== null) {
-            return $afterControllerEvent->getResponse()->prepare($request);
+            return $this->prepareResponse($afterControllerEvent->getResponse(), $request);
         }
 
-        return $response->prepare($request);
+        return $this->prepareResponse($response, $request);
     }
 
     /**
@@ -215,12 +220,9 @@ class Kernel
                 //TODO named exception constructors?
                 throw new KernelException('There is no services.php file in your config dir.');
             }
-            /**
-             * @var array $services
-             */
-            /**
-             * @noinspection PhpIncludeInspection
-             */
+
+            /** @var array $services */
+            /** @noinspection PhpIncludeInspection */
             $services = include $servicesFile;
 
             if (!is_array($services)) {
