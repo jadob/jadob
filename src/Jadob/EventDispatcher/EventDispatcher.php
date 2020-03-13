@@ -8,6 +8,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
+use SplObjectStorage;
 use function get_class;
 use function microtime;
 use function spl_object_hash;
@@ -25,10 +26,9 @@ class EventDispatcher implements EventDispatcherInterface
     protected $listeners = [];
 
     /**
-     * @TODO maybe SplObjectStorage?
-     * @var  Timestamp[]
+     * @var  SplObjectStorage
      */
-    protected $timestamps = [];
+    protected $timestamps;
 
     /**
      * @var LoggerInterface|null
@@ -42,6 +42,7 @@ class EventDispatcher implements EventDispatcherInterface
      */
     public function __construct(?LoggerInterface $logger = null)
     {
+        $this->timestamps = new SplObjectStorage();
         $this->logger = $logger;
     }
 
@@ -53,11 +54,11 @@ class EventDispatcher implements EventDispatcherInterface
     public function dispatch(object $event)
     {
         $className = get_class($event);
-        $this->timestamps[] = new Timestamp(
+        $this->timestamps->attach(new Timestamp(
             $className,
             microtime(true),
             spl_object_hash($event)
-        );
+        ));
 
         $handlersCount = 0;
         foreach ($this->listeners as $listener) {
@@ -83,7 +84,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     /**
      * @param string $message
-     * @param array  $context
+     * @param array $context
      */
     private function log(string $message, array $context = []): void
     {
@@ -95,7 +96,7 @@ class EventDispatcher implements EventDispatcherInterface
     }
 
     /**
-     * @param  ListenerProviderInterface $provider
+     * @param ListenerProviderInterface $provider
      * @return $this
      */
     public function addListener(ListenerProviderInterface $provider): EventDispatcher
