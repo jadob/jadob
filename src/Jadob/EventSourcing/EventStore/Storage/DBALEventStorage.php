@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Jadob\EventStore\Storage;
 
 use Doctrine\DBAL\Connection;
+use Jadob\EventSourcing\EventStore\Storage\EventStorageInterface;
 
+/**
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
+ */
 class DBALEventStorage implements EventStorageInterface
 {
     //default

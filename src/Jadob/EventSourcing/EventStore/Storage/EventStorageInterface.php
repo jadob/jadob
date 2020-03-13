@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore\Storage;
+namespace Jadob\EventSourcing\EventStore\Storage;
 
 
 interface EventStorageInterface
