@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Jadob\Container;
@@ -48,6 +47,10 @@ class ContainerBuilder
      */
     protected $eventListener;
 
+    /**
+     * ContainerBuilder constructor.
+     * @param ContainerEventListener|null $eventListener
+     */
     public function __construct(?ContainerEventListener $eventListener = null)
     {
         $this->eventListener = $eventListener;
@@ -62,8 +65,8 @@ class ContainerBuilder
     }
 
     /**
-     * @param  string $serviceName
-     * @param  mixed  $definition
+     * @param string $serviceName
+     * @param mixed $definition
      * @return $this
      */
     public function add($serviceName, $definition): self
@@ -80,15 +83,22 @@ class ContainerBuilder
     }
 
     /**
-     * @param  array $config
+     * @param array $config
      * @return Container
      * @throws ContainerException
      * @throws ContainerBuildException
+     * @throws Exception\ServiceNotFoundException
      */
     public function build(array $config = []): Container
     {
         $this->emit(new ContainerBuildStartedEvent());
         foreach ($this->serviceProviders as $serviceProvider) {
+
+            //prevent registration duplication
+            if (isset($this->instantiatedProviders[$serviceProvider])) {
+                continue;
+            }
+
             $this->emit(new ProviderRegistrationStartedEvent($serviceProvider));
             $provider = $this->instantiateProvider($serviceProvider);
 
@@ -97,40 +107,37 @@ class ContainerBuilder
              * Then, parent classes will be registered before the current one
              */
             if ($provider instanceof ParentProviderInterface) {
-                foreach ($provider->getParentProviders() as $parentProvider) {
+                foreach ($provider->getParentProviders() as $parentProviderFqcn) {
+
+                    //Use existing provider if exists
+                    if (isset($this->instantiatedProviders[$parentProviderFqcn])) {
+                        $parentProvider = $this->instantiatedProviders[$parentProviderFqcn];
+                    } else {
+                        $parentProvider = $this->instantiateProvider($parentProviderFqcn);
+                    }
+
                     $this->registerProvider($parentProvider, $config);
                 }
             }
 
-            /**
-             * @TODO check if provider was registered few lines above
-             */
             $this->registerProvider($provider, $config);
             $this->emit(new ProviderRegisteredEvent($serviceProvider));
         }
 
-
         $container = new Container($this->services, $this->factories);
 
-        foreach ($this->serviceProviders as $serviceProvider) {
-            $provider = new $serviceProvider;
-
-            if (!($provider instanceof ServiceProviderInterface)) {
-                throw new ContainerException('Class ' . $serviceProvider . ' cannot be used as an service provider');
-            }
-
+        foreach ($this->instantiatedProviders as $provider) {
             $configNodeKey = $provider->getConfigNode();
             $configNode = $this->getConfigNode($config, $configNodeKey);
             $provider->onContainerBuild($container, $configNode);
-
         }
 
         return $container;
     }
 
     /**
-     * @param  array  $config
-     * @param  string $configNodeKey
+     * @param array $config
+     * @param string $configNodeKey
      * @return array|null
      *
      * @throws ContainerBuildException
@@ -158,7 +165,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param  ServiceProviderInterface[] $serviceProviders
+     * @param ServiceProviderInterface[] $serviceProviders
      * @return ContainerBuilder
      */
     public function setServiceProviders(array $serviceProviders): ContainerBuilder
@@ -186,7 +193,7 @@ class ContainerBuilder
 
 
     /**
-     * @param  string $providerClass
+     * @param string $providerClass
      * @return ServiceProviderInterface
      * @throws ContainerBuildException
      */
