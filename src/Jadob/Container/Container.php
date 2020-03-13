@@ -8,9 +8,12 @@ use Closure;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
+use SplObjectStorage;
 use function array_keys;
+use function class_exists;
 use function in_array;
 
 /**
@@ -23,35 +26,35 @@ class Container implements ContainerInterface
 {
 
     /**
-     * @var Definition[]
+     * @var array<string, object>
      */
-    protected $definitions = [];
+    protected array $definitions = [];
 
     /**
      * Instantiated objects, ready to be used.
      *
-     * @var array
+     * @var array<string, object>
      */
-    protected $services = [];
+    protected array $services = [];
 
     /**
      * Closures, arrays, components that can be used to instantiate a new service.
      *
-     * @var array
+     * @var array<string, object>
      */
-    protected $factories = [];
+    protected array $factories = [];
 
     /**
      * If true, adding new services/aliases will throw an exception.
      *
      * @var bool
      */
-    protected $locked = false;
+    protected bool $locked = false;
 
     /**
      * @var array
      */
-    protected $parameters;
+    protected array $parameters;
 
     /**
      * Container constructor.
@@ -61,6 +64,7 @@ class Container implements ContainerInterface
      */
     public function __construct(array $services = null, array $factories = null)
     {
+
         if ($services !== null) {
             $this->services = $services;
         }
@@ -256,10 +260,10 @@ class Container implements ContainerInterface
      */
     public function autowire(string $className): object
     {
-        if (!\class_exists($className)) {
+        if (!class_exists($className)) {
             throw new AutowiringException('Unable to autowire class "' . $className . '", as it does not exists.');
         }
-        $classReflection = new \ReflectionClass($className);
+        $classReflection = new ReflectionClass($className);
 
         //no dependencies required, we can just instantiate them and return
         if ($classReflection->getConstructor() === null) {
