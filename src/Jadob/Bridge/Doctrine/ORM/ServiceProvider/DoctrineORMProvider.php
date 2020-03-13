@@ -15,7 +15,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Container\Container;
+use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
@@ -30,7 +32,7 @@ use Symfony\Component\Console\Helper\HelperSet;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class DoctrineORMProvider implements ServiceProviderInterface
+class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInterface
 {
 
     /**
@@ -107,7 +109,6 @@ class DoctrineORMProvider implements ServiceProviderInterface
                 }
 
 
-
                 $configuration = new Configuration();
                 $configuration->setMetadataCacheImpl($metadataCache);
                 $configuration->setHydrationCacheImpl($hydrationCache);
@@ -167,5 +168,15 @@ class DoctrineORMProvider implements ServiceProviderInterface
     {
         $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
         require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
+    }
+
+    /**
+     * @return ServiceProviderInterface[]
+     */
+    public function getParentProviders(): array
+    {
+        return [
+            DoctrineDBALProvider::class
+        ];
     }
 }
