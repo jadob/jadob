@@ -297,4 +297,19 @@ class Kernel
         $this->container = $container;
     }
 
+
+    /**
+     * @param Response $response
+     * @param Request $request
+     * @return Response
+     */
+    public function prepareResponse(Response $response, Request $request): Response
+    {
+        if ($this->env !== 'prod' && $response instanceof JsonResponse) {
+            $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
+        }
+
+        $response->prepare($request);
+        return $response;
+    }
 }
