@@ -49,8 +49,9 @@ interface BootstrapInterface
     /**
      * Returns array of Service providers that will be load while framework bootstrapping.
      *
+     * @param string $env
      * @return array
      */
-    public function getServiceProviders(): array;
+    public function getServiceProviders(string $env): array;
 
 }

@@ -238,7 +238,7 @@ class Kernel
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
-            $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders());
+            $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders($this->env));
             $containerBuilder->add(Config::class, $this->config);
 
             foreach ($services as $serviceName => $serviceObject) {
