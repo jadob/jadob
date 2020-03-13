@@ -49,7 +49,7 @@ class CommandBus
      * @param object $command
      * @throws Throwable
      */
-    public function handle(object $command): void
+    public function handle(object $command)
     {
         $commandFqcn = \get_class($command);
         $this->logger->info('Command ' . $commandFqcn . ' received');
@@ -59,6 +59,7 @@ class CommandBus
                 throw new \RuntimeException('There is no handler for ' . $commandFqcn . ' command.');
             }
 
+            $result = null;
             $handler = $this->routing[$commandFqcn];
             $dispatchingMethodUsed = '';
             //Objects implementing __invoke can be used as callables (since PHP 5.3)
@@ -66,16 +67,17 @@ class CommandBus
             if ($this->isHandlerInvokableClass($handler)) {
                 $dispatchingMethodUsed = 'invokable';
                 $this->logger->info('Calling __invoke() method from ' . get_class($handler) . '.');
-                $handler($command);
+                $result = $handler($command);
             }
 
             if ($handler instanceof \Closure) {
                 $dispatchingMethodUsed = 'closure';
                 $this->logger->info('Handler for event ' . $commandFqcn . ' is Closure and it has been called.');
-                $handler($command);
+                $result = $handler($command);
             }
 
             $this->logger->info('Command ' . $commandFqcn . ' has been dispatched via ' . $dispatchingMethodUsed);
+            return $result;
 
         } catch (Throwable $e) {
             $this->logger->critical('An error occured during command handling: ' . $e->getMessage(), $e->getTrace());
