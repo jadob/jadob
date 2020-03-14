@@ -33,11 +33,12 @@ class BCryptEncoder extends AbstractPasswordEncoder
     }
 
     /**
-     * @param  string $raw
-     * @param  string $salt
-     * @return bool|string
+     * @param string $raw
+     * @param string $salt
+     *
+     * @return null|string
      */
-    public function encode($raw, $salt = null)
+    public function encode($raw, $salt = null): ?string
     {
         return \password_hash(
             $raw, \PASSWORD_BCRYPT, [

@@ -42,7 +42,7 @@ class Definition
         $this->created = $created;
     }
 
-    public function addMethodCall(string $methodName, array $arguments = [])
+    public function addMethodCall(string $methodName, array $arguments = []): self
     {
         $this->methodCalls[] = [
             'method' => $methodName,

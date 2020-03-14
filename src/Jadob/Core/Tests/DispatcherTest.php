@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 class DispatcherTest extends TestCase
 {
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $_SERVER['HTTP_HOST'] = 'localhost';
@@ -34,8 +37,10 @@ class DispatcherTest extends TestCase
      * @throws \Jadob\Router\Exception\MethodNotAllowedException
      * @throws \Jadob\Router\Exception\RouteNotFoundException
      * @throws \ReflectionException
+     *
+     * @return void
      */
-    public function testDispatcherWillThrowExceptionIfControllerWillBeNull()
+    public function testDispatcherWillThrowExceptionIfControllerWillBeNull(): void
     {
         $this->expectException(KernelException::class);
         $this->expectExceptionMessage('Route "example_route_1" should provide a valid FQCN or Closure, null given');

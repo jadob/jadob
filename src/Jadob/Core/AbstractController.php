@@ -103,12 +103,15 @@ abstract class AbstractController
     }
 
     /**
-     * @param  $level
-     * @param  $message
-     * @param  array $context
+     * @param $level
+     * @param $message
+     * @param array $context
+     *
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     *
+     * @return void
      */
-    protected function log($level, $message, array $context = [])
+    protected function log($level, $message, array $context = []): void
     {
         $this->container->get(LoggerInterface::class)->log($level, $message, $context);
     }

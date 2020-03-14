@@ -16,7 +16,7 @@ use Psr\Container\ContainerInterface;
 class ContainerTest extends TestCase
 {
 
-    public function testServicesAliasing()
+    public function testServicesAliasing(): void
     {
 
         $container = new Container(['dummy' => new \stdClass()]);
@@ -26,7 +26,7 @@ class ContainerTest extends TestCase
 
     }
 
-    public function testFactoriesAliasing()
+    public function testFactoriesAliasing(): void
     {
         $container = new Container(
             [], ['dummy' => function () {
@@ -38,7 +38,7 @@ class ContainerTest extends TestCase
         $this->assertSame($container->get('dummy'), $container->get('dummy1'));
     }
 
-    public function testAccessingFactories()
+    public function testAccessingFactories(): void
     {
 
         $container = new Container(
@@ -58,8 +58,10 @@ class ContainerTest extends TestCase
 
     /**
      * @expectedException \Jadob\Container\Exception\ServiceNotFoundException
+     *
+     * @return void
      */
-    public function testServiceNotFoundException()
+    public function testServiceNotFoundException(): void
     {
         $container = new Container();
 
@@ -67,7 +69,7 @@ class ContainerTest extends TestCase
 
     }
 
-    public function testContainerIsPsr3Compatible()
+    public function testContainerIsPsr3Compatible(): void
     {
         $container = new Container();
 
@@ -75,7 +77,7 @@ class ContainerTest extends TestCase
     }
 
 
-    public function testGettingServicesByItsClassName()
+    public function testGettingServicesByItsClassName(): void
     {
         $container = new Container(
             [], ['dummy2' => function () {

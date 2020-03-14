@@ -46,6 +46,10 @@ class DoctrineODMProvider implements ServiceProviderInterface
      * {@inheritdoc}
      *
      * @throws \ReflectionException
+     *
+     * @return (\Closure|\Closure)[]
+     *
+     * @psalm-return array{Doctrine\ODM\MongoDB\Configuration: \Closure(ContainerInterface):mixed, Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver: \Closure(ContainerInterface):mixed, MongoDB\Client: \Closure():Client, Doctrine\ODM\MongoDB\DocumentManager: \Closure(ContainerInterface):mixed}
      */
     public function register($config)
     {
@@ -98,7 +102,7 @@ class DoctrineODMProvider implements ServiceProviderInterface
             return AnnotationDriver::create($fullDocumentPaths);
         };
 
-        $services[Client::class] = static function () use ($config) {
+        $services[Client::class] = static function () use ($config): \MongoDB\Client {
 
             $dsn = $config['dsn'];
             $driverOptions = $config['driver_options'] ?? [];

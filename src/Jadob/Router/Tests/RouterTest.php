@@ -18,6 +18,9 @@ use PHPUnit\Framework\TestCase;
 class RouterTest extends TestCase
 {
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
@@ -33,7 +36,7 @@ class RouterTest extends TestCase
         $this->assertEquals('my.domain.com', $router->getContext()->getHost());
     }
 
-    public function testRouterContextOverriding()
+    public function testRouterContextOverriding(): void
     {
         $customContext = new Context();
         $customContext->setHost('my.newdomain.com');

@@ -241,7 +241,7 @@ class DBALEventStore implements EventStoreInterface
     }
 
 
-    public function fixTableName($tableName)
+    public function fixTableName(string $tableName): string
     {
         return str_replace('-', '_', $tableName);
     }

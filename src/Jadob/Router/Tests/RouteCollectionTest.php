@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class RouteCollectionTest extends TestCase
 {
 
-    public function testRouteCollectionPassesPrefixAndPathToAllRoutes()
+    public function testRouteCollectionPassesPrefixAndPathToAllRoutes(): void
     {
         $collection = new RouteCollection('/nice', 'example.com');
         $collection->addRoute(new Route('test_route_1', '/route1'));
@@ -26,7 +26,7 @@ class RouteCollectionTest extends TestCase
     }
 
 
-    public function testRouteCollectionNesting()
+    public function testRouteCollectionNesting(): void
     {
 
         $collection1 = new RouteCollection('/r1');
@@ -45,7 +45,7 @@ class RouteCollectionTest extends TestCase
         // $this->assertNull($collection1->getParentCollection());
     }
 
-    public function testCreatingRouteCollectionFromArray()
+    public function testCreatingRouteCollectionFromArray(): void
     {
         $routes = [
             [

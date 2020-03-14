@@ -8,7 +8,7 @@ class ContainerEventListener
 {
     public static $events = [];
 
-    public function emit(object $event)
+    public function emit(object $event): void
     {
         self::$events[] = $event;
     }

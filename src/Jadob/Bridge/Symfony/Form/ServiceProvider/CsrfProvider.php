@@ -19,6 +19,8 @@ class CsrfProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function getConfigNode()
     {
@@ -27,6 +29,10 @@ class CsrfProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return (\Closure|\Closure)[]
+     *
+     * @psalm-return array{symfony.csrf.token.manager: \Closure(Container):CsrfTokenManager, symfony.forms.csrf.extension: \Closure(Container):CsrfExtension}
      */
     public function register($config)
     {

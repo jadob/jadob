@@ -44,6 +44,10 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      *
      * @throws \Doctrine\DBAL\DBALException
      * @throws \RuntimeException
+     *
+     * @return (EventManager|\Closure|\Closure|\Closure|\Closure)[]
+     *
+     * @psalm-return array<string, EventManager|\Closure(ContainerInterface):Configuration|\Closure(ContainerInterface):Logger|\Closure(ContainerInterface):Psr3QueryLogger|\Closure(ContainerInterface):\Doctrine\DBAL\Connection>
      */
     public function register($config)
     {
@@ -62,7 +66,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         $services[EventManager::class] = $eventManager = new EventManager();
 
 
-        $services['doctrine.dbal.logger'] = function (ContainerInterface $container) {
+        $services['doctrine.dbal.logger'] = function (ContainerInterface $container): \Monolog\Logger {
             $logger = new Logger('doctrine_dbal');
             $handler = new StreamHandler($container->get(BootstrapInterface::class)->getLogsDir() . '/dbal.log');
             $logger->pushHandler($handler);
@@ -70,7 +74,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             return $logger;
         };
 
-        $services['doctrine.dbal.query.logger'] = function (ContainerInterface $container) {
+        $services['doctrine.dbal.query.logger'] = function (ContainerInterface $container): \Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger {
             $logger = new Psr3QueryLogger(
                 $container->get('doctrine.dbal.logger')
             );
@@ -78,7 +82,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             return $logger;
         };
 
-        $services[Configuration::class] = function (ContainerInterface $container) {
+        $services[Configuration::class] = function (ContainerInterface $container): \Doctrine\DBAL\Configuration {
             $configuration = new Configuration();
             $configuration->setSQLLogger($container->get('doctrine.dbal.query.logger'));
 
@@ -86,7 +90,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         };
 
         foreach ($config['connections'] as $connectionName => $configuration) {
-            $services['doctrine.dbal.' . $connectionName] = function (ContainerInterface $container) use ($configuration, $eventManager) {
+            $services['doctrine.dbal.' . $connectionName] = function (ContainerInterface $container) use ($configuration, $eventManager): \Doctrine\DBAL\Connection {
                 return DriverManager::getConnection(
                     $configuration,
                     $container->get(Configuration::class),

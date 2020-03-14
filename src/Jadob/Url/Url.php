@@ -55,7 +55,7 @@ class Url
         }
     }
 
-    protected function parse(string $url)
+    protected function parse(string $url): void
     {
         $output = parse_url($url);
 
@@ -99,7 +99,7 @@ class Url
     }
 
 
-    public function setHost(string $host)
+    public function setHost(string $host): void
     {
         $this->changed = true;
         $this->host = $host;

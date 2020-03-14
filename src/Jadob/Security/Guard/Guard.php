@@ -52,8 +52,9 @@ class Guard
     }
 
     /**
-     * @param  GuardAuthenticatorInterface $authenticator
-     * @param  string|null                 $name
+     * @param GuardAuthenticatorInterface $authenticator
+     * @param string $name
+     *
      * @return Guard
      */
     public function addGuard(GuardAuthenticatorInterface $authenticator, string $name)

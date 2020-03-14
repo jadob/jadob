@@ -23,16 +23,20 @@ abstract class AbstractDomainEvent
 
     /**
      * @param string $aggregateId
+     *
+     * @return void
      */
-    public function setAggregateId(string $aggregateId)
+    public function setAggregateId(string $aggregateId): void
     {
         $this->aggregateId = $aggregateId;
     }
 
     /**
      * @param int $version
+     *
+     * @return void
      */
-    public function setAggregateVersion(int $version)
+    public function setAggregateVersion(int $version): void
     {
         $this->aggregateVersion = $version;
     }

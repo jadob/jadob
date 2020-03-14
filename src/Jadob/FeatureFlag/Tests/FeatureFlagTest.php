@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class FeatureFlagTest extends TestCase
 {
 
-    public function testBasicFeatureFlag()
+    public function testBasicFeatureFlag(): void
     {
 
         $config = [
@@ -25,7 +25,7 @@ class FeatureFlagTest extends TestCase
 
     }
 
-    public function testBasicFeatureFlagButFeatureIsDisabled()
+    public function testBasicFeatureFlagButFeatureIsDisabled(): void
     {
 
         $config = [
@@ -42,10 +42,13 @@ class FeatureFlagTest extends TestCase
     }
 
     /**
-     * @expectedException        \Jadob\FeatureFlag\Exception\MissingFeatureRulesException
+     * @expectedException \Jadob\FeatureFlag\Exception\MissingFeatureRulesException
+     *
      * @expectedExceptionMessage Feature "missing" is not defined.
+     *
+     * @return void
      */
-    public function testBasicFeatureFlagButFeatureIsMissing()
+    public function testBasicFeatureFlagButFeatureIsMissing(): void
     {
 
         $config = [

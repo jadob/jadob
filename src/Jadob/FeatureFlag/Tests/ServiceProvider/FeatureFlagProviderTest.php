@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class FeatureFlagProviderTest extends TestCase
 {
-    public function testServiceProvider()
+    public function testServiceProvider(): void
     {
         $provider = new FeatureFlagProvider();
 

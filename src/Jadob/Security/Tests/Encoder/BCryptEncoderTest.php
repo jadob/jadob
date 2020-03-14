@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class BCryptEncoderTest extends TestCase
 {
-    public function testBcryptEncoder()
+    public function testBcryptEncoder(): void
     {
 
         $rawPassword = 'myv3ryhardp@ssw06d';
@@ -29,16 +29,20 @@ class BCryptEncoderTest extends TestCase
 
     /**
      * @expectedException \RuntimeException
+     *
+     * @return void
      */
-    public function testTooLowCostPassedInConstructor()
+    public function testTooLowCostPassedInConstructor(): void
     {
         new BCryptEncoder(2);
     }
 
     /**
      * @expectedException \RuntimeException
+     *
+     * @return void
      */
-    public function testTooHighCostPassedInConstructor()
+    public function testTooHighCostPassedInConstructor(): void
     {
         new BCryptEncoder(32);
     }

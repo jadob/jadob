@@ -78,11 +78,12 @@ class Router
 
     /**
      * @param Route $route
-     * @param  $host
+     * @param $host
      * @param array $matchedAttributes
+     *
      * @return bool
      */
-    protected function hostMatches(Route $route, $host, array &$matchedAttributes): bool
+    protected function hostMatches(Route $route, string $host, array &$matchedAttributes): bool
     {
         //route does not rely on hosts
         if ($route->getHost() === null) {
@@ -166,10 +167,12 @@ class Router
     }
 
     /**
-     * @param  $pattern
+     * @param $pattern
+     * @param null|string $pattern
+     *
      * @return bool|string
      */
-    protected function getRegex($pattern)
+    protected function getRegex(?string $pattern)
     {
         if (preg_match('/[^-:.\/_{}()a-zA-Z\d]/', $pattern)) {
             return false; // Invalid pattern
@@ -194,13 +197,15 @@ class Router
     }
 
     /**
-     * @param  $name
-     * @param  $params
+     * @param $name
+     * @param $params
      * @param bool $full
+     *
      * @return mixed|string
+     *
      * @throws RouteNotFoundException
      */
-    public function generateRoute($name, array $params = [], $full = false)
+    public function generateRoute(string $name, array $params = [], $full = false)
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {

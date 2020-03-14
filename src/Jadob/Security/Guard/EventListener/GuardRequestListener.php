@@ -60,8 +60,10 @@ class GuardRequestListener //implements BeforeControllerEventListenerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return bool
      */
-    public function isEventStoppingPropagation()
+    public function isEventStoppingPropagation(): bool
     {
         return $this->blockPropagation;
     }

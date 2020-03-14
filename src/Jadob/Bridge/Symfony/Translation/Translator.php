@@ -32,7 +32,8 @@ class Translator implements TranslatorInterface
      * @param string $key
      * @param array $arguments
      * @param string|null $group
-     * @return mixed
+     *
+     * @return void
      */
     public function translate(string $key, array $arguments = [], string $group = null): string
     {
@@ -52,7 +53,8 @@ class Translator implements TranslatorInterface
      * @param string $locale
      * @param string $type
      * @param string $group
-     * @return mixed
+     *
+     * @return void
      */
     public function addSource(string $path, string $locale, string $type, string $group): void
     {

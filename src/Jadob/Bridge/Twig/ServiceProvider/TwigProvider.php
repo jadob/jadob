@@ -38,10 +38,14 @@ class TwigProvider implements ServiceProviderInterface
      * {@inheritdoc}
      *
      * @throws \Twig\Error\LoaderError
+     *
+     * @return (\Closure|\Closure)[]
+     *
+     * @psalm-return array{Twig\Loader\LoaderInterface: \Closure(ContainerInterface):FilesystemLoader, Twig\Environment: \Closure(ContainerInterface):Environment}
      */
     public function register($config)
     {
-        $loaderClosure = static function (ContainerInterface $container) use ($config) {
+        $loaderClosure = static function (ContainerInterface $container) use ($config): \Twig\Loader\FilesystemLoader {
             $loader = new FilesystemLoader();
 
             //Adds Jadob namespace with some predefined templates (forms, alerts)
@@ -64,7 +68,7 @@ class TwigProvider implements ServiceProviderInterface
             return $loader;
         };
 
-        $environmentClosure = static function (ContainerInterface $container) use ($config) {
+        $environmentClosure = static function (ContainerInterface $container) use ($config): \Twig\Environment {
             $cache = false;
 
             if ($config['cache']) {

@@ -15,7 +15,7 @@ class ContainerBuilderTest extends TestCase
     public function testClosureAddedViaMethodWillBeAddedToFactories(): void
     {
 
-        $factory = static function () {
+        $factory = static function (): Fixtures\ExampleService {
             return new ExampleService();
         };
 
@@ -28,7 +28,7 @@ class ContainerBuilderTest extends TestCase
 
     }
 
-    public function testContainerBuildingWithoutConfigPassed()
+    public function testContainerBuildingWithoutConfigPassed(): void
     {
         $builder = new ContainerBuilder();
 
@@ -42,10 +42,13 @@ class ContainerBuilderTest extends TestCase
     }
 
     /**
-     * @expectedException        \Jadob\Container\Exception\ContainerBuildException
-     * @expectedExceptionMessage
+     * @expectedException \Jadob\Container\Exception\ContainerBuildException
+     *
+     * @expectedExceptionMessage 
+     *
+     * @return void
      */
-    public function testBuildWillBreakWhenInvalidProviderPasser()
+    public function testBuildWillBreakWhenInvalidProviderPasser(): void
     {
         $builder = new ContainerBuilder();
 

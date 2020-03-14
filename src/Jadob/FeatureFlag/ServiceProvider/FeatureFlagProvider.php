@@ -26,6 +26,10 @@ class FeatureFlagProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return FeatureFlag[]
+     *
+     * @psalm-return array{Jadob\FeatureFlag\FeatureFlag: FeatureFlag}
      */
     public function register($config)
     {

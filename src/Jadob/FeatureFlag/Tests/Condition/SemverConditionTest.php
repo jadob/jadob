@@ -16,7 +16,7 @@ class SemverConditionTest extends TestCase
 {
 
 
-    public function testOnlyMinVersionPassed()
+    public function testOnlyMinVersionPassed(): void
     {
         $condition = new SemverCondition('version', '5.4.0');
         $this->assertTrue($condition->verifyFeature('5.4.1'));
@@ -24,7 +24,7 @@ class SemverConditionTest extends TestCase
         $this->assertFalse($condition->verifyFeature('5.3.9'));
     }
 
-    public function testOnlyMaxVersionPassed()
+    public function testOnlyMaxVersionPassed(): void
     {
         $condition = new SemverCondition('version', null, '5.4.0');
         $this->assertFalse($condition->verifyFeature('6'));
@@ -32,7 +32,7 @@ class SemverConditionTest extends TestCase
         $this->assertTrue($condition->verifyFeature('5.3.9'));
     }
 
-    public function testBothMaxAndMinVersionPassed()
+    public function testBothMaxAndMinVersionPassed(): void
     {
         $condition = new SemverCondition('version', '2.3.4', '5.4.0');
         $this->assertTrue($condition->verifyFeature('5.4.0'));
@@ -44,7 +44,7 @@ class SemverConditionTest extends TestCase
         $this->assertFalse($condition->verifyFeature('6'));
     }
 
-    public function testConditionKey()
+    public function testConditionKey(): void
     {
         $condition = new SemverCondition('version');
         $this->assertEquals('version', $condition->getConditionKey());

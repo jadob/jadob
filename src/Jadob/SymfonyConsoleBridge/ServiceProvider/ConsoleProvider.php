@@ -28,10 +28,13 @@ class ConsoleProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param  null $config
-     * @return array
+     * @param null $config
+     *
+     * @return Application[]|null
+     *
+     * @psalm-return array{console: Application}|null
      */
-    public function register($config)
+    public function register($config): ?array
     {
         if (strtolower(PHP_SAPI) === 'cli') {
             return ['console' => new Application('Jadob', Kernel::VERSION)];

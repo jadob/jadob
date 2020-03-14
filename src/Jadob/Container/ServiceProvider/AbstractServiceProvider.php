@@ -16,6 +16,8 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function register($config)
     {

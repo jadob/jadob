@@ -20,8 +20,10 @@ class InvalidCredentialsException extends \Error
 
     /**
      * @param mixed $passedCredentials
+     *
+     * @return void
      */
-    public function setPassedCredentials($passedCredentials)
+    public function setPassedCredentials($passedCredentials): void
     {
         $this->passedCredentials = $passedCredentials;
     }

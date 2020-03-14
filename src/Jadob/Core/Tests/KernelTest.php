@@ -19,8 +19,10 @@ class KernelTest extends TestCase
     /**
      * @throws KernelException
      * @throws \Exception
+     *
+     * @return void
      */
-    public function testKernelCannotBeCreatedWithInvalidEnvironmentPassed()
+    public function testKernelCannotBeCreatedWithInvalidEnvironmentPassed(): void
     {
         $this->expectException(KernelException::class);
 

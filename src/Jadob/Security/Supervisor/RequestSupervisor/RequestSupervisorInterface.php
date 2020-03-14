@@ -60,7 +60,7 @@ interface RequestSupervisorInterface
      * Called when Authentication process will break for some reasons.
      * Whether stateless or not, return value will be sent to user.
      *
-     * @return Response|null
+     * @return Response
      */
     public function handleAuthenticationFailure(): Response;
 
@@ -75,9 +75,10 @@ interface RequestSupervisorInterface
     /**
      * This is a place, where you can throw UserNotFoundException.
      *
-     * @param  $credentials
-     * @param  UserProviderInterface $userProvider
-     * @return mixed
+     * @param $credentials
+     * @param UserProviderInterface $userProvider
+     *
+     * @return UserInterface|null
      */
     public function getIdentityFromProvider($credentials, UserProviderInterface $userProvider): ?UserInterface;
 

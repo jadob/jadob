@@ -21,7 +21,7 @@ class ProjectionManager
         $this->logger = $logger;
     }
 
-    public function addProjection(object $projector)
+    public function addProjection(object $projector): self
     {
         $this->projections[get_class($projector)] = $projector;
         return $this;

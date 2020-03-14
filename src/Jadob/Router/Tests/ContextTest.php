@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class ContextTest extends TestCase
 {
 
-    public function testBasicContextFeatures()
+    public function testBasicContextFeatures(): void
     {
         $context = new Context();
 
@@ -28,7 +28,7 @@ class ContextTest extends TestCase
         $this->assertEquals(1234, $context->getPort());
     }
 
-    public function testCreatingContextObjectFromSuperglobalArrays()
+    public function testCreatingContextObjectFromSuperglobalArrays(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['HTTPS'] = true;
@@ -42,7 +42,7 @@ class ContextTest extends TestCase
         $this->assertEquals(8001, $context->getPort());
     }
 
-    public function testCheckingHttpHostHasAColon()
+    public function testCheckingHttpHostHasAColon(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com:8001';
         $_SERVER['HTTPS'] = true;

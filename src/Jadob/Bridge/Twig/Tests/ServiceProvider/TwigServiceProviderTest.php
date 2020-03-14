@@ -24,7 +24,7 @@ use Twig\Loader\LoaderInterface;
 class TwigServiceProviderTest extends TestCase
 {
 
-    public function testGettingConfigNode()
+    public function testGettingConfigNode(): void
     {
         $provider = new TwigProvider();
 
@@ -32,7 +32,7 @@ class TwigServiceProviderTest extends TestCase
     }
 
 
-    public function testServicesRegisteringWithoutCache()
+    public function testServicesRegisteringWithoutCache(): void
     {
 
         $provider = new TwigProvider();
@@ -71,8 +71,10 @@ class TwigServiceProviderTest extends TestCase
     /**
      * @throws \Jadob\Core\Exception\KernelException
      * @throws \Twig\Error\LoaderError
+     *
+     * @return void
      */
-    public function testServicesRegisteringWithCache()
+    public function testServicesRegisteringWithCache(): void
     {
 
         $provider = new TwigProvider();
@@ -107,8 +109,10 @@ class TwigServiceProviderTest extends TestCase
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      * @throws \Jadob\Core\Exception\KernelException
      * @throws \Twig\Error\LoaderError
+     *
+     * @return void
      */
-    public function testOnContainerBuild()
+    public function testOnContainerBuild(): void
     {
         $provider = new TwigProvider();
         $bootstrap = new Bootstrap();

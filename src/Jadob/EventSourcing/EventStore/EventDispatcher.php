@@ -21,9 +21,12 @@ class EventDispatcher
 
     /**
      * @param object $event
+     *
      * @throws ReflectionException
+     *
+     * @return void
      */
-    public function emit(object $event)
+    public function emit(object $event): void
     {
         $eventType = get_class($event);
         foreach ($this->listeners as $listener) {

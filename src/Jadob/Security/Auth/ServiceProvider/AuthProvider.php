@@ -20,14 +20,20 @@ class AuthProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function getConfigNode()
+    public function getConfigNode(): void
     {
         return;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return \Closure[]
+     *
+     * @psalm-return array{auth.user.storage: \Closure(Container):UserStorage}
      */
     public function register($config)
     {

@@ -12,7 +12,7 @@ use Monolog\Test\TestCase;
  */
 class PayloadSerializerTest extends TestCase
 {
-    public function testSerialization()
+    public function testSerialization(): void
     {
         $serializer = new PayloadSerializer();
 
@@ -22,7 +22,7 @@ class PayloadSerializerTest extends TestCase
         $this->assertSame(json_decode($result, true), $payload);
     }
 
-    public function testDeserialization()
+    public function testDeserialization(): void
     {
         $serializer = new PayloadSerializer();
 

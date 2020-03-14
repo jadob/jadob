@@ -57,7 +57,7 @@ class ContainerBuilder
     }
 
 
-    protected function emit(object $event)
+    protected function emit(object $event): void
     {
         if ($this->eventListener !== null) {
             $this->eventListener->emit($event);
@@ -186,7 +186,7 @@ class ContainerBuilder
     /**
      * {@inheritdoc}
      */
-    public function has($id): bool
+    public function has(string $id): bool
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
     }

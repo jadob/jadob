@@ -19,13 +19,13 @@ use Psr\Container\ContainerInterface;
 class DefinitionTest extends TestCase
 {
 
-    public function testServiceCreating()
+    public function testServiceCreating(): void
     {
         $container = new Container();
         $container->add(ExampleService::class, $example = new ExampleService());
 
 
-        $factory = function (ContainerInterface $container) {
+        $factory = function (ContainerInterface $container): Fixtures\YetAnotherExampleService {
             return new YetAnotherExampleService();
         };
 
@@ -47,7 +47,7 @@ class DefinitionTest extends TestCase
 
     }
 
-    public function testScalarCreating()
+    public function testScalarCreating(): void
     {
         $container = new Container();
         $container->add(ExampleService::class, $example = new ExampleService());

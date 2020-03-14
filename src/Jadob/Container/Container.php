@@ -116,7 +116,8 @@ class Container implements ContainerInterface
      * UNSTABLE, there will be some work needed
      *
      * @param string $interfaceClassName FQCN of interface that need to be verified
-     * @return null|object[]
+     *
+     * @return array
      */
     public function getObjectsImplementing(string $interfaceClassName): array
     {
@@ -186,10 +187,11 @@ class Container implements ContainerInterface
 
     /**
      * @param string $id
-     * @param  $object
+     * @param $object
+     *
      * @return Definition
      */
-    public function add(string $id, $object)
+    public function add(string $id, object $object)
     {
 
         $definition = new Definition($object);
@@ -227,8 +229,11 @@ class Container implements ContainerInterface
     /**
      * @param string $key
      * @param $value
+     * @param false|string $value
+     *
+     * @return void
      */
-    public function addParameter(string $key, $value)
+    public function addParameter(string $key, $value): void
     {
         $this->parameters[$key] = $value;
     }

@@ -50,14 +50,14 @@ class Supervisor
     }
 
     //@todo refactor
-    public function addRequestSupervisor(string $name, RequestSupervisorInterface $requestSupervisor, UserProviderInterface $userProvider)
+    public function addRequestSupervisor(string $name, RequestSupervisorInterface $requestSupervisor, UserProviderInterface $userProvider): void
     {
         $this->requestSupervisors[$name] = $requestSupervisor;
         $this->userProviders[\spl_object_hash($requestSupervisor)] = $userProvider;
     }
 
     //@TODO refactor
-    public function getUserProviderForSupervisor(RequestSupervisorInterface $supervisor)
+    public function getUserProviderForSupervisor(RequestSupervisorInterface $supervisor): UserProviderInterface
     {
         return $this->userProviders[\spl_object_hash($supervisor)];
     }

@@ -13,7 +13,7 @@ class ServiceAddedEvent implements BuilderRelatedEventInterface
         $this->serviceName = $serviceName;
     }
 
-    public function getPayload()
+    public function getPayload(): string
     {
         return $this->serviceName;
     }

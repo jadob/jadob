@@ -86,7 +86,7 @@ class CommandBus
 
     }
 
-    protected function isHandlerInvokableClass($object): bool
+    protected function isHandlerInvokableClass(callable $object): bool
     {
         return \is_object($object) && \method_exists($object, '__invoke');
     }

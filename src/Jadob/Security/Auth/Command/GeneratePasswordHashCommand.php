@@ -21,6 +21,9 @@ class GeneratePasswordHashCommand extends Command
      */
     protected static $defaultName = 'security:auth:password-hash';
 
+    /**
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // ...

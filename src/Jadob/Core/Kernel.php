@@ -294,7 +294,7 @@ class Kernel
 
     }
 
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container): void
     {
         $this->container = $container;
     }

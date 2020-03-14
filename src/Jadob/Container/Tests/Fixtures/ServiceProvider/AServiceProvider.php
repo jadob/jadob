@@ -17,6 +17,11 @@ class AServiceProvider implements ServiceProviderInterface
     }
 
 
+    /**
+     * @return (ExampleService|\Closure)[]
+     *
+     * @psalm-return array{a.1: ExampleService, a.2: \Closure():YetAnotherExampleService}
+     */
     public function register($config)
     {
         return [

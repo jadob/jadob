@@ -7,7 +7,7 @@ class YetAnotherExampleService
 
     public $example;
 
-    public function setService(ExampleService $service)
+    public function setService(ExampleService $service): void
     {
         $this->example = $service;
     }

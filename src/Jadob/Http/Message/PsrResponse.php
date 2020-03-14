@@ -16,7 +16,7 @@ class PsrResponse implements ResponseInterface
      *
      * The string MUST contain only the HTTP version number (e.g., "1.1", "1.0").
      *
-     * @return string HTTP protocol version.
+     * @return void
      */
     public function getProtocolVersion()
     {
@@ -33,8 +33,9 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * new protocol version.
      *
-     * @param  string $version HTTP protocol version
-     * @return static
+     * @param string $version HTTP protocol version
+     *
+     * @return void
      */
     public function withProtocolVersion($version)
     {
@@ -62,9 +63,7 @@ class PsrResponse implements ResponseInterface
      * While header names are not case-sensitive, getHeaders() will preserve the
      * exact case in which headers were originally specified.
      *
-     * @return string[][] Returns an associative array of the message's headers. Each
-     *     key MUST be a header name, and each value MUST be an array of strings
-     *     for that header.
+     * @return void
      */
     public function getHeaders()
     {
@@ -74,10 +73,9 @@ class PsrResponse implements ResponseInterface
     /**
      * Checks if a header exists by the given case-insensitive name.
      *
-     * @param  string $name Case-insensitive header field name.
-     * @return bool Returns true if any header names match the given header
-     *     name using a case-insensitive string comparison. Returns false if
-     *     no matching header name is found in the message.
+     * @param string $name Case-insensitive header field name.
+     *
+     * @return void
      */
     public function hasHeader($name)
     {
@@ -93,10 +91,9 @@ class PsrResponse implements ResponseInterface
      * If the header does not appear in the message, this method MUST return an
      * empty array.
      *
-     * @param  string $name Case-insensitive header field name.
-     * @return string[] An array of string values as provided for the given
-     *    header. If the header does not appear in the message, this method MUST
-     *    return an empty array.
+     * @param string $name Case-insensitive header field name.
+     *
+     * @return void
      */
     public function getHeader($name)
     {
@@ -117,10 +114,9 @@ class PsrResponse implements ResponseInterface
      * If the header does not appear in the message, this method MUST return
      * an empty string.
      *
-     * @param  string $name Case-insensitive header field name.
-     * @return string A string of values as provided for the given header
-     *    concatenated together using a comma. If the header does not appear in
-     *    the message, this method MUST return an empty string.
+     * @param string $name Case-insensitive header field name.
+     *
+     * @return void
      */
     public function getHeaderLine($name)
     {
@@ -137,9 +133,11 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param  string          $name  Case-insensitive header field name.
-     * @param  string|string[] $value Header value(s).
-     * @return static
+     * @param string          $name  Case-insensitive header field name.
+     * @param string|string[] $value Header value(s).
+     *
+     * @return void
+     *
      * @throws \InvalidArgumentException for invalid header names or values.
      */
     public function withHeader($name, $value)
@@ -158,9 +156,11 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param  string          $name  Case-insensitive header field name to add.
-     * @param  string|string[] $value Header value(s).
-     * @return static
+     * @param string          $name  Case-insensitive header field name to add.
+     * @param string|string[] $value Header value(s).
+     *
+     * @return void
+     *
      * @throws \InvalidArgumentException for invalid header names or values.
      */
     public function withAddedHeader($name, $value)
@@ -177,8 +177,9 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return an instance that removes
      * the named header.
      *
-     * @param  string $name Case-insensitive header field name to remove.
-     * @return static
+     * @param string $name Case-insensitive header field name to remove.
+     *
+     * @return void
      */
     public function withoutHeader($name)
     {
@@ -188,7 +189,7 @@ class PsrResponse implements ResponseInterface
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return void
      */
     public function getBody()
     {
@@ -204,8 +205,10 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return a new instance that has the
      * new body stream.
      *
-     * @param  StreamInterface $body Body.
-     * @return static
+     * @param StreamInterface $body Body.
+     *
+     * @return void
+     *
      * @throws \InvalidArgumentException When the body is not valid.
      */
     public function withBody(StreamInterface $body)
@@ -219,7 +222,7 @@ class PsrResponse implements ResponseInterface
      * The status code is a 3-digit integer result code of the server's attempt
      * to understand and satisfy the request.
      *
-     * @return int Status code.
+     * @return void
      */
     public function getStatusCode()
     {
@@ -237,13 +240,16 @@ class PsrResponse implements ResponseInterface
      * immutability of the message, and MUST return an instance that has the
      * updated status and reason phrase.
      *
-     * @link   http://tools.ietf.org/html/rfc7231#section-6
-     * @link   http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @param  int    $code         The 3-digit integer result code to set.
-     * @param  string $reasonPhrase The reason phrase to use with the
+     * @link http://tools.ietf.org/html/rfc7231#section-6
+     * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+     *
+     * @param int    $code         The 3-digit integer result code to set.
+     * @param string $reasonPhrase The reason phrase to use with the
      *                              provided status code; if none is provided, implementations MAY
      *                              use the defaults as suggested in the HTTP specification.
-     * @return static
+     *
+     * @return void
+     *
      * @throws \InvalidArgumentException For invalid status code arguments.
      */
     public function withStatus($code, $reasonPhrase = '')
@@ -260,9 +266,10 @@ class PsrResponse implements ResponseInterface
      * listed in the IANA HTTP Status Code Registry) for the response's
      * status code.
      *
-     * @link   http://tools.ietf.org/html/rfc7231#section-6
-     * @link   http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @return string Reason phrase; must return an empty string if none present.
+     * @link http://tools.ietf.org/html/rfc7231#section-6
+     * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+     *
+     * @return void
      */
     public function getReasonPhrase()
     {

@@ -12,7 +12,11 @@ namespace Jadob\Security\Encoder;
 interface PasswordEncoderInterface
 {
 
-    const MAX_LENGTH = 4096;
+    /**
+     *
+     * @var string
+     */
+    const MAX_PASSWORD_LENGTH = 4096;
 
     /**
      * @param  string $raw

@@ -14,7 +14,7 @@ class ProviderRegisteredEvent implements BuilderRelatedEventInterface
     }
 
 
-    public function getPayload()
+    public function getPayload(): string
     {
         return $this->className;
     }

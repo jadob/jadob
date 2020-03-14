@@ -15,7 +15,7 @@ use Twig\TwigFunction;
 class WebpackManifestAssetExtensionTest extends TestCase
 {
 
-    public function testExtensionReturnsTwigFunction()
+    public function testExtensionReturnsTwigFunction(): void
     {
         $extension = new WebpackManifestAssetExtension([]);
         $functions = $extension->getFunctions();
@@ -27,7 +27,7 @@ class WebpackManifestAssetExtensionTest extends TestCase
 
     }
 
-    public function testExtensionCanProperlyReturnValues()
+    public function testExtensionCanProperlyReturnValues(): void
     {
         $extension = new WebpackManifestAssetExtension(
             ['styles.css' => 'styles.1234qwer.css']
@@ -43,7 +43,7 @@ class WebpackManifestAssetExtensionTest extends TestCase
     }
 
 
-    public function testExtensionWillBreakWhenNoAssetFound()
+    public function testExtensionWillBreakWhenNoAssetFound(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not find "index.js" in webpack manifest file');

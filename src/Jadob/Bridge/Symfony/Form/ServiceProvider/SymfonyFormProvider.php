@@ -41,6 +41,10 @@ class SymfonyFormProvider implements ServiceProviderInterface
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     *
+     * @return (\Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
+     *
+     * @psalm-return array{symfony.validator: \Symfony\Component\Validator\Validator\ValidatorInterface, symfony.form.factory: \Closure(Container):\Symfony\Component\Form\FormFactoryInterface}
      */
     public function register($config)
     {

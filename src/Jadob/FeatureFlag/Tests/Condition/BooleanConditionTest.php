@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class BooleanConditionTest extends TestCase
 {
-    public function testConditionReturnsValidConditionKey()
+    public function testConditionReturnsValidConditionKey(): void
     {
         $condition = new BooleanCondition('test1');
         $this->assertEquals('test1', $condition->getConditionKey());
     }
 
-    public function testConditionVeryfingReturnsBooleanValues()
+    public function testConditionVeryfingReturnsBooleanValues(): void
     {
         $condition = new BooleanCondition('test1');
         $this->assertTrue($condition->verifyFeature(true));

@@ -33,6 +33,10 @@ class EventStoreProvider implements ServiceProviderInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @return (\Closure|\Closure|\Closure)[]
+     *
+     * @psalm-return array{Jadob\EventSourcing\EventStore\ProjectionManager: \Closure(ContainerInterface):ProjectionManager, Jadob\EventSourcing\EventStore\EventDispatcher: \Closure(ContainerInterface):EventDispatcher, Jadob\EventSourcing\EventStore\EventStoreInterface: \Closure(ContainerInterface):DBALEventStore}
      */
     public function register($config)
     {

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase
 {
-    public function testSimpleConfigNodesLoading()
+    public function testSimpleConfigNodesLoading(): void
     {
         $config = new Config();
 
@@ -17,10 +17,13 @@ class ConfigTest extends TestCase
     }
 
     /**
-     * @expectedException        \Jadob\Config\Exception\ConfigNodeNotFoundException
+     * @expectedException \Jadob\Config\Exception\ConfigNodeNotFoundException
+     *
      * @expectedExceptionMessage Could not find node "missing".
+     *
+     * @return void
      */
-    public function testConfigWillBreakIfNoNodeFound()
+    public function testConfigWillBreakIfNoNodeFound(): void
     {
         $config = new Config();
 
@@ -29,7 +32,7 @@ class ConfigTest extends TestCase
     }
 
 
-    public function testParameterPassing()
+    public function testParameterPassing(): void
     {
         $config = new Config();
 

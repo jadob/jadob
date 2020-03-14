@@ -46,6 +46,10 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
     /**
      * @TODO add support for multiple cache types
      * {@inheritdoc}
+     *
+     * @return \Closure[]
+     *
+     * @psalm-return array<string, \Closure(ContainerInterface):EntityManager>
      */
     public function register($config)
     {
@@ -163,15 +167,19 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
 
     /**
      * @throws ReflectionException
+     *
+     * @return void
      */
-    protected function registerAnnotations()
+    protected function registerAnnotations(): void
     {
         $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
         require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
     }
 
     /**
-     * @return ServiceProviderInterface[]
+     * @return DoctrineDBALProvider::class[]
+     *
+     * @psalm-return array{0: DoctrineDBALProvider::class}
      */
     public function getParentProviders(): array
     {

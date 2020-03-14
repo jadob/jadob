@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class GuardTest extends TestCase
 {
 
-    public function testExcludedPathsMatching()
+    public function testExcludedPathsMatching(): void
     {
 
         $excludedPaths = [

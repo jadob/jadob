@@ -14,7 +14,8 @@ interface TranslatorInterface
      * @param string $key
      * @param array $arguments
      * @param string|null $group
-     * @return mixed
+     *
+     * @return string
      */
     public function translate(
         string $key,
@@ -34,7 +35,8 @@ interface TranslatorInterface
      * @param string $locale
      * @param string $type
      * @param string $group
-     * @return mixed
+     *
+     * @return void
      */
     public function addSource(
         string $path,

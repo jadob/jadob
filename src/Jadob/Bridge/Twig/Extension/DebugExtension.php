@@ -26,7 +26,7 @@ class DebugExtension extends AbstractExtension
         ];
     }
 
-    public function debug()
+    public function debug(): ?string
     {
         return @r(\func_get_args());
     }

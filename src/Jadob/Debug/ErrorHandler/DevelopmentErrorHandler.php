@@ -49,6 +49,9 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @return void
+     */
     public function registerErrorHandler()
     {
         $logger = $this->logger;
@@ -78,6 +81,9 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         }
     }
 
+    /**
+     * @return void
+     */
     public function registerExceptionHandler()
     {
         $logger = $this->logger;

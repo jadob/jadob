@@ -66,7 +66,7 @@ class SemverCondition implements ConditionInterface
         $this->maxVersion = $maxVersion;
     }
 
-    public function verifyFeature($conditions): bool
+    public function verifyFeature(string $conditions): bool
     {
         //check only min version
         if ($this->maxVersion === null && $this->minVersion !== null) {

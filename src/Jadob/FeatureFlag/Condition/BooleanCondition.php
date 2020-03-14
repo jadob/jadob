@@ -29,10 +29,12 @@ class BooleanCondition implements ConditionInterface
     }
 
     /**
-     * @param  $conditions
+     * @param $conditions
+     * @param true $conditions
+     *
      * @return bool
      */
-    public function verifyFeature($conditions): bool
+    public function verifyFeature(bool $conditions): bool
     {
         return (bool)$conditions;
     }

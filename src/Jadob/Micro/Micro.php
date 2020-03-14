@@ -127,7 +127,7 @@ class Micro /**
         $this->router = new Router(new RouteCollection(), Context::fromGlobals());
     }
 
-    public function get($path, $callback)
+    public function get($path, $callback): self
     {
         $route = new Route($path, $path);
         $route->setController($callback);
@@ -188,7 +188,7 @@ class Micro /**
         $this->middlewares[] = $middleware;
     }
 
-    public function run(?ServerRequestInterface $request = null)
+    public function run(?ServerRequestInterface $request = null): void
     {
 
         if ($request === null) {

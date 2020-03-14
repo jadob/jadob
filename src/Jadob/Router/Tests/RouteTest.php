@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class RouteTest extends TestCase
 {
 
-    public function testBasicRouteFeatures()
+    public function testBasicRouteFeatures(): void
     {
         $route = new Route('example-route-1', '/');
 
@@ -40,7 +40,7 @@ class RouteTest extends TestCase
     }
 
 
-    public function testRouteParams()
+    public function testRouteParams(): void
     {
         $route = new Route('example-route-2', '/');
 
@@ -55,7 +55,7 @@ class RouteTest extends TestCase
         $this->assertCount(2, $route->getParams());
     }
 
-    public function testRouteNameChanging()
+    public function testRouteNameChanging(): void
     {
 
         $route = new Route('example-route-3', '/');
@@ -67,7 +67,7 @@ class RouteTest extends TestCase
         $this->assertEquals('example-route-3-v2', $route->getName());
     }
 
-    public function testRouteMethods()
+    public function testRouteMethods(): void
     {
         $route = new Route('route-with-many-methods', '/');
         $route->setMethods(['GET', 'POST']);
@@ -75,14 +75,14 @@ class RouteTest extends TestCase
         $this->assertCount(2, $route->getMethods());
     }
 
-    public function testParentCollection()
+    public function testParentCollection(): void
     {
         $collection = new RouteCollection();
         $collection->addRoute($route = new Route('example1', '/'));
         $this->assertSame($collection, $route->getParentCollection());
     }
 
-    public function testCreatingRouteFromArray()
+    public function testCreatingRouteFromArray(): void
     {
         $route = [
             'path' => '/my/path/1',
@@ -98,11 +98,15 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @expectedException        \Jadob\Router\Exception\RouterException
+     * @expectedException \Jadob\Router\Exception\RouterException
+     *
      * @expectedExceptionMessage Missing "name" key in $data.
-     * @throws                   \Jadob\Router\Exception\RouterException
+     *
+     * @throws \Jadob\Router\Exception\RouterException
+     *
+     * @return void
      */
-    public function testCreatingRouteFromArrayWillBreakIfNoNamePassed()
+    public function testCreatingRouteFromArrayWillBreakIfNoNamePassed(): void
     {
         $route = [
             'path' => '/my/path/1',
@@ -116,11 +120,15 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @expectedException        \Jadob\Router\Exception\RouterException
+     * @expectedException \Jadob\Router\Exception\RouterException
+     *
      * @expectedExceptionMessage Missing "path" key in $data.
-     * @throws                   \Jadob\Router\Exception\RouterException
+     *
+     * @throws \Jadob\Router\Exception\RouterException
+     *
+     * @return void
      */
-    public function testCreatingRouteFromArrayWillBreakIfNoPathPassed()
+    public function testCreatingRouteFromArrayWillBreakIfNoPathPassed(): void
     {
         $route = [
             'name' => '/my/path/1',
