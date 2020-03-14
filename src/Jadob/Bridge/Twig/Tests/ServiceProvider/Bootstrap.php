@@ -1,19 +1,20 @@
 <?php
 
-namespace Jadob\Core\Tests;
+namespace Jadob\Bridge\Twig\Tests\ServiceProvider;
+
 
 use Jadob\Core\AbstractBootstrap;
 
 /**
- * Class Bootstrap
- *
- * @package Jadob\Core\Tests
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @internal
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  */
 class Bootstrap extends AbstractBootstrap
 {
+
     /**
+     * Returns project root directory.
+     *
      * @return string
      */
     public function getRootDir(): string

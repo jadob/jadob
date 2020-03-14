@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\Router\Tests;
+namespace Jadob\Security\Tests\Encoder;
 
 use Jadob\Security\Encoder\BCryptEncoder;
 use PHPUnit\Framework\TestCase;

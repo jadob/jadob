@@ -10,24 +10,6 @@ use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-/**
- * @package Jadob\Core\Tests
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
- */
-class ExampleController
-{
-
-    /**
-     * @return Response
-     */
-    public function __invoke()
-    {
-        return new Response('ok');
-    }
-}
 
 
 /**

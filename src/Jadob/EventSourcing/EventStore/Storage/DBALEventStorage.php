@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore\Storage;
+namespace Jadob\EventSourcing\EventStore\Storage;
 
 use Doctrine\DBAL\Connection;
-use Jadob\EventSourcing\EventStore\Storage\EventStorageInterface;
+//use Jadob\EventSourcing\EventStore\Storage\EventStorageInterface;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>

@@ -12,29 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class Bootstrap extends AbstractBootstrap
-{
 
-    /**
-     * Returns project root directory.
-     *
-     * @return string
-     */
-    public function getRootDir(): string
-    {
-        return __DIR__;
-    }
-
-    /**
-     * Returns array of Service providers that will be load while framework bootstrapping.
-     *
-     * @return array
-     */
-    public function getServiceProviders(): array
-    {
-        return [];
-    }
-}
 
 /**
  * Class TwigServiceProviderTest
