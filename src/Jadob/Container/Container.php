@@ -118,7 +118,7 @@ class Container implements ContainerInterface
      * @param string $interfaceClassName FQCN of interface that need to be verified
      * @return null|object[]
      */
-    public function getObjectsImplementing(string $interfaceClassName): ?array
+    public function getObjectsImplementing(string $interfaceClassName): array
     {
         $objects = [];
 
@@ -134,10 +134,6 @@ class Container implements ContainerInterface
             if ($service instanceof $interfaceClassName) {
                 $objects[] = $service;
             }
-        }
-
-        if (count($objects) === 0) {
-            return null;
         }
 
         return $objects;
