@@ -20,6 +20,10 @@ Allows to toggle application features without making changes in code.
 
 @TODO
 
+## Running tests
+
+Please run test in ``jadob/jadob`` repository, not in this one.
+
 # License 
 
 MIT
