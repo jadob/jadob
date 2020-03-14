@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Jadob\SymfonyTranslationBridge\Twig\Extension;
 
-use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 /**
- * Class TranslationExtension
- *
+ * @deprecated
  * @package Jadob\SymfonyTranslationBridge\Twig\Extension
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
@@ -22,7 +20,7 @@ class TranslationExtension extends AbstractExtension
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * TranslationExtension constructor.

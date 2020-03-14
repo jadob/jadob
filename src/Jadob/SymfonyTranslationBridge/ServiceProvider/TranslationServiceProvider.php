@@ -1,20 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\SymfonyTranslationBridge\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\SymfonyTranslationBridge\Twig\Extension\TranslationExtension;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\LoggingTranslator;
 use Symfony\Component\Translation\Translator;
 
 /**
- * Class TranslationServiceProvider
  *
+ * @deprecated
  * @package Jadob\SymfonyTranslationBridge\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
