@@ -34,7 +34,7 @@ class BooleanCondition implements ConditionInterface
      *
      * @return bool
      */
-    public function verifyFeature(bool $conditions): bool
+    public function verifyFeature($conditions): bool
     {
         return (bool)$conditions;
     }
