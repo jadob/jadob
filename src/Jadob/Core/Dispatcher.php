@@ -3,21 +3,23 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use InvalidArgumentException;
+use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
-use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\RequestInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function call_user_func_array;
@@ -27,9 +29,8 @@ use function gettype;
 use function method_exists;
 
 /**
- * Class Dispatcher
  *
- * @package Jadob\Core
+ * @internal
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -58,36 +59,34 @@ class Dispatcher
      * @param Container $container
      * @param EventDispatcherInterface|null $eventDispatcher
      */
-    public function __construct(array $config, Container $container, ?EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(array $config, Container $container, EventDispatcherInterface $eventDispatcher = null)
     {
         $this->config = $config;
         $this->container = $container;
-
-        if ($eventDispatcher === null) {
-            $this->eventDispatcher = new EventDispatcher();
-        }
-
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * @param Request $request
+     * @param RequestContext $context
      * @return Response
-     * @throws InvalidArgumentException
-     * @throws ServiceNotFoundException
-     * @throws RouteNotFoundException
-     * @throws KernelException
-     * @throws ReflectionException
-     * @throws MethodNotAllowedException
      * @throws AutowiringException
+     * @throws KernelException
+     * @throws MethodNotAllowedException
+     * @throws ReflectionException
+     * @throws RouteNotFoundException
+     * @throws ServiceNotFoundException
      */
-    public function executeRequest(Request $request): Response
+    public function executeRequest(RequestContext $context): Response
     {
         /**
          * @var Router $router
          */
         $router = $this->container->get('router');
 
-        $route = $router->matchRequest($request);
+        $route = $router->matchRequest($context->getRequest());
+
+        $context->setContext($router->getContext());
+        $context->setRoute($route);
 
         $controllerClass = $route->getController();
 
@@ -113,7 +112,12 @@ class Dispatcher
 
         //@TODO: check if method is accessible
 
-        $methodArguments = $this->resolveControllerMethodArguments($autowiredController, $methodName, $route->getParams());
+        $methodArguments = $this->resolveControllerMethodArguments(
+            $autowiredController,
+            $methodName,
+            $route->getParams(),
+            $context
+        );
 
         $response = call_user_func_array([$autowiredController, $methodName], $methodArguments);
 
@@ -127,10 +131,10 @@ class Dispatcher
     /**
      * @param  $controllerClassName
      * @return mixed
+     * @throws AutowiringException
+     * @throws KernelException
      * @throws ReflectionException
      * @throws ServiceNotFoundException
-     * @throws KernelException
-     * @throws AutowiringException
      */
     protected function autowireControllerClass($controllerClassName)
     {
@@ -178,12 +182,18 @@ class Dispatcher
      * @param object $controllerClass instantiated controller class
      * @param string $methodName method to be called later
      * @param array $routerParams arguments resolved from route
+     * @param RequestContext $context
      * @return array
+     * @throws AutowiringException
      * @throws ReflectionException
      * @throws ServiceNotFoundException
-     * @throws AutowiringException
      */
-    protected function resolveControllerMethodArguments($controllerClass, $methodName, array $routerParams): array
+    protected function resolveControllerMethodArguments(
+        $controllerClass,
+        $methodName,
+        array $routerParams,
+        RequestContext $context
+    ): array
     {
         $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
         $reflection = new ReflectionMethod($controllerClass, $methodName);
@@ -211,12 +221,23 @@ class Dispatcher
 
             //service requested
             if ($type !== null && !$type->isBuiltin()) {
-                //TODO Refactor or move to another method
                 try {
-                    $output[$name] = $this->container->findObjectByClassName($type);
+                    $class = (string)$type;
+
+                    if ($class instanceof Request) {
+                        $output[$name] = $context->getRequest();
+                        continue;
+                    }
+
+                    if ($context->isPsr7Complaint() && $class instanceof RequestInterface) {
+                        $output[$name] = $this->convertRequestToPsr7Complaint($context->getRequest());
+                        continue;
+                    }
+
+                    $output[$name] = $this->container->findObjectByClassName($class);
                 } catch (ServiceNotFoundException $exception) {
                     if ($autowireEnabled) {
-                        $output[$name] = $this->container->autowire($type);
+                        $output[$name] = $this->container->autowire((string)$type);
                     } else {
                         throw $exception;
                     }
@@ -227,5 +248,22 @@ class Dispatcher
             throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
         }
         return $output;
+    }
+
+    /**
+     * @param Request $request
+     * @return RequestInterface
+     */
+    protected function convertRequestToPsr7Complaint(Request $request): RequestInterface
+    {
+        if(isset($this->config['psr7_converter'])) {
+            /** @var Closure $userDefinedConverter */
+            $userDefinedConverter = $this->config['psr7_converter'];
+            return $userDefinedConverter($request);
+        }
+
+        $psr17Factory = new Psr17Factory();
+        $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+        return $psrHttpFactory->createRequest($request);
     }
 }

@@ -5,6 +5,7 @@ namespace Jadob\Core\Tests;
 use Jadob\Container\Container;
 use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
+use Jadob\Core\RequestContext;
 use Jadob\Router\Route;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
@@ -59,7 +60,7 @@ class DispatcherTest extends TestCase
 
         $dispatcher = new Dispatcher([], $container);
 
-        $dispatcher->executeRequest($request);
+        $dispatcher->executeRequest(new RequestContext('test', $request, false));
     }
 
 }

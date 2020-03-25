@@ -100,6 +100,11 @@ class Kernel
     protected $fileStreamHandler;
 
     /**
+     * @var bool
+     */
+    protected bool $psr7Complaint = false;
+
+    /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
      * @throws KernelException
@@ -145,6 +150,7 @@ class Kernel
     public function execute(Request $request): Response
     {
         $requestId = substr(md5((string)mt_rand()), 0, 15);
+        $context = new RequestContext($requestId, $request, $this->psr7Complaint);
 
         $this->logger->info(
             'New request received', [
@@ -156,14 +162,15 @@ class Kernel
         );
 
         $builder = $this->getContainerBuilder();
-        $builder->add('request', $request);
 
         $configArray = $this->config->toArray();
         $this->container = $builder->build($configArray);
         $this->container->addParameter('request_id', $requestId);
 
-
         $dispatcherConfig = $configArray['framework']['dispatcher'];
+        /**
+         * TODO: Dispatcher should also receive some kind of RequestContext object, where Request, Current Route will be present
+         */
         $dispatcher = new Dispatcher($dispatcherConfig, $this->container);
 
         //@TODO this one should be moved  to dispather and called after router to provide matched route
@@ -178,7 +185,7 @@ class Kernel
             return $beforeControllerEventResponse->prepare($request);
         }
 
-        $response = $dispatcher->executeRequest($request);
+        $response = $dispatcher->executeRequest($context);
 
         //@TODO: this one should be moved to dispatcher & should be called after controller
         $afterControllerEvent = new AfterControllerEvent($response);
@@ -313,5 +320,21 @@ class Kernel
 
         $response->prepare($request);
         return $response;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPsr7Complaint(): bool
+    {
+        return $this->psr7Complaint;
+    }
+
+    /**
+     * @param bool $psr7Complaint
+     */
+    public function setPsr7Complaint(bool $psr7Complaint): void
+    {
+        $this->psr7Complaint = $psr7Complaint;
     }
 }
