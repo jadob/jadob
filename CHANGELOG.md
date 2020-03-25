@@ -11,15 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Container] Added ``Container#autowire()`` method
 - [Container] Added ``LazyInvokableClass`` for invokables
 - [Http] Added implementation for PSR HTTP-related interfaces
+- [Container] Added ``ParentProviderInterface`` to allow parent providers registering
+- Added Doctrine Migrations Bridge
+- Bumped minimum required PHP version
+- Added ``infection/infection`` for mutation testing
+- Added ``Contract`` component
+- [Core] added PSR-7 Complaint mode in Kernel
+- [Core] request object is removed from container
 
 ### Changed
 - [Core] Dispatcher will now try to autowire classes in controller if there are not present in Container
 - [Micro] Renamed from ``Application`` to ``Micro``, rewritten to comply with PSR Requests and Middlewares
+- [Core] added ``$env `` to ``BootstrapInterface#getServiceProviders()`` to register providers depending on environment
+- [TwigBridge] Renamed ``TwigServiceProvider`` class to ``TwigProvider``
 
 ### Fixed
 - [Router] now iterates through all methods, and throws ``MethodNotAllowedException`` only if no path supporting given method is found (commit 9d90b20)
 
+### Removed
+- Removed ``phan/phan`` and replaced it with ``vimeo/psalm`` instead
+- Removed ``doctrine/coding-standard``
 
+### Deprecated
+- [SymfonyTranslationBridge] is now deprecated and refactored to ``Jadob\Bridge\Symfony\Translation`` namespace with contract support
 ## [0.0.63] 
 ### Changed
 - [DoctrineORMBridge] Replaced ArrayCache with FilesystemCache
