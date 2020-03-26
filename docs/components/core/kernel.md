@@ -3,10 +3,10 @@
 Turns requests into responses. 
 
 ## PSR-7 Complaint 
-Jadob is able to handle psr-7 based controllers in your application. When enabled, HttpFoundation object is converted to PSR-7 
+Jadob is able to handle PSR-7 based controllers in your application. When enabled, HttpFoundation object is converted to PSR-7 
 and passed to your action. Dispatcher will automatically detect which request object should be used for further execution.
 
-** Note that this applies only to controller methods so far. **
+**Note that this applies only to controller methods so far.**
 
 ### Enable/Disable feature
 
