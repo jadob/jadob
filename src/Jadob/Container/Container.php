@@ -11,7 +11,6 @@ use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
-use SplObjectStorage;
 use function array_keys;
 use function class_exists;
 use function in_array;
@@ -54,7 +53,7 @@ class Container implements ContainerInterface
     /**
      * @var array
      */
-    protected array $parameters;
+    protected array $parameters = [];
 
     /**
      * Container constructor.
@@ -228,7 +227,6 @@ class Container implements ContainerInterface
 
     /**
      * @param string $key
-     * @param $value
      * @param false|string $value
      *
      * @return void
@@ -287,7 +285,7 @@ class Container implements ContainerInterface
             //only user defined classes allowed so far
             if ($argument->getType()->isBuiltin()) {
                 //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built in type argument');
+                throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built-in type argument');
             }
 
             $argumentClass = $argument->getType()->getName();
