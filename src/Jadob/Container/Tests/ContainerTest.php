@@ -3,6 +3,8 @@
 namespace Jadob\Container\Tests;
 
 use Jadob\Container\Container;
+use Jadob\Container\Tests\Fixtures\AService;
+use Jadob\Container\Tests\Fixtures\CService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -90,5 +92,14 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(Container::class, $container->findObjectByClassName(ContainerInterface::class));
         $this->assertInstanceOf(DummyClass::class, $container->findObjectByClassName(DummyClass::class));
         $this->assertInstanceOf(\stdClass::class, $container->findObjectByClassName(\stdClass::class));
+    }
+
+    public function testServiceAutowiring()
+    {
+        $container = new Container();
+        $container->add(AService::class, new AService());
+        $serviceC = $container->autowire(CService::class);
+
+        $this->assertSame($container->get(AService::class), $serviceC->getService());
     }
 }
