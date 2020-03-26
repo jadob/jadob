@@ -26,6 +26,7 @@ use function call_user_func_array;
 use function count;
 use function get_class;
 use function gettype;
+use function in_array;
 use function method_exists;
 
 /**
@@ -223,22 +224,28 @@ class Dispatcher
             if ($type !== null && !$type->isBuiltin()) {
                 try {
                     $class = (string)$type;
-
-                    if ($class instanceof Request) {
-                        $output[$name] = $context->getRequest();
+                    /**
+                     * try to match request object first
+                     */
+                    if (($request = $this->matchRequestObject($class, $context)) !== null) {
+                        $output[$name] = $request;
                         continue;
                     }
 
-                    if ($context->isPsr7Complaint() && $class instanceof RequestInterface) {
-                        $output[$name] = $this->convertRequestToPsr7Complaint($context->getRequest());
-                        continue;
-                    }
-
+                    /**
+                     * Then look in container for existing class
+                     */
                     $output[$name] = $this->container->findObjectByClassName($class);
                 } catch (ServiceNotFoundException $exception) {
                     if ($autowireEnabled) {
+                        /**
+                         * Try to autowire if enabled in dispatcher configuration
+                         */
                         $output[$name] = $this->container->autowire((string)$type);
                     } else {
+                        /**
+                         * Break if all possibilities gave no results
+                         */
                         throw $exception;
                     }
                 }
@@ -256,14 +263,54 @@ class Dispatcher
      */
     protected function convertRequestToPsr7Complaint(Request $request): RequestInterface
     {
-        if(isset($this->config['psr7_converter'])) {
+        /**
+         * Allows to use user defined factory for PSR Requests
+         */
+        if (isset($this->config['psr7_converter'])) {
             /** @var Closure $userDefinedConverter */
             $userDefinedConverter = $this->config['psr7_converter'];
             return $userDefinedConverter($request);
         }
 
+        /**
+         * There is no reason to use separate instance for any request interface
+         */
         $psr17Factory = new Psr17Factory();
-        $psrHttpFactory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+        $psrHttpFactory = new PsrHttpFactory(
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory
+        );
+
         return $psrHttpFactory->createRequest($request);
+    }
+
+    /**
+     * @param string $className
+     * @param RequestContext $context
+     * @return Request|RequestInterface|null
+     */
+    protected function matchRequestObject(string $className, RequestContext $context): ?object
+    {
+        if (
+            $className === Request::class
+            || in_array(Request::class, class_parents($className), true) // an instanceof Request has been passed to execute() method
+        ) {
+            return $context->getRequest();
+        }
+
+        if (
+            $context->isPsr7Complaint()
+            && (
+                in_array(RequestInterface::class, class_implements($className), true)
+                || $className === RequestInterface::class
+            )
+        ) {
+            $this->convertRequestToPsr7Complaint($context->getRequest());
+        }
+
+        return null;
+
     }
 }
