@@ -101,7 +101,9 @@ class Container implements ContainerInterface
      */
     protected function instantiateFactory(string $factoryName)
     {
-        //@TODO find why DoctrineDBALBridge breaks here
+        /**
+         * Do not instantiate factories if it has been instantiated
+         */
         if (isset($this->services[$factoryName])) {
             return $this->services[$factoryName];
         }
@@ -112,11 +114,44 @@ class Container implements ContainerInterface
     }
 
     /**
-     * UNSTABLE, there will be some work needed
-     *
+     * @param string $factoryName
+     * @param string $interfaceToCheck
+     * @return bool|null
+     * @throws ReflectionException
+     */
+    protected function factoryReturnImplements(string $factoryName, string $interfaceToCheck): ?bool
+    {
+
+
+        $factory = $this->factories[$factoryName];
+        $reflection = new \ReflectionMethod($factory, '__invoke');
+
+        /**
+         * There is no return type defined in factory, return null as at this moment is not possible to resolve
+         * return type without service instantiating
+         */
+        if (!$reflection->hasReturnType()) {
+            return null;
+        }
+
+        $returnType = (string)$reflection->getReturnType();
+
+        if (
+            $returnType === $interfaceToCheck
+            || in_array($interfaceToCheck, class_implements($returnType), true)
+            || in_array($interfaceToCheck, class_parents($returnType), true)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $interfaceClassName FQCN of interface that need to be verified
      *
      * @return array
+     * @throws ReflectionException
      */
     public function getObjectsImplementing(string $interfaceClassName): array
     {
@@ -129,6 +164,19 @@ class Container implements ContainerInterface
         }
 
         foreach (array_keys($this->factories) as $factoryName) {
+            /**
+             * When given factory has got a return type defined, use it and check that returned class implements
+             * requested interface
+             *
+             * Also, factoryReturnImplements() returns bool|null, so explicitly check for return type
+             */
+            if ($this->factoryReturnImplements($factoryName, $interfaceClassName) === false) {
+                continue;
+            }
+
+            /**
+             * If given factory does not have return type defined, instantiate them
+             */
             $service = $this->instantiateFactory($factoryName);
 
             if ($service instanceof $interfaceClassName) {
@@ -146,6 +194,7 @@ class Container implements ContainerInterface
      * @param string $className FQCN of class that we need to find
      * @return mixed
      * @throws ServiceNotFoundException
+     * @throws ReflectionException
      */
     public function findObjectByClassName(string $className)
     {
@@ -166,6 +215,15 @@ class Container implements ContainerInterface
          * BUT these ones are still present in current foreach
          */
         foreach (array_keys($this->factories) as $factoryName) {
+
+            /**
+             * Use factory return check as this method works similar to getObjectsImplementing()
+             * @see self::getObjectsImplementing()
+             */
+            if ($this->factoryReturnImplements($factoryName, $className) === false) {
+                continue;
+            }
+
             $service = $this->instantiateFactory($factoryName);
 
             if ($service instanceof $className) {
