@@ -7,6 +7,10 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Container\Tests\Fixtures\ExampleService;
 use Jadob\Container\Tests\Fixtures\YetAnotherExampleService;
 
+/**
+ * @internal
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ */
 class AServiceProvider implements ServiceProviderInterface
 {
 

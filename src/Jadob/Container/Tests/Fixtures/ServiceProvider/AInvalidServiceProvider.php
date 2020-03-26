@@ -8,7 +8,10 @@
 
 namespace Jadob\Container\Tests\Fixtures\ServiceProvider;
 
-
+/**
+ * @internal
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ */
 class AInvalidServiceProvider
 {
 
