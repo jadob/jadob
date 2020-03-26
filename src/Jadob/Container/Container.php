@@ -290,7 +290,7 @@ class Container implements ContainerInterface
                 throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built in type argument');
             }
 
-            $argumentClass = (string)$argument->getType();
+            $argumentClass = $argument->getType()->getName();
             try {
                 $argumentsToInject[] = $this->findObjectByClassName($argumentClass);
             } catch (ServiceNotFoundException $exception) {
