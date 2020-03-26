@@ -14,6 +14,7 @@ use ReflectionClass;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\ExtensionInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 use function file_get_contents;
@@ -151,7 +152,7 @@ class TwigProvider implements ServiceProviderInterface
         }
 
         //Register user-defined extensions:
-        $extensions = $container->getObjectsImplementing(AbstractExtension::class);
+        $extensions = $container->getObjectsImplementing(ExtensionInterface::class);
         foreach ($extensions as $extension) {
             //TODO: check if addExtensions() does not override currently added extensions and use it for lower complexity
             $twig->addExtension($extension);
