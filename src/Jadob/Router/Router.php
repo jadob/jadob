@@ -6,7 +6,6 @@ namespace Jadob\Router;
 
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
-use Jadob\Router\Exception\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 use function array_filter;
 use function array_flip;
@@ -109,7 +108,7 @@ class Router
              */
             $pathRegex = $this->getRegex($route->getPath());
             //@TODO: maybe we should break here if $pathRegex === false?
-            $parameters = [];
+            $parameters = $route->getParams();
 
             if ($pathRegex !== false
                 && preg_match($pathRegex, $path, $matches) > 0
