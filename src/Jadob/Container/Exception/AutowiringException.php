@@ -8,7 +8,7 @@ namespace Jadob\Container\Exception;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class AutowiringException extends \Exception
+class AutowiringException extends ContainerException
 {
 
 }

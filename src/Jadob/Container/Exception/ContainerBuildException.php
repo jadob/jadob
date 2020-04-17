@@ -9,7 +9,7 @@ namespace Jadob\Container\Exception;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class ContainerBuildException extends \Exception
+class ContainerBuildException extends ContainerException
 {
 
 }
