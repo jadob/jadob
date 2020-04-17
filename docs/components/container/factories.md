@@ -27,9 +27,11 @@ return [
     }, 
 ]
 
+
+````
+
 **Factories are resolved once, when requested via get() or autowiring.** Until the request terminates, a returned object 
 from factory will be used with each service request.
-````
 
 ## Factory return type optimization
 
