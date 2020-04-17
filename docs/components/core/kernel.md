@@ -23,7 +23,7 @@ $kernel->setPsr7Complaint(true); //set false to disable
 $response = $kernel->execute(); //HttpComponent Response returned
 ```
 
-### Overriding Default converter
+### Overriding Default HTTP Foundation to PSR-7 Converter
 Under the hood, a ``symfony/psr-http-message-bridge`` and ``nyholm/psr7`` are used for converting Symfony Request object into
 a PSR-7 Request. You can override it with your own solution by providing a Closure into ``framework.dispatcher.psr7_converter``config key:
 

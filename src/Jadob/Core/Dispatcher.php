@@ -10,6 +10,7 @@ use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
@@ -233,6 +234,14 @@ class Dispatcher
                     }
 
                     /**
+                     * Current matched route is passed to given argument
+                     */
+                    if ($class === Route::class) {
+                        $output[$name] = $context->getRoute();
+                        continue;
+                    }
+
+                    /**
                      * Then look in container for existing class
                      */
                     $output[$name] = $this->container->findObjectByClassName($class);
@@ -313,4 +322,5 @@ class Dispatcher
         return null;
 
     }
+
 }

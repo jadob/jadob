@@ -23,6 +23,7 @@ use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
@@ -50,7 +51,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.0.64';
+    public const VERSION = '0.0.65';
 
     /**
      * If true, application log will be saved while destructing objects
@@ -242,7 +243,7 @@ class Kernel
                 $listener = new ContainerEventListener();
             }
             $containerBuilder = new ContainerBuilder($listener);
-            $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
+            $containerBuilder->add(EventDispatcherInterface::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);

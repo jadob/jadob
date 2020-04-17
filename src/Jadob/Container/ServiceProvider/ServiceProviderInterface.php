@@ -38,10 +38,10 @@ interface ServiceProviderInterface
      * (example 2: EventDispatcher registers all Listeners here)
      * - You can add new services of course
      *
-     * @param  Container  $container
-     * @param  array|null $config    the same config node as passed in register()
-     * @throws ServiceNotFoundException
+     * @param Container $container
+     * @param array|null $config the same config node as passed in register()
      * @return void
+     * @throws ServiceNotFoundException
      */
     public function onContainerBuild(Container $container, $config);
 

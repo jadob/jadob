@@ -6,10 +6,12 @@ namespace Jadob\Container;
 
 use Closure;
 use Jadob\Container\Exception\AutowiringException;
+use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionParameter;
 use RuntimeException;
 use function array_keys;
 use function class_exists;
@@ -108,7 +110,14 @@ class Container implements ContainerInterface
             return $this->services[$factoryName];
         }
 
-        $this->services[$factoryName] = $this->factories[$factoryName]($this);
+
+        $service = $this->factories[$factoryName]($this);
+
+        if (!is_object($service)) {
+            throw new ContainerException('Factory "' . $factoryName . '" should return an object, ' . gettype($service) . ' returned');
+        }
+
+        $this->services[$factoryName] = $service;
         unset($this->factories[$factoryName]);
         return $this->services[$factoryName];
     }
@@ -309,7 +318,7 @@ class Container implements ContainerInterface
 
     /**
      * Creates new instance of object with dependencies that currently have been stored in container
-     *
+     * @TODO REFACTOR - method looks ugly af
      * @param string $className
      * @return object
      * @throws AutowiringException
@@ -333,30 +342,46 @@ class Container implements ContainerInterface
         $arguments = $constructor->getParameters();
         $argumentsToInject = [];
 
+        #TODO REFACTOR - method looks ugly af
         foreach ($arguments as $argument) {
-            //no nulls allowed
-            if ($argument->getType() === null) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
-            }
-
-            //only user defined classes allowed so far
-            if ($argument->getType()->isBuiltin()) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built-in type argument');
-            }
+            $this->checkConstructorArgumentCanBeAutowired($argument, $className);
 
             $argumentClass = $argument->getType()->getName();
             try {
                 $argumentsToInject[] = $this->findObjectByClassName($argumentClass);
             } catch (ServiceNotFoundException $exception) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
+                //try to autowire if not found
+                try {
+                    $argumentsToInject[] = $this->autowire($argumentClass);
+                } catch (ContainerException $autowiringException) {
+                    //TODO Named constructors
+                    throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
+                }
             }
         }
 
         $service = new $className(...$argumentsToInject);
         $this->add($className, $service);
         return $service;
+    }
+
+    /**
+     * @param ReflectionParameter $parameter
+     * @param string $className
+     * @throws AutowiringException
+     */
+    protected function checkConstructorArgumentCanBeAutowired(ReflectionParameter $parameter, string $className)
+    {
+        //no nulls allowed
+        if ($parameter->getType() === null) {
+            //TODO Named constructors
+            throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
+        }
+
+        //only classes allowed so far
+        if ($parameter->getType()->isBuiltin()) {
+            //TODO Named constructors
+            throw new AutowiringException('Unable to autowire class "' . $className . '", as "$' . $parameter->name . '" constructor argument requires a scalar value');
+        }
     }
 }

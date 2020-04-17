@@ -11,7 +11,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class ServiceNotFoundException extends \Exception implements NotFoundExceptionInterface
+class ServiceNotFoundException extends ContainerException implements NotFoundExceptionInterface
 {
 
 }

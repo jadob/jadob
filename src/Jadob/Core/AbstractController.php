@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use InvalidArgumentException;
 use Jadob\Container\Container;
+use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -13,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 /**
+ * This is a base class for your controller which exposes some basic features required in most cases.
+ *
+ * It is not required for your actions to extend this class. Feel free to ignore it and reach all your required
+ * services via action arguments or create your own AbstractController class.
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -25,19 +31,20 @@ abstract class AbstractController
     protected $container;
 
     /**
-     * ControllerUtils constructor.
+     * Constructor cannot be overriden in this case as this abstract rely on it.
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    final public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
     /**
-     * @param  string $templateName
-     * @param  array  $data
+     * @param string $templateName
+     * @param array $data
      * @return string
+     * @throws ServiceNotFoundException
      */
     protected function renderTemplate(string $templateName, array $data = []): string
     {
@@ -46,6 +53,7 @@ abstract class AbstractController
 
     /**
      * @return FormFactory
+     * @throws ServiceNotFoundException
      */
     protected function getFormFactory(): FormFactory
     {
@@ -53,19 +61,32 @@ abstract class AbstractController
     }
 
     /**
+     * @param string $type
+     * @param null $data
+     * @param array $options
+     * @return \Symfony\Component\Form\FormInterface
+     * @throws ServiceNotFoundException
+     */
+    public function createForm(string $type, $data = null, array $options = [])
+    {
+        return $this->getFormFactory()->create($type, $data, $options);
+    }
+
+    /**
      * @return UserInterface|null
+     * @throws ServiceNotFoundException
      */
     protected function getUser(): ?UserInterface
     {
         return $this->container->get('auth.user.storage')->getUser();
     }
 
-
     /**
-     * @param  string $name
-     * @param  array  $params
-     * @param  bool   $full
+     * @param string $name
+     * @param array $params
+     * @param bool $full
      * @return string
+     * @throws ServiceNotFoundException
      */
     protected function generateRoute($name, array $params = [], $full = false): string
     {
@@ -73,10 +94,10 @@ abstract class AbstractController
     }
 
     /**
-     * @param  string $name
-     * @param  array  $params
+     * @param string $name
+     * @param array $params
      * @return RedirectResponse
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function createRedirectToRouteResponse(string $name, array $params = []): RedirectResponse
     {
@@ -86,6 +107,8 @@ abstract class AbstractController
 
     /**
      * @return Request
+     * @throws ServiceNotFoundException
+     * @deprecated - reach given request via action argument
      */
     protected function getRequest(): Request
     {
@@ -95,7 +118,7 @@ abstract class AbstractController
     /**
      * @param  $id
      * @return mixed
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     protected function get($id)
     {
@@ -107,9 +130,8 @@ abstract class AbstractController
      * @param $message
      * @param array $context
      *
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     *
      * @return void
+     * @throws ServiceNotFoundException
      */
     protected function log($level, $message, array $context = []): void
     {

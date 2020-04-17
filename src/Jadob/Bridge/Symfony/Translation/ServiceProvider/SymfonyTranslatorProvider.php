@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Translation\ServiceProvider;
 
-
-use Jadob\Bridge\Symfony\Translation\Translator;
+use Jadob\Bridge\Symfony\Translation\TranslationSource;
 use Jadob\Container\Container;
-use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\Contract\Translation\TranslatorInterface;
+use Jadob\Core\BootstrapInterface;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
+use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
+use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\LoggingTranslator;
-use Symfony\Component\Translation\Translator as SymfonyTranslator;
+use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use function glob;
+use function preg_match;
+use function sprintf;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -30,7 +34,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'translation';
+        return 'translator';
     }
 
     /**
@@ -43,40 +47,86 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
     {
         return [
             //expose this as a separate service to make it possible to override
-            MessageFormatter::class => static function () {
+            MessageFormatterInterface::class => static function () {
                 return new MessageFormatter();
             },
+
             TranslatorInterface::class => static function (ContainerInterface $container) use ($config) {
-                $symfonyTranslator = new SymfonyTranslator(
+                /** @var BootstrapInterface $bootstrap */
+                $bootstrap = $container->get(BootstrapInterface::class);
+                /** @var TranslationSource[] $sources */
+                $sources = [];
+
+                $symfonyTranslator = new Translator(
                     $config['locale'],
-                    $container->get(MessageFormatter::class)
+                    $container->get(MessageFormatterInterface::class)
+                );
+                $symfonyTranslator->addLoader('php', new PhpFileLoader());
+
+
+                /**
+                 * Adding translations automatically:
+                 *
+                 * Traverse CONFIG_DIR/translations/ * / *.php files for translations
+                 * When found any, a filename without extension will be used as a domain
+                 */
+                $sourcesPath = $bootstrap->getConfigDir() . '/translations/*/*.php';
+                $sourcesGlob = glob($sourcesPath);
+
+                $sourcesRegexp = sprintf(
+                    '@%s\/translations\/(?<locale>[A-Za-z]{2})\/(?<domain>[a-zA-Z]*).php@i',
+                    $bootstrap->getConfigDir()
                 );
 
-                if (isset($config['logging']) && $config['logging'] === true) {
-                    $symfonyTranslator = new LoggingTranslator(
-                        $symfonyTranslator,
-                        $container->get(LoggerInterface::class)
+                foreach ($sourcesGlob as $sourcePath) {
+                    preg_match($sourcesRegexp, $sourcePath, $sourceMatch);
+                    $sources[] = new TranslationSource($sourcePath, $sourceMatch['locale'], $sourceMatch['domain']);
+                }
+
+                /**
+                 * User-defined translations
+                 */
+                if (isset($config['sources'])) {
+                    foreach ($config['sources'] as $userDefinedSource) {
+                        $sources[] = new TranslationSource(
+                            $userDefinedSource['path'],
+                            $userDefinedSource['locale'],
+                            $userDefinedSource['domain']
+                        );
+                    }
+                }
+
+                foreach ($sources as $source) {
+                    $symfonyTranslator->addResource(
+                        'php',
+                        $source->getPath(),
+                        $source->getLocale(),
+                        $source->getDomain()
                     );
                 }
 
-                return new Translator($symfonyTranslator);
+                /**
+                 * If Logging enabled, wrap the orginal instance into an logging translator
+                 */
+                if (isset($config['logging']) && $config['logging'] === true) {
+                    $defaultLoggerHandler = $container->get('logger.handler.default');
+                    $translationLogger = new Logger('translator', [
+                        $defaultLoggerHandler
+                    ]);
+
+                    $symfonyTranslator = new LoggingTranslator(
+                        $symfonyTranslator,
+                        $translationLogger
+                    );
+                }
+
+                return $symfonyTranslator;
             }
         ];
     }
 
     /**
-     * Stuff that's needed to be done after container is built.
-     * What can you do using these method?
-     * - This one gets container as a first argument, so, you can e.g. get all services implementing SomeCoolInterface,
-     * and inject them somewhere
-     * (example 1: using Twig, you can register all extensions)
-     * (example 2: EventDispatcher registers all Listeners here)
-     * - You can add new services of course
-     *
-     * @param Container $container
-     * @param array|null $config the same config node as passed in register()
-     * @return void
-     * @throws ServiceNotFoundException
+     * {@inheritDoc}
      */
     public function onContainerBuild(Container $container, $config)
     {

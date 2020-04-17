@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\Logger;
 
@@ -6,9 +7,6 @@ use Doctrine\DBAL\Logging\SQLLogger;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class Psr3QueryLogger
- *
- * @package Jadob\Bridge\Doctrine\DBAL\Logger
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
