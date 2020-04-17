@@ -59,9 +59,10 @@ class Route
      * @param string|null $controller
      * @param string|null $action
      * @param string|null $host
-     * @param array       $methods
+     * @param array $methods
+     * @param array $params
      */
-    public function __construct($name, $path = null, $controller = null, $action = null, $host = null, array $methods = [])
+    public function __construct($name, $path = null, $controller = null, $action = null, $host = null, array $methods = [], array $params = [])
     {
         $this->name = $name;
         $this->path = $path;
@@ -241,7 +242,8 @@ class Route
             $data['controller'] ?? null,
             $data['action'] ?? '__invoke',
             $data['host'] ?? null,
-            $data['methods'] ?? []
+            $data['methods'] ?? [],
+            $data['params'] ?? []
         );
     }
 }
