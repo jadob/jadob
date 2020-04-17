@@ -6,10 +6,12 @@ namespace Jadob\Container;
 
 use Closure;
 use Jadob\Container\Exception\AutowiringException;
+use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionParameter;
 use RuntimeException;
 use function array_keys;
 use function class_exists;
@@ -108,7 +110,14 @@ class Container implements ContainerInterface
             return $this->services[$factoryName];
         }
 
-        $this->services[$factoryName] = $this->factories[$factoryName]($this);
+
+        $service = $this->factories[$factoryName]($this);
+
+        if (!is_object($service)) {
+            throw new ContainerException('Factory "' . $factoryName . '" should return an object, ' . gettype($service) . ' returned');
+        }
+
+        $this->services[$factoryName] = $service;
         unset($this->factories[$factoryName]);
         return $this->services[$factoryName];
     }
@@ -309,7 +318,7 @@ class Container implements ContainerInterface
 
     /**
      * Creates new instance of object with dependencies that currently have been stored in container
-     *
+     * @TODO REFACTOR - method looks ugly af
      * @param string $className
      * @return object
      * @throws AutowiringException
@@ -333,6 +342,7 @@ class Container implements ContainerInterface
         $arguments = $constructor->getParameters();
         $argumentsToInject = [];
 
+        #TODO REFACTOR - method looks ugly af
         foreach ($arguments as $argument) {
             $this->checkConstructorArgumentCanBeAutowired($argument, $className);
 
