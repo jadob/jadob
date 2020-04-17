@@ -1,23 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
-use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Validation;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 /**
@@ -38,17 +34,18 @@ class SymfonyFormProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
-     * @throws \ReflectionException
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     *
      * @return (\Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
      *
      * @psalm-return array{symfony.validator: \Symfony\Component\Validator\Validator\ValidatorInterface, symfony.form.factory: \Closure(Container):\Symfony\Component\Form\FormFactoryInterface}
+     * @throws \ReflectionException
+     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     *
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function register($config)
     {
 
+        //TODO move to parent provider
         $validator = Validation::createValidatorBuilder();
 
         return [
@@ -70,17 +67,17 @@ class SymfonyFormProvider implements ServiceProviderInterface
     {
         if ($container->has('twig')) {
             /**
- * @var \Twig\Environment $twig 
-*/
+             * @var \Twig\Environment $twig
+             */
             $twig = $container->get('twig');
             $formEngine = new TwigRendererEngine($config['forms'], $twig);
 
             $twig->addRuntimeLoader(
                 new FactoryRuntimeLoader(
                     [
-                    FormRenderer::class => function () use ($formEngine) {
-                        return new FormRenderer($formEngine);
-                    },
+                        FormRenderer::class => function () use ($formEngine) {
+                            return new FormRenderer($formEngine);
+                        },
                     ]
                 )
             );
@@ -88,7 +85,7 @@ class SymfonyFormProvider implements ServiceProviderInterface
             $twig->addExtension(new FormExtension());
             $twig->addExtension(
                 new TranslationExtension(
-                    $container->get('translator')
+                    $container->get(TranslatorInterface::class)
                 )
             );
         }

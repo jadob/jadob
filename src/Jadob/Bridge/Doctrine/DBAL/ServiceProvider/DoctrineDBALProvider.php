@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
@@ -42,12 +41,12 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \RuntimeException
-     *
      * @return (EventManager|\Closure|\Closure|\Closure|\Closure)[]
      *
      * @psalm-return array<string, EventManager|\Closure(ContainerInterface):Configuration|\Closure(ContainerInterface):Logger|\Closure(ContainerInterface):Psr3QueryLogger|\Closure(ContainerInterface):\Doctrine\DBAL\Connection>
+     * @throws \RuntimeException
+     *
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function register($config)
     {
@@ -56,7 +55,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         }
 
 
-        if(isset($config['types'])) {
+        if (isset($config['types'])) {
             foreach ($config['types'] as $name => $class) {
                 Type::addType($name, $class);
             }
@@ -115,42 +114,22 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
             $helperSet = new HelperSet(
                 [
-                'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
+                    'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
                 ]
             );
 
             /**
- * @var Application $console 
-*/
+             * @var Application $console
+             */
             $console = $container->get('console');
 
             $console->setHelperSet($helperSet);
             $console->addCommands(
                 [
-                new ReservedWordsCommand(),
-                new RunSqlCommand()
+                    new ReservedWordsCommand(),
+                    new RunSqlCommand()
                 ]
             );
         }
-    }
-
-
-    public function getDefaultConfiguration(): array
-    {
-        return [
-            /**
-             * DBAL logger configuration
-             */
-            'logging' => [
-                /**
-                 * If true, DBAL will log all queries to %LOG_DIR%/dbal.log file, otherwise it will use default logfile
-                 */
-                'use_external_file' => false,
-                /**
-                 * Pass all StreamHandler IDs from container that DBAL Logs will be sent too.
-                 */
-                'log_to' => []
-            ]
-        ];
     }
 }
