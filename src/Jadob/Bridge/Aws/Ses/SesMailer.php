@@ -42,12 +42,15 @@ class SesMailer
         }
         unset($address);
 
+        $from = $email->getFrom();
+        $plainFromAddress = reset($from)->toString();
+
         $result = $this->sesClient->sendEmail([
             'Destination' => [
                 'ToAddresses' => $plainToEmails,
             ],
             'ReplyToAddresses' => $plainReplyToEmails,
-            'Source' => $email->getFrom(),
+            'Source' => $plainFromAddress,
             'Message' => [
                 'Body' => [
                     'Html' => [
