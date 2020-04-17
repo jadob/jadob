@@ -39,16 +39,6 @@ class Router
     protected $routeCollection;
 
     /**
-     * @var string
-     */
-    protected $leftDelimiter = '{';
-
-    /**
-     * @var string
-     */
-    protected $rightDelimiter = '}';
-
-    /**
      * @var Context
      */
     protected $context;
@@ -63,8 +53,7 @@ class Router
         $this->routeCollection = $routeCollection;
 
         $defaultConfig = [
-            'case_sensitive' => false,
-            'optional_locale' => false,
+            'case_sensitive' => false
         ];
 
         $this->config = array_merge($defaultConfig, $config);
@@ -276,26 +265,6 @@ class Router
     public function setContext(Context $context): Router
     {
         $this->context = $context;
-        return $this;
-    }
-
-    /**
-     * Allows to set custom route argument delimiters
-     *
-     * @param string $left
-     * @param string $right
-     * @return $this
-     * @throws RouterException
-     */
-    public function setParameterDelimiters(string $left, string $right): self
-    {
-        if ($left === '' || $right === '') {
-            throw new RouterException('Parameter delimiters cannot be blank');
-        }
-
-        $this->leftDelimiter = $left;
-        $this->rightDelimiter = $right;
-
         return $this;
     }
 
