@@ -334,29 +334,44 @@ class Container implements ContainerInterface
         $argumentsToInject = [];
 
         foreach ($arguments as $argument) {
-            //no nulls allowed
-            if ($argument->getType() === null) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
-            }
-
-            //only user defined classes allowed so far
-            if ($argument->getType()->isBuiltin()) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", as it requires built-in type argument');
-            }
+            $this->checkConstructorArgumentCanBeAutowired($argument, $className);
 
             $argumentClass = $argument->getType()->getName();
             try {
                 $argumentsToInject[] = $this->findObjectByClassName($argumentClass);
             } catch (ServiceNotFoundException $exception) {
-                //TODO Named constructors
-                throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
+                //try to autowire if not found
+                try {
+                    $argumentsToInject[] = $this->autowire($argumentClass);
+                } catch (ContainerException $autowiringException) {
+                    //TODO Named constructors
+                    throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
+                }
             }
         }
 
         $service = new $className(...$argumentsToInject);
         $this->add($className, $service);
         return $service;
+    }
+
+    /**
+     * @param ReflectionParameter $parameter
+     * @param string $className
+     * @throws AutowiringException
+     */
+    protected function checkConstructorArgumentCanBeAutowired(ReflectionParameter $parameter, string $className)
+    {
+        //no nulls allowed
+        if ($parameter->getType() === null) {
+            //TODO Named constructors
+            throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
+        }
+
+        //only classes allowed so far
+        if ($parameter->getType()->isBuiltin()) {
+            //TODO Named constructors
+            throw new AutowiringException('Unable to autowire class "' . $className . '", as "$' . $parameter->name . '" constructor argument requires a scalar value');
+        }
     }
 }
