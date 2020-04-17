@@ -32,13 +32,13 @@ class SesMailer
         $charset = 'UTF-8';
         $plainToEmails = [];
         foreach ($email->getTo() as $address) {
-            $plainToEmails[] = $address->getAddress();
+            $plainToEmails[] = $address->toString();
         }
         unset($address);
 
         $plainReplyToEmails = [];
         foreach ($email->getReplyTo() as $address) {
-            $plainReplyToEmails[] = $address->getAddress();
+            $plainReplyToEmails[] = $address->toString();
         }
         unset($address);
 
