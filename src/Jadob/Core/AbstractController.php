@@ -31,19 +31,20 @@ abstract class AbstractController
     protected $container;
 
     /**
-     * ControllerUtils constructor.
+     * Constructor cannot be overriden in this case as this abstract rely on it.
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    final public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
     /**
-     * @param  string $templateName
-     * @param  array  $data
+     * @param string $templateName
+     * @param array $data
      * @return string
+     * @throws ServiceNotFoundException
      */
     protected function renderTemplate(string $templateName, array $data = []): string
     {
@@ -52,6 +53,7 @@ abstract class AbstractController
 
     /**
      * @return FormFactory
+     * @throws ServiceNotFoundException
      */
     protected function getFormFactory(): FormFactory
     {
@@ -72,18 +74,19 @@ abstract class AbstractController
 
     /**
      * @return UserInterface|null
+     * @throws ServiceNotFoundException
      */
     protected function getUser(): ?UserInterface
     {
         return $this->container->get('auth.user.storage')->getUser();
     }
 
-
     /**
-     * @param  string $name
-     * @param  array  $params
-     * @param  bool   $full
+     * @param string $name
+     * @param array $params
+     * @param bool $full
      * @return string
+     * @throws ServiceNotFoundException
      */
     protected function generateRoute($name, array $params = [], $full = false): string
     {
@@ -91,10 +94,10 @@ abstract class AbstractController
     }
 
     /**
-     * @param  string $name
-     * @param  array  $params
+     * @param string $name
+     * @param array $params
      * @return RedirectResponse
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function createRedirectToRouteResponse(string $name, array $params = []): RedirectResponse
     {
@@ -104,6 +107,8 @@ abstract class AbstractController
 
     /**
      * @return Request
+     * @throws ServiceNotFoundException
+     * @deprecated - reach given request via action argument
      */
     protected function getRequest(): Request
     {
@@ -113,7 +118,7 @@ abstract class AbstractController
     /**
      * @param  $id
      * @return mixed
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
+     * @throws ServiceNotFoundException
      */
     protected function get($id)
     {
@@ -125,9 +130,8 @@ abstract class AbstractController
      * @param $message
      * @param array $context
      *
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     *
      * @return void
+     * @throws ServiceNotFoundException
      */
     protected function log($level, $message, array $context = []): void
     {
