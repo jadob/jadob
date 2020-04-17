@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use InvalidArgumentException;
 use Jadob\Container\Container;
+use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -13,6 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 /**
+ * This is a base class for your controller which exposes some basic features required in most cases.
+ *
+ * It is not required for your actions to extend this class. Feel free to ignore it and reach all your required
+ * services via action arguments or create your own AbstractController class.
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -50,6 +56,18 @@ abstract class AbstractController
     protected function getFormFactory(): FormFactory
     {
         return $this->container->get('symfony.form.factory');
+    }
+
+    /**
+     * @param string $type
+     * @param null $data
+     * @param array $options
+     * @return \Symfony\Component\Form\FormInterface
+     * @throws ServiceNotFoundException
+     */
+    public function createForm(string $type, $data = null, array $options = [])
+    {
+        return $this->getFormFactory()->create($type, $data, $options);
     }
 
     /**
