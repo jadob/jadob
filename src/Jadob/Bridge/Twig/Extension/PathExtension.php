@@ -1,15 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Extension;
 
+use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use function ltrim;
 
 /**
- * Class PathExtension
  *
- * @package Jadob\TwigBridge\Twig\Extension
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -19,7 +20,7 @@ class PathExtension extends AbstractExtension
     /**
      * @var Router
      */
-    private $router;
+    private Router $router;
 
     /**
      * PathExtension constructor.
@@ -32,35 +33,63 @@ class PathExtension extends AbstractExtension
     }
 
     /**
-     * @return array
+     * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('path', [$this, 'path'], ['is_safe' => ['html'],]),
-            new TwigFunction('url', [$this, 'url'], ['is_safe' => ['html'],]),
+            new TwigFunction('path', [$this, 'path'], ['is_safe' => ['html']]),
+            new TwigFunction('url', [$this, 'url'], ['is_safe' => ['html']]),
+            new TwigFunction('asset_url', [$this, 'assetUrl'], ['is_safe' => ['html']])
         ];
     }
 
     /**
-     * @param  $path
-     * @param  $params
+     * @param string $path
+     * @param array $params
      * @return string
-     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
-    public function path($path, $params = [])
+    public function path(string $path, array $params = []): string
     {
         return $this->router->generateRoute($path, $params);
     }
 
     /**
-     * @param  $path
-     * @param  $params
+     * @param string $path
+     * @param array $params
      * @return string
-     * @throws \Jadob\Router\Exception\RouteNotFoundException
+     * @throws RouteNotFoundException
      */
-    public function url($path, $params = [])
+    public function url(string $path, array $params = []): string
     {
         return $this->router->generateRoute($path, $params, true);
+    }
+
+    /**
+     * Generates an absolute URL to given asset in project public root.
+     * @param string $path
+     * @return string
+     */
+    public function assetUrl(string $path): string
+    {
+        $context = $this->router->getContext();
+
+        $protocol = 'http';
+
+        if ($context->isSecure()) {
+            $protocol = 'https';
+        }
+
+        $port = null;
+
+        if (
+            !($context->isSecure() && $context->getPort() === 443)
+            && !(!$context->isSecure() && $context->getPort() === 80)
+        ) {
+            $port = $context->getPort();
+        }
+
+        return $protocol . '://' . $context->getHost() . ($port !== null ? ':' . $port : null) . '/' . ltrim($path, '/');
     }
 }
