@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added ``Contract`` component
 - [Core] added PSR-7 Complaint mode in Kernel
 - [Core] request object is removed from container
+- [TwigBridge] added ``asset_url`` twig function
 
 ### Changed
 - [Core] Dispatcher will now try to autowire classes in controller if there are not present in Container
