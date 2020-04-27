@@ -59,7 +59,7 @@ class Kernel
      *
      * @var bool
      */
-    protected $deferLogs = false;
+    protected bool $deferLogs = false;
 
     /**
      * @var Config
