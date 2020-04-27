@@ -201,12 +201,6 @@ class Dispatcher
         $reflection = new ReflectionMethod($controllerClass, $methodName);
 
         $parameters = $reflection->getParameters();
-
-        //nothing to do here
-        if (count($parameters) === 0) {
-            return [];
-        }
-
         $output = [];
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
