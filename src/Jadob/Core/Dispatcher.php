@@ -16,6 +16,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -24,7 +25,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function call_user_func_array;
-use function count;
 use function get_class;
 use function gettype;
 use function in_array;
@@ -305,25 +305,29 @@ class Dispatcher
      */
     protected function matchRequestObject(string $className, RequestContext $context): ?object
     {
+        if ($context->isPsr7Complaint()) {
+            if (
+                in_array(RequestInterface::class, class_implements($className), true)
+                || $className === RequestInterface::class
+            ) {
+                return $this->convertRequestToPsr7Complaint($context->getRequest());
+            }
+
+            if (
+                in_array(ResponseInterface::class, class_implements($className), true)
+                || $className === ResponseInterface::class
+            ) {
+                return new \Nyholm\Psr7\Response();
+            }
+        }
+
         if (
             $className === Request::class
             || in_array(Request::class, class_parents($className), true) // an user-defined instanceof Request has been passed to execute() method
         ) {
             return $context->getRequest();
         }
-
-        if (
-            $context->isPsr7Complaint()
-            && (
-                in_array(RequestInterface::class, class_implements($className), true)
-                || $className === RequestInterface::class
-            )
-        ) {
-            $this->convertRequestToPsr7Complaint($context->getRequest());
-        }
-
         return null;
-
     }
 
 }
