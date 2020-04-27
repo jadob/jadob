@@ -30,6 +30,7 @@ use ReflectionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use function fastcgi_finish_request;
 use function file_exists;
 use function function_exists;
@@ -173,6 +174,14 @@ class Kernel
 
         $configArray = $this->config->toArray();
         $this->container = $builder->build($configArray);
+
+        /**
+         * @TODO: Allow session storage overloading
+         */
+        $session = new Session();
+
+        $request->setSession($session);
+        $context->setSession($session);
         $this->container->addParameter('request_id', $requestId);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
