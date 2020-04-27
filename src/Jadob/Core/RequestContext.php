@@ -7,6 +7,7 @@ use Jadob\Router\Context;
 use Jadob\Router\Route;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -20,6 +21,7 @@ class RequestContext
     protected Route $route;
     protected ?RequestSupervisorInterface $supervisor;
     protected bool $psr7Complaint;
+    protected SessionInterface $session;
 
     public function __construct(string $requestId, Request $request, bool $psr7Complaint)
     {
@@ -100,5 +102,21 @@ class RequestContext
         return $this->psr7Complaint;
     }
 
+    /**
+     * @return SessionInterface
+     */
+    public function getSession(): SessionInterface
+    {
+        return $this->session;
+    }
 
+    /**
+     * @param SessionInterface $session
+     * @return RequestContext
+     */
+    public function setSession(SessionInterface $session): RequestContext
+    {
+        $this->session = $session;
+        return $this;
+    }
 }
