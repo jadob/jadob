@@ -19,6 +19,7 @@ use function get_class;
 use function str_replace;
 
 /**
+ * @deprecated
  * @TODO   this one should be EventStorage related, and EventStore should be separated
  * @author takbardzoimiki <mikolajczajkowsky@gmail.com>
  * @license MIT
