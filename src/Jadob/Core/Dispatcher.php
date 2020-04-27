@@ -202,10 +202,14 @@ class Dispatcher
 
         $parameters = $reflection->getParameters();
         $output = [];
+
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
             $type = $parameter->getType();
 
+            /**
+             * At first, pass the route parameters
+             */
             if (
                 isset($routerParams[$name])
                 //assuming that router param has builtin type defined, or does not defined at all
@@ -220,7 +224,7 @@ class Dispatcher
                 try {
                     $class = (string)$type;
                     /**
-                     * try to match request object first
+                     * Detects that request object has been requested
                      */
                     if (($request = $this->matchRequestObject($class, $context)) !== null) {
                         $output[$name] = $request;
@@ -228,7 +232,8 @@ class Dispatcher
                     }
 
                     /**
-                     * Current matched route is passed to given argument
+                     * Detect that Route was requested.
+                     * When true, then current route will be injected.
                      */
                     if ($class === Route::class) {
                         $output[$name] = $context->getRoute();
@@ -236,10 +241,13 @@ class Dispatcher
                     }
 
                     /**
-                     * Then look in container for existing class
+                     * Looks for given service in container.
                      */
                     $output[$name] = $this->container->findObjectByClassName($class);
                 } catch (ServiceNotFoundException $exception) {
+                    /**
+                     * When container does not have nothing interesting, lets try to autowire a class that we need
+                     */
                     if ($autowireEnabled) {
                         /**
                          * Try to autowire if enabled in dispatcher configuration
@@ -254,7 +262,6 @@ class Dispatcher
                 }
                 continue;
             }
-
             throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
         }
         return $output;
@@ -290,6 +297,8 @@ class Dispatcher
     }
 
     /**
+     * Allows to inject proper request object.
+     *
      * @param string $className
      * @param RequestContext $context
      * @return Request|RequestInterface|null
@@ -298,7 +307,7 @@ class Dispatcher
     {
         if (
             $className === Request::class
-            || in_array(Request::class, class_parents($className), true) // an instanceof Request has been passed to execute() method
+            || in_array(Request::class, class_parents($className), true) // an user-defined instanceof Request has been passed to execute() method
         ) {
             return $context->getRequest();
         }
