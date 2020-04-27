@@ -176,9 +176,6 @@ class Kernel
         $this->container->addParameter('request_id', $requestId);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
-        /**
-         * TODO: Dispatcher should also receive some kind of RequestContext object, where Request, Current Route will be present
-         */
         $dispatcher = new Dispatcher($dispatcherConfig, $this->container);
 
         //@TODO this one should be moved  to dispather and called after router to provide matched route
