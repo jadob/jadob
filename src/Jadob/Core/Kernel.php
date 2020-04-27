@@ -239,7 +239,7 @@ class Kernel
             $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
             if (!file_exists($servicesFile)) {
                 //TODO named exception constructors?
-                throw new KernelException('There is no services.php file in your config dir.');
+                throw new KernelException('There is no services.php file in your config directory.');
             }
 
             /** @var array $services */
@@ -248,7 +248,7 @@ class Kernel
 
             if (!is_array($services)) {
                 //TODO named exception constructors?
-                throw new KernelException('services.php has missing return statement or returned value is not an array');
+                throw new KernelException('services.php has missing return statement or returned value is not an array.');
             }
 
             $listener = null;
@@ -328,11 +328,18 @@ class Kernel
      */
     public function prepareResponse(Response $response, Request $request): Response
     {
+        /**
+         * Pretty prints JSON Responses on dev environments.
+         */
         if ($this->env !== 'prod' && $response instanceof JsonResponse) {
             $response->setEncodingOptions($response->getEncodingOptions() | JSON_PRETTY_PRINT);
         }
 
+        /**
+         * Applies some tweaks to Response object.
+         */
         $response->prepare($request);
+
         return $response;
     }
 
