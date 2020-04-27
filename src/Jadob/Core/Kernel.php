@@ -133,24 +133,31 @@ class Kernel
     }
 
     /**
-     * @TODO: This one should be maybe more flexible (and shorter):
-     * - this method should be called "handle" and it should need some basic stuff that can be extracted from superglobals
-     * - handling HttpFoundation object should be realised via handleRequest(Request $request) which would be an alias for handle()
-     *
      * @param Request $request
+     * @param string|null $requestId ID of given request, which will be passed as a parameter to container and will be visible in all logs generated during these one request
      * @return Response
+     * @throws AutowiringException
      * @throws ContainerBuildException
      * @throws ContainerException
      * @throws KernelException
+     * @throws MethodNotAllowedException
      * @throws ReflectionException
      * @throws RouteNotFoundException
      * @throws ServiceNotFoundException
-     * @throws AutowiringException
-     * @throws MethodNotAllowedException
      */
-    public function execute(Request $request): Response
+    public function execute(Request $request, string $requestId = null): Response
     {
-        $requestId = substr(md5((string)mt_rand()), 0, 15);
+        /**
+         * An unique ID for each given Request.
+         * It can be useful during e.g. debugging.
+         * You can override it with your own value.
+         *
+         * Example:
+         * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
+         * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
+         */
+        $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
+
         $context = new RequestContext($requestId, $request, $this->psr7Complaint);
 
         $this->logger->info(
