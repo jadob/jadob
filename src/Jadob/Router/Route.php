@@ -54,7 +54,7 @@ class Route
     protected $methods;
 
     /**
-     * @param string      $name
+     * @param string $name
      * @param string|null $path
      * @param string|null $controller
      * @param string|null $action
@@ -70,6 +70,7 @@ class Route
         $this->action = $action;
         $this->host = $host;
         $this->methods = $methods;
+        $this->params = $params;
     }
 
     /**
@@ -81,7 +82,7 @@ class Route
     }
 
     /**
-     * @param  string $name
+     * @param string $name
      * @return Route
      */
     public function setName($name)
@@ -103,7 +104,7 @@ class Route
     }
 
     /**
-     * @param  mixed $path
+     * @param mixed $path
      * @return Route
      */
     public function setPath($path)
@@ -121,7 +122,7 @@ class Route
     }
 
     /**
-     * @param  string|null $action
+     * @param string|null $action
      * @return Route
      */
     public function setAction($action)
@@ -139,7 +140,7 @@ class Route
     }
 
     /**
-     * @param  mixed $controller
+     * @param mixed $controller
      * @return Route
      */
     public function setController($controller)
@@ -157,7 +158,7 @@ class Route
     }
 
     /**
-     * @param  array $params
+     * @param array $params
      * @return Route
      */
     public function setParams($params): Route
@@ -175,7 +176,7 @@ class Route
     }
 
     /**
-     * @param  null|string $host
+     * @param null|string $host
      * @return Route
      */
     public function setHost($host): Route
@@ -185,7 +186,7 @@ class Route
     }
 
     /**
-     * @param  string[] $methods
+     * @param string[] $methods
      * @return Route
      */
     public function setMethods(array $methods): Route
@@ -211,7 +212,7 @@ class Route
     }
 
     /**
-     * @param  RouteCollection|null $parentCollection
+     * @param RouteCollection|null $parentCollection
      * @return Route
      */
     public function setParentCollection(?RouteCollection $parentCollection): Route
@@ -222,7 +223,7 @@ class Route
 
 
     /**
-     * @param  array $data
+     * @param array $data
      * @return Route
      * @throws RouterException
      */
