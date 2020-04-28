@@ -6,8 +6,10 @@ namespace Jadob\Security\Supervisor\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Security\Auth\ServiceProvider\AuthProvider;
 use Jadob\Security\Supervisor\EventListener\SupervisorListener;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\Container\ContainerInterface;
@@ -16,7 +18,7 @@ use Psr\Container\ContainerInterface;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SupervisorProvider implements ServiceProviderInterface
+class SupervisorProvider implements ServiceProviderInterface, ParentProviderInterface
 {
 
     /**
@@ -70,5 +72,15 @@ class SupervisorProvider implements ServiceProviderInterface
                 $container->get('auth.user.storage')
             )
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParentProviders()
+    {
+       return [
+           AuthProvider::class
+       ];
     }
 }
