@@ -9,8 +9,8 @@ use Jadob\Router\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * When the only thing you require from given Controller is to render some static page, you can use this one in your route
- * configuration to reduce your codebase.
+ * When the only thing you require from given Controller is to render some static page,
+ * you can use this one in your route configuration to reduce your codebase.
  *
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
