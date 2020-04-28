@@ -1,16 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
+use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Router\Context;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 
 /**
- * Class RouterServiceProvider
+ * @deprecated - remove it when better space for creating router will be found
  *
  * @package Jadob\Router\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

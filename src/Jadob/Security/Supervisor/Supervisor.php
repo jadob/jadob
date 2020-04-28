@@ -22,17 +22,17 @@ class Supervisor
      *
      * @var int
      */
-    protected $unsecuredRequestPolicy = self::POLICY_UNSECURED_BLOCK;
+    protected int $unsecuredRequestPolicy = self::POLICY_UNSECURED_BLOCK;
 
     /**
      * @var RequestSupervisorInterface[]
      */
-    protected $requestSupervisors = [];
+    protected array $requestSupervisors = [];
 
     /**
      * @var UserProviderInterface[]
      */
-    protected $userProviders = [];
+    protected array $userProviders = [];
 
     /**
      * @param  Request $request

@@ -23,5 +23,5 @@ interface UserProviderInterface
      * @param  $id
      * @return null|UserInterface
      */
-    public function getOneById($id): ?UserInterface;
+    public function getUserById($id): ?UserInterface;
 }

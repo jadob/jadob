@@ -31,6 +31,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use function fastcgi_finish_request;
 use function file_exists;
 use function function_exists;
@@ -263,6 +267,28 @@ class Kernel
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders($this->env));
             $containerBuilder->add(Config::class, $this->config);
+
+            /**
+             * Split session to three services to allow handler overriding
+             */
+            $containerBuilder->add(\SessionHandlerInterface::class, new NativeFileSessionHandler());
+            $containerBuilder->add(
+                SessionStorageInterface::class,
+                static function (Container $container): NativeSessionStorage {
+                    return new NativeSessionStorage(
+                        [],
+                        $container->get(\SessionHandlerInterface::class)
+                    );
+                });
+
+            $containerBuilder->add(
+                SessionInterface::class,
+                static function (Container $container): Session {
+                    return new Session(
+                        $container->get(SessionStorageInterface::class)
+                    );
+                }
+            );
 
             foreach ($services as $serviceName => $serviceObject) {
                 $containerBuilder->add($serviceName, $serviceObject);
