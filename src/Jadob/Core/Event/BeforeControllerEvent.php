@@ -24,7 +24,7 @@ class BeforeControllerEvent implements StoppableEventInterface
 
     /**
      * BeforeControllerEvent constructor.
-     *
+     * @TODO: RequextContext should be passed here instead of Request object
      * @param Request $request
      */
     public function __construct(Request $request)

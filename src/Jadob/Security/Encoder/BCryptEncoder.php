@@ -2,6 +2,11 @@
 
 namespace Jadob\Security\Encoder;
 
+use RuntimeException;
+use function password_hash;
+use function password_verify;
+use const PASSWORD_BCRYPT;
+
 /**
  * Class BcryptEncoder
  *
@@ -9,24 +14,24 @@ namespace Jadob\Security\Encoder;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class BCryptEncoder extends AbstractPasswordEncoder
+class BCryptEncoder implements PasswordEncoderInterface
 {
     /**
      * @var int
      */
-    protected $cost;
+    protected int $cost;
 
     /**
      * BcryptEncoder constructor.
      *
      * @param  int $cost
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function __construct(int $cost)
     {
 
         if ($cost < 4 || $cost > 31) {
-            throw new \RuntimeException('Invalid password cost passed');
+            throw new RuntimeException('Invalid password cost passed');
         }
 
         $this->cost = $cost;
@@ -40,8 +45,8 @@ class BCryptEncoder extends AbstractPasswordEncoder
      */
     public function encode($raw, $salt = null): ?string
     {
-        return \password_hash(
-            $raw, \PASSWORD_BCRYPT, [
+        return password_hash(
+            $raw, PASSWORD_BCRYPT, [
             'cost' => $this->cost
             ]
         );
@@ -54,6 +59,6 @@ class BCryptEncoder extends AbstractPasswordEncoder
      */
     public function compare($raw, $hash)
     {
-        return \password_verify($raw, $hash);
+        return password_verify($raw, $hash);
     }
 }
