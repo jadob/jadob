@@ -55,9 +55,15 @@ class UserRequestSupervisor implements RequestSupervisorInterface {
 	//Decides that given request should be managed by this supervisor, 
 	//but allows user to be unauthenticated
 	public function isAnonymousRequestAllowed(Request $request): bool 
-	{
-		
-	}
+	{  
+         //Because you have access to $request, and there are path name in attributes, 
+         //You can allow access to actions by path names:
+         $allowedPaths = [
+              'app_oauth2_authorize'
+         ];
+        
+         return in_array($request->attributes->get('path_name'), $allowedPaths, true);
+    }
 	
 	//when true returned, authenticated client will not be stored in session 
 	//and will be removed at the end of the request.
