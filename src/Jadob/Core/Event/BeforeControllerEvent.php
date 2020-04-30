@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core\Event;
 
+use Jadob\Core\RequestContext;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,23 +15,21 @@ use Symfony\Component\HttpFoundation\Response;
 class BeforeControllerEvent implements StoppableEventInterface
 {
     /**
-     * @var Request
+     * @var RequestContext
      */
-    protected $request;
+    protected RequestContext $context;
 
     /**
      * @var Response|null
      */
-    protected $response;
+    protected ?Response $response = null;
 
     /**
-     * BeforeControllerEvent constructor.
-     * @TODO: RequextContext should be passed here instead of Request object
-     * @param Request $request
+     * @param RequestContext $context
      */
-    public function __construct(Request $request)
+    public function __construct(RequestContext $context)
     {
-        $this->request = $request;
+        $this->context = $context;
     }
 
     /**
@@ -48,7 +48,7 @@ class BeforeControllerEvent implements StoppableEventInterface
      */
     public function getRequest(): Request
     {
-        return $this->request;
+        return $this->context->getRequest();
     }
 
     /**
@@ -57,6 +57,14 @@ class BeforeControllerEvent implements StoppableEventInterface
     public function getResponse(): ?Response
     {
         return $this->response;
+    }
+
+    /**
+     * @return RequestContext
+     */
+    public function getContext(): RequestContext
+    {
+        return $this->context;
     }
 
     /**
