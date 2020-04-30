@@ -32,6 +32,9 @@ You should have one supervisor per "endpoint", that means:
 - When you only allow your users to be logged in, you need to create **1** supervisor;
 - When you expose some API for your users, you need to create **2** supervisors (one for users, second for API).
 
+Supervisor Listener handles request during ``BeforeControllerEvent``, so you have access for matched route attributes in $request
+object.
+
 
 Your supervisor class **MUST**  implement ``Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface``.
 
