@@ -12,18 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Supervisor
 {
-
-    public const POLICY_UNSECURED_BLOCK = 1;
-
-    public const POLICY_UNSECURED_ALLOW = 2;
-
-    /**
-     * How supervisor should behave when no RequestSupervisor matched for request?
-     *
-     * @var int
-     */
-    protected int $unsecuredRequestPolicy = self::POLICY_UNSECURED_BLOCK;
-
     /**
      * @var RequestSupervisorInterface[]
      */
@@ -61,13 +49,5 @@ class Supervisor
     {
         return $this->userProviders[\spl_object_hash($supervisor)];
     }
-    /**
-     * to be deprecated probably
-     *
-     * @return bool
-     */
-    public function isBlockingUnsecuredRequests()
-    {
-        return $this->unsecuredRequestPolicy === self::POLICY_UNSECURED_BLOCK;
-    }
+
 }
