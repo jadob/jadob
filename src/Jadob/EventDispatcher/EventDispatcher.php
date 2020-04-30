@@ -23,17 +23,17 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * @var ListenerProviderInterface[]
      */
-    protected $listeners = [];
+    protected array $listeners = [];
 
     /**
      * @var  SplObjectStorage
      */
-    protected $timestamps;
+    protected SplObjectStorage $timestamps;
 
     /**
      * @var LoggerInterface|null
      */
-    protected $logger;
+    protected ?LoggerInterface $logger;
 
     /**
      * EventDispatcher constructor.
