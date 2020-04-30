@@ -7,6 +7,8 @@ use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Core\Event\AfterControllerEvent;
+use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
@@ -108,6 +110,15 @@ class Dispatcher
         $context->getRequest()->attributes->set('path_name', $route->getName());
         $context->getRequest()->attributes->set('current_route', $route);
 
+        $beforeControllerEvent = new BeforeControllerEvent($context);
+        $this->eventDispatcher->dispatch($beforeControllerEvent);
+        $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
+
+        if ($beforeControllerEventResponse !== null) {
+            $this->logger->debug('Received response from event listener, controller from route is not executed');
+            return $beforeControllerEventResponse;
+        }
+
 
         $controllerClass = $route->getController();
 
@@ -132,7 +143,6 @@ class Dispatcher
         }
 
         //@TODO: check if method is accessible
-
         $methodArguments = $this->resolveControllerMethodArguments(
             $autowiredController,
             $methodName,
@@ -144,6 +154,12 @@ class Dispatcher
 
         if (!($response instanceof Response)) {
             throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
+        }
+
+        $afterControllerEvent = new AfterControllerEvent($response);
+        $this->eventDispatcher->dispatch($afterControllerEvent);
+        if ($afterControllerEvent->getResponse() !== null) {
+            return $afterControllerEvent->getResponse();
         }
 
         return $response;

@@ -198,15 +198,6 @@ class Kernel
 
         $response = $dispatcher->executeRequest($context);
 
-        //@TODO: this one should be moved to dispatcher & should be called after controller
-        $afterControllerEvent = new AfterControllerEvent($response);
-
-        $this->eventDispatcher->dispatch($afterControllerEvent);
-
-        if ($afterControllerEvent->getResponse() !== null) {
-            return $this->prepareResponse($afterControllerEvent->getResponse(), $request);
-        }
-
         return $this->prepareResponse($response, $request);
     }
 
