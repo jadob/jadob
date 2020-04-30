@@ -58,10 +58,8 @@ class SupervisorListener implements ListenerProviderInterface
     {
         $requestSupervisor = $this->supervisor->matchRequestSupervisor($event->getRequest());
 
-        if ($requestSupervisor === null && $this->supervisor->isBlockingUnsecuredRequests()) {
-            throw new \RuntimeException('No requestsupervisor found &  supervisor is blocking unsecured requests');
-        }
-        //if supervisor is null and is allowed to unsecure, return
+        //Assign current provider to context
+        $event->getContext()->setSupervisor($requestSupervisor);
 
 
         //At first, handle stateless
