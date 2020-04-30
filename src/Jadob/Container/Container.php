@@ -76,23 +76,37 @@ class Container implements ContainerInterface
     }
 
     /**
+     * This methods does not try to autowire services.
+     *
      * @param string $serviceName
      * @return mixed
      * @throws ServiceNotFoundException
+     * @throws ContainerException
      */
     public function get($serviceName)
     {
 
+        /**
+         * Check there is a factory for given service
+         */
         if (isset($this->factories[$serviceName])) {
+            /**
+             * instantiateFactory() adds them to $this->services, so we can just return them here
+             */
             return $this->instantiateFactory($serviceName);
         }
 
+        /**
+         * Return service if exists
+         */
         if (isset($this->services[$serviceName])) {
             return $this->services[$serviceName];
         }
 
+        /**
+         * if reached this moment, the only thing we need to do, is to break
+         */
         throw new ServiceNotFoundException('Service ' . $serviceName . ' is not found in container.');
-
     }
 
     /**

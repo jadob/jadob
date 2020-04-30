@@ -25,17 +25,12 @@ class UserStorage
     /**
      * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
-     * @var UserInterface
+     * @var string|null
      */
-    protected $user;
-
-    /**
-     * @var string
-     */
-    protected $currentProvider;
+    protected ?string $currentProvider;
 
     /**
      * UserStorage constructor.
@@ -48,30 +43,33 @@ class UserStorage
     }
 
     /**
-     * @param  null|string $provider
+     * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser(?string $provider = null)
+    public function getUser(?string $provider = null): ?UserInterface
     {
 
         if ($provider === null) {
             $provider = $this->currentProvider;
         }
 
-        if ($this->user === null) {
-            $userFromSession = unserialize($this->session->get(self::USER_SESSION_KEY . $provider));
-
-            if ($userFromSession !== false) {
-                $this->user = $userFromSession;
-            }
+        $userFromSession = $this->session->get(self::USER_SESSION_KEY . $provider);
+        if ($userFromSession === null) {
+            return null;
         }
-        return $this->user;
+
+        $user = unserialize($userFromSession);
+        if ($user !== false) {
+            return $user;
+        }
+
+        return null;
     }
 
     /**
      * @TODO   there should be some parameter for defining stateless things
-     * @param  UserInterface $user
-     * @param  null|string   $provider
+     * @param UserInterface $user
+     * @param null|string $provider
      * @return UserStorage
      */
     public function setUser(UserInterface $user, ?string $provider = null): UserStorage
@@ -81,20 +79,11 @@ class UserStorage
         }
 
         $this->session->set(self::USER_SESSION_KEY . $provider, serialize($user));
-        $this->user = $user;
         return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getCurrentProvider()
-    {
-        return $this->currentProvider;
-    }
-
-    /**
-     * @param  string $currentProvider
+     * @param string $currentProvider
      * @return UserStorage
      */
     public function setCurrentProvider($currentProvider): UserStorage
