@@ -7,6 +7,8 @@ use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Core\Event\AfterControllerEvent;
+use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
@@ -17,6 +19,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -54,16 +57,28 @@ class Dispatcher
     protected array $config;
 
     /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+
+    /**
      * Dispatcher constructor.
      *
      * @param array $config
      * @param Container $container
+     * @param LoggerInterface $logger
      * @param EventDispatcherInterface|null $eventDispatcher
      */
-    public function __construct(array $config, Container $container, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(
+        array $config,
+        Container $container,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->config = $config;
         $this->container = $container;
+        $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -89,6 +104,22 @@ class Dispatcher
         $context->setContext($router->getContext());
         $context->setRoute($route);
 
+        /**
+         * Add information about matched route to request object
+         */
+        $context->getRequest()->attributes->set('path_name', $route->getName());
+        $context->getRequest()->attributes->set('current_route', $route);
+
+        $beforeControllerEvent = new BeforeControllerEvent($context);
+        $this->eventDispatcher->dispatch($beforeControllerEvent);
+        $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
+
+        if ($beforeControllerEventResponse !== null) {
+            $this->logger->debug('Received response from BeforeControllerEvent, further execution is stopped.');
+            return $beforeControllerEventResponse;
+        }
+
+
         $controllerClass = $route->getController();
 
         if ($controllerClass === null) {
@@ -112,7 +143,6 @@ class Dispatcher
         }
 
         //@TODO: check if method is accessible
-
         $methodArguments = $this->resolveControllerMethodArguments(
             $autowiredController,
             $methodName,
@@ -124,6 +154,14 @@ class Dispatcher
 
         if (!($response instanceof Response)) {
             throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
+        }
+
+        $afterControllerEvent = new AfterControllerEvent($response);
+        $this->eventDispatcher->dispatch($afterControllerEvent);
+
+        if ($afterControllerEvent->getResponse() !== null) {
+            $this->logger->debug('Received response from AfterControllerEvent.');
+            return $afterControllerEvent->getResponse();
         }
 
         return $response;

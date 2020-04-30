@@ -32,6 +32,9 @@ You should have one supervisor per "endpoint", that means:
 - When you only allow your users to be logged in, you need to create **1** supervisor;
 - When you expose some API for your users, you need to create **2** supervisors (one for users, second for API).
 
+Supervisor Listener handles request during ``BeforeControllerEvent``, so you have access for matched route attributes in $request
+object.
+
 
 Your supervisor class **MUST**  implement ``Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface``.
 
@@ -55,9 +58,15 @@ class UserRequestSupervisor implements RequestSupervisorInterface {
 	//Decides that given request should be managed by this supervisor, 
 	//but allows user to be unauthenticated
 	public function isAnonymousRequestAllowed(Request $request): bool 
-	{
-		
-	}
+	{  
+         //Because you have access to $request, and there are path name in attributes, 
+         //You can allow access to actions by path names:
+         $allowedPaths = [
+              'app_oauth2_authorize'
+         ];
+        
+         return in_array($request->attributes->get('path_name'), $allowedPaths, true);
+    }
 	
 	//when true returned, authenticated client will not be stored in session 
 	//and will be removed at the end of the request.
