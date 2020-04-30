@@ -89,6 +89,13 @@ class Dispatcher
         $context->setContext($router->getContext());
         $context->setRoute($route);
 
+        /**
+         * Add information about matched route to request object
+         */
+        $context->getRequest()->attributes->set('path_name', $route->getName());
+        $context->getRequest()->attributes->set('current_route', $route);
+
+
         $controllerClass = $route->getController();
 
         if ($controllerClass === null) {
