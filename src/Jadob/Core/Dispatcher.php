@@ -31,7 +31,6 @@ use function in_array;
 use function method_exists;
 
 /**
- *
  * @internal
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
@@ -42,17 +41,17 @@ class Dispatcher
     /**
      * @var Container
      */
-    protected $container;
+    protected Container $container;
 
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    protected ?EventDispatcherInterface $eventDispatcher;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Dispatcher constructor.
@@ -260,6 +259,9 @@ class Dispatcher
                         throw $exception;
                     }
                 }
+                /**
+                 * Exit current iteration
+                 */
                 continue;
             }
             throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
