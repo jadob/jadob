@@ -70,8 +70,7 @@ class EventDispatcher implements EventDispatcherInterface
 
                 if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
                     $this->log(
-                        'Event ' . $className . ' propagation has been stopped by ' . get_class($singleListener)
-                        . ' listener. Event has been consumed by ' . $handlersCount . ' listeners.'
+                        'Event ' . $className . ' propagation has been stopped. Event has been consumed by ' . $handlersCount . ' listeners.'
                     );
                     return $event;
                 }
