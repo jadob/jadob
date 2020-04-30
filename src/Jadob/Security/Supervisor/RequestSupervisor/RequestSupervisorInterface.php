@@ -94,4 +94,10 @@ interface RequestSupervisorInterface
      * @return bool
      */
     public function supports(Request $request): bool;
+
+    /**
+     * Called when authentication is required and user is not logged in.
+     * @return Response
+     */
+    public function handleUnauthenticated(): Response;
 }
