@@ -25,7 +25,7 @@ class UserStorage
     /**
      * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * @var string|null
@@ -43,10 +43,10 @@ class UserStorage
     }
 
     /**
-     * @param  null|string $provider
+     * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser(?string $provider = null)
+    public function getUser(?string $provider = null): ?UserInterface
     {
 
         if ($provider === null) {
