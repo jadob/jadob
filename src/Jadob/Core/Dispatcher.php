@@ -17,6 +17,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -54,16 +55,28 @@ class Dispatcher
     protected array $config;
 
     /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+
+    /**
      * Dispatcher constructor.
      *
      * @param array $config
      * @param Container $container
+     * @param LoggerInterface $logger
      * @param EventDispatcherInterface|null $eventDispatcher
      */
-    public function __construct(array $config, Container $container, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(
+        array $config,
+        Container $container,
+        LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->config = $config;
         $this->container = $container;
+        $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
     }
 

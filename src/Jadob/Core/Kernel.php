@@ -189,19 +189,12 @@ class Kernel
         $this->container->addParameter('request_id', $requestId);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
-        $dispatcher = new Dispatcher($dispatcherConfig, $this->container);
-
-        //@TODO this one should be moved  to dispather and called after router to provide matched route
-        $beforeControllerEvent = new BeforeControllerEvent($context);
-
-        $this->eventDispatcher->dispatch($beforeControllerEvent);
-
-        $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
-
-        if ($beforeControllerEventResponse !== null) {
-            $this->logger->debug('Received response from event listener, controller from route is not executed');
-            return $beforeControllerEventResponse->prepare($request);
-        }
+        $dispatcher = new Dispatcher(
+            $dispatcherConfig,
+            $this->container,
+            $this->logger,
+            $this->eventDispatcher
+        );
 
         $response = $dispatcher->executeRequest($context);
 
