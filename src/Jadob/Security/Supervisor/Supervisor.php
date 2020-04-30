@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Supervisor;
 
 use Jadob\Security\Auth\UserProviderInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use function spl_object_hash;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -23,6 +25,7 @@ class Supervisor
     protected array $userProviders = [];
 
     /**
+     * Finds out which supervisor can handle given request.
      * @param  Request $request
      * @return RequestSupervisorInterface|null
      */
@@ -41,13 +44,13 @@ class Supervisor
     public function addRequestSupervisor(string $name, RequestSupervisorInterface $requestSupervisor, UserProviderInterface $userProvider): void
     {
         $this->requestSupervisors[$name] = $requestSupervisor;
-        $this->userProviders[\spl_object_hash($requestSupervisor)] = $userProvider;
+        $this->userProviders[spl_object_hash($requestSupervisor)] = $userProvider;
     }
 
     //@TODO refactor
     public function getUserProviderForSupervisor(RequestSupervisorInterface $supervisor): UserProviderInterface
     {
-        return $this->userProviders[\spl_object_hash($supervisor)];
+        return $this->userProviders[spl_object_hash($supervisor)];
     }
 
 }
