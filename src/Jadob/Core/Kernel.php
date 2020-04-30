@@ -192,7 +192,7 @@ class Kernel
         $dispatcher = new Dispatcher($dispatcherConfig, $this->container);
 
         //@TODO this one should be moved  to dispather and called after router to provide matched route
-        $beforeControllerEvent = new BeforeControllerEvent($request);
+        $beforeControllerEvent = new BeforeControllerEvent($context);
 
         $this->eventDispatcher->dispatch($beforeControllerEvent);
 
@@ -260,7 +260,9 @@ class Kernel
                 $listener = new ContainerEventListener();
             }
             $containerBuilder = new ContainerBuilder($listener);
+            //TODO: When service definitions and aliases will be ready, use them here
             $containerBuilder->add(EventDispatcherInterface::class, $this->eventDispatcher);
+            $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
