@@ -115,7 +115,7 @@ class Dispatcher
         $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
 
         if ($beforeControllerEventResponse !== null) {
-            $this->logger->debug('Received response from event listener, controller from route is not executed');
+            $this->logger->debug('Received response from BeforeControllerEvent, further execution is stopped.');
             return $beforeControllerEventResponse;
         }
 
@@ -158,7 +158,9 @@ class Dispatcher
 
         $afterControllerEvent = new AfterControllerEvent($response);
         $this->eventDispatcher->dispatch($afterControllerEvent);
+
         if ($afterControllerEvent->getResponse() !== null) {
+            $this->logger->debug('Received response from AfterControllerEvent.');
             return $afterControllerEvent->getResponse();
         }
 
