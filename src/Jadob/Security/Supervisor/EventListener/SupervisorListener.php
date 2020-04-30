@@ -21,17 +21,17 @@ class SupervisorListener implements ListenerProviderInterface
     /**
      * @var Supervisor
      */
-    protected $supervisor;
+    protected Supervisor $supervisor;
 
     /**
      * @var UserStorage
      */
-    protected $userStorage;
+    protected UserStorage $userStorage;
 
     /**
      * SupervisorListener constructor.
      *
-     * @param Supervisor  $supervisor
+     * @param Supervisor $supervisor
      * @param UserStorage $userStorage
      */
     public function __construct(Supervisor $supervisor, UserStorage $userStorage)
