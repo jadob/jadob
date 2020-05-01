@@ -1,12 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\User;
 
 /**
- * Interface UserInterface
- *
- * @package Jadob\Security\Auth
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
 interface UserInterface
 {
