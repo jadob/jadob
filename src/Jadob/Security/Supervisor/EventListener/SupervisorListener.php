@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\Security\Auth\Exception\AuthenticationException;
+use Jadob\Security\Auth\Exception\InvalidCredentialsException;
+use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\UserStorage;
-use Jadob\Security\Exception\UserNotFoundException;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -63,7 +65,7 @@ class SupervisorListener implements ListenerProviderInterface
 
         //Assign current provider to context
         $event->getContext()->setSupervisor($requestSupervisor);
-
+        $this->userStorage->setCurrentProvider(get_class($requestSupervisor));
 
         //At first, handle stateless
         if ($requestSupervisor->isStateless()) {
@@ -92,40 +94,65 @@ class SupervisorListener implements ListenerProviderInterface
      */
     protected function handleStatelessRequest(Request $request, RequestSupervisorInterface $supervisor): ?Response
     {
-        $credentials = $supervisor->extractCredentialsFromRequest($request);
+        try {
+            $credentials = $supervisor->extractCredentialsFromRequest($request);
 
-        //break if no credentials found
-        if ($credentials === null || $credentials === false) {
-            //@TODO add exception message
-            throw new UserNotFoundException();
+            //break if no credentials found
+            if ($credentials === null || $credentials === false || count($credentials) === 0) {
+                throw UserNotFoundException::emptyCredentials();
+            }
+
+            $userProvider = $this->supervisor->getUserProviderForSupervisor($supervisor);
+            $user = $supervisor->getIdentityFromProvider($credentials, $userProvider);
+
+            if ($user === null) {
+                throw UserNotFoundException::emptyCredentials();
+            }
+
+            if (!$supervisor->verifyIdentity($user, $credentials)) {
+                throw InvalidCredentialsException::invalidCredentials();
+            }
+        } catch (AuthenticationException $exception) {
+            return $supervisor->handleAuthenticationFailure($exception);
         }
 
-        $userProvider = $this->supervisor->getUserProviderForSupervisor($supervisor);
-        $user = $supervisor->getIdentityFromProvider($credentials, $userProvider);
-
-        if ($user === null) {
-            //@TODO add exception message
-            throw new UserNotFoundException();
-        }
-
-        if (!$supervisor->verifyIdentity($user, $credentials)) {
-            //@TODO create new exception for this
-            throw new UserNotFoundException();
-        }
-
-
-        $this->userStorage->setCurrentProvider(get_class($supervisor));
         $this->userStorage->setUser($user, get_class($supervisor));
-        return $supervisor->handleAuthenticationSuccess($request, $user);
+        $supervisor->handleAuthenticationSuccess($request, $user);
     }
 
     protected function handleNonStatelessRequest(Request $request, RequestSupervisorInterface $supervisor): ?Response
     {
         //1. Check if this is an authentication attempt:
         if ($supervisor->isAuthenticationRequest($request)) {
-            //2. Handle Authentication
-            $credentials = $supervisor->extractCredentialsFromRequest($request);
+            try {
+                //2. Handle Authentication
+                $credentials = $supervisor->extractCredentialsFromRequest($request);
+                if ($credentials === null || $credentials === false || count($credentials) === 0) {
+                    throw UserNotFoundException::emptyCredentials();
+                }
 
+                //Get user
+                $user = $supervisor->getIdentityFromProvider(
+                    $credentials,
+                    $this->supervisor->getUserProviderForSupervisor($supervisor)
+                );
+
+                if ($user === null) {
+                    throw UserNotFoundException::userNotFound();
+                }
+
+                //verify user
+                $verified = $supervisor->verifyIdentity($user, $credentials);
+                if ($verified === false) {
+                    throw InvalidCredentialsException::invalidCredentials();
+                }
+
+            } catch (AuthenticationException $exception) {
+                return $supervisor->handleAuthenticationFailure($exception);
+            }
+
+            $this->userStorage->setUser($user, get_class($supervisor));
+            return $supervisor->handleAuthenticationSuccess($request, $user);
         }
 
         /**
