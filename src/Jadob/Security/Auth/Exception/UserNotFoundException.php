@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Security\Exception;
+namespace Jadob\Security\Auth\Exception;
 
 /**
  * Class UserNotFoundException

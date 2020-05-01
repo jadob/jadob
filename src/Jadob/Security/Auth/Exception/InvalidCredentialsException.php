@@ -1,11 +1,9 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Security\Exception;
+namespace Jadob\Security\Auth\Exception;
 
 /**
- * Class InvalidCredentialsException
- *
- * @package Jadob\Security\Exception
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
