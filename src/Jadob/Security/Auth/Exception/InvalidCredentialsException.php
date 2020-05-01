@@ -7,7 +7,7 @@ namespace Jadob\Security\Auth\Exception;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class InvalidCredentialsException extends \Error
+class InvalidCredentialsException extends AuthenticationException
 {
     /**
      * Things passed by used, extracted in
