@@ -65,6 +65,14 @@ class SupervisorListener implements ListenerProviderInterface
 
         //Assign current provider to context
         $event->getContext()->setSupervisor($requestSupervisor);
+
+        /**
+         * There is nothing to do when there is no supervisor available
+         */
+        if($requestSupervisor === null) {
+            return $event;
+        }
+
         $this->userStorage->setCurrentProvider(get_class($requestSupervisor));
 
         //At first, handle stateless
@@ -82,6 +90,7 @@ class SupervisorListener implements ListenerProviderInterface
         if ($response !== null) {
             $event->setResponse($response);
         }
+
         return $event;
 
     }
