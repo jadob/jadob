@@ -2,6 +2,7 @@
 
 namespace Jadob\Security\Supervisor\RequestSupervisor;
 
+use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Auth\UserProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,9 +61,10 @@ interface RequestSupervisorInterface
      * Called when Authentication process will break for some reasons.
      * Whether stateless or not, return value will be sent to user.
      *
+     * @param AuthenticationException $exception
      * @return Response
      */
-    public function handleAuthenticationFailure(): Response;
+    public function handleAuthenticationFailure(AuthenticationException $exception): Response;
 
     /**
      * If true, stored identity will be removed on request termination.
