@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\Command;
 
@@ -22,6 +23,8 @@ class GeneratePasswordHashCommand extends Command
     protected static $defaultName = 'security:auth:password-hash';
 
     /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)

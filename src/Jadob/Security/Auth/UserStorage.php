@@ -30,7 +30,7 @@ class UserStorage
     /**
      * @var string|null
      */
-    protected ?string $currentProvider;
+    protected ?string $currentProvider = null;
 
     /**
      * UserStorage constructor.
