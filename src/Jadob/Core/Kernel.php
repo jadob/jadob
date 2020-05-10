@@ -42,9 +42,6 @@ use function in_array;
 use function is_array;
 
 /**
- * Class Kernel
- *
- * @package Jadob\Core
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -108,7 +105,7 @@ class Kernel
     /**
      * @var bool
      */
-    protected bool $psr7Complaint = false;
+    protected bool $psr7Compliant = false;
 
     /**
      * @param string $env
@@ -163,7 +160,7 @@ class Kernel
          */
         $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
 
-        $context = new RequestContext($requestId, $request, $this->psr7Complaint);
+        $context = new RequestContext($requestId, $request, $this->psr7Compliant);
 
         $this->logger->info(
             'New request received', [
@@ -358,16 +355,16 @@ class Kernel
     /**
      * @return bool
      */
-    public function isPsr7Complaint(): bool
+    public function isPsr7Compliant(): bool
     {
-        return $this->psr7Complaint;
+        return $this->psr7Compliant;
     }
 
     /**
-     * @param bool $psr7Complaint
+     * @param bool $psr7Compliant
      */
-    public function setPsr7Complaint(bool $psr7Complaint): void
+    public function setPsr7Compliant(bool $psr7Compliant): void
     {
-        $this->psr7Complaint = $psr7Complaint;
+        $this->psr7Compliant = $psr7Compliant;
     }
 }

@@ -334,7 +334,7 @@ class Dispatcher
      * @param Request $request
      * @return RequestInterface
      */
-    protected function convertRequestToPsr7Complaint(Request $request): RequestInterface
+    protected function convertRequestToPsr7Compliant(Request $request): RequestInterface
     {
         /**
          * Allows to use user defined factory for PSR Requests
@@ -357,12 +357,12 @@ class Dispatcher
      */
     protected function matchRequestObject(string $className, RequestContext $context): ?object
     {
-        if ($context->isPsr7Complaint()) {
+        if ($context->isPsr7Compliant()) {
             if (
                 in_array(RequestInterface::class, class_implements($className), true)
                 || $className === RequestInterface::class
             ) {
-                return $this->convertRequestToPsr7Complaint($context->getRequest());
+                return $this->convertRequestToPsr7Compliant($context->getRequest());
             }
 
             if (
