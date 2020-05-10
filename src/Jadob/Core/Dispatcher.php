@@ -177,7 +177,10 @@ class Dispatcher
         }
 
         if (!($response instanceof Response)) {
-            throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
+            //@TODO named constructor
+            throw new KernelException(
+                'Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ' or PSR-7 ResponseInterface, ' . gettype($response) . ' returned'
+            );
         }
 
         $afterControllerEvent = new AfterControllerEvent($response);
@@ -322,7 +325,7 @@ class Dispatcher
                     }
                 }
                 /**
-                 * Exit current iteration
+                 * Exit current iteration as requested dependency has been found
                  */
                 continue;
             }
