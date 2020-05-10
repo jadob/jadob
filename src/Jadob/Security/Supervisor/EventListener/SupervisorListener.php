@@ -122,7 +122,7 @@ class SupervisorListener implements ListenerProviderInterface
                 throw InvalidCredentialsException::invalidCredentials();
             }
         } catch (AuthenticationException $exception) {
-            return $supervisor->handleAuthenticationFailure($exception);
+            return $supervisor->handleAuthenticationFailure($exception, $request);
         }
 
         $this->userStorage->setUser($user, get_class($supervisor));
@@ -157,7 +157,7 @@ class SupervisorListener implements ListenerProviderInterface
                 }
 
             } catch (AuthenticationException $exception) {
-                return $supervisor->handleAuthenticationFailure($exception);
+                return $supervisor->handleAuthenticationFailure($exception, $request);
             }
 
             $this->userStorage->setUser($user, get_class($supervisor));

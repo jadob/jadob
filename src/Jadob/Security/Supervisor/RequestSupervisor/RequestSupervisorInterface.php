@@ -62,9 +62,10 @@ interface RequestSupervisorInterface
      * Whether stateless or not, return value will be sent to user.
      *
      * @param AuthenticationException $exception
+     * @param Request $request
      * @return Response
      */
-    public function handleAuthenticationFailure(AuthenticationException $exception): Response;
+    public function handleAuthenticationFailure(AuthenticationException $exception, Request $request): Response;
 
     /**
      * If true, stored identity will be removed on request termination.
