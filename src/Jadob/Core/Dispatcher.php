@@ -62,6 +62,11 @@ class Dispatcher
     protected LoggerInterface $logger;
 
     /**
+     * @var PsrHttpFactory
+     */
+    protected PsrHttpFactory $psrHttpFactory;
+
+    /**
      * Dispatcher constructor.
      *
      * @param array $config
@@ -80,6 +85,17 @@ class Dispatcher
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+
+        /**
+         * There is no reason to use separate instance for any request interface
+         */
+        $psr17Factory = new Psr17Factory();
+        $this->psrHttpFactory = new PsrHttpFactory(
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory
+        );
     }
 
     /**
@@ -151,6 +167,13 @@ class Dispatcher
         );
 
         $response = call_user_func_array([$autowiredController, $methodName], $methodArguments);
+
+        /**
+         * Convert response to HTTP Foundation before passing them to AfterController Event
+         */
+        if ($context->isPsr7Compliant() && ($response instanceof ResponseInterface)) {
+            $response = (new HttpFoundationFactory())->createResponse($response);
+        }
 
         if (!($response instanceof Response)) {
             throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
@@ -322,18 +345,7 @@ class Dispatcher
             return $userDefinedConverter($request);
         }
 
-        /**
-         * There is no reason to use separate instance for any request interface
-         */
-        $psr17Factory = new Psr17Factory();
-        $psrHttpFactory = new PsrHttpFactory(
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory
-        );
-
-        return $psrHttpFactory->createRequest($request);
+        return $this->psrHttpFactory->createRequest($request);
     }
 
     /**
