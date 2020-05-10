@@ -27,6 +27,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
+use SessionHandlerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -254,13 +255,13 @@ class Kernel
             /**
              * Split session to three services to allow handler overriding
              */
-            $containerBuilder->add(\SessionHandlerInterface::class, new NativeFileSessionHandler());
+            $containerBuilder->add(SessionHandlerInterface::class, new NativeFileSessionHandler());
             $containerBuilder->add(
                 SessionStorageInterface::class,
                 static function (Container $container): NativeSessionStorage {
                     return new NativeSessionStorage(
                         [],
-                        $container->get(\SessionHandlerInterface::class)
+                        $container->get(SessionHandlerInterface::class)
                     );
                 });
 
