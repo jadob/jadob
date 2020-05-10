@@ -17,10 +17,10 @@ class RequestContext
 {
     protected string $requestId;
     protected Request $request;
-    protected Context $context;
+    protected ?Context $context = null;
     protected Route $route;
-    protected ?RequestSupervisorInterface $supervisor;
-    protected bool $psr7Complaint;
+    protected ?RequestSupervisorInterface $supervisor = null;
+    protected bool $psr7Complaint = false;
     protected SessionInterface $session;
 
     public function __construct(string $requestId, Request $request, bool $psr7Complaint)
