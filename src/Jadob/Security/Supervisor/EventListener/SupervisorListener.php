@@ -65,6 +65,14 @@ class SupervisorListener implements ListenerProviderInterface
 
         //Assign current provider to context
         $event->getContext()->setSupervisor($requestSupervisor);
+
+        /**
+         * There is nothing to do when there is no supervisor available
+         */
+        if($requestSupervisor === null) {
+            return $event;
+        }
+
         $this->userStorage->setCurrentProvider(get_class($requestSupervisor));
 
         //At first, handle stateless
@@ -82,6 +90,7 @@ class SupervisorListener implements ListenerProviderInterface
         if ($response !== null) {
             $event->setResponse($response);
         }
+
         return $event;
 
     }
@@ -113,7 +122,7 @@ class SupervisorListener implements ListenerProviderInterface
                 throw InvalidCredentialsException::invalidCredentials();
             }
         } catch (AuthenticationException $exception) {
-            return $supervisor->handleAuthenticationFailure($exception);
+            return $supervisor->handleAuthenticationFailure($exception, $request);
         }
 
         $this->userStorage->setUser($user, get_class($supervisor));
@@ -148,7 +157,7 @@ class SupervisorListener implements ListenerProviderInterface
                 }
 
             } catch (AuthenticationException $exception) {
-                return $supervisor->handleAuthenticationFailure($exception);
+                return $supervisor->handleAuthenticationFailure($exception, $request);
             }
 
             $this->userStorage->setUser($user, get_class($supervisor));

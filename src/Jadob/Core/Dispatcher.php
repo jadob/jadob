@@ -24,6 +24,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,6 +63,11 @@ class Dispatcher
     protected LoggerInterface $logger;
 
     /**
+     * @var PsrHttpFactory
+     */
+    protected PsrHttpFactory $psrHttpFactory;
+
+    /**
      * Dispatcher constructor.
      *
      * @param array $config
@@ -80,6 +86,17 @@ class Dispatcher
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+
+        /**
+         * There is no reason to use separate instance for any request interface
+         */
+        $psr17Factory = new Psr17Factory();
+        $this->psrHttpFactory = new PsrHttpFactory(
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory,
+            $psr17Factory
+        );
     }
 
     /**
@@ -152,8 +169,18 @@ class Dispatcher
 
         $response = call_user_func_array([$autowiredController, $methodName], $methodArguments);
 
+        /**
+         * Convert response to HTTP Foundation before passing them to AfterController Event
+         */
+        if ($context->isPsr7Compliant() && ($response instanceof ResponseInterface)) {
+            $response = (new HttpFoundationFactory())->createResponse($response);
+        }
+
         if (!($response instanceof Response)) {
-            throw new KernelException('Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned');
+            //@TODO named constructor
+            throw new KernelException(
+                'Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ' or PSR-7 ResponseInterface, ' . gettype($response) . ' returned'
+            );
         }
 
         $afterControllerEvent = new AfterControllerEvent($response);
@@ -298,7 +325,7 @@ class Dispatcher
                     }
                 }
                 /**
-                 * Exit current iteration
+                 * Exit current iteration as requested dependency has been found
                  */
                 continue;
             }
@@ -311,7 +338,7 @@ class Dispatcher
      * @param Request $request
      * @return RequestInterface
      */
-    protected function convertRequestToPsr7Complaint(Request $request): RequestInterface
+    protected function convertRequestToPsr7Compliant(Request $request): RequestInterface
     {
         /**
          * Allows to use user defined factory for PSR Requests
@@ -322,18 +349,7 @@ class Dispatcher
             return $userDefinedConverter($request);
         }
 
-        /**
-         * There is no reason to use separate instance for any request interface
-         */
-        $psr17Factory = new Psr17Factory();
-        $psrHttpFactory = new PsrHttpFactory(
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory
-        );
-
-        return $psrHttpFactory->createRequest($request);
+        return $this->psrHttpFactory->createRequest($request);
     }
 
     /**
@@ -345,12 +361,12 @@ class Dispatcher
      */
     protected function matchRequestObject(string $className, RequestContext $context): ?object
     {
-        if ($context->isPsr7Complaint()) {
+        if ($context->isPsr7Compliant()) {
             if (
                 in_array(RequestInterface::class, class_implements($className), true)
                 || $className === RequestInterface::class
             ) {
-                return $this->convertRequestToPsr7Complaint($context->getRequest());
+                return $this->convertRequestToPsr7Compliant($context->getRequest());
             }
 
             if (

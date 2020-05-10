@@ -17,13 +17,13 @@ class RequestContext
 {
     protected string $requestId;
     protected Request $request;
-    protected Context $context;
+    protected ?Context $context = null;
     protected Route $route;
-    protected ?RequestSupervisorInterface $supervisor;
-    protected bool $psr7Complaint;
+    protected ?RequestSupervisorInterface $supervisor = null;
+    protected bool $psr7Compliant = false;
     protected SessionInterface $session;
 
-    public function __construct(string $requestId, Request $request, bool $psr7Complaint)
+    public function __construct(string $requestId, Request $request, bool $psr7Compliant)
     {
         $this->requestId = $requestId;
         $this->request = $request;
@@ -97,9 +97,9 @@ class RequestContext
     /**
      * @return bool
      */
-    public function isPsr7Complaint(): bool
+    public function isPsr7Compliant(): bool
     {
-        return $this->psr7Complaint;
+        return $this->psr7Compliant;
     }
 
     /**
