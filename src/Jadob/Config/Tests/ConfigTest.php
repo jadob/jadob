@@ -16,15 +16,11 @@ class ConfigTest extends TestCase
         $this->assertFalse($config->hasNode('default_config_file.php'));
     }
 
-    /**
-     * @expectedException \Jadob\Config\Exception\ConfigNodeNotFoundException
-     *
-     * @expectedExceptionMessage Could not find node "missing".
-     *
-     * @return void
-     */
+
     public function testConfigWillBreakIfNoNodeFound(): void
     {
+        $this->expectExceptionMessage('Could not find node "missing".');
+        $this->expectException(\Jadob\Config\Exception\ConfigNodeNotFoundException::class);
         $config = new Config();
 
         $config->loadDirectory(__DIR__ . '/includes/1');

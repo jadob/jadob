@@ -27,7 +27,7 @@ class RequestContext
     {
         $this->requestId = $requestId;
         $this->request = $request;
-        $this->psr7Complaint = $psr7Complaint;
+        $this->psr7Compliant = $psr7Compliant;
     }
 
     /**

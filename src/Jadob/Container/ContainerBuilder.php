@@ -165,7 +165,7 @@ class ContainerBuilder
     }
 
     /**
-     * @param ServiceProviderInterface[] $serviceProviders
+     * @param ServiceProviderInterface[]|string[] $serviceProviders
      * @return ContainerBuilder
      */
     public function setServiceProviders(array $serviceProviders): ContainerBuilder

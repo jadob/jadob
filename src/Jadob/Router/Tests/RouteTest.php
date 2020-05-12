@@ -26,8 +26,8 @@ class RouteTest extends TestCase
             ->setPath('/path/1/2/3')
             ->setParams(
                 [
-                '_param1' => 'value1',
-                'param2' => 'value2'
+                    '_param1' => 'value1',
+                    'param2' => 'value2'
                 ]
             );
 
@@ -47,8 +47,8 @@ class RouteTest extends TestCase
         $route
             ->setParams(
                 [
-                '_param1' => 'value1',
-                'param2' => 'value2'
+                    '_param1' => 'value1',
+                    'param2' => 'value2'
                 ]
             );
 
@@ -97,17 +97,10 @@ class RouteTest extends TestCase
         $this->assertEquals('/my/path/1', $routeObject->getPath());
     }
 
-    /**
-     * @expectedException \Jadob\Router\Exception\RouterException
-     *
-     * @expectedExceptionMessage Missing "name" key in $data.
-     *
-     * @throws \Jadob\Router\Exception\RouterException
-     *
-     * @return void
-     */
     public function testCreatingRouteFromArrayWillBreakIfNoNamePassed(): void
     {
+        $this->expectExceptionMessage('Missing "name" key in $data.');
+        $this->expectException(\Jadob\Router\Exception\RouterException::class);
         $route = [
             'path' => '/my/path/1',
             'controller' => '/My/Dummy/ControllerClass',
@@ -119,17 +112,10 @@ class RouteTest extends TestCase
 
     }
 
-    /**
-     * @expectedException \Jadob\Router\Exception\RouterException
-     *
-     * @expectedExceptionMessage Missing "path" key in $data.
-     *
-     * @throws \Jadob\Router\Exception\RouterException
-     *
-     * @return void
-     */
     public function testCreatingRouteFromArrayWillBreakIfNoPathPassed(): void
     {
+        $this->expectException(\Jadob\Router\Exception\RouterException::class);
+        $this->expectExceptionMessage('Missing "path" key in $data.');
         $route = [
             'name' => '/my/path/1',
             'controller' => '/My/Dummy/ControllerClass',

@@ -52,22 +52,9 @@ class RouterTest extends TestCase
     }
 
 
-    //    public function testRoutesMatching()
-    //    {
-    //        $routeCollection = new RouteCollection();
-    //
-    //        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
-    //        $router = new Router($routeCollection);
-    //        $result = $router->matchRoute('/user/1/stuff', 'GET');
-    //
-    //        $this->assertInstanceOf(Route::class, $result);
-    //    }
-
-    /**
-     * @expectedException \Jadob\Router\Exception\MethodNotAllowedException
-     */
     public function testMethodNotAllowed(): void
     {
+        $this->expectException(\Jadob\Router\Exception\MethodNotAllowedException::class);
         $routeCollection = new RouteCollection();
 
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff', null, null, null, ['POST']));
@@ -159,7 +146,6 @@ class RouterTest extends TestCase
     public function testFullRouteWithHttpsAndDefaultPortGenerating(): void
     {
 
-        //        $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['SERVER_PORT'] = 443;
         $_SERVER['HTTPS'] = 'on';
 
@@ -174,9 +160,7 @@ class RouterTest extends TestCase
     public function testFullRouteWithHttpAndHttpsPortGenerating(): void
     {
 
-        //        $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['SERVER_PORT'] = 443;
-        //        $_SERVER['HTTPS'] = 'on';
 
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));

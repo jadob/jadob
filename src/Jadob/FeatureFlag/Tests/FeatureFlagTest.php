@@ -41,15 +41,10 @@ class FeatureFlagTest extends TestCase
 
     }
 
-    /**
-     * @expectedException \Jadob\FeatureFlag\Exception\MissingFeatureRulesException
-     *
-     * @expectedExceptionMessage Feature "missing" is not defined.
-     *
-     * @return void
-     */
     public function testBasicFeatureFlagButFeatureIsMissing(): void
     {
+        $this->expectException(\Jadob\FeatureFlag\Exception\MissingFeatureRulesException::class);
+        $this->expectExceptionMessage('Feature "missing" is not defined.');
 
         $config = [
             'example' => [
