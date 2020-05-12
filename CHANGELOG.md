@@ -8,9 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [AwsBridge] - in progress
 - [Serverless] - support for AWS Lambda in progress
 - [Webhook] - in progress
+- [Core] Deferred logger
+
+## [0.0.67]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
 
 
-## [0.0.66]
+## [0.0.66] - 2020-05-13
 ### Added
 - [Core] Added support for PSR-7 Controllers
 - [Core] Added ``RequestContext`` object
