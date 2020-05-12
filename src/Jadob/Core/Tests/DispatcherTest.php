@@ -6,10 +6,12 @@ use Jadob\Container\Container;
 use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\RequestContext;
+use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Route;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -26,7 +28,7 @@ class DispatcherTest extends TestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['SERVER_PORT'] = 8000;
@@ -58,7 +60,7 @@ class DispatcherTest extends TestCase
 
         $request = Request::create('/invalid');
 
-        $dispatcher = new Dispatcher([], $container);
+        $dispatcher = new Dispatcher([], $container, new NullLogger(), new EventDispatcher());
 
         $dispatcher->executeRequest(new RequestContext('test', $request, false));
     }

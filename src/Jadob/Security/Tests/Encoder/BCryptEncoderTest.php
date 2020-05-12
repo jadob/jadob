@@ -22,28 +22,19 @@ class BCryptEncoderTest extends TestCase
         $encoder = new BCryptEncoder(10);
         $hash = $encoder->encode($rawPassword);
 
-        $this->assertNotContains($rawPassword, $hash);
         $this->assertTrue($encoder->compare($rawPassword, $hash));
     }
 
 
-    /**
-     * @expectedException \RuntimeException
-     *
-     * @return void
-     */
     public function testTooLowCostPassedInConstructor(): void
     {
+        $this->expectException(\RuntimeException::class);
         new BCryptEncoder(2);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     *
-     * @return void
-     */
     public function testTooHighCostPassedInConstructor(): void
     {
+        $this->expectException(\RuntimeException::class);
         new BCryptEncoder(32);
     }
 }

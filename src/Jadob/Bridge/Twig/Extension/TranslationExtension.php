@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Jadob\SymfonyTranslationBridge\Twig\Extension;
+namespace Jadob\Bridge\Twig\Extension;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 /**
- * @deprecated
- * @package Jadob\SymfonyTranslationBridge\Twig\Extension
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

@@ -41,20 +41,14 @@ class ContainerBuilderTest extends TestCase
 
     }
 
-    /**
-     * @expectedException \Jadob\Container\Exception\ContainerBuildException
-     *
-     * @expectedExceptionMessage 
-     *
-     * @return void
-     */
-    public function testBuildWillBreakWhenInvalidProviderPasser(): void
+    public function testBuildWillBreakWhenInvalidProviderPassed(): void
     {
+        $this->expectException(\Jadob\Container\Exception\ContainerBuildException::class);
+        $this->expectDeprecationMessage('Class Jadob\Container\Tests\Fixtures\ServiceProvider\AInvalidServiceProvider cannot be used as an service provider');
         $builder = new ContainerBuilder();
 
         $builder->setServiceProviders([AInvalidServiceProvider::class]);
 
         $container = $builder->build();
-
     }
 }

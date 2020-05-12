@@ -58,20 +58,17 @@ class ContainerTest extends TestCase
 
     }
 
-    /**
-     * @expectedException \Jadob\Container\Exception\ServiceNotFoundException
-     *
-     * @return void
-     */
     public function testServiceNotFoundException(): void
     {
+        $this->expectException(\Jadob\Container\Exception\ServiceNotFoundException::class);
+        $this->expectExceptionMessage('Service missing is not found in container.');
         $container = new Container();
 
         $container->get('missing');
 
     }
 
-    public function testContainerIsPsr3Compatible(): void
+    public function testContainerIsPsr11Compatible(): void
     {
         $container = new Container();
 
@@ -94,7 +91,8 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $container->findObjectByClassName(\stdClass::class));
     }
 
-    public function testServiceAutowiring()
+    //
+    public function testContainerCanAutowireClassWithKnownDepedencies()
     {
         $container = new Container();
         $container->add(AService::class, new AService());

@@ -13,7 +13,7 @@ namespace Jadob\Url;
 class Url
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $url;
 
@@ -49,8 +49,9 @@ class Url
      */
     public function __construct(?string $url = null)
     {
+        $this->url = $url;
+
         if ($url !== null) {
-            $this->url = $url;
             $this->parse($url);
         }
     }
