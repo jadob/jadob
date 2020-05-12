@@ -21,7 +21,7 @@ class RouterTest extends TestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['SERVER_PORT'] = 8001;
