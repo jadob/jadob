@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+- [AwsBridge] - in progress
+- [Serverless] - support for AWS Lambda in progress
+- [Webhook] - in progress
+
+
+## [0.0.66]
+### Added
+- [Core] Added support for PSR-7 Controllers
+- [Core] Added ``RequestContext`` object
+- [Core] Added ``StaticPageController``
+- [SymfonyTranslationBridge] Added automatically loaded translation paths
+- [Container] Autowiring
+- [Container] Factory Return types optimization
+
+### Changed
+- Bumped vendors version
+- ``Request`` object now contains current route data
+
+### Removed
+- [Debug] Removed ``ErrorLogger`` as it has not been touched since february 2019 
+- [Core] Removed ``LocaleChangedEvent`` as it not has been implemented yet and is not required
+
+### Fixed
+- [Router] route parameters does not disappear after route matching #ca7bf0f1
+
+
 ## [0.0.64]
 ### Added 
 - Bumped vendors versions
