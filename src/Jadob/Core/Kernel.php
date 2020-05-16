@@ -14,8 +14,6 @@ use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Jadob\Core\Event\AfterControllerEvent;
-use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventDispatcher\EventDispatcher;
