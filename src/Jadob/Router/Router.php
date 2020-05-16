@@ -197,7 +197,7 @@ class Router
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
-                $path = $route->getPath();
+                $path = $this->context->getAlias().$route->getPath();
                 $paramsToGET = [];
                 $convertedPath = $path;
                 foreach ($params as $key => $param) {
