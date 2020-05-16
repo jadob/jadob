@@ -21,6 +21,7 @@ use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\ServiceProvider\RouterServiceProvider;
 use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+use function array_merge;
 use function fastcgi_finish_request;
 use function file_exists;
 use function function_exists;
@@ -221,6 +223,21 @@ class Kernel
      */
     public function getContainerBuilder(): ContainerBuilder
     {
+        /**
+         * Providers for core features are added here, so you do not have to register them elsewhere in your bootstrap.
+         * Also registering them here allow to validate configuration for core services.
+         */
+        $coreServiceProviders = [
+            RouterServiceProvider::class
+        ];
+
+        //merge core & user provided services
+        $serviceProviders = array_merge(
+            $coreServiceProviders,
+            $this->bootstrap->getServiceProviders($this->env)
+        );
+
+
         if ($this->containerBuilder === null) {
             $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
             if (!file_exists($servicesFile)) {
@@ -249,8 +266,8 @@ class Kernel
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
-            $containerBuilder->setServiceProviders($this->bootstrap->getServiceProviders($this->env));
             $containerBuilder->add(Config::class, $this->config);
+            $containerBuilder->setServiceProviders($serviceProviders);
 
             /**
              * Split session to three services to allow handler overriding

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Router] Partial support for aliased paths
 ### Changed
+- [Core] RouterServiceProvider is added in Kernel as a core provider
 ### Deprecated
 ### Removed
 ### Fixed
