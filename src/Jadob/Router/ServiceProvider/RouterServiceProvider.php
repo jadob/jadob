@@ -10,8 +10,6 @@ use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 
 /**
- * @deprecated - remove it when better space for creating router will be found
- *
  * @package Jadob\Router\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
