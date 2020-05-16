@@ -17,10 +17,9 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 
 - PHP 7.4.0 or higher
 
- 
 ## Things that need to be done before `1.0.0` release
 
-### Default things
+### In general
 
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
@@ -30,17 +29,8 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 * [ ]  80%+ Code Coverage
 * [ ]  90%+ Code Coverage
 * [ ]  95%+ Code Coverage
-* [ ]  CRAP Index >= 10 for all methods
-* [ ] `Jadob\Core`
-* [ ] `Jadob\Security`
-* [ ] `Jadob\Saml`
-* [ ] `Jadob\Oauth`
-* [ ] `Jadob\Router`
-* [ ] Better Error Handling
-* [ ] Documentation
-* [ ] All Bridges (`Jadob\DoctrineORMBridge`, `Jadob\SymfonyFormBridge`) should be moved do `Jadob\Bridge\*` namespace.
 * [ ] Custom CSRF Extension to Forms 
-* [ ] 
+* [ ] Fluent configuration objects for each provider
 
 ### URL
 
@@ -49,6 +39,7 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 ### Config
 
 * [ ] Support for YAML files
+* [ ] Fluent ConfigNode object
 
 ### EventSourcing
 
@@ -56,8 +47,7 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 
 ## Container
 - aliasing
-- config via arrays
-
+- better autowiring
 
 ## Testing
 
