@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Router] Partial support for aliased paths
 ### Changed
 - [Core] RouterServiceProvider is added in Kernel as a core provider
+- Fixed Symfony components version constraints to use LTS (3.4, 4,4) and latest (5.0)
+- Fixed Twig and Doctrine ORM version constraints 
 ### Deprecated
 ### Removed
 ### Fixed
