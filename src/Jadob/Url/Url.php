@@ -23,6 +23,11 @@ class Url
     protected $scheme;
 
     /**
+     * @var int
+     */
+    protected $port;
+
+    /**
      * @var string
      */
     protected $host;
@@ -41,6 +46,11 @@ class Url
      * @var bool
      */
     protected $changed = false;
+
+    /**
+     * @var array
+     */
+    protected array $parameters = [];
 
     /**
      * Url constructor.
@@ -64,6 +74,10 @@ class Url
             $this->host = $output['host'];
         }
 
+        if (isset($output['port'])) {
+            $this->port = $output['port'];
+        }
+
         if (isset($output['scheme'])) {
             $this->scheme = $output['scheme'];
         }
@@ -82,7 +96,16 @@ class Url
      */
     public function build(): string
     {
-        return $this->scheme.'://'.$this->host.$this->path.'?'.$this->query;
+        $query = http_build_query($this->parameters);
+        $port = null;
+
+        if (
+            !($this->scheme === 'http' && $this->port === 80)
+            && !($this->scheme === 'https' && $this->port === 443)
+        ) {
+            $port = ':' . $this->port;
+        }
+        return $this->scheme . '://' . $this->host . $port . $this->path . '?' . $query;
     }
 
     /**
@@ -121,7 +144,7 @@ class Url
     }
 
     /**
-     * @param  string $scheme
+     * @param string $scheme
      * @return Url
      */
     public function setScheme(string $scheme): Url
@@ -140,7 +163,7 @@ class Url
     }
 
     /**
-     * @param  string $path
+     * @param string $path
      * @return Url
      */
     public function setPath(string $path): Url
@@ -150,4 +173,20 @@ class Url
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param string|int|array $value
+     * @return $this
+     */
+    public function addQueryParameter(string $key, $value): self
+    {
+        if (!is_scalar($value) && !is_array($value)) {
+            throw new \InvalidArgumentException('Given $value parameter should be scalar or array');
+        }
+
+        $this->changed = true;
+        $this->parameters[$key] = $value;
+
+        return $this;
+    }
 }
