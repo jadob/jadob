@@ -6,13 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 - [AwsBridge] - in progress
-- [Serverless] - support for AWS Lambda in progress
 - [Webhook] - in progress
 - [Core] Deferred logger
 
 ## [0.0.67]
 ### Added
 - [Router] Partial support for aliased paths
+- [Router] Define router context parameters in config 
 ### Changed
 - [Core] RouterServiceProvider is added in Kernel as a core provider
 - Fixed Symfony components version constraints to use LTS (3.4, 4,4) and latest (5.0)
