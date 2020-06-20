@@ -144,7 +144,9 @@ class Container implements ContainerInterface
      */
     protected function factoryReturnImplements(string $factoryName, string $interfaceToCheck): ?bool
     {
-
+        if (!isset($this->factories[$factoryName])) {
+            return null;
+        }
 
         $factory = $this->factories[$factoryName];
         $reflection = new \ReflectionMethod($factory, '__invoke');
@@ -157,7 +159,7 @@ class Container implements ContainerInterface
             return null;
         }
 
-        $returnType = (string)$reflection->getReturnType();
+        $returnType = @(string)$reflection->getReturnType();
 
         if (
             $returnType === $interfaceToCheck
