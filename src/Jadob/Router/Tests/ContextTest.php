@@ -46,6 +46,7 @@ class ContextTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com:8001';
         $_SERVER['HTTPS'] = true;
+        $_SERVER['REQUEST_URI'] = '/';
 
         $context = Context::fromGlobals();
 

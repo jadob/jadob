@@ -34,14 +34,21 @@ class RouterServiceProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        return ['router' => function (Container $container) use ($config) {
-            $collection = $config['routes'];
-            if (\is_array($config['routes'])) {
-                $collection = RouteCollection::fromArray($config['routes']);
-            }
+        return [
+            'router' => function (Container $container) use ($config) {
+                $collection = $config['routes'];
+                if (\is_array($config['routes'])) {
+                    $collection = RouteCollection::fromArray($config['routes']);
+                }
 
-            return new Router($collection, Context::fromGlobals());
-        }];
+                $context = Context::fromGlobals();
+                if (isset($config['context'])) {
+                    $context->setHost($config['context']['host']);
+                    $context->setPort($config['context']['port']);
+                }
+
+                return new Router($collection, $context);
+            }];
 
     }
 

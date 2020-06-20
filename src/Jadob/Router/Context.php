@@ -77,8 +77,10 @@ class Context
             $requestUri = substr($requestUri, 0, $questionMarkPosition);
         }
 
-        //URI resolved by webserver
-        $pathInfo = $_SERVER['PATH_INFO'];
+        /**
+         * some SAPIs like cli-server does not register PATH_INFO when we are on / request
+         */
+        $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
 
         //if these two does not match that means that request has been "aliased"
         if ($requestUri !== $pathInfo) {
