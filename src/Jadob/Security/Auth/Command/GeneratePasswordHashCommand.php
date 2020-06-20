@@ -20,7 +20,7 @@ class GeneratePasswordHashCommand extends Command
     /**
      * @var string
      */
-    protected static $defaultName = 'security:auth:password-hash';
+    protected static string $defaultName = 'security:auth:password-hash';
 
     /**
      * @param InputInterface $input
