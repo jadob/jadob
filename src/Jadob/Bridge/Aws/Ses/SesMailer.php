@@ -91,7 +91,7 @@ class SesMailer
             $command['ReturnPathArn'] = $this->config['return_path_arn'];
         }
 
-        $result = $this->sesClient->sendEmail();
+        $result = $this->sesClient->sendEmail($command);
 
 
     }
