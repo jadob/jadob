@@ -16,12 +16,19 @@ class SesMailer
     protected SesClient $sesClient;
 
     /**
+     * @var array{source_arn: string, from_arn: string, return_path_arn: string}
+     */
+    protected array $config;
+
+    /**
      * SesMailer constructor.
      * @param SesClient $sesClient
+     * @param array{source_arn: string, from_arm: string, return_path_arn: string} $config
      */
-    public function __construct(SesClient $sesClient)
+    public function __construct(SesClient $sesClient, array $config = [])
     {
         $this->sesClient = $sesClient;
+        $this->config = $config;
     }
 
     /**
@@ -45,7 +52,7 @@ class SesMailer
         $from = $email->getFrom();
         $plainFromAddress = reset($from)->toString();
 
-        $result = $this->sesClient->sendEmail([
+        $command = [
             'Destination' => [
                 'ToAddresses' => $plainToEmails,
             ],
@@ -67,7 +74,24 @@ class SesMailer
                     'Data' => $email->getSubject(),
                 ],
             ]
-        ]);
+        ];
+
+        /**
+         * Enables support for cross-account mailing
+         * (Use case: your app is deployed on ACCOUNT1, but you have to send emails from ACCOUNT2
+         * @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/sending-authorization-delegate-sender-tasks-email.html
+         */
+        if (isset($this->config['source_arn'])) {
+            $command['SourceArn'] = $this->config['source_arn'];
+        }
+        if (isset($this->config['from_arn'])) {
+            $command['FromArn'] = $this->config['from_arn'];
+        }
+        if (isset($this->config['return_path_arn'])) {
+            $command['ReturnPathArn'] = $this->config['return_path_arn'];
+        }
+
+        $result = $this->sesClient->sendEmail();
 
 
     }
