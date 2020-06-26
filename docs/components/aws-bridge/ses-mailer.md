@@ -3,6 +3,9 @@
 
 ## 1. Install required vendors 
 
+`composer require symfony/mime`
+
+`composer require aws/aws-sdk-php`
 
 ## 2. Add depedencies to your service container
 Add new entries in your services.php:
@@ -52,3 +55,21 @@ There can be a use case when your app has to send email from another account. To
 
 Meaning of particular attributes has been taken from [AWS SES Developer Guide](https://docs.aws.amazon.com/ses/latest/DeveloperGuide/sending-authorization-delegate-sender-tasks-email.html).
 ## 3.Prepare your e-mail message
+
+```php
+use Symfony\Component\Mime\Email;
+use Jadob\Bridge\Aws\Ses\SesMailer;
+use Symfony\Component\Mime\Address;
+
+//compose your message:
+$mail = new Email();
+$mail->from(new Address('hello@example.com', 'Hello'));
+$mail->subject('I got a message for you');
+$mail->to(new Address('me@example.com', 'mr. recipient'));
+$mail->html('<strong>hello!</strong>');
+$mail->text('hello!');
+
+//and then send them:
+/** @var \Jadob\Container\Container $container */
+$container->get(SesMailer::class)->send($mail);
+```
