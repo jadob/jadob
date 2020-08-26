@@ -23,6 +23,11 @@ class Url
     protected $scheme;
 
     /**
+     * @var int
+     */
+    protected $port;
+
+    /**
      * @var string
      */
     protected $host;
@@ -33,9 +38,9 @@ class Url
     protected $path;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $query;
+    protected $query = [];
 
     /**
      * @var bool
@@ -64,6 +69,10 @@ class Url
             $this->host = $output['host'];
         }
 
+        if (isset($output['port'])) {
+            $this->port = $output['port'];
+        }
+
         if (isset($output['scheme'])) {
             $this->scheme = $output['scheme'];
         }
@@ -73,7 +82,10 @@ class Url
         }
 
         if (isset($output['query'])) {
-            $this->query = $output['query'];
+            parse_url(
+                $output['query'],
+                $this->query
+            );
         }
     }
 
@@ -82,7 +94,9 @@ class Url
      */
     public function build(): string
     {
-        return $this->scheme.'://'.$this->host.$this->path.'?'.$this->query;
+        $query = http_build_query($this->query);
+        $port = $this->port !== null ? ':' . $this->port : null;
+        return $this->scheme . '://' . $this->host . $port . $this->path . '?' . $query;
     }
 
     /**
@@ -121,7 +135,7 @@ class Url
     }
 
     /**
-     * @param  string $scheme
+     * @param string $scheme
      * @return Url
      */
     public function setScheme(string $scheme): Url
@@ -140,7 +154,7 @@ class Url
     }
 
     /**
-     * @param  string $path
+     * @param string $path
      * @return Url
      */
     public function setPath(string $path): Url
@@ -148,6 +162,11 @@ class Url
         $this->changed = true;
         $this->path = $path;
         return $this;
+    }
+
+    public function addQueryParameter(string $key, $value)
+    {
+        $this->query[$key] = $value;
     }
 
 }
