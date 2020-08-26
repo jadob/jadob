@@ -9,10 +9,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
-use SplObjectStorage;
 use function get_class;
-use function microtime;
-use function spl_object_hash;
 
 /**
  * @see     https://www.php-fig.org/psr/psr-14/
@@ -32,11 +29,6 @@ class EventDispatcher implements EventDispatcherInterface
     protected array $listeners = [];
 
     /**
-     * @var  SplObjectStorage
-     */
-    protected SplObjectStorage $timestamps;
-
-    /**
      * @var LoggerInterface|null
      */
     protected ?LoggerInterface $logger;
@@ -48,7 +40,6 @@ class EventDispatcher implements EventDispatcherInterface
      */
     public function __construct(?LoggerInterface $logger = null)
     {
-        $this->timestamps = new SplObjectStorage();
         $this->logger = $logger;
     }
 
