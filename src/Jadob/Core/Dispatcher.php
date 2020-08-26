@@ -253,6 +253,7 @@ class Dispatcher
      * @throws AutowiringException
      * @throws ReflectionException
      * @throws ServiceNotFoundException
+     * @throws \Jadob\Container\Exception\ContainerException
      */
     protected function resolveControllerMethodArguments(
         $controllerClass,
@@ -283,52 +284,41 @@ class Dispatcher
                 continue;
             }
 
-            //service requested
+            //service or something from RequestContext requested
             if ($type !== null && !$type->isBuiltin()) {
-                try {
-                    $class = (string)$type;
-                    /**
-                     * Detects that request object has been requested
-                     */
-                    if (($request = $this->matchRequestObject($class, $context)) !== null) {
-                        $output[$name] = $request;
-                        continue;
-                    }
+                $class = (string)$type;
 
-                    /**
-                     * Detect that Route was requested.
-                     * When true, then current route will be injected.
-                     */
-                    if ($class === Route::class) {
-                        $output[$name] = $context->getRoute();
-                        continue;
-                    }
-
-                    /**
-                     * Looks for given service in container.
-                     */
-                    $output[$name] = $this->container->findObjectByClassName($class);
-                } catch (ServiceNotFoundException $exception) {
-                    /**
-                     * When container does not have nothing interesting, lets try to autowire a class that we need
-                     */
-                    if ($autowireEnabled) {
-                        /**
-                         * Try to autowire if enabled in dispatcher configuration
-                         */
-                        $output[$name] = $this->container->autowire((string)$type);
-                    } else {
-                        /**
-                         * Break if all possibilities gave no results
-                         */
-                        throw $exception;
-                    }
+                if (($request = $this->matchRequestObject($class, $context)) !== null) {
+                    $output[$name] = $request;
+                    continue;
                 }
+
+                if ($class === Route::class) {
+                    $output[$name] = $context->getRoute();
+                    continue;
+                }
+
+                /**
+                 * When still here, try to get a service from container or autowire them
+                 */
+                $service = $this->container->findObjectByClassName($class);
+
+                if ($service !== null) {
+                    $output[$name] = $service;
+                    continue;
+                }
+
+                if ($autowireEnabled) {
+                    $output[$name] = $this->container->autowire((string)$type);
+                    continue;
+                }
+
                 /**
                  * Exit current iteration as requested dependency has been found
                  */
                 continue;
             }
+
             throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
         }
         return $output;

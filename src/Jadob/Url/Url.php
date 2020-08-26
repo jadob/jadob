@@ -38,19 +38,14 @@ class Url
     protected $path;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $query;
+    protected $query = [];
 
     /**
      * @var bool
      */
     protected $changed = false;
-
-    /**
-     * @var array
-     */
-    protected array $parameters = [];
 
     /**
      * Url constructor.
@@ -87,7 +82,10 @@ class Url
         }
 
         if (isset($output['query'])) {
-            $this->query = $output['query'];
+            parse_url(
+                $output['query'],
+                $this->query
+            );
         }
     }
 
@@ -96,15 +94,8 @@ class Url
      */
     public function build(): string
     {
-        $query = http_build_query($this->parameters);
-        $port = null;
-
-        if (
-            !($this->scheme === 'http' && $this->port === 80)
-            && !($this->scheme === 'https' && $this->port === 443)
-        ) {
-            $port = ':' . $this->port;
-        }
+        $query = http_build_query($this->query);
+        $port = $this->port !== null ? ':' . $this->port : null;
         return $this->scheme . '://' . $this->host . $port . $this->path . '?' . $query;
     }
 
@@ -185,8 +176,10 @@ class Url
         }
 
         $this->changed = true;
-        $this->parameters[$key] = $value;
+        $this->query[$key] = $value;
 
         return $this;
     }
+
+
 }
