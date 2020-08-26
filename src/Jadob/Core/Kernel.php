@@ -259,12 +259,10 @@ class Kernel
             $containerBuilder = new ContainerBuilder($listener);
             //TODO: When service definitions and aliases will be ready, use them here
             $containerBuilder->add(EventDispatcherInterface::class, $this->eventDispatcher);
-            $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
-            $containerBuilder->add(Config::class, $this->config);
             $containerBuilder->setServiceProviders($serviceProviders);
 
             /**
