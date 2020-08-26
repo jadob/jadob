@@ -9,9 +9,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * TODO: this one maybe should be called IdentityStorage
- * Class UserStorage
- *
- * @package Jadob\Security\Auth
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -25,7 +22,7 @@ class UserStorage
     /**
      * @var SessionInterface
      */
-    protected SessionInterface $session;
+    protected ?SessionInterface $session = null;
 
     /**
      * @var string|null
@@ -33,13 +30,30 @@ class UserStorage
     protected ?string $currentProvider = null;
 
     /**
-     * UserStorage constructor.
-     *
-     * @param SessionInterface $session
+     * @param SessionInterface|null $session
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(?SessionInterface $session)
     {
         $this->session = $session;
+    }
+
+    /**
+     * @param SessionInterface $session
+     */
+    public function setSession(SessionInterface $session): void
+    {
+        $this->session = $session;
+    }
+
+    /**
+     * When in multiple dispatch cycle, sessions will be assigned automatically in BeforeControllerEvent,
+     * And removed in AfterControllerEvent. This method is used to remove current session and matched supervisor from
+     * class to make sure that nothing will be passed to another request.
+     */
+    public function removeCurrentRequestData()
+    {
+        $this->session = null;
+        $this->currentProvider = null;
     }
 
     /**
@@ -48,6 +62,10 @@ class UserStorage
      */
     public function getUser(?string $provider = null): ?UserInterface
     {
+        //@TODO: add special exception class for Jadob/Security/Auth things
+        if ($this->session === null) {
+            throw new \RuntimeException('A session have been not passed to UserStorage object.');
+        }
 
         if ($provider === null) {
             $provider = $this->currentProvider;
