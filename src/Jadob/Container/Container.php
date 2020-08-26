@@ -217,9 +217,9 @@ class Container implements ContainerInterface
      * Checks the services and factories by it's type, not the name.
      *
      * @param string $className FQCN of class that we need to find
-     * @return mixed
-     * @throws ServiceNotFoundException
+     * @return null|object - null when no object found
      * @throws ReflectionException
+     * @throws ContainerException
      */
     public function findObjectByClassName(string $className)
     {
@@ -256,7 +256,7 @@ class Container implements ContainerInterface
             }
         }
 
-        throw new ServiceNotFoundException('There is no service extending/implementing ' . $className . ' class.');
+        return null;
     }
 
     /**
