@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
+use Jadob\EventDispatcher\Exception\EventDispatcherException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
@@ -20,6 +21,11 @@ use function spl_object_hash;
  */
 class EventDispatcher implements EventDispatcherInterface
 {
+    /**
+     * @var int
+     */
+    private const DEFAULT_LISTENER_PRIORITY = 100;
+
     /**
      * @var ListenerProviderInterface[]
      */
@@ -50,29 +56,47 @@ class EventDispatcher implements EventDispatcherInterface
      * {@inheritDoc}
      *
      * @see https://www.php-fig.org/psr/psr-14/#dispatcher
+     * @throws EventDispatcherException
      */
     public function dispatch(object $event)
     {
         $className = get_class($event);
-        $this->timestamps->attach(new Timestamp(
-            $className,
-            microtime(true),
-            spl_object_hash($event)
-        ));
+        $this->log(sprintf('Begin event %s dispatching.', $className));
+
+        $handlers = [];
+
+        foreach ($this->listeners as $listener) {
+            $listenerPriority = self::DEFAULT_LISTENER_PRIORITY;
+            $eventsFromListener = $listener->getListenersForEvent($event);
+            /** @noinspection PhpParamsInspection */
+            $eventsCount = count($eventsFromListener);
+
+            if ($listener instanceof ListenerProviderPriorityInterface && $eventsCount > 0) {
+                $listenerPriority = $listener->getListenerPriorityForEvent($event);
+                if ($listenerPriority < 0) {
+                    throw EventDispatcherException::negativeListenerPriority($listener, $event);
+                }
+            }
+
+            $handlers[$listenerPriority][] = $eventsFromListener;
+        }
 
         $handlersCount = 0;
-        foreach ($this->listeners as $listener) {
-            $eventsFromListener = $listener->getListenersForEvent($event);
+        foreach ($handlers as $priority => $handlersByPriority) {
+            $this->log(sprintf('Dispatching event %s for listeners with priority %s.', $className, $priority));
 
-            foreach ($eventsFromListener as $singleListener) {
-                $singleListener($event);
-                $handlersCount++;
+            foreach ($handlersByPriority as $listenersFromSingleObject) {
+                foreach ($listenersFromSingleObject as $singleListener) {
+                    $singleListener($event);
+                    $handlersCount++;
 
-                if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
-                    $this->log(
-                        'Event ' . $className . ' propagation has been stopped. Event has been consumed by ' . $handlersCount . ' listeners.'
-                    );
-                    return $event;
+                    if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
+                        $this->log(
+                            sprintf('Event %s propagation has been stopped. Event has been consumed by %s listeners.', $className, $handlersCount)
+                        );
+
+                        return $event;
+                    }
                 }
             }
         }
