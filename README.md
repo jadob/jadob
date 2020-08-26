@@ -21,6 +21,7 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 
 ### In general
 
+* [ ]  Allow to work in multiple dispatch cycles (e.g. in ReactPHP, php-pm, or swoole)
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
 * [ ]  50%+ Code Coverage
@@ -31,6 +32,12 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 * [ ]  95%+ Code Coverage
 * [ ] Custom CSRF Extension to Forms 
 * [ ] Fluent configuration objects for each provider
+
+
+### Allow to work in multiple dispatch cycles
+
+- [ ] Drop session out of container
+- [ ] Any service that rely on session from container, should be changed and receive them from BeforeControllerEvent
 
 ### URL
 
