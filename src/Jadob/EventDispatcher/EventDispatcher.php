@@ -72,10 +72,13 @@ class EventDispatcher implements EventDispatcherInterface
             $handlers[$listenerPriority][] = $eventsFromListener;
         }
 
-        $handlersCount = 0;
-        foreach ($handlers as $priority => $handlersByPriority) {
-            $this->log(sprintf('Dispatching event %s for listeners with priority %s.', $className, $priority));
+        $handlersPriorities = array_keys($handlers);
+        sort($handlersPriorities);
 
+        $handlersCount = 0;
+        foreach ($handlersPriorities as $priority) {
+            $this->log(sprintf('Dispatching event %s for listeners with priority %s.', $className, $priority));
+            $handlersByPriority = $handlers[$priority];
             foreach ($handlersByPriority as $listenersFromSingleObject) {
                 foreach ($listenersFromSingleObject as $singleListener) {
                     $singleListener($event);
