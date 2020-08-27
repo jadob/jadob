@@ -21,7 +21,6 @@ class RequestContext
     protected Route $route;
     protected ?RequestSupervisorInterface $supervisor = null;
     protected bool $psr7Compliant = false;
-    protected SessionInterface $session;
 
     public function __construct(string $requestId, Request $request, bool $psr7Compliant)
     {
@@ -107,7 +106,7 @@ class RequestContext
      */
     public function getSession(): SessionInterface
     {
-        return $this->session;
+        return $this->request->getSession();
     }
 
     /**
@@ -116,7 +115,7 @@ class RequestContext
      */
     public function setSession(SessionInterface $session): RequestContext
     {
-        $this->session = $session;
+        $this->request->setSession($session);
         return $this;
     }
 }
