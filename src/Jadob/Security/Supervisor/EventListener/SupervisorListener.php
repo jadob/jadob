@@ -8,7 +8,7 @@ use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
-use Jadob\Security\Auth\UserStorage;
+use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -29,17 +29,17 @@ class SupervisorListener implements ListenerProviderInterface
     protected Supervisor $supervisor;
 
     /**
-     * @var UserStorage
+     * @var IdentityStorage
      */
-    protected UserStorage $userStorage;
+    protected IdentityStorage $userStorage;
 
     /**
      * SupervisorListener constructor.
      *
      * @param Supervisor $supervisor
-     * @param UserStorage $userStorage
+     * @param IdentityStorage $userStorage
      */
-    public function __construct(Supervisor $supervisor, UserStorage $userStorage)
+    public function __construct(Supervisor $supervisor, IdentityStorage $userStorage)
     {
         $this->supervisor = $supervisor;
         $this->userStorage = $userStorage;

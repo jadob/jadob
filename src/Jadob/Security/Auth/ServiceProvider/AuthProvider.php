@@ -5,7 +5,7 @@ namespace Jadob\Security\Auth\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\Command\GeneratePasswordHashCommand;
-use Jadob\Security\Auth\UserStorage;
+use Jadob\Security\Auth\IdentityStorage;
 use Symfony\Component\Console\Application;
 
 /**
@@ -34,7 +34,7 @@ class AuthProvider implements ServiceProviderInterface
     {
         return [
             'auth.user.storage' => function (Container $container) {
-                return new UserStorage();
+                return new IdentityStorage();
             }
         ];
     }

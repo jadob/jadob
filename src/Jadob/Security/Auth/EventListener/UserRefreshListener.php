@@ -5,7 +5,7 @@ namespace Jadob\Security\Auth\EventListener;
 use Jadob\EventListener\Event\BeforeControllerEvent;
 use Jadob\EventListener\Event\Type\BeforeControllerEventListenerInterface;
 use Jadob\Security\Auth\User\RefreshableUserInterface;
-use Jadob\Security\Auth\UserStorage;
+use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Guard\Guard;
 
 /**
@@ -24,7 +24,7 @@ class UserRefreshListener //implements BeforeControllerEventListenerInterface
     protected $guard;
 
     /**
-     * @var UserStorage
+     * @var IdentityStorage
      */
     protected $storage;
 
@@ -32,9 +32,9 @@ class UserRefreshListener //implements BeforeControllerEventListenerInterface
      * UserRefreshListener constructor.
      *
      * @param Guard       $guard
-     * @param UserStorage $storage
+     * @param IdentityStorage $storage
      */
-    public function __construct(Guard $guard, UserStorage $storage)
+    public function __construct(Guard $guard, IdentityStorage $storage)
     {
         $this->guard = $guard;
         $this->storage = $storage;

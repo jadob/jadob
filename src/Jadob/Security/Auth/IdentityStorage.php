@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class UserStorage
+class IdentityStorage
 {
     /**
      * @var string
@@ -45,9 +45,9 @@ class UserStorage
      * @param UserInterface $user
      * @param SessionInterface $session
      * @param null|string $provider
-     * @return UserStorage
+     * @return IdentityStorage
      */
-    public function setUser(UserInterface $user, SessionInterface $session, ?string $provider = null): UserStorage
+    public function setUser(UserInterface $user, SessionInterface $session, ?string $provider = null): IdentityStorage
     {
         $session->set(self::USER_SESSION_KEY . $provider, serialize($user));
         return $this;
