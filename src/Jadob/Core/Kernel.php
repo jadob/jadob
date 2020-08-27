@@ -265,10 +265,13 @@ class Kernel
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($serviceProviders);
 
-            /**
-             * Split session to three services to allow handler overriding
-             */
-            $containerBuilder->add(SessionHandlerInterface::class, new NativeFileSessionHandler());
+
+            $containerBuilder->add(SessionHandlerInterface::class,
+                static function (): NativeFileSessionHandler {
+                    return new NativeFileSessionHandler();
+                }
+            );
+
             $containerBuilder->add(
                 SessionStorageInterface::class,
                 static function (Container $container): NativeSessionStorage {
@@ -277,15 +280,6 @@ class Kernel
                         $container->get(SessionHandlerInterface::class)
                     );
                 });
-
-            $containerBuilder->add(
-                SessionInterface::class,
-                static function (Container $container): Session {
-                    return new Session(
-                        $container->get(SessionStorageInterface::class)
-                    );
-                }
-            );
 
             foreach ($services as $serviceName => $serviceObject) {
                 $containerBuilder->add($serviceName, $serviceObject);
