@@ -176,7 +176,7 @@ class Kernel
 
         /** @var SessionHandlerFactory $sessionHandlerFactory */
         $sessionHandlerFactory = $this->container->get(SessionHandlerFactory::class);
-        $sessionHandler = $sessionHandlerFactory->create($request);
+        $sessionHandler = $sessionHandlerFactory->create();
         $sessionStorage = new NativeSessionStorage([], $sessionHandler);
         $session = new Session($sessionStorage);
 
