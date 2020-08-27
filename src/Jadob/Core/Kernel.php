@@ -15,6 +15,7 @@ use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
+use Jadob\Core\Session\SessionHandlerFactory;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
@@ -26,15 +27,11 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
-use SessionHandlerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use function array_merge;
 use function fastcgi_finish_request;
 use function file_exists;
@@ -177,12 +174,13 @@ class Kernel
         $configArray = $this->config->toArray();
         $this->container = $builder->build($configArray);
 
-        /**
-         * @TODO: Allow session storage overloading
-         */
-        $session = new Session();
+        /** @var SessionHandlerFactory $sessionHandlerFactory */
+        $sessionHandlerFactory = $this->container->get(SessionHandlerFactory::class);
+        $sessionHandler = $sessionHandlerFactory->create($request);
+        $sessionStorage = new NativeSessionStorage([], $sessionHandler);
+        $session = new Session($sessionStorage);
 
-        $request->setSession($session);
+
         $context->setSession($session);
         $this->container->addParameter('request_id', $requestId);
 
@@ -265,21 +263,9 @@ class Kernel
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->setServiceProviders($serviceProviders);
 
-
-            $containerBuilder->add(SessionHandlerInterface::class,
-                static function (): NativeFileSessionHandler {
-                    return new NativeFileSessionHandler();
-                }
-            );
-
-            $containerBuilder->add(
-                SessionStorageInterface::class,
-                static function (Container $container): NativeSessionStorage {
-                    return new NativeSessionStorage(
-                        [],
-                        $container->get(SessionHandlerInterface::class)
-                    );
-                });
+            $containerBuilder->add(SessionHandlerFactory::class, static function (): SessionHandlerFactory {
+                return new SessionHandlerFactory();
+            });
 
             foreach ($services as $serviceName => $serviceObject) {
                 $containerBuilder->add($serviceName, $serviceObject);
