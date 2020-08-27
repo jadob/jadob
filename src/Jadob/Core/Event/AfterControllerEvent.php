@@ -2,6 +2,7 @@
 
 namespace Jadob\Core\Event;
 
+use Jadob\Core\RequestContext;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -16,14 +17,17 @@ class AfterControllerEvent
      */
     protected $response;
 
+    protected $context;
+
     /**
      * AfterControllerEvent constructor.
      *
      * @param Response $response
      */
-    public function __construct(Response $response)
+    public function __construct(Response $response, RequestContext $context)
     {
         $this->response = $response;
+        $this->context = $context;
     }
 
     /**
@@ -35,7 +39,7 @@ class AfterControllerEvent
     }
 
     /**
-     * @param  Response $response
+     * @param Response $response
      * @return AfterControllerEvent
      */
     public function setResponse(Response $response): self
@@ -43,4 +47,14 @@ class AfterControllerEvent
         $this->response = $response;
         return $this;
     }
+
+    /**
+     * @return RequestContext
+     */
+    public function getContext(): RequestContext
+    {
+        return $this->context;
+    }
+
+
 }

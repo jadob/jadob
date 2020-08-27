@@ -183,7 +183,7 @@ class Dispatcher
             );
         }
 
-        $afterControllerEvent = new AfterControllerEvent($response);
+        $afterControllerEvent = new AfterControllerEvent($response, $context);
         $this->eventDispatcher->dispatch($afterControllerEvent);
 
         if ($afterControllerEvent->getResponse() !== null) {
