@@ -182,7 +182,6 @@ class Kernel
 
 
         $context->setSession($session);
-        $this->container->addParameter('request_id', $requestId);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
         $dispatcher = new Dispatcher(
