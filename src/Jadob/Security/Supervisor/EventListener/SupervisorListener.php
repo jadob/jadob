@@ -31,18 +31,16 @@ class SupervisorListener implements ListenerProviderInterface
     /**
      * @var IdentityStorage
      */
-    protected IdentityStorage $userStorage;
+    protected IdentityStorage $identityStorage;
 
     /**
-     * SupervisorListener constructor.
-     *
      * @param Supervisor $supervisor
-     * @param IdentityStorage $userStorage
+     * @param IdentityStorage $identityStorage
      */
-    public function __construct(Supervisor $supervisor, IdentityStorage $userStorage)
+    public function __construct(Supervisor $supervisor, IdentityStorage $identityStorage)
     {
         $this->supervisor = $supervisor;
-        $this->userStorage = $userStorage;
+        $this->identityStorage = $identityStorage;
     }
 
     /**
@@ -69,11 +67,10 @@ class SupervisorListener implements ListenerProviderInterface
         /**
          * There is nothing to do when there is no supervisor available
          */
-        if($requestSupervisor === null) {
+        if ($requestSupervisor === null) {
             return $event;
         }
 
-        $this->userStorage->setCurrentProvider(get_class($requestSupervisor));
 
         //At first, handle stateless
         if ($requestSupervisor->isStateless()) {
@@ -125,8 +122,8 @@ class SupervisorListener implements ListenerProviderInterface
             return $supervisor->handleAuthenticationFailure($exception, $request);
         }
 
-        $this->userStorage->setUser($user, get_class($supervisor));
-        $supervisor->handleAuthenticationSuccess($request, $user);
+        $this->identityStorage->setUser($user, $request->getSession(), get_class($supervisor));
+        return $supervisor->handleAuthenticationSuccess($request, $user);
     }
 
     protected function handleNonStatelessRequest(Request $request, RequestSupervisorInterface $supervisor): ?Response
@@ -160,14 +157,14 @@ class SupervisorListener implements ListenerProviderInterface
                 return $supervisor->handleAuthenticationFailure($exception, $request);
             }
 
-            $this->userStorage->setUser($user, get_class($supervisor));
+            $this->identityStorage->setUser($user, $request->getSession(), get_class($supervisor));
             return $supervisor->handleAuthenticationSuccess($request, $user);
         }
 
         /**
          * Gets User from session storage.
          */
-        $userFromStorage = $this->userStorage->getUser(get_class($supervisor));
+        $userFromStorage = $this->identityStorage->getUser($request->getSession(),get_class($supervisor));
 
         /**
          * Case #1: User is logged in, nothing to do
@@ -194,6 +191,7 @@ class SupervisorListener implements ListenerProviderInterface
         }
 
 
+        return null;
         //3. User is not logged in, but supervisor allows unauthenticated user to enter
         //4. User is not logged in and supervisor wants user to be authenticated
         //5. User is logged in, there is nothing to do
