@@ -5,6 +5,7 @@ namespace Jadob\Core;
 
 use Jadob\Router\Context;
 use Jadob\Router\Route;
+use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -21,6 +22,7 @@ class RequestContext
     protected Route $route;
     protected ?RequestSupervisorInterface $supervisor = null;
     protected bool $psr7Compliant = false;
+    protected ?UserInterface $user = null;
 
     public function __construct(string $requestId, Request $request, bool $psr7Compliant)
     {
@@ -118,4 +120,24 @@ class RequestContext
         $this->request->setSession($session);
         return $this;
     }
+
+    /**
+     * @return UserInterface|null
+     */
+    public function getUser(): ?UserInterface
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param UserInterface|null $user
+     * @return RequestContext
+     */
+    public function setUser(?UserInterface $user): RequestContext
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+
 }
