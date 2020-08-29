@@ -351,6 +351,13 @@ class Dispatcher
      */
     protected function matchRequestObject(string $className, RequestContext $context): ?object
     {
+        if (
+            in_array(RequestContext::class, class_parents($className), true)
+            || $className === RequestContext::class
+        ) {
+            return $context;
+        }
+
         if ($context->isPsr7Compliant()) {
             if (
                 in_array(RequestInterface::class, class_implements($className), true)
