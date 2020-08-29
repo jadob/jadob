@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\Core\RequestContext;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
@@ -82,7 +83,7 @@ class SupervisorListener implements ListenerProviderInterface
             return $event;
         }
 
-        $response = $this->handleNonStatelessRequest($event->getRequest(), $requestSupervisor);
+        $response = $this->handleNonStatelessRequest($event->getContext(), $requestSupervisor);
 
         if ($response !== null) {
             $event->setResponse($response);
@@ -126,8 +127,10 @@ class SupervisorListener implements ListenerProviderInterface
         return $supervisor->handleAuthenticationSuccess($request, $user);
     }
 
-    protected function handleNonStatelessRequest(Request $request, RequestSupervisorInterface $supervisor): ?Response
+    protected function handleNonStatelessRequest(RequestContext $context, RequestSupervisorInterface $supervisor): ?Response
     {
+        $request = $context->getRequest();
+
         //1. Check if this is an authentication attempt:
         if ($supervisor->isAuthenticationRequest($request)) {
             try {
@@ -161,7 +164,8 @@ class SupervisorListener implements ListenerProviderInterface
             return $supervisor->handleAuthenticationSuccess($request, $user);
         }
 
-        $userFromStorage = $this->identityStorage->getUser($request->getSession(),get_class($supervisor));
+        $userFromStorage = $this->identityStorage->getUser($request->getSession(), get_class($supervisor));
+        $context->setUser($userFromStorage);
 
         /**
          * Case #1: User is logged in, nothing to do
