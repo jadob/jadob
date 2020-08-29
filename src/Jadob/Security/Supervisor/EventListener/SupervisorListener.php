@@ -161,9 +161,6 @@ class SupervisorListener implements ListenerProviderInterface
             return $supervisor->handleAuthenticationSuccess($request, $user);
         }
 
-        /**
-         * Gets User from session storage.
-         */
         $userFromStorage = $this->identityStorage->getUser($request->getSession(),get_class($supervisor));
 
         /**
