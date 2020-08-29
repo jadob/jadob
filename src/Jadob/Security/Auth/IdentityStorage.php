@@ -26,8 +26,7 @@ class IdentityStorage
      */
     public function getUser(SessionInterface $session, ?string $provider = null): ?UserInterface
     {
-
-        $userFromSession = $session->get(sprintf('%s/%s', self::USER_SESSION_KEY, $provider));
+        $userFromSession = $session->get($this->buildSessionKey($provider));
         if ($userFromSession === null) {
             return null;
         }
@@ -49,7 +48,20 @@ class IdentityStorage
      */
     public function setUser(UserInterface $user, SessionInterface $session, ?string $provider = null): IdentityStorage
     {
-        $session->set(self::USER_SESSION_KEY . $provider, serialize($user));
+        $session->set(
+            $this->buildSessionKey($provider),
+            serialize($user)
+        );
+
         return $this;
+    }
+
+    /**
+     * @param string $provider FQCN of provider class
+     * @return string
+     */
+    protected function buildSessionKey($provider): string
+    {
+        return sprintf('%s/%s', self::USER_SESSION_KEY, $provider);
     }
 }
