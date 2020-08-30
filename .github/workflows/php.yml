@@ -7,9 +7,17 @@ jobs:
 
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    strategy:
+      matrix:
+        php-versions: ['7.4', '8.0']
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install PHP ${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
 
     - name: Validate composer.json and composer.lock
       run: composer validate
