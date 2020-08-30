@@ -61,6 +61,13 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 Jadob uses PHPUnit for unit test, Psalm for static analysis and Infection for Mutation testing.
 
 
+## Development tips'n'tricks
+
+### CI Workflows
+
+Jadob  uses [GitHub Actions](https://github.com/features/actions) for performing codebase-related test. 
+If for some reason you do not to run them, please add a `[ci-skip]` phrase in your commit message.
+
 ## Getting Started
 
 @TODO
