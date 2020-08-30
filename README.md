@@ -20,7 +20,7 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 ## Things that need to be done before `1.0.0` release
 
 ### In general
-
+* [ ]  Psalm workflow must be green
 * [ ]  Allow to work in multiple dispatch cycles (e.g. in ReactPHP, php-pm, or swoole)
 * [x]  30%+ Code Coverage
 * [x]  40%+ Code Coverage
@@ -36,8 +36,9 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB dat
 
 ### Allow to work in multiple dispatch cycles
 
-- [ ] Drop session out of container
-- [ ] Any service that rely on session from container, should be changed and receive them from BeforeControllerEvent
+- [x] Drop session out of container
+- [x] Any service that rely on session from container, should be changed and receive them from BeforeControllerEvent
+      **Update:** All services that rely on session in container now have an session passed as an argument in method that requires session.
 
 ### URL
 
