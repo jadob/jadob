@@ -4,26 +4,18 @@ on: [push]
 
 jobs:
   build:
-    name: PHPUnit Tests (PHP ${{ matrix.php-versions }}, Composer ${{ matrix.composer-versions }} --prefer-${{ matrix.composer-deps }} --prefer-${{ matrix.composer-deps-source }})
+    name: PHPUnit Tests (PHP ${{ matrix.php-versions }}, Composer ${{ matrix.composer-versions }} --prefer-${{ matrix.composer-deps }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.php-versions == '8.0' }}
     if: "!contains(github.event.head_commit.message, '[ci-skip]')"
-    continue-on-error: ${{ matrix.allow-to-fail }}
     strategy:
       matrix:
-        php-versions: ['7.4']
-        allow-to-fail: [false]
+        php-versions: ['7.4','8.0']
         composer-versions:
           - composer:v1
         composer-deps:
           - stable
           - lowest
-        composer-deps-source:
-          - dist
-          - source
-        include:
-          - php-versions: '8.0'
-            composer-versions: composer:v2 
-            allow-to-fail: true
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +30,7 @@ jobs:
       run: composer validate
 
     - name: Install dependencies
-      run: composer update --prefer-${{ matrix.composer-deps }} --prefer-${{ matrix.composer-deps-source }} --no-interaction
+      run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
       
     - name: Run Unit Tests
       run: vendor/bin/phpunit
