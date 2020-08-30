@@ -1,6 +1,29 @@
 name: PHP Composer
 on: [push]
 jobs:
+  infection:
+    name: Infection Mutation Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['7.4']
+        composer-versions:
+          - composer:v1
+        composer-deps:
+          - stable
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install PHP ${{ matrix.php-versions }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+        tools: ${{ matrix.composer-versions }}
+
+    - name: Install dependencies
+      run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
+    - name: Run Infection
+      run: vendor/bin/infection
   psalm:
     name: Psalm Static Analysis 
     runs-on: ubuntu-latest
