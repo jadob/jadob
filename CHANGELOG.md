@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Webhook] - in progress
 - [Core] Deferred logger
 
+## [0.1.0] - Release Date TBA
+### Added
+- [EventDispatcher] Allow to specify priority for given listeners
+### Changed
+- [Security] [BC BREAK] Renamed `AuthStorage` to `IdentityStorage`
+### Removed
+- [Core] [BC BREAK] Removed AbstractController::getUser() method
+### Fixed
+- [Auth] build session storage key in the same way in both methods (fixed in #9802f458f6ff5723fc23ed65f3d200d25dd23b66)
+
+
 ## [0.0.67]
 ### Added
 - [Router] Partial support for aliased paths

@@ -72,14 +72,6 @@ abstract class AbstractController
         return $this->getFormFactory()->create($type, $data, $options);
     }
 
-    /**
-     * @return UserInterface|null
-     * @throws ServiceNotFoundException
-     */
-    protected function getUser(): ?UserInterface
-    {
-        return $this->container->get('auth.user.storage')->getUser();
-    }
 
     /**
      * @param string $name

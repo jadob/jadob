@@ -57,7 +57,7 @@ class Micro /**
      *
      * @var string;
      */
-    public const VERSION = '0.0.67';
+    public const VERSION = '0.1.0';
 
     /**
      * @var ContainerInterface

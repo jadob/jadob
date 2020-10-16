@@ -15,6 +15,7 @@ use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
+use Jadob\Core\Session\SessionHandlerFactory;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
@@ -26,15 +27,11 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
-use SessionHandlerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use function array_merge;
 use function fastcgi_finish_request;
 use function file_exists;
@@ -54,7 +51,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.0.68';
+    public const VERSION = '0.1.0';
 
     /**
      * If true, application log will be saved while destructing objects
@@ -177,14 +174,14 @@ class Kernel
         $configArray = $this->config->toArray();
         $this->container = $builder->build($configArray);
 
-        /**
-         * @TODO: Allow session storage overloading
-         */
-        $session = new Session();
+        /** @var SessionHandlerFactory $sessionHandlerFactory */
+        $sessionHandlerFactory = $this->container->get(SessionHandlerFactory::class);
+        $sessionHandler = $sessionHandlerFactory->create();
+        $sessionStorage = new NativeSessionStorage([], $sessionHandler);
+        $session = new Session($sessionStorage);
 
-        $request->setSession($session);
+
         $context->setSession($session);
-        $this->container->addParameter('request_id', $requestId);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
         $dispatcher = new Dispatcher(
@@ -259,35 +256,15 @@ class Kernel
             $containerBuilder = new ContainerBuilder($listener);
             //TODO: When service definitions and aliases will be ready, use them here
             $containerBuilder->add(EventDispatcherInterface::class, $this->eventDispatcher);
-            $containerBuilder->add(EventDispatcher::class, $this->eventDispatcher);
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
-            $containerBuilder->add(Config::class, $this->config);
             $containerBuilder->setServiceProviders($serviceProviders);
 
-            /**
-             * Split session to three services to allow handler overriding
-             */
-            $containerBuilder->add(SessionHandlerInterface::class, new NativeFileSessionHandler());
-            $containerBuilder->add(
-                SessionStorageInterface::class,
-                static function (Container $container): NativeSessionStorage {
-                    return new NativeSessionStorage(
-                        [],
-                        $container->get(SessionHandlerInterface::class)
-                    );
-                });
-
-            $containerBuilder->add(
-                SessionInterface::class,
-                static function (Container $container): Session {
-                    return new Session(
-                        $container->get(SessionStorageInterface::class)
-                    );
-                }
-            );
+            $containerBuilder->add(SessionHandlerFactory::class, static function (): SessionHandlerFactory {
+                return new SessionHandlerFactory();
+            });
 
             foreach ($services as $serviceName => $serviceObject) {
                 $containerBuilder->add($serviceName, $serviceObject);
