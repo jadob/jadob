@@ -11,6 +11,7 @@ use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
 use function array_keys;
@@ -149,17 +150,19 @@ class Container implements ContainerInterface
         }
 
         $factory = $this->factories[$factoryName];
-        $reflection = new \ReflectionMethod($factory, '__invoke');
+        $reflectionMethod = new \ReflectionMethod($factory, '__invoke');
 
         /**
          * There is no return type defined in factory, return null as at this moment is not possible to resolve
          * return type without service instantiating
          */
-        if (!$reflection->hasReturnType()) {
+        if (!$reflectionMethod->hasReturnType()) {
             return null;
         }
 
-        $returnType = @(string)$reflection->getReturnType();
+        /** @var ReflectionNamedType $returnRypeReflection */
+        $returnRypeReflection = $reflectionMethod->getReturnType();
+        $returnType = $returnRypeReflection->getName();
 
         if (
             $returnType === $interfaceToCheck

@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - Release date SOON
 ### Changed
 - [Security] [BC BREAK] Return value from RequestSupervisorInterface#handleAuthenticationFailure() can be null
+### Fixed
+- [Core][Container] Removed reflection-related deprecations which flooded the logs with warnings
 
 ## [0.1.0] - 2020-10-17
 ### Added

@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use ReflectionNamedType;
 use RuntimeException;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -222,7 +223,10 @@ class Dispatcher
                 throw new KernelException('Argument "' . $parameter->getName() . '" defined in ' . $controllerClassName . ' does not have any type.');
             }
 
-            $type = (string)$parameter->getType();
+            /** @var ReflectionNamedType $parameterType */
+            $parameterType = $parameter->getType();
+            $type = $parameterType->getName();
+
             if ($type === ContainerInterface::class) {
                 $arguments[] = $this->container;
             } else {
@@ -263,38 +267,39 @@ class Dispatcher
     ): array
     {
         $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
-        $reflection = new ReflectionMethod($controllerClass, $methodName);
+        $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 
-        $parameters = $reflection->getParameters();
+        $methodParameters = $methodReflection->getParameters();
         $output = [];
 
-        foreach ($parameters as $parameter) {
-            $name = $parameter->getName();
-            $type = $parameter->getType();
+        foreach ($methodParameters as $parameter) {
+            $parameterName = $parameter->getName();
+            /** @var ReflectionNamedType $parameterType */
+            $parameterType = $parameter->getType();
 
             /**
              * At first, pass the route parameters
              */
             if (
-                isset($routerParams[$name])
+                isset($routerParams[$parameterName])
                 //assuming that router param has builtin type defined, or does not defined at all
-                && ($type === null || ($type !== null && $type->isBuiltin()))
+                && ($parameterType === null || ($parameterType !== null && $parameterType->isBuiltin()))
             ) {
-                $output[$name] = $routerParams[$name];
+                $output[$parameterName] = $routerParams[$parameterName];
                 continue;
             }
 
             //service or something from RequestContext requested
-            if ($type !== null && !$type->isBuiltin()) {
-                $class = (string)$type;
+            if ($parameterType !== null && !$parameterType->isBuiltin()) {
+                $class = $parameterType->getName();
 
                 if (($request = $this->matchRequestObject($class, $context)) !== null) {
-                    $output[$name] = $request;
+                    $output[$parameterName] = $request;
                     continue;
                 }
 
                 if ($class === Route::class) {
-                    $output[$name] = $context->getRoute();
+                    $output[$parameterName] = $context->getRoute();
                     continue;
                 }
 
@@ -304,12 +309,12 @@ class Dispatcher
                 $service = $this->container->findObjectByClassName($class);
 
                 if ($service !== null) {
-                    $output[$name] = $service;
+                    $output[$parameterName] = $service;
                     continue;
                 }
 
                 if ($autowireEnabled) {
-                    $output[$name] = $this->container->autowire((string)$type);
+                    $output[$parameterName] = $this->container->autowire($class);
                     continue;
                 }
 
@@ -319,7 +324,7 @@ class Dispatcher
                 continue;
             }
 
-            throw new RuntimeException('Missing service or route parameter with name "' . $name . '"');
+            throw new RuntimeException('Missing service or route parameter with name "' . $parameterName . '"');
         }
         return $output;
     }
