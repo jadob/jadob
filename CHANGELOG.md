@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Webhook] - in progress
 - [Core] Deferred logger
 
+
+## [0.1.1] - Release date SOON
+### Changed
+- [Security] [BC BREAK] Return value from RequestSupervisorInterface#handleAuthenticationFailure() can be null
+
 ## [0.1.0] - 2020-10-17
 ### Added
 - [EventDispatcher] Allow to specify priority for given listeners

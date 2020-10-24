@@ -59,13 +59,14 @@ interface RequestSupervisorInterface
 
     /**
      * Called when Authentication process will break for some reasons.
-     * Whether stateless or not, return value will be sent to user.
+     * Whether stateless or not, return value, if not null, will be sent to user.
+     * Otherwise, when there is null returned, supervisor will continue with request handling.
      *
      * @param AuthenticationException $exception
      * @param Request $request
      * @return Response
      */
-    public function handleAuthenticationFailure(AuthenticationException $exception, Request $request): Response;
+    public function handleAuthenticationFailure(AuthenticationException $exception, Request $request): ?Response;
 
     /**
      * If true, stored identity will be removed on request termination.
