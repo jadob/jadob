@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Webhook] - in progress
 - [Core] Deferred logger
 
-## [0.1.0] - Release Date TBA
+## [0.1.0] - 2020-10-17
 ### Added
 - [EventDispatcher] Allow to specify priority for given listeners
+- [Core] Added RequestContext::getUser() method
 ### Changed
 - [Security] [BC BREAK] Renamed `AuthStorage` to `IdentityStorage`
 ### Removed
