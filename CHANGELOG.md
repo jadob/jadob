@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Core] Deferred logger
 
 
-## [0.1.1] - Release date SOON
+## [0.1.1] - 2020-10-24
 ### Changed
 - [Security] [BC BREAK] Return value from RequestSupervisorInterface#handleAuthenticationFailure() can be null
 ### Fixed
