@@ -9,8 +9,7 @@ use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Guard\Guard;
 
 /**
- * Class UserRefreshListener
- *
+ * @TODO: this class is so freaking old that needs to be refactored ASAP
  * @package Jadob\Security\Auth\EventListener
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT

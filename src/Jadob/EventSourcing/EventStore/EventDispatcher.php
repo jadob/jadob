@@ -13,6 +13,7 @@ use function get_class;
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
+ * @deprecated
  */
 class EventDispatcher
 {
