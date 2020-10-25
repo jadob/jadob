@@ -2,6 +2,7 @@
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\RouterException;
 use function explode;
 use function strlen;
 use function substr;
@@ -40,6 +41,44 @@ class Context
      * @var string|null
      */
     protected ?string $alias = null;
+
+
+    /**
+     * @param string $baseUrl
+     * @return self
+     * @throws RouterException
+     */
+    public static function fromBaseUrl(string $baseUrl)
+    {
+        $url = parse_url($baseUrl);
+
+        if(!is_array($url)) {
+            throw new RouterException('Unable to create context from base url: Invalid URL passed');
+        }
+
+        if(!isset($url['host'])) {
+            throw new RouterException('Unable to create context from base url: Missing hostname');
+        }
+
+        $host = $url['host'];
+        if(isset($url['port'])) {
+            $port = $url['port'];
+        } elseif($url['scheme'] === 'http') {
+            $port = 80;
+        } else {
+            $port = 443;
+        }
+
+        $self = new self();
+        $self->setHost($host)
+            ->setPort($port);
+
+        if(isset($url['scheme']) && $url['scheme'] === 'https') {
+            $self->setSecure(true);
+        }
+
+        return $self;
+    }
 
     /**
      * @return Context
@@ -161,6 +200,7 @@ class Context
         $this->alias = $alias;
         return $this;
     }
+
 
 
 }

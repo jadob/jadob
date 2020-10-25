@@ -42,9 +42,17 @@ class RouterServiceProvider implements ServiceProviderInterface
                 }
 
                 $context = Context::fromGlobals();
-                if (isset($config['context'])) {
+                if (isset($config['context']) && empty($config['context']['base_url'])) {
                     $context->setHost($config['context']['host']);
                     $context->setPort($config['context']['port']);
+                }
+
+                if(isset($config['context']['base_url'])) {
+                    $context = Context::fromBaseUrl($config['context']['base_url']);
+                }
+
+                if(isset($config['force_https']) && (bool)$config['force_https'] === true) {
+                    $context->setSecure(true);
                 }
 
                 return new Router($collection, $context);
