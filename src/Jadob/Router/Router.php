@@ -204,7 +204,7 @@ class Router
 
                     $isFound = 0;
                     if (!is_array($param)) {
-                        $convertedPath = str_replace('{' . $key . '}', $param, $convertedPath, $isFound);
+                        $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
                     }
 
                     if ($isFound === 0) {
