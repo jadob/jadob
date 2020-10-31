@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Router] add `context.base_url` option
 ### Changed
 - [Router] refreshed documentation
-
+- Bumped Psalm version to make it running on php8
 
 ## [0.1.1] - 2020-10-24
 ### Changed
