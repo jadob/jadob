@@ -35,7 +35,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     public function register($config)
     {
         return [
-            'router' => function (Container $container) use ($config) {
+            'router' => static function () use ($config): Router {
                 $collection = $config['routes'];
                 if (\is_array($config['routes'])) {
                     $collection = RouteCollection::fromArray($config['routes']);
