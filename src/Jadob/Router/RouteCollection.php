@@ -69,6 +69,8 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
 
     /**
      * Merges passed $collection with current object.
+     * At this level there is no need to merge paths with prefixes, as Route#getPath() will ask his parentCollection
+     * (if exists) for full prefix.
      *
      * @param RouteCollection $collection
      * @return RouteCollection
@@ -238,15 +240,38 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
         $routeCollection = new self();
 
         foreach ($data as $routeName => $routeArray) {
+            /**
+             * Prevents from passing invalid values to further processing.
+             * @TODO drop it or refactor, as input typehints should handle this too
+             */
             if (is_integer($routeName) && is_string($routeArray)) {
-                throw new RouterException('Route "' . $routeArray . '" looks malformed. Please provide a valid array as a value for this route.');
+                throw new RouterException('Route or collection"' . $routeArray . '" looks malformed. Please provide a valid array as a value for this route.');
             }
 
-            if (!isset($routeArray['name'])) {
-                $routeArray['name'] = $routeName;
-            }
+            /**
+             * Allows to add Route collections directly in array of routes.
+             * Collections array MUST contain both prefix and routes keys, which single route SHOULD NOT have.
+             * Also: $routeName in case of collections has symbolic meaning, this name would not be registered in router anyway.
+             */
+            if (isset($routeArray['prefix'], $routeArray['routes']) && is_array($routeArray['routes'])) {
+                $nestedRouteCollection = RouteCollection::fromArray($routeArray['routes']);
+                $nestedRouteCollection->setPrefix($routeArray['prefix']);
 
-            $routeCollection->addRoute(Route::fromArray($routeArray));
+                /**
+                 * In collections, only prefix is required.
+                 */
+                if(isset($routeArray['host'])) {
+                    $nestedRouteCollection->setHost($routeArray['host']);
+                }
+
+                $routeCollection->addCollection($nestedRouteCollection);
+            } else {
+                if (!isset($routeArray['name'])) {
+                    $routeArray['name'] = $routeName;
+
+                }
+                $routeCollection->addRoute(Route::fromArray($routeArray));
+            }
         }
 
         return $routeCollection;
