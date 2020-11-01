@@ -46,4 +46,24 @@ Where:
   
 Only `path` and `controller` are required, `action` defaults to `__invoke` when not passed.
 
+It's also possible to define a route collection by using this syntax:
+
+````
+'app_with_locale' => [
+        'prefix' => '/{_locale}',
+        'host' => 'example.com',
+        'routes' => [
+            
+        ]
+    ]
+````
+Where:
+- `prefix` defines a common prefix for all routes in collection *(Required)*;
+- `routes` defines an array of routes *(Required)*;
+- `host` defines a common host for all of routes in this collection.
+
+In this case, array-key has a symbolic meaning and would be ignored.
+
+
+
 

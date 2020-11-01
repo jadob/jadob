@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Webhook] - in progress
 - [Core] Deferred logger
 
+## [0.1.3] - 2020-11-07
+### Added
+- [Router] Nesting Route collections in array of routes
+
 ## [0.1.2] - 2020-10-31
 ### Added
 - [Router] add `force_https` option
