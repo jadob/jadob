@@ -26,6 +26,7 @@ class IdentityStorage
      */
     public function getUser(SessionInterface $session, ?string $provider = null): ?UserInterface
     {
+        /** @var string|null $userFromSession */
         $userFromSession = $session->get($this->buildSessionKey($provider));
         if ($userFromSession === null) {
             return null;

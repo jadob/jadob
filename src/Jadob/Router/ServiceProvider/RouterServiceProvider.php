@@ -28,9 +28,6 @@ class RouterServiceProvider implements ServiceProviderInterface
     /**
      * @param  $config
      * @return \Closure[]
-     * @throws \Jadob\Router\Exception\RouterException
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function register($config)
     {

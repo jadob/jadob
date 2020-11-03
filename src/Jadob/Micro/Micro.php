@@ -55,7 +55,7 @@ class Micro /**
     /**
      * Micro uses the same codebase as Jadob so both will have the same versions.
      *
-     * @var string;
+     * @var string
      */
     public const VERSION = '0.1.2';
 
