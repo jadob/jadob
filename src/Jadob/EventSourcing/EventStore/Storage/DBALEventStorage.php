@@ -18,9 +18,12 @@ class DBALEventStorage implements EventStorageInterface
     public const STRATEGY_TABLE_PER_TYPE = 2;
     public const STRATEGY_ONE_TABLE_FOR_ALL = 3;
 
-    protected $dbal;
+    protected Connection $dbal;
 
-    protected $config = [];
+    /**
+     * @var array{aggregate_table_name?: string, aggregate_table_prefix?: string, bulk_inserts?: false, events_table_name?: string, strategy?: int}
+     */
+    protected array $config = [];
 
     /**
      * DBALEventStorage constructor.

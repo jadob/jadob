@@ -189,11 +189,11 @@ class Router
      * @param $params
      * @param bool $full
      *
-     * @return mixed|string
+     * @return string
      *
      * @throws RouteNotFoundException
      */
-    public function generateRoute(string $name, array $params = [], $full = false)
+    public function generateRoute(string $name, array $params = [], $full = false): string
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
