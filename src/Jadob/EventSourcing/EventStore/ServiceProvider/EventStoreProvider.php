@@ -66,8 +66,9 @@ class EventStoreProvider implements ServiceProviderInterface
                 $connection = $container->get('doctrine.dbal.' . $connectionName);
 
                 if ($separateLogger) {
-                    $logDir = $container->get(BootstrapInterface::class)->getLogsDir() . '/event_store.log';
-                    $stream = new StreamHandler($logDir);
+                    $logDir = $container->get(BootstrapInterface::class)->getLogsDir();
+                    $logPath = $logDir. '/event_store.log';
+                    $stream = new StreamHandler($logPath);
                     $logger = new Logger('event_store', [$stream]);
                 } else {
                     $logger = $container->get(LoggerInterface::class);

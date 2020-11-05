@@ -43,7 +43,7 @@ class PagerfantaExtension extends AbstractExtension
     }
 
     /**
-     * @return array|TwigFunction[]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {

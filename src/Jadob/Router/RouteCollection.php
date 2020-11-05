@@ -35,10 +35,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
      */
     protected $routes = [];
 
-    /**
-     * @var RouteCollection
-     */
-    protected $parentCollection;
+    protected ?RouteCollection $parentCollection = null;
 
     /**
      * RouteCollection constructor.

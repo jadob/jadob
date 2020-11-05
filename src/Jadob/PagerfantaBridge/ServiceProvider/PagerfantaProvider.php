@@ -17,35 +17,26 @@ use Jadob\PagerfantaBridge\Twig\Extension\PagerfantaExtension;
 class PagerfantaProvider implements ServiceProviderInterface
 {
 
-    /**
-     * returns Config node name that will be passed as $config in register() method.
-     * return null if no config needed.
-     *
-     * @return string|null.
-     */
     public function getConfigNode()
     {
         return null;
     }
 
     /**
-     * @param Container  $container
      * @param array|null $config
      *
-     * @throws \Jadob\Container\Exception\ServiceNotFoundException
-     *
-     * @return void
+     * @return array
      */
-    public function register( $config)
+    public function register($config)
     {
-        $container->add(
+        return [
             'pagerfanta.extension', function (Container $container) {
                 return new PagerfantaExtension(
                     $container->get('request'),
                     $container->get('router')
                 );
             }
-        );
+        ];
     }
 
     /**

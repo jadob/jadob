@@ -32,6 +32,7 @@ class IdentityStorage
             return null;
         }
 
+        /** @var UserInterface|false $user */
         $user = unserialize($userFromSession);
         if ($user !== false) {
             return $user;

@@ -12,30 +12,16 @@ namespace Jadob\Url;
  */
 class Url
 {
-    /**
-     * @var string|null
-     */
-    protected $url;
 
-    /**
-     * @var string
-     */
-    protected $scheme;
+    protected ?string $url = null;
 
-    /**
-     * @var int
-     */
-    protected $port;
+    protected ?string $scheme = null;
 
-    /**
-     * @var string
-     */
-    protected $host;
+    protected ?int $port = null;
 
-    /**
-     * @var string
-     */
-    protected $path;
+    protected ?string $host = null;
+
+    protected ?string $path = null;
 
     /**
      * @var array
@@ -43,9 +29,10 @@ class Url
     protected $query = [];
 
     /**
-     * @var bool
+     * URL has changed since last build
+     * @TODO to be dropped, or class to be refactored to be immutable
      */
-    protected $changed = false;
+    protected bool $changed = false;
 
     /**
      * Url constructor.
@@ -127,12 +114,21 @@ class Url
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getScheme(): string
+    public function getScheme(): ?string
     {
         return $this->scheme;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
 
     /**
      * @param string $scheme
@@ -145,13 +141,7 @@ class Url
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
+
 
     /**
      * @param string $path
@@ -166,7 +156,7 @@ class Url
 
     /**
      * @param string $key
-     * @param string|int|array $value
+     * @param array|string|int $value
      * @return $this
      */
     public function addQueryParameter(string $key, $value): self
