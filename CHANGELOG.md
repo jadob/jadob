@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [0.1.4] - 2021-01-16
 ### Added
 - [AwsBridge] Added `AssumeRoleSesMailer`
 - [DoctrineAnnotationsBridge] added DoctrineAnnotationsProvider
+- [Core] added `AbstractController#url` method
+### Changed
+- [Supervisor] [BC BREAK] `Supervisor` now requires a `LoggerInterface` in constructor 
+### Fixed
+- [AwsBridge] `RoleSessionName` now contains only alphanumeric random values and AWS SDK is not throwing exceptions
+
+
 
 ## [0.1.3] - 2020-12-04
 ### Added
