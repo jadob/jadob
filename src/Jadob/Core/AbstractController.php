@@ -85,6 +85,19 @@ abstract class AbstractController
         return $this->container->get('router')->generateRoute($name, $params, $full);
     }
 
+
+    /**
+     * @param $name
+     * @param array $params
+     * @return string
+     * @throws ServiceNotFoundException
+     * @throws \Jadob\Container\Exception\ContainerException
+     */
+    protected function url($name, array $params = []): string
+    {
+        return $this->container->get('router')->generateRoute($name, $params, true);
+    }
+
     /**
      * @param string $name
      * @param array $params
