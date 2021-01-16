@@ -41,7 +41,7 @@ class AssumeRoleSesMailer extends SesMailer
 
             $assumedCredentials = $stsClient->assumeRole([
                 'RoleArn' => $this->roleToAssumeArn,
-                'RoleSessionName' => 'JadobAssumeRole' . base64_decode(random_bytes(10)),
+                'RoleSessionName' => 'JadobAssumeRole' . md5(base64_encode(random_bytes(10))),
             ])->toArray();
 
             $this->assumedCredentials = $assumedCredentials;
