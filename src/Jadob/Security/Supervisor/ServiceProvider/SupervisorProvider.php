@@ -12,6 +12,7 @@ use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Auth\ServiceProvider\AuthProvider;
 use Jadob\Security\Supervisor\EventListener\SupervisorListener;
 use Jadob\Security\Supervisor\Supervisor;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -43,7 +44,12 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
         return [
             Supervisor::class => static function (ContainerInterface $container) use ($config) {
 
-                $supervisor = new Supervisor();
+                /** @noinspection MissingService */
+                $logger = new Logger('supervisor', [
+                    $container->get('logger.handler.default')
+                ]);
+
+                $supervisor = new Supervisor($logger);
                 foreach ($config['supervisors'] as $supervisorName => $supervisorConfig) {
                     $supervisor->addRequestSupervisor(
                         $supervisorName,

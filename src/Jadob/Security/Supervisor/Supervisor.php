@@ -5,6 +5,7 @@ namespace Jadob\Security\Supervisor;
 
 use Jadob\Security\Auth\UserProviderInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use function spl_object_hash;
 
@@ -24,19 +25,32 @@ class Supervisor
      */
     protected array $userProviders = [];
 
+    protected LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Finds out which supervisor can handle given request.
-     * @param  Request $request
+     * @param Request $request
      * @return RequestSupervisorInterface|null
      */
     public function matchRequestSupervisor(Request $request): ?RequestSupervisorInterface
     {
+        $pathName = $request->attributes->get('path_name');
+
         foreach ($this->requestSupervisors as $requestSupervisor) {
             if ($requestSupervisor->supports($request)) {
+                $this->logger->debug(
+                    sprintf('Path "%s" is supported by "%s" supervisor.', $pathName, get_class($requestSupervisor))
+                );
                 return $requestSupervisor;
             }
         }
 
+        $this->logger->debug(sprintf('Path "%s" is not supported by any supervisor.', $pathName));
         return null;
     }
 
