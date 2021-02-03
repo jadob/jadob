@@ -104,8 +104,7 @@ class SupervisorListener implements ListenerProviderInterface
         try {
             $credentials = $supervisor->extractCredentialsFromRequest($request);
 
-            //break if no credentials found
-            if ($credentials === null || $credentials === false || count($credentials) === 0) {
+            if ($credentials === null || $credentials === false || (is_countable($credentials) && count($credentials) === 0)) {
                 throw UserNotFoundException::emptyCredentials();
             }
 
