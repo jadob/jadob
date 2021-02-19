@@ -10,7 +10,9 @@ use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger;
+use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
@@ -29,6 +31,7 @@ use Symfony\Component\Console\Helper\HelperSet;
  */
 class DoctrineDBALProvider implements ServiceProviderInterface
 {
+    private const CONNECTION_SERVICE_NAME_FORMAT = 'doctrine.dbal.%s';
 
     /**
      * {@inheritdoc}
@@ -81,6 +84,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             return $logger;
         };
 
+
         $services[Configuration::class] = function (ContainerInterface $container): \Doctrine\DBAL\Configuration {
             $configuration = new Configuration();
             $configuration->setSQLLogger($container->get('doctrine.dbal.query.logger'));
@@ -88,15 +92,29 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             return $configuration;
         };
 
+        $defaultConnectionName = null;
         foreach ($config['connections'] as $connectionName => $configuration) {
-            $services['doctrine.dbal.' . $connectionName] = function (ContainerInterface $container) use ($configuration, $eventManager): \Doctrine\DBAL\Connection {
+
+            $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
+            if (isset($configuration['default']) && (bool)$configuration['default']) {
+                if ($defaultConnectionName !== null) {
+                    throw new \InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');
+                }
+
+                $defaultConnectionName = $connectionName;
+            }
+
+            $services[$serviceName] = function (ContainerInterface $container) use ($configuration, $eventManager): \Doctrine\DBAL\Connection {
                 return DriverManager::getConnection(
                     $configuration,
                     $container->get(Configuration::class),
                     $eventManager
                 );
             };
+        }
 
+        if ($defaultConnectionName === null) {
+            throw new \InvalidArgumentException('There is no default DBAL connections defined! Check your configuration file.');
         }
 
         return $services;
@@ -130,6 +148,25 @@ class DoctrineDBALProvider implements ServiceProviderInterface
                     new RunSqlCommand()
                 ]
             );
+        }
+
+        if ($container->has(ManagerRegistry::class)) {
+
+            /** @var DoctrineManagerRegistry $managerRegistry */
+            $managerRegistry = $container->get(ManagerRegistry::class);
+            foreach ($config['connections'] as $connectionName => $configuration) {
+
+                $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
+
+                $managerRegistry->addConnection(
+                    $connectionName,
+                    $container->get($serviceName)
+                );
+
+                if($configuration['default']) {
+                    $managerRegistry->setDefaultConnectionName($connectionName);
+                }
+            }
         }
     }
 }
