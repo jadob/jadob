@@ -15,7 +15,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
+use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -62,8 +64,17 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
 
         $annotationsRegistered = false;
         $services = [];
+        $defaultManagerName = null;
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
+
+            if (isset($configuration['default']) && (bool)$configuration['default']) {
+                if ($defaultManagerName !== null) {
+                    throw new \InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
+                }
+
+                $defaultManagerName = $managerName;
+            }
 
             $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container)
             use (
@@ -162,6 +173,24 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
             $console->setHelperSet($helperSet);
 
             ConsoleRunner::addCommands($console);
+        }
+
+        if ($container->has(ManagerRegistry::class)) {
+            /** @var DoctrineManagerRegistry $managerRegistry */
+            $managerRegistry = $container->get(ManagerRegistry::class);
+            foreach ($config['managers'] as $connectionName => $configuration) {
+
+                $serviceName = sprintf('doctrine.orm.%s', $connectionName);
+
+                $managerRegistry->addManager(
+                    $connectionName,
+                    $container->get($serviceName)
+                );
+
+                if($configuration['default']) {
+                    $managerRegistry->setDefaultManagerName($connectionName);
+                }
+            }
         }
     }
 

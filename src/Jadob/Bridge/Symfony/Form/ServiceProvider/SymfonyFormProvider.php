@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -54,6 +56,16 @@ class SymfonyFormProvider implements ServiceProviderInterface
                 $formFactoryBuilder = Forms::createFormFactoryBuilder()
                     ->addExtension(new HttpFoundationExtension())
                     ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
+
+                //@TODO: remove this when there will be container tags implemented
+                if (
+                    class_exists(DoctrineOrmExtension::class)
+                    && $container->has(ManagerRegistry::class)
+                ) {
+                    $formFactoryBuilder->addExtension(
+                        new DoctrineOrmExtension($container->get(ManagerRegistry::class))
+                    );
+                }
 
                 return $formFactoryBuilder->getFormFactory();
             }
