@@ -207,6 +207,12 @@ class Router
                         $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
                     }
 
+                    if($isFound !== 0 && is_array($param)) {
+                        throw new RouterException(
+                            sprintf('Param "%s" cannot be injected into route "%s" as it is an array.', $param, $name)
+                        );
+                    }
+
                     if ($isFound === 0) {
                         $paramsToGET[$key] = $param;
                     }
