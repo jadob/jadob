@@ -173,7 +173,7 @@ class Router
      */
     protected function getRegex(?string $pattern)
     {
-        if (preg_match('/[^-:.\/_{}()a-zA-Z\d]/', $pattern)) {
+        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', $pattern)) {
             return false; // Invalid pattern
         }
 
