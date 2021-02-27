@@ -21,6 +21,8 @@ use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\ServiceProvider\RouterServiceProvider;
+use Jadob\Runtime\RuntimeFactory;
+use Jadob\Runtime\RuntimeInterface;
 use Monolog\Handler\StreamHandler;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -105,6 +107,8 @@ class Kernel
      */
     protected bool $psr7Compliant = false;
 
+    private RuntimeInterface $runtime;
+
     /**
      * @param string $env
      * @param BootstrapInterface $bootstrap
@@ -118,9 +122,10 @@ class Kernel
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
 
+        $this->runtime = RuntimeFactory::fromGlobals();
         $env = strtolower($env);
         $this->env = $env;
-        $this->bootstrap = $bootstrap;
+        $this->bootstrap = $this->wrapBootstrapClass($bootstrap, $this->runtime);
         $this->deferLogs = $deferLogs;
         $this->logger = $this->initializeLogger();
 
@@ -130,6 +135,19 @@ class Kernel
 
         $this->eventDispatcher = new EventDispatcher();
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
+
+
+    }
+
+    private function wrapBootstrapClass(BootstrapInterface $bootstrap, RuntimeInterface $runtime): BootstrapInterface
+    {
+        $runtimeTmpDir = $runtime->getTmpDir();
+
+        if($runtimeTmpDir === null) {
+            return $bootstrap;
+        }
+
+        return new WrappedBootstrap($bootstrap, $runtimeTmpDir);
     }
 
     /**
@@ -260,6 +278,7 @@ class Kernel
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
+            $containerBuilder->add(RuntimeInterface::class, $this->runtime);
             $containerBuilder->setServiceProviders($serviceProviders);
 
             $containerBuilder->add(SessionHandlerFactory::class, static function (): SessionHandlerFactory {
