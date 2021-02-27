@@ -107,7 +107,9 @@ class Kernel
      */
     protected bool $psr7Compliant = false;
 
-    private RuntimeInterface $runtime;
+    protected RuntimeInterface $runtime;
+
+    protected RequestContextStore $contextStore;
 
     /**
      * @param string $env
@@ -134,6 +136,7 @@ class Kernel
         $errorHandler->registerExceptionHandler();
 
         $this->eventDispatcher = new EventDispatcher();
+        $this->contextStore = new RequestContextStore();
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
 
 
@@ -200,6 +203,7 @@ class Kernel
 
 
         $context->setSession($session);
+        $this->contextStore->push($context);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
         $dispatcher = new Dispatcher(
@@ -279,6 +283,7 @@ class Kernel
             $containerBuilder->add(LoggerInterface::class, $this->logger);
             $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
             $containerBuilder->add(RuntimeInterface::class, $this->runtime);
+            $containerBuilder->add(RequestContextStore::class, $this->contextStore);
             $containerBuilder->setServiceProviders($serviceProviders);
 
             $containerBuilder->add(SessionHandlerFactory::class, static function (): SessionHandlerFactory {

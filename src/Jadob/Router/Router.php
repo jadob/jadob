@@ -6,6 +6,7 @@ namespace Jadob\Router;
 
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Exception\RouterException;
 use Symfony\Component\HttpFoundation\Request;
 use function array_filter;
 use function array_flip;
@@ -42,12 +43,20 @@ class Router
      */
     protected $context;
 
+    protected ?ParameterStoreInterface $paramStore;
+
     /**
      * @param RouteCollection $routeCollection
      * @param Context|null $context
      * @param array $config
+     * @param ParameterStoreInterface|null $paramStore
      */
-    public function __construct(RouteCollection $routeCollection, ?Context $context = null, array $config = [])
+    public function __construct(
+        RouteCollection $routeCollection,
+        ?Context $context = null,
+        array $config = [],
+        ?ParameterStoreInterface $paramStore = null
+    )
     {
         $this->routeCollection = $routeCollection;
 
@@ -62,6 +71,8 @@ class Router
         } else {
             $this->context = Context::fromGlobals();
         }
+
+        $this->paramStore = $paramStore;
     }
 
     /**
@@ -191,23 +202,39 @@ class Router
      *
      * @return string
      *
-     * @throws RouteNotFoundException
+     * @throws RouteNotFoundException|RouterException
      */
     public function generateRoute(string $name, array $params = [], $full = false): string
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
-                $path = $this->context->getAlias().$route->getPath();
+                $path = $this->context->getAlias() . $route->getPath();
                 $paramsToGET = [];
                 $convertedPath = $path;
-                foreach ($params as $key => $param) {
+                $convertedPathParams = $this->extractPathParams($convertedPath);
 
+                foreach ($convertedPathParams as $convertedPathParam) {
+                    if (isset($params[$convertedPathParam])) {
+                        continue;
+                    }
+
+                    if ($this->paramStore !== null && $this->paramStore->has($convertedPathParam)) {
+                        $params[$convertedPathParam] = $this->paramStore->get($convertedPathParam);
+                        continue;
+                    }
+
+                    throw new RouterException(
+                        sprintf('Unable to generate path "%s": missing "%s" param', $name, $convertedPathParam)
+                    );
+                }
+
+                foreach ($params as $key => $param) {
                     $isFound = 0;
                     if (!is_array($param)) {
                         $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
                     }
 
-                    if($isFound !== 0 && is_array($param)) {
+                    if ($isFound !== 0 && is_array($param)) {
                         throw new RouterException(
                             sprintf('Param "%s" cannot be injected into route "%s" as it is an array.', $param, $name)
                         );
@@ -252,6 +279,17 @@ class Router
         }
 
         throw new RouteNotFoundException('Route "' . $name . '" is not defined');
+
+    }
+
+
+    protected function extractPathParams(string $path): array
+    {
+        $regexp = '@\{(.+?)\}@i';
+        $matches = [];
+        preg_match_all($regexp, $path, $matches);
+
+        return end($matches);
 
     }
 

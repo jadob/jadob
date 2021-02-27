@@ -5,9 +5,12 @@ namespace Jadob\Router\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Core\RequestContextStore;
 use Jadob\Router\Context;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
+use Jadob\Router\StickyParameterStore;
+use Psr\Container\ContainerInterface;
 
 /**
  * @package Jadob\Router\ServiceProvider
@@ -32,7 +35,7 @@ class RouterServiceProvider implements ServiceProviderInterface
     public function register($config)
     {
         return [
-            'router' => static function () use ($config): Router {
+            'router' => static function (ContainerInterface $container) use ($config): Router {
                 $collection = $config['routes'];
                 if (\is_array($config['routes'])) {
                     $collection = RouteCollection::fromArray($config['routes']);
@@ -52,7 +55,14 @@ class RouterServiceProvider implements ServiceProviderInterface
                     $context->setSecure(true);
                 }
 
-                return new Router($collection, $context);
+                return new Router(
+                    $collection,
+                    $context,
+                    $config,
+                    new StickyParameterStore(
+                        $container->get(RequestContextStore::class)
+                    )
+                );
             }];
 
     }
