@@ -1,0 +1,36 @@
+{% extends '@JadobDashboard/base.html.twig' %}
+{% set page_title = 'Dashboard' %}
+{% set page_header = dashboard.title %}
+{% set page_subheader = request_date|date('Y-m-d H:i:s') %}
+{% block content %}
+    <div class="container mx-auto">
+        <div class="grid grid-cols-3 gap-3">
+            {% for component in dashboard.grid.components %}
+                {% set component_container_classes = 'dashboard-component' %}
+                {% if component.span is not null %}
+                    {% set component_container_classes = component_container_classes ~ ' col-span-' ~ component.span %}
+                {% endif %}
+                <div class="{{ component_container_classes }}">
+                    <div class="px-4 py-6 sm:px-0">
+                        <div class="border-4 border-dashed border-gray-200 rounded-lg h-96">
+                            <p class="component-title mx-2 my-2 font-semibold text-gray-600 tracking-wide ">
+                                {{ component.title }}
+                            </p>
+                            <div class="mx-2 my-2 component-content">
+                                {% include
+                                    dashboard_get_template(component.provider)
+                                    with dashboard_get_component_data(
+                                        component.provider,
+                                        request,
+                                        request_date,
+                                        component.context
+                                    )
+                                %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
