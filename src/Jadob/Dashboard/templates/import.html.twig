@@ -1,0 +1,19 @@
+{% extends '@JadobDashboard/base.html.twig' %}
+{% set page_title = 'Bulk Import' %}
+{% set page_header = object_fqcn %}
+{% set page_subheader %}
+    Bulk Import
+{% endset %}
+{% set dashboard_name = 'import' %}
+{% block content %}
+    <div class="container mx-auto">
+        <div class="grid grid-cols-2 gap-4">
+            {% for form in forms %}
+                <div class="form-{{ form.name }}">
+                    <h3 class="text-xl">{{ form.title }}</h3>
+                    {{ form(form.form.createView()) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
