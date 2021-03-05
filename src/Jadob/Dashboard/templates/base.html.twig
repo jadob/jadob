@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ page_title }}</title>
+    <link href="{{ asset_aliased('tailwind2') }}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="bg-gray-800">
+    <div class="p-4 sm:px-6 lg:px-8">
+        <div class="text-white">
+            Backoffice
+        </div>
+    </div>
+</nav>
+<main>
+    <div class="flex">
+        <div class="flex-none w-1/6 bg-gray-100">
+            <div class="px-2 pt-2 pb-3">
+                <p>
+                    <strong class="text-sm tracking-wide text-gray-400">
+                        Managed objects:
+                    </strong>
+                </p>
+                <ul>
+                    {% for obj in dashboard_config.managedObjects %}
+                        <li class="px-3 py-2 text-base">
+                            <a href="{{ dashboard_path_object_list(obj) }}"
+                               class="text-gray-500 hover:text-gray-700">
+                                {{ obj|split('\\')|last }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="flex-grow">
+            <header class="bg-white shadow">
+                <div class="py-6 px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold leading-tight text-gray-900">
+                        {{ page_header }}
+                    </h1>
+                    <h2 class="leading-tight text-gray-500">
+                        {{ page_subheader }}
+                    </h2>
+                </div>
+            </header>
+            <div data-dashboard-name="{{ dashboard_name }}"
+                 class="jadob dashboard dashboard-{{ dashboard_name }} py-6 sm:px-6 lg:px-8">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
