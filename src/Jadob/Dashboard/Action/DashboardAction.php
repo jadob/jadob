@@ -20,6 +20,7 @@ use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -245,97 +246,176 @@ class DashboardAction
         $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
         $managedObjectConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn);
 
-        if (!isset($managedObjectConfiguration['import']) || count($managedObjectConfiguration['import']) === 0) {
+        if (!isset($managedObjectConfiguration['imports']) || count($managedObjectConfiguration['imports']) === 0) {
             throw new RuntimeException('There is no import configured for this managed object.');
         }
 
-        $imports = $managedObjectConfiguration['import'];
+        $imports = $managedObjectConfiguration['imports'];
 
         $forms = [];
         foreach ($imports as $key => $import) {
-            $form['title'] = $import['name'];
-            $form['name'] = $key;
-            $formObject = $this
-                ->formFactory
-                ->createNamedBuilder($key)
-                ->add('file', FileType::class, [
-                    'constraints' => [
-                        new File(['mimeTypes' => $import['mime']])
-                    ]
-                ])
-                ->add('submit', SubmitType::class)
-                ->getForm();
+            if ($import['type'] === 'csv_upload') {
+                $form['title'] = $import['name'];
+                $form['name'] = $key;
+                $formObject = $this
+                    ->formFactory
+                    ->createNamedBuilder($key)
+                    ->add('file', FileType::class, [
+                        'constraints' => [
+                            new File(['mimeTypes' => $import['mime']])
+                        ]
+                    ])
+                    ->add('submit', SubmitType::class)
+                    ->getForm();
 
-            $formObject->handleRequest($request);
-            if ($formObject->isSubmitted() && $formObject->isValid()) {
-                $this->logger->info('Form submitted, proceeding to process file.');
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $formObject->get('file')->getData();
-                $fileHandler = $uploadedFile->openFile();
-                $firstLine = true;
-                $headers = [];
-                foreach ($fileHandler as $line) {
-                    if ($firstLine) {
-                        $firstLine = false;
-                        $headers = array_flip(str_getcsv($line));
-                        $this->logger->info('Found headers in uploaded file.', [
-                            'headers' => $headers
-                        ]);
+                $formObject->handleRequest($request);
+                if ($formObject->isSubmitted() && $formObject->isValid()) {
+                    $this->logger->info('Form submitted, proceeding to process file.');
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFile = $formObject->get('file')->getData();
+                    $fileHandler = $uploadedFile->openFile();
+                    $firstLine = true;
+                    $headers = [];
+                    foreach ($fileHandler as $line) {
+                        if ($firstLine) {
+                            $firstLine = false;
+                            $headers = array_flip(str_getcsv($line));
+                            $this->logger->info('Found headers in uploaded file.', [
+                                'headers' => $headers
+                            ]);
 
-                        continue;
-                    }
-
-                    $reflectionObject = new ReflectionClass($objectFqcn);
-                    $instance = $reflectionObject->newInstanceWithoutConstructor();
-                    $csvLine = str_getcsv($line);
-
-                    if (count($csvLine) !== count($headers)) {
-                        $this->logger->warning('Error while importing a file: line does not matches headers, line will be skipped.', [
-                            'line' => $csvLine,
-                            'headers' => $headers
-                        ]);
-                        continue;
-                    }
-
-                    foreach ($import['mapping'] as $csvHeader => $property) {
-                        $valueToInsert = $csvLine[$headers[$csvHeader]];
-                        $reflectionProp = $reflectionObject->getProperty($property);
-                        $reflectionProp->setAccessible(true);
-                        $reflectionProp->setValue($instance, $valueToInsert);
-                    }
-
-                    if (isset($import['before_insert'])) {
-                        if (!($import['before_insert'] instanceof Closure)) {
-                            throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                            continue;
                         }
 
-                        $import['before_insert']($instance);
-                    }
+                        $reflectionObject = new ReflectionClass($objectFqcn);
+                        $instance = $reflectionObject->newInstanceWithoutConstructor();
+                        $csvLine = str_getcsv($line);
 
-                    $this->doctrineOrmObjectManager->persist($instance);
-
-                    if (isset($import['post_insert'])) {
-                        if (!($import['post_insert'] instanceof Closure)) {
-                            throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                        if (count($csvLine) !== count($headers)) {
+                            $this->logger->warning('Error while importing a file: line does not matches headers, line will be skipped.', [
+                                'line' => $csvLine,
+                                'headers' => $headers
+                            ]);
+                            continue;
                         }
 
-                        $import['post_insert']($instance);
+                        foreach ($import['mapping'] as $csvHeader => $property) {
+                            $valueToInsert = $csvLine[$headers[$csvHeader]];
+                            $reflectionProp = $reflectionObject->getProperty($property);
+                            $reflectionProp->setAccessible(true);
+                            $reflectionProp->setValue($instance, $valueToInsert);
+                        }
+
+                        if (isset($import['before_insert'])) {
+                            if (!($import['before_insert'] instanceof Closure)) {
+                                throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                            }
+
+                            $import['before_insert']($instance);
+                        }
+
+                        $this->doctrineOrmObjectManager->persist($instance);
+
+                        if (isset($import['post_insert'])) {
+                            if (!($import['post_insert'] instanceof Closure)) {
+                                throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                            }
+
+                            $import['post_insert']($instance);
+                        }
                     }
+
+                    $this->logger->info('Finished processing file, redirecting to listing page.');
+                    return new RedirectResponse($this->urlGenerator->generateRoute(
+                        'jadob_dashboard_action',
+                        [
+                            QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
+                            QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                            QueryStringParamName::OBJECT_NAME => $objectFqcn
+                        ]
+                    ));
                 }
 
-                $this->logger->info('Finished processing file, redirecting to listing page.');
-                return new RedirectResponse($this->urlGenerator->generateRoute(
-                    'jadob_dashboard_action',
-                    [
-                        QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                        QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
-                        QueryStringParamName::OBJECT_NAME => $objectFqcn
-                    ]
-                ));
+                $form['form'] = $formObject;
+                $forms[] = $form;
             }
 
-            $form['form'] = $formObject;
-            $forms[] = $form;
+            if($import['type'] === 'paste_csv') {
+
+                $form['title'] = $import['name'];
+                $form['name'] = $key;
+                $formObject = $this
+                    ->formFactory
+                    ->createNamedBuilder($key)
+                    ->add('content', TextareaType::class, [
+                    ])
+                    ->add('submit', SubmitType::class)
+                    ->getForm();
+
+                $formObject->handleRequest($request);
+                if ($formObject->isSubmitted() && $formObject->isValid()) {
+
+
+                    $this->logger->info('Form submitted, proceeding to handle upload.');
+                    $content = $formObject->get('content')->getData();
+                    $splittedContent = explode(PHP_EOL, $content);
+
+                    $mapping = $import['mapping'];
+                    $headers = [];
+                    foreach ($splittedContent as $line) {
+                        $reflectionObject = new ReflectionClass($objectFqcn);
+                        $instance = $reflectionObject->newInstanceWithoutConstructor();
+                        $csvLine = str_getcsv($line, $import['separator'] ?? ',');
+
+
+                        if (count($csvLine) !== count($mapping)) {
+                            $this->logger->warning('Error while importing a file: line does not matches headers, line will be skipped.', [
+                                'line' => $csvLine,
+                                'headers' => $headers
+                            ]);
+                            continue;
+                        }
+
+                        foreach ($mapping as $csvHeader => $property) {
+                            $valueToInsert = $csvLine[$csvHeader];
+                            $reflectionProp = $reflectionObject->getProperty($property);
+                            $reflectionProp->setAccessible(true);
+                            $reflectionProp->setValue($instance, $valueToInsert);
+                        }
+
+                        if (isset($import['before_insert'])) {
+                            if (!($import['before_insert'] instanceof Closure)) {
+                                throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                            }
+
+                            $import['before_insert']($instance);
+                        }
+
+                        $this->doctrineOrmObjectManager->persist($instance);
+
+                        if (isset($import['post_insert'])) {
+                            if (!($import['post_insert'] instanceof Closure)) {
+                                throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
+                            }
+
+                            $import['post_insert']($instance);
+                        }
+                    }
+
+                    $this->logger->info('Finished processing uploaded content, redirecting to listing page.');
+                    return new RedirectResponse($this->urlGenerator->generateRoute(
+                        'jadob_dashboard_action',
+                        [
+                            QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
+                            QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                            QueryStringParamName::OBJECT_NAME => $objectFqcn
+                        ]
+                    ));
+                }
+
+                $form['form'] = $formObject;
+                $forms[] = $form;
+            }
         }
 
         return new Response(
