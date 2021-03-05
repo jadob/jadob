@@ -2,6 +2,7 @@
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
+use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
 use Jadob\Bridge\Twig\Extension\DebugExtension;
 use Jadob\Bridge\Twig\Extension\PathExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
@@ -38,11 +39,11 @@ class TwigProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \Twig\Error\LoaderError
-     *
      * @return (\Closure|\Closure)[]
      *
      * @psalm-return array{Twig\Loader\LoaderInterface: \Closure(ContainerInterface):FilesystemLoader, Twig\Environment: \Closure(ContainerInterface):Environment}
+     * @throws \Twig\Error\LoaderError
+     *
      */
     public function register($config)
     {
@@ -150,6 +151,8 @@ class TwigProvider implements ServiceProviderInterface
             );
             $twig->addExtension(new WebpackManifestAssetExtension($manifest));
         }
+
+        $twig->addExtension(new AliasedAssetPathExtension($extensions['aliased_assets'] ?? []));
 
         //Register user-defined extensions:
         $extensions = $container->getObjectsImplementing(ExtensionInterface::class);
