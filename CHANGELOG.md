@@ -6,8 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.6]
 ### Added
-- [TwigBridge] aliased assets Extension
+- [TwigBridge] aliased assets extension
+- Added Dashboard component
+- Added DoctrineMigrationsBridge component
+- Added DoctrinePersistenceBridge component
+- Added experimental Runtime component  
+- [Router] sticky route parameters
+- [SymfonyFormBridge] Support for Symfony `EntityType` form field
 
+### Changed
+- [Router] router can now have commas
+
+### Removed
+- Removed Micro component
 
 ## [0.1.5] - 2021-02-03
 ### Fixed
