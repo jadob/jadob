@@ -1,0 +1,10 @@
+<?php
+declare(strict_types=1);
+
+namespace Jadob\Dashboard\Exception;
+
+
+class DashboardException extends \Exception
+{
+
+}

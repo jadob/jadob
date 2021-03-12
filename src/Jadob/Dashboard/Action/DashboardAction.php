@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Action;
 
-
 use Closure;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Jadob\Dashboard\ActionType;
 use Jadob\Dashboard\Configuration\Dashboard;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
+use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\QueryStringParamName;
 use Jadob\Dashboard\UrlGeneratorInterface;
@@ -18,7 +18,6 @@ use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -96,6 +95,7 @@ class DashboardAction
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws DashboardException
      */
     protected function handleCrudOperation(Request $request): Response
     {
@@ -104,13 +104,13 @@ class DashboardAction
         $managedObjectConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn);
 
         if ($operation === QueryStringParamName::CRUD_OPERATION_LIST) {
-            if (!isset($managedObjectConfiguration['list'])) {
-                throw new RuntimeException(sprintf('There is no "list" action configuration for "%s" object.', $objectFqcn));
+            $listConfiguration = $managedObjectConfiguration->getListConfiguration();
+            if (count($listConfiguration->getFieldsToShow()) === 0) {
+                throw new DashboardException(sprintf('There is no fields to show in "%s" object configuration.', $objectFqcn));
             }
 
-            $listConfiguration = $managedObjectConfiguration['list'];
             $pageNumber = $request->query->getInt(QueryStringParamName::CRUD_CURRENT_PAGE, 1);
-            $resultsPerPage = 25;
+            $resultsPerPage = $listConfiguration->getResultsPerPage();
             $pagesCount = $this->doctrineOrmObjectManager->getPagesCount($objectFqcn, $resultsPerPage);
 
             $objects = $this->doctrineOrmObjectManager->read(
@@ -120,7 +120,9 @@ class DashboardAction
             );
 
             $list = [];
-            $fieldsToExtract = $listConfiguration['fields'];
+            $fieldsToExtract = $listConfiguration->getFieldsToShow();
+            $operations = $listConfiguration->getOperations();
+
             foreach ($objects as $object) {
                 $objectArray = [];
                 $reflectionObject = new ReflectionClass($object);
@@ -340,7 +342,7 @@ class DashboardAction
                 $forms[] = $form;
             }
 
-            if($import['type'] === 'paste_csv') {
+            if ($import['type'] === 'paste_csv') {
 
                 $form['title'] = $import['name'];
                 $form['name'] = $key;

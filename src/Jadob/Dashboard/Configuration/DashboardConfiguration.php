@@ -4,14 +4,24 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Configuration;
 
 
+use Jadob\Dashboard\Exception\ConfigurationException;
+
 class DashboardConfiguration
 {
     protected array $dashboards = [];
 
+    /**
+     * @var array<string, ManagedObject>
+     */
     protected array $managedObjects = [];
 
     protected string $defaultDashboardName;
 
+    /**
+     * @param array $config
+     * @return static
+     * @throws ConfigurationException
+     */
     public static function fromArray(array $config): self
     {
         $self = new self();
@@ -27,26 +37,20 @@ class DashboardConfiguration
         }
 
         if(isset($config['managed_objects']) && is_array($config['managed_objects'])) {
-            foreach ($config['managed_objects'] as $managedObjectKey => $managedObject) {
-                /**
-                 * Additional configuration is passed to managed object:
-                 * User:class => []
-                 */
-                if(is_string($managedObjectKey) && is_array($managedObject)) {
-                    $self->managedObjects[$managedObjectKey] = $managedObject;
+            foreach ($config['managed_objects'] as $managedObjectFqcn => $managedObjectConfig) {
+
+                if(is_string($managedObjectFqcn) && is_array($managedObjectConfig)) {
+                    $self->managedObjects[$managedObjectFqcn] = ManagedObject::fromArray($managedObjectFqcn, $managedObjectConfig);
+                    continue;
                 }
 
-                /**
-                 * There is no additional config, object fqcn is just passed to managed_objects:
-                 * [
-                 *      User:class
-                 * ]
-                 */
-                if(is_int($managedObjectKey) && is_string($managedObject)) {
-                    $self->managedObjects[$managedObject] = [];
-                }
+                throw new ConfigurationException(
+                    sprintf(
+                        'Could not process configuration for "%s" as it does not have nor valid key nor valid value.',
+                        $managedObjectConfig
+                    )
+                );
 
-                //@TODO: exception, unexpected thing passed to managed_objects
             }
         }
 
@@ -71,7 +75,7 @@ class DashboardConfiguration
         return array_keys($this->managedObjects);
     }
 
-    public function getManagedObjectConfiguration(string $objectFqcn): array
+    public function getManagedObjectConfiguration(string $objectFqcn): ManagedObject
     {
         return $this->managedObjects[$objectFqcn];
     }
