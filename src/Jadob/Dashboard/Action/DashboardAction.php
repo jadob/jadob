@@ -9,6 +9,7 @@ use DateTimeInterface;
 use Jadob\Dashboard\ActionType;
 use Jadob\Dashboard\Configuration\Dashboard;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
+use Jadob\Dashboard\CrudOperationType;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\QueryStringParamName;
@@ -79,7 +80,7 @@ class DashboardAction
             );
         }
 
-        if (mb_strtolower($action) === QueryStringParamName::ACTION_CRUD) {
+        if (mb_strtolower($action) === ActionType::CRUD) {
             return $this->handleCrudOperation($request);
         }
 
@@ -103,7 +104,7 @@ class DashboardAction
         $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
         $managedObjectConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn);
 
-        if ($operation === QueryStringParamName::CRUD_OPERATION_LIST) {
+        if ($operation === CrudOperationType::LIST) {
             $listConfiguration = $managedObjectConfiguration->getListConfiguration();
             if (count($listConfiguration->getFieldsToShow()) === 0) {
                 throw new DashboardException(sprintf('There is no fields to show in "%s" object configuration.', $objectFqcn));
@@ -158,7 +159,7 @@ class DashboardAction
             );
         }
 
-        if ($operation === QueryStringParamName::CRUD_OPERATION_NEW) {
+        if ($operation === CrudOperationType::NEW) {
             $objectConfig = $this->configuration->getManagedObjectConfiguration($objectFqcn);
             if(!$objectConfig->hasNewObjectConfiguration()) {
                 throw new DashboardException(
@@ -188,8 +189,8 @@ class DashboardAction
                 return new RedirectResponse($this->urlGenerator->generateRoute(
                     'jadob_dashboard_action',
                     [
-                        QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                        QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                        QueryStringParamName::ACTION => ActionType::CRUD,
+                        QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
                         QueryStringParamName::OBJECT_NAME => $objectFqcn
                     ]
                 ));
@@ -330,8 +331,8 @@ class DashboardAction
                     return new RedirectResponse($this->urlGenerator->generateRoute(
                         'jadob_dashboard_action',
                         [
-                            QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                            QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                            QueryStringParamName::ACTION => ActionType::CRUD,
+                            QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
                             QueryStringParamName::OBJECT_NAME => $objectFqcn
                         ]
                     ));
@@ -407,8 +408,8 @@ class DashboardAction
                     return new RedirectResponse($this->urlGenerator->generateRoute(
                         'jadob_dashboard_action',
                         [
-                            QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                            QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                            QueryStringParamName::ACTION => ActionType::CRUD,
+                            QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
                             QueryStringParamName::OBJECT_NAME => $objectFqcn
                         ]
                     ));

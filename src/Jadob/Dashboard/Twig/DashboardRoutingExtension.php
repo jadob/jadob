@@ -5,6 +5,7 @@ namespace Jadob\Dashboard\Twig;
 
 
 use Jadob\Dashboard\ActionType;
+use Jadob\Dashboard\CrudOperationType;
 use Jadob\Dashboard\QueryStringParamName;
 use Jadob\Dashboard\UrlGeneratorInterface;
 use Jadob\Router\Router;
@@ -36,8 +37,8 @@ class DashboardRoutingExtension extends AbstractExtension
         return $this->router->generateRoute(
             'jadob_dashboard_action',
             [
-                QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_LIST,
+                QueryStringParamName::ACTION => ActionType::CRUD,
+                QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
                 QueryStringParamName::OBJECT_NAME => $objectFqcn,
                 QueryStringParamName::CRUD_CURRENT_PAGE => $page
             ]
@@ -49,8 +50,8 @@ class DashboardRoutingExtension extends AbstractExtension
         return $this->router->generateRoute(
             'jadob_dashboard_action',
             [
-                QueryStringParamName::ACTION => QueryStringParamName::ACTION_CRUD,
-                QueryStringParamName::CRUD_OPERATION => QueryStringParamName::CRUD_OPERATION_NEW,
+                QueryStringParamName::ACTION => ActionType::CRUD,
+                QueryStringParamName::CRUD_OPERATION => CrudOperationType::NEW,
                 QueryStringParamName::OBJECT_NAME => $objectFqcn
             ]
         );
