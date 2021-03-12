@@ -3,68 +3,25 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Twig;
 
-
-use Jadob\Dashboard\ActionType;
-use Jadob\Dashboard\CrudOperationType;
-use Jadob\Dashboard\QueryStringParamName;
-use Jadob\Dashboard\UrlGeneratorInterface;
-use Jadob\Router\Router;
+use Jadob\Dashboard\PathGenerator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class DashboardRoutingExtension extends AbstractExtension
 {
+    protected PathGenerator $pathGenerator;
 
-    protected UrlGeneratorInterface $router;
-
-    public function __construct(UrlGeneratorInterface $router)
+    public function __construct(PathGenerator $pathGenerator)
     {
-        $this->router = $router;
+        $this->pathGenerator = $pathGenerator;
     }
 
     public function getFunctions()
     {
         return [
-           new TwigFunction('dashboard_path_object_list', [$this, 'getPathForObjectList']),
-           new TwigFunction('dashboard_path_object_new', [$this, 'getPathForObjectNew']),
-           new TwigFunction('dashboard_path_object_import', [$this, 'getPathForImport'])
+            new TwigFunction('dashboard_path_object_list', [$this->pathGenerator, 'getPathForObjectList']),
+            new TwigFunction('dashboard_path_object_new', [$this->pathGenerator, 'getPathForObjectNew']),
+            new TwigFunction('dashboard_path_object_import', [$this->pathGenerator, 'getPathForImport'])
         ];
-    }
-
-
-    public function getPathForObjectList(string $objectFqcn, int $page = 1): string
-    {
-        return $this->router->generateRoute(
-            'jadob_dashboard_action',
-            [
-                QueryStringParamName::ACTION => ActionType::CRUD,
-                QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
-                QueryStringParamName::OBJECT_NAME => $objectFqcn,
-                QueryStringParamName::CRUD_CURRENT_PAGE => $page
-            ]
-        );
-    }
-
-    public function getPathForObjectNew(string $objectFqcn): string
-    {
-        return $this->router->generateRoute(
-            'jadob_dashboard_action',
-            [
-                QueryStringParamName::ACTION => ActionType::CRUD,
-                QueryStringParamName::CRUD_OPERATION => CrudOperationType::NEW,
-                QueryStringParamName::OBJECT_NAME => $objectFqcn
-            ]
-        );
-    }
-
-    public function getPathForImport(string $objectFqcn): string
-    {
-        return $this->router->generateRoute(
-            'jadob_dashboard_action',
-            [
-                QueryStringParamName::ACTION => ActionType::IMPORT,
-                QueryStringParamName::OBJECT_NAME => $objectFqcn
-            ]
-        );
     }
 }

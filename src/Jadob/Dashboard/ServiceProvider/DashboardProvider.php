@@ -12,6 +12,7 @@ use Jadob\Dashboard\Component\BigNumberComponent;
 use Jadob\Dashboard\Component\ComponentProcessor;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
+use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\Twig\DashboardExtension;
 use Jadob\Dashboard\Twig\DashboardRoutingExtension;
 use Jadob\Dashboard\UrlGeneratorInterface;
@@ -34,17 +35,20 @@ class DashboardProvider implements ServiceProviderInterface
             DashboardConfiguration::class => static function () use ($config): DashboardConfiguration {
                 return DashboardConfiguration::fromArray($config);
             },
-            ComponentProcessor::class => static function(ContainerInterface $container): ComponentProcessor {
+            ComponentProcessor::class => static function (ContainerInterface $container): ComponentProcessor {
                 return new ComponentProcessor($container);
             },
-            DoctrineOrmObjectManager::class => static function(ContainerInterface $container): DoctrineOrmObjectManager {
+            DoctrineOrmObjectManager::class => static function (ContainerInterface $container): DoctrineOrmObjectManager {
                 return new DoctrineOrmObjectManager($container->get('doctrine.orm.default'));
             },
-            BigNumberComponent::class => static function(): BigNumberComponent {
+            BigNumberComponent::class => static function (): BigNumberComponent {
                 return new BigNumberComponent();
             },
-            UrlGeneratorInterface::class => static function(ContainerInterface $container): JadobUrlGenerator {
+            UrlGeneratorInterface::class => static function (ContainerInterface $container): JadobUrlGenerator {
                 return new JadobUrlGenerator($container->get('router'));
+            },
+            PathGenerator::class => static function (ContainerInterface $container): PathGenerator {
+                return new PathGenerator($container->get(UrlGeneratorInterface::class));
             }
         ];
     }
@@ -67,7 +71,7 @@ class DashboardProvider implements ServiceProviderInterface
             }
 
             $twig->addExtension(new DashboardExtension($container->get(ComponentProcessor::class)));
-            $twig->addExtension(new DashboardRoutingExtension($container->get(UrlGeneratorInterface::class)));
+            $twig->addExtension(new DashboardRoutingExtension($container->get(PathGenerator::class)));
         }
     }
 }
