@@ -12,8 +12,8 @@ use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\CrudOperationType;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
+use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\QueryStringParamName;
-use Jadob\Dashboard\UrlGeneratorInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -40,7 +40,7 @@ class DashboardAction
     protected DashboardConfiguration $configuration;
     protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
     protected FormFactoryInterface $formFactory;
-    protected UrlGeneratorInterface $urlGenerator;
+    protected PathGenerator $pathGenerator;
     protected LoggerInterface $logger;
 
     public function __construct(
@@ -48,7 +48,7 @@ class DashboardAction
         DashboardConfiguration $configuration,
         DoctrineOrmObjectManager $doctrineOrmObjectManager,
         FormFactoryInterface $formFactory,
-        UrlGeneratorInterface $urlGenerator,
+        PathGenerator $pathGenerator,
         LoggerInterface $logger
     )
     {
@@ -56,7 +56,7 @@ class DashboardAction
         $this->configuration = $configuration;
         $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
         $this->formFactory = $formFactory;
-        $this->urlGenerator = $urlGenerator;
+        $this->pathGenerator = $pathGenerator;
         $this->logger = $logger;
     }
 
@@ -185,15 +185,7 @@ class DashboardAction
                 }
 
                 $this->doctrineOrmObjectManager->persist($createdObject);
-
-                return new RedirectResponse($this->urlGenerator->generateRoute(
-                    'jadob_dashboard_action',
-                    [
-                        QueryStringParamName::ACTION => ActionType::CRUD,
-                        QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
-                        QueryStringParamName::OBJECT_NAME => $objectFqcn
-                    ]
-                ));
+                return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
             }
 
             return new Response(
@@ -328,14 +320,7 @@ class DashboardAction
                     }
 
                     $this->logger->info('Finished processing file, redirecting to listing page.');
-                    return new RedirectResponse($this->urlGenerator->generateRoute(
-                        'jadob_dashboard_action',
-                        [
-                            QueryStringParamName::ACTION => ActionType::CRUD,
-                            QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
-                            QueryStringParamName::OBJECT_NAME => $objectFqcn
-                        ]
-                    ));
+                    return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
                 }
 
                 $form['form'] = $formObject;
@@ -405,14 +390,7 @@ class DashboardAction
                     }
 
                     $this->logger->info('Finished processing uploaded content, redirecting to listing page.');
-                    return new RedirectResponse($this->urlGenerator->generateRoute(
-                        'jadob_dashboard_action',
-                        [
-                            QueryStringParamName::ACTION => ActionType::CRUD,
-                            QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
-                            QueryStringParamName::OBJECT_NAME => $objectFqcn
-                        ]
-                    ));
+                    return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
                 }
 
                 $form['form'] = $formObject;
