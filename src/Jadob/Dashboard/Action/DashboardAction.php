@@ -159,12 +159,15 @@ class DashboardAction
         }
 
         if ($operation === QueryStringParamName::CRUD_OPERATION_NEW) {
-            $newConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn)['new'];
-            /** @var Closure $formBuilder */
-            $formBuilder = $newConfiguration['form_factory'];
-            if ($formBuilder === null) {
-                throw new RuntimeException('Creating forms from scratch not implemented yet');
+            $objectConfig = $this->configuration->getManagedObjectConfiguration($objectFqcn);
+            if(!$objectConfig->hasNewObjectConfiguration()) {
+                throw new DashboardException(
+                    sprintf('Object "%s" does not have configuration for new objects.', $objectFqcn)
+                );
             }
+
+            $newConfiguration = $objectConfig->getNewObjectConfiguration();
+            $formBuilder = $newConfiguration->getFormFactory();
 
             /** @var FormInterface $form */
             $form = $formBuilder($this->formFactory);
@@ -176,12 +179,8 @@ class DashboardAction
             if ($form->isSubmitted() && $form->isValid()) {
                 $createdObject = $form->getData();
 
-                if (isset($newConfiguration['before_insert'])) {
-                    if (!($newConfiguration['before_insert'] instanceof Closure)) {
-                        throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
-                    }
-
-                    $newConfiguration['before_insert']($createdObject);
+                if ($newConfiguration->hasBeforeInsertHook()) {
+                    $newConfiguration->getBeforeInsertHook()($createdObject);
                 }
 
                 $this->doctrineOrmObjectManager->persist($createdObject);

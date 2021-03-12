@@ -7,6 +7,7 @@ class ManagedObject
 {
     protected ListConfiguration $listConfiguration;
     protected string $objectFqcn;
+    protected ?NewObjectConfiguration $newObjectConfiguration = null;
 
     protected function __construct(string $objectFqcn, ListConfiguration $listConfiguration)
     {
@@ -32,7 +33,25 @@ class ManagedObject
         $self = self::create($objectFqcn);
         $self->listConfiguration->setFieldsToShow($configuration['list']['fields'] ?? []);
         $self->listConfiguration->setResultsPerPage($configuration['list']['results_per_page'] ?? 25);
+
+        if(isset($configuration['new'])) {
+            $self->newObjectConfiguration = NewObjectConfiguration::fromArray($configuration['new']);
+        }
+
         return $self;
+    }
+
+    public function hasNewObjectConfiguration(): bool
+    {
+        return $this->newObjectConfiguration !== null;
+    }
+
+    /**
+     * @return NewObjectConfiguration|null
+     */
+    public function getNewObjectConfiguration(): ?NewObjectConfiguration
+    {
+        return $this->newObjectConfiguration;
     }
 
 }
