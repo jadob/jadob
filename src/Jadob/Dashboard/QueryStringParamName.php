@@ -10,4 +10,6 @@ class QueryStringParamName
     public const OBJECT_NAME = 'obj';
     public const CRUD_CURRENT_PAGE = 'p';
     public const CRUD_OPERATION = 'op';
+    public const OBJECT_ID = 'id';
+    public const OPERATION_NAME = 'opname';
 }

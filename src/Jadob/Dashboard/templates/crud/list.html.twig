@@ -38,10 +38,15 @@
             <thead>
             <tr>
                 {% for f in fields %}
-                    <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                         {{ f }}
                     </th>
                 {% endfor %}
+                {% if operations|length > 0 %}
+                <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    Operations
+                </th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -53,6 +58,16 @@
                     {{ obj[f] }}
                 </td>
                 {% endfor %}
+                {% if operations|length > 0 %}
+                    <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                        {% for operation in operations %}
+                            <a href="{{ dashboard_path_object_operation(object_fqcn, obj.id, operation.name) }}" class="text-gray-500 font-bold text-xs hover:text-gray-800 focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
+                                {{ operation.label|trans }}
+                            </a>
+
+                        {% endfor %}
+                    </td>
+                {% endif %}
 
             </tr>
             {% endfor %}

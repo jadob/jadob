@@ -5,6 +5,7 @@ namespace Jadob\Dashboard\ObjectManager;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Jadob\Dashboard\Exception\DashboardException;
 
 class DoctrineOrmObjectManager
 {
@@ -26,7 +27,7 @@ class DoctrineOrmObjectManager
 
         $objectsCount = $objectsCountQuery['count'] ?? 0;
 
-        return (int)ceil(($objectsCount/$resultsPerPage));
+        return (int)ceil(($objectsCount / $resultsPerPage));
     }
 
     public function read(string $objectFqcn, int $pageNumber, int $resultsPerPage)
@@ -38,7 +39,7 @@ class DoctrineOrmObjectManager
                 [],
                 null,
                 $resultsPerPage,
-                (($pageNumber-1) * $resultsPerPage)
+                (($pageNumber - 1) * $resultsPerPage)
             );
 
     }
@@ -47,5 +48,22 @@ class DoctrineOrmObjectManager
     {
         $this->em->persist($object);
         $this->em->flush();
+    }
+
+    public function getOneById(string $objectFqcn, $objectId): object
+    {
+        $object = $this->em->find($objectFqcn, $objectId);
+
+        if ($object === null) {
+            throw new DashboardException(
+                sprintf(
+                    'Could not find object "%s" with ID "%s"',
+                    $objectFqcn,
+                    $objectId
+                )
+            );
+        }
+
+        return $object;
     }
 }

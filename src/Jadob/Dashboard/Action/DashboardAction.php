@@ -10,8 +10,10 @@ use Jadob\Dashboard\ActionType;
 use Jadob\Dashboard\Configuration\Dashboard;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\CrudOperationType;
+use Jadob\Dashboard\DashboardContext;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
+use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\QueryStringParamName;
 use Psr\Log\LoggerInterface;
@@ -41,6 +43,7 @@ class DashboardAction
     protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
     protected FormFactoryInterface $formFactory;
     protected PathGenerator $pathGenerator;
+    protected OperationHandler $operationHandler;
     protected LoggerInterface $logger;
 
     public function __construct(
@@ -49,6 +52,7 @@ class DashboardAction
         DoctrineOrmObjectManager $doctrineOrmObjectManager,
         FormFactoryInterface $formFactory,
         PathGenerator $pathGenerator,
+        OperationHandler $operationHandler,
         LoggerInterface $logger
     )
     {
@@ -57,6 +61,7 @@ class DashboardAction
         $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
         $this->formFactory = $formFactory;
         $this->pathGenerator = $pathGenerator;
+        $this->operationHandler = $operationHandler;
         $this->logger = $logger;
     }
 
@@ -70,22 +75,35 @@ class DashboardAction
      */
     public function __invoke(Request $request): Response
     {
-        $action = $request->query->get(QueryStringParamName::ACTION);
+        $action = mb_strtolower($request->query->get(QueryStringParamName::ACTION));
+
+        $context = new DashboardContext(
+            DateTimeImmutable::createFromFormat(
+                'U',
+                (string)$request->server->get('REQUEST_TIME')
+            )
+        );
+
 
         if ($action === null) {
             return $this->handleDashboard(
                 $this->configuration->getDefaultDashboard(),
                 $this->configuration,
+                $context,
                 $request
             );
         }
 
-        if (mb_strtolower($action) === ActionType::CRUD) {
+        if ($action === ActionType::CRUD) {
             return $this->handleCrudOperation($request);
         }
 
-        if (mb_strtolower($action) === ActionType::IMPORT) {
+        if ($action === ActionType::IMPORT) {
             return $this->handleImport($request);
+        }
+
+        if ($action === ActionType::OPERATION) {
+            return $this->handleOperation($request, $context);
         }
     }
 
@@ -122,7 +140,6 @@ class DashboardAction
 
             $list = [];
             $fieldsToExtract = $listConfiguration->getFieldsToShow();
-            $operations = $listConfiguration->getOperations();
 
             foreach ($objects as $object) {
                 $objectArray = [];
@@ -153,7 +170,8 @@ class DashboardAction
                         'object_fqcn' => $objectFqcn,
                         'results_per_page' => $resultsPerPage,
                         'current_page' => $pageNumber,
-                        'pages_count' => $pagesCount
+                        'pages_count' => $pagesCount,
+                        'operations' => $listConfiguration->getOperations()
                     ]
                 )
             );
@@ -161,7 +179,7 @@ class DashboardAction
 
         if ($operation === CrudOperationType::NEW) {
             $objectConfig = $this->configuration->getManagedObjectConfiguration($objectFqcn);
-            if(!$objectConfig->hasNewObjectConfiguration()) {
+            if (!$objectConfig->hasNewObjectConfiguration()) {
                 throw new DashboardException(
                     sprintf('Object "%s" does not have configuration for new objects.', $objectFqcn)
                 );
@@ -213,14 +231,12 @@ class DashboardAction
     protected function handleDashboard(
         Dashboard $dashboard,
         DashboardConfiguration $dashboardConfiguration,
+        DashboardContext $context,
         Request $request
     ): Response
     {
 
-        $requestDate = DateTimeImmutable::createFromFormat(
-            'U',
-            (string)$request->server->get('REQUEST_TIME')
-        );
+        $requestDate = $context->getRequestDateTime();
 
         return new Response(
             $this->twig->render(
@@ -407,6 +423,26 @@ class DashboardAction
                 ]
             )
         );
+
+    }
+
+    public function handleOperation(Request $request, DashboardContext $context)
+    {
+        $this->logger->debug('handleOperation invoked');
+        $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
+        $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
+        $operationName = $request->query->get(QueryStringParamName::OPERATION_NAME);
+        $managedObjectConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn);
+
+        $this->logger->debug('Getting information about operation');
+        $operation = $managedObjectConfiguration->getListConfiguration()->getOperation($operationName);
+        $this->logger->debug('Getting object from persistence');
+        $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+        $this->logger->debug(sprintf('Continuing to invoke an operation "%s"', $operationName));
+        $this->operationHandler->processOperation($operation, $object, $context);
+        $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
+
+        return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
 
     }
 }

@@ -49,4 +49,17 @@ class PathGenerator
         );
     }
 
+    public function getPathForObjectOperation(string $objectFqcn, $objectId, string $operationName): string
+    {
+        return $this->urlGenerator->generateRoute(
+            'jadob_dashboard_action',
+            [
+                QueryStringParamName::ACTION => ActionType::OPERATION,
+                QueryStringParamName::OBJECT_NAME => $objectFqcn,
+                QueryStringParamName::OBJECT_ID => $objectId,
+                QueryStringParamName::OPERATION_NAME => $operationName
+            ]
+        );
+    }
+
 }

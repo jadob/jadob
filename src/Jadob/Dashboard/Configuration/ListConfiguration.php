@@ -50,4 +50,17 @@ class ListConfiguration
         $this->resultsPerPage = $resultsPerPage;
     }
 
+    /**
+     * @param array $operations
+     */
+    public function setOperations(array $operations): void
+    {
+        $this->operations = $operations;
+    }
+
+
+    public function getOperation(string $operationName)
+    {
+        return $this->operations[$operationName];
+    }
 }

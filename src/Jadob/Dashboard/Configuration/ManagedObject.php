@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
+use Jadob\Dashboard\Exception\ConfigurationException;
+
 class ManagedObject
 {
     protected ListConfiguration $listConfiguration;
@@ -31,8 +33,14 @@ class ManagedObject
     public static function fromArray(string $objectFqcn, array $configuration): self
     {
         $self = self::create($objectFqcn);
+
+        if(!isset($configuration['list'])) {
+            throw new ConfigurationException('Missing "list" key for "%s" object.', $objectFqcn);
+        }
+
         $self->listConfiguration->setFieldsToShow($configuration['list']['fields'] ?? []);
         $self->listConfiguration->setResultsPerPage($configuration['list']['results_per_page'] ?? 25);
+        $self->listConfiguration->setOperations($self->entityOperationsFromArray($configuration['list']['operations'] ?? []));
 
         if(isset($configuration['new'])) {
             $self->newObjectConfiguration = NewObjectConfiguration::fromArray($configuration['new']);
@@ -52,6 +60,23 @@ class ManagedObject
     public function getNewObjectConfiguration(): ?NewObjectConfiguration
     {
         return $this->newObjectConfiguration;
+    }
+
+
+    protected function entityOperationsFromArray(array $operations): array
+    {
+        $output = [];
+        foreach ($operations as $operationName => $operationConfig) {
+            $output[$operationName] = new EntityOperation(
+                $operationName,
+                $operationConfig['label'],
+                $operationConfig['handler_fqcn'] ?? null,
+                $operationConfig['handler_method'] ?? null,
+                $operationConfig['transform'] ?? null
+            );
+        }
+
+        return $output;
     }
 
 }

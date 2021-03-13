@@ -12,12 +12,14 @@ use Jadob\Dashboard\Component\BigNumberComponent;
 use Jadob\Dashboard\Component\ComponentProcessor;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
+use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\Twig\DashboardExtension;
 use Jadob\Dashboard\Twig\DashboardRoutingExtension;
 use Jadob\Dashboard\UrlGeneratorInterface;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -49,6 +51,9 @@ class DashboardProvider implements ServiceProviderInterface
             },
             PathGenerator::class => static function (ContainerInterface $container): PathGenerator {
                 return new PathGenerator($container->get(UrlGeneratorInterface::class));
+            },
+            OperationHandler::class => static function (ContainerInterface $container): OperationHandler {
+                return new OperationHandler($container, $container->get(LoggerInterface::class));
             }
         ];
     }
