@@ -75,7 +75,7 @@ class DashboardAction
      */
     public function __invoke(Request $request): Response
     {
-        $action = mb_strtolower($request->query->get(QueryStringParamName::ACTION));
+        $action = $request->query->get(QueryStringParamName::ACTION);
 
         $context = new DashboardContext(
             DateTimeImmutable::createFromFormat(
@@ -93,6 +93,8 @@ class DashboardAction
                 $request
             );
         }
+
+        $action === mb_strtolower($action);
 
         if ($action === ActionType::CRUD) {
             return $this->handleCrudOperation($request);
