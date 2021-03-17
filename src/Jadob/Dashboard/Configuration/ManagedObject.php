@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Configuration;
 
 use Jadob\Dashboard\Exception\ConfigurationException;
+use Jadob\Dashboard\Exception\DashboardException;
 
 class ManagedObject
 {
@@ -30,6 +31,13 @@ class ManagedObject
         return $this->listConfiguration;
     }
 
+    /**
+     * @param string $objectFqcn
+     * @param array $configuration
+     * @return static
+     * @throws ConfigurationException
+     * @throws DashboardException
+     */
     public static function fromArray(string $objectFqcn, array $configuration): self
     {
         $self = self::create($objectFqcn);
@@ -63,6 +71,11 @@ class ManagedObject
     }
 
 
+    /**
+     * @param array $operations
+     * @return array
+     * @throws DashboardException
+     */
     protected function entityOperationsFromArray(array $operations): array
     {
         $output = [];
@@ -72,7 +85,8 @@ class ManagedObject
                 $operationConfig['label'],
                 $operationConfig['handler_fqcn'] ?? null,
                 $operationConfig['handler_method'] ?? null,
-                $operationConfig['transform'] ?? null
+                $operationConfig['transform'] ?? null,
+                $operationConfig['force_persist'] ?? false
             );
         }
 

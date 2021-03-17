@@ -3,33 +3,37 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard;
 
-
 use Jadob\Dashboard\Configuration\EntityOperation;
 use Jadob\Dashboard\Exception\DashboardException;
+use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class OperationHandler
 {
     protected ContainerInterface $container;
     protected LoggerInterface $logger;
+    protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
 
     public function __construct(
         ContainerInterface $container,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DoctrineOrmObjectManager $doctrineOrmObjectManager
     )
     {
         $this->container = $container;
         $this->logger = $logger;
+        $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
     }
 
     /**
      * @param EntityOperation $operation
      * @param object $object
      * @param DashboardContext $context
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function processOperation(EntityOperation $operation, object $object, DashboardContext $context)
+    public function processOperation(EntityOperation $operation, object $object, DashboardContext $context): void
     {
         try {
             $argumentTransformer = $operation->getArgumentTransformer();
@@ -53,7 +57,7 @@ class OperationHandler
                 $methodToCall = $handlerMethod;
                 if ($handlerMethod === null) {
                     $methodToCall = '__invoke';
-                    $this->logger->debug(sprintf('There is handler FQCN but no method, using default one.'));
+                    $this->logger->debug(sprintf('There is handler FQCN but no method, using "__invoke" then.'));
                 }
 
                 $this->logger->debug(sprintf('I am calling %s#%s', $handlerFqcn, $methodToCall));
@@ -62,8 +66,13 @@ class OperationHandler
                 $handlerClass->$methodToCall(...$arguments);
             }
 
+            if($operation->isForcePersist()) {
+                $this->logger->debug(sprintf('Storing object in persistence.'));
+                $this->doctrineOrmObjectManager->persist($object);
+            }
+
             $this->logger->debug(sprintf('Operation handled.'));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->critical(sprintf('Caught an exception during processing: %s', $e->getMessage()), $e->getTrace());
             throw $e;
         }

@@ -13,9 +13,10 @@ class EntityOperation
     protected ?string $handlerFqcn = null;
     protected ?string $handlerMethod = null;
     protected ?\Closure $argumentTransformer = null;
+    protected bool $forcePersist = false;
 
 
-    public function __construct(string $name, string $label, ?string $handlerFqcn = null, ?string $handlerMethod = null, ?\Closure $argumentTransformer = null)
+    public function __construct(string $name, string $label, ?string $handlerFqcn = null, ?string $handlerMethod = null, ?\Closure $argumentTransformer = null, bool $forcePersist = false)
     {
         if($handlerFqcn === null && $handlerMethod === null) {
             throw new DashboardException(sprintf('There should be handler FQCN, handler method or both of them defined in "%s" operation', $name));
@@ -26,6 +27,7 @@ class EntityOperation
         $this->handlerFqcn = $handlerFqcn;
         $this->handlerMethod = $handlerMethod;
         $this->argumentTransformer = $argumentTransformer;
+        $this->forcePersist = $forcePersist;
 
     }
 
@@ -68,4 +70,13 @@ class EntityOperation
     {
         return $this->argumentTransformer;
     }
+
+    /**
+     * @return bool
+     */
+    public function isForcePersist(): bool
+    {
+        return $this->forcePersist;
+    }
+
 }
