@@ -18,7 +18,7 @@ class EntityOperation
     public function __construct(string $name, string $label, ?string $handlerFqcn = null, ?string $handlerMethod = null, ?\Closure $argumentTransformer = null)
     {
         if($handlerFqcn === null && $handlerMethod === null) {
-            throw new DashboardException('There should be handler FQCN, handler method or both of them defined in "%" operation', $name);
+            throw new DashboardException(sprintf('There should be handler FQCN, handler method or both of them defined in "%s" operation', $name));
         }
 
         $this->name = $name;
