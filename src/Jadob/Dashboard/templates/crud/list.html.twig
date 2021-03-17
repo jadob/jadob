@@ -17,19 +17,7 @@
         </a>
 
         <div class="float-right">
-            {% if current_page - 1 > 0 %}
-                <a href="{{ dashboard_path_object_list(object_fqcn, current_page-1) }}"
-                   class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 rounded-md text-base font-medium">
-                    &lt; Previous page
-                </a>
-            {% endif %}
-
-            {% if current_page + 1 <= pages_count %}
-                <a href="{{ dashboard_path_object_list(object_fqcn, current_page+1) }}"
-                   class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
-                    Next Page &gt;
-                </a>
-            {% endif %}
+            {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
         </div>
     </div>
 
@@ -77,19 +65,7 @@
         </table>
     <div class="container mx-auto">
         <div class="float-right">
-            {% if current_page - 1 > 0 %}
-                <a href="{{ dashboard_path_object_list(object_fqcn, current_page-1) }}"
-                   class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 rounded-md text-base font-medium">
-                    &lt; Previous page
-                </a>
-            {% endif %}
-
-            {% if current_page + 1 <= pages_count %}
-                <a href="{{ dashboard_path_object_list(object_fqcn, current_page+1) }}"
-                   class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
-                    Next Page &gt;
-                </a>
-            {% endif %}
+            {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
         </div>
     </div>
 {% endblock %}
