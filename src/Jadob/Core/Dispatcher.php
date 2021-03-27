@@ -229,18 +229,28 @@ class Dispatcher
 
             if ($type === ContainerInterface::class) {
                 $arguments[] = $this->container;
-            } else {
-                //TODO Refactor or move to another method
-                try {
-                    $arguments[] = $this->container->findObjectByClassName($type);
-                } catch (ServiceNotFoundException $exception) {
-                    if ($autowireEnabled) {
-                        $arguments[] = $this->container->autowire($type);
-                    } else {
-                        throw  $exception;
-                    }
-                }
+                continue;
             }
+
+            $objectByFqcn = $this->container->findObjectByClassName($type);
+            if ($objectByFqcn !== null) {
+                $arguments[] = $objectByFqcn;
+                continue;
+            }
+
+            if ($autowireEnabled) {
+                $arguments[] = $this->container->autowire($type);
+                continue;
+            }
+
+            throw new KernelException(
+                sprintf(
+                    'Unable to autowire controller "%s" because service "%s" is not found in container and cannot be autowired as "%s" is false.',
+                    $controllerClassName,
+                    $type,
+                    'framework.autowire_controller_arguments'
+                )
+            );
         }
 
         return new $controllerClassName(...$arguments);
