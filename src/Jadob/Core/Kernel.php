@@ -24,6 +24,7 @@ use Jadob\Router\ServiceProvider\RouterServiceProvider;
 use Jadob\Runtime\RuntimeFactory;
 use Jadob\Runtime\RuntimeInterface;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -206,10 +207,11 @@ class Kernel
         $this->contextStore->push($context);
 
         $dispatcherConfig = $configArray['framework']['dispatcher'];
+        $dispatcherLogger = new Logger('dispatcher', [$this->fileStreamHandler]);
         $dispatcher = new Dispatcher(
             $dispatcherConfig,
             $this->container,
-            $this->logger,
+            $dispatcherLogger,
             $this->eventDispatcher
         );
 

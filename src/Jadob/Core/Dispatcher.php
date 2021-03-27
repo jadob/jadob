@@ -48,6 +48,8 @@ class Dispatcher
      */
     protected Container $container;
 
+    protected bool $verbose = false;
+
     /**
      * @var EventDispatcherInterface
      */
@@ -87,6 +89,8 @@ class Dispatcher
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
+
+        $this->verbose = $this->config['verbose'] ?? false;
 
         /**
          * There is no reason to use separate instance for any request interface
@@ -205,6 +209,7 @@ class Dispatcher
      */
     protected function autowireControllerClass($controllerClassName)
     {
+
         $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
 
         $reflection = new ReflectionClass($controllerClassName);
@@ -214,6 +219,10 @@ class Dispatcher
          * There is no reasons for class autowiring when there is no constructor
          */
         if ($classConstructor === null) {
+            $this->verbose && $this->logger->debug(
+                sprintf('Skipping autowiring for "%s" as it does not have a constructor.', $controllerClassName)
+            );
+
             return new $controllerClassName;
         }
 
@@ -234,12 +243,21 @@ class Dispatcher
 
             $objectByFqcn = $this->container->findObjectByClassName($type);
             if ($objectByFqcn !== null) {
+                $this->verbose && $this->logger->debug(
+                    sprintf('Found "%s" service for type "%s"', get_class($objectByFqcn), $type)
+                );
+
                 $arguments[] = $objectByFqcn;
                 continue;
             }
 
             if ($autowireEnabled) {
-                $arguments[] = $this->container->autowire($type);
+                $autowiredService = $this->container->autowire($type);
+                $this->verbose && $this->logger->debug(
+                    sprintf('Autowired "%s" service for type "%s"', get_class($autowiredService), $type)
+                );
+
+                $arguments[] = $autowiredService;
                 continue;
             }
 
