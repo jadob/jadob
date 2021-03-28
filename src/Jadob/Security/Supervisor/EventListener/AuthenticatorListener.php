@@ -12,6 +12,7 @@ use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\IdentityStorage;
+use Jadob\Security\Supervisor\RequestAttribute;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -177,6 +178,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
         }
 
         $anonymousRequestAllowed = $supervisor->isAnonymousRequestAllowed($request);
+        $request->attributes->set(RequestAttribute::SUPERVISOR_ANONYMOUS_ALLOWED, $anonymousRequestAllowed);
 
         /**
          * Case #2: User is not authenticated, but supervisor allows these request to continue without authentication
