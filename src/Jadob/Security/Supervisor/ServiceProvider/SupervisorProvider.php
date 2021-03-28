@@ -10,7 +10,8 @@ use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Auth\ServiceProvider\AuthProvider;
-use Jadob\Security\Supervisor\EventListener\SupervisorListener;
+use Jadob\Security\Supervisor\EventListener\AuthenticatorListener;
+use Jadob\Security\Supervisor\EventListener\AuthorizerListener;
 use Jadob\Security\Supervisor\Supervisor;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -44,7 +45,6 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
         return [
             Supervisor::class => static function (ContainerInterface $container) use ($config) {
 
-                /** @noinspection MissingService */
                 $logger = new Logger('supervisor', [
                     $container->get('logger.handler.default')
                 ]);
@@ -78,8 +78,13 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
         $supervisor = $container->get(Supervisor::class);
         /** @var IdentityStorage $identityStorage */
         $identityStorage = $container->get('auth.user.storage');
+
         $container->get(EventDispatcherInterface::class)->addListener(
-            new SupervisorListener($supervisor, $identityStorage)
+            new AuthenticatorListener($supervisor, $identityStorage)
+        );
+
+        $container->get(EventDispatcherInterface::class)->addListener(
+            new AuthorizerListener()
         );
     }
 
