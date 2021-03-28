@@ -6,6 +6,8 @@ namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\RequestContext;
+use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
@@ -21,7 +23,7 @@ use function get_class;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SupervisorListener implements ListenerProviderInterface
+class AuthenticatorListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
 
     /**
@@ -197,4 +199,8 @@ class SupervisorListener implements ListenerProviderInterface
         //5. User is logged in, there is nothing to do
     }
 
+    public function getListenerPriorityForEvent(object $event): int
+    {
+        return 110; // DEFAULT_LISTENER_PRIORITY + 10
+    }
 }
