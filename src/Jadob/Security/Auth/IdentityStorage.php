@@ -8,7 +8,6 @@ use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * TODO: this one maybe should be called IdentityStorage
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
