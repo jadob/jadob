@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard;
 
+use Jadob\Contracts\Dashboard\DashboardContextInterface;
 use Jadob\Dashboard\Configuration\EntityOperation;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
@@ -33,7 +34,7 @@ class OperationHandler
      * @param DashboardContext $context
      * @throws Throwable
      */
-    public function processOperation(EntityOperation $operation, object $object, DashboardContext $context): void
+    public function processOperation(EntityOperation $operation, object $object, DashboardContextInterface $context): void
     {
         try {
             $argumentTransformer = $operation->getArgumentTransformer();
