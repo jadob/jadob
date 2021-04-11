@@ -5,23 +5,30 @@ declare(strict_types=1);
 namespace Jadob\Url;
 
 /**
- * TODO maybe comply with UriInterface?
- *
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Url
 {
+    /**
+     * @var string
+     */
+    protected $url;
 
-    protected ?string $url = null;
+    /**
+     * @var string
+     */
+    protected $scheme;
 
-    protected ?string $scheme = null;
+    /**
+     * @var string
+     */
+    protected $host;
 
-    protected ?int $port = null;
-
-    protected ?string $host = null;
-
-    protected ?string $path = null;
+    /**
+     * @var null|string
+     */
+    protected $path;
 
     /**
      * @var array
@@ -29,28 +36,25 @@ class Url
     protected $query = [];
 
     /**
-     * URL has changed since last build
-     * @TODO to be dropped, or class to be refactored to be immutable
+     * @var null|string
      */
-    protected bool $changed = false;
+    protected $fragment;
 
     /**
      * Url constructor.
-     *
      * @param string|null $url
      */
     public function __construct(?string $url = null)
     {
-        $this->url = $url;
-
         if ($url !== null) {
+            $this->url = $url;
             $this->parse($url);
         }
     }
 
-    protected function parse(string $url): void
+    protected function parse(string $url)
     {
-        $output = parse_url($url);
+        $output = \parse_url($url);
 
         if (isset($output['host'])) {
             $this->host = $output['host'];
@@ -68,6 +72,8 @@ class Url
             $this->path = $output['path'];
         }
 
+        $this->fragment = $output['fragment'] ?? null;
+
         if (isset($output['query'])) {
             parse_url(
                 $output['query'],
@@ -77,23 +83,57 @@ class Url
     }
 
     /**
+     * @return bool
+     */
+    public function hasScheme(): bool
+    {
+        return $this->scheme !== null;
+    }
+
+    /**
      * @return string
+     * @throws \Exception
      */
     public function build(): string
     {
-        $query = http_build_query($this->query);
-        $port = $this->port !== null ? ':' . $this->port : null;
-        return $this->scheme . '://' . $this->host . $port . $this->path . '?' . $query;
+        $isHttpUrl = in_array(mb_strtolower($this->getScheme()), ['http', 'https'], true);
+        if ($this->scheme === null) {
+            throw new \RuntimeException('Missing scheme in URL Object');
+        }
+
+        if ($this->host === null && $isHttpUrl) {
+            throw new \RuntimeException('Missing host in URL Object');
+        }
+
+
+        $url = $this->scheme . '://' . $this->host;
+        if (!$isHttpUrl) {
+            $url = $this->scheme . ':' . $this->host;
+        }
+
+        if ($this->path !== null) {
+            if ($isHttpUrl) {
+                $url .= '/' . ltrim($this->path, '/');
+            } else {
+                $url .= $this->path;
+            }
+        }
+
+        if ($this->fragment !== null) {
+            $url .= '#' . $this->fragment;
+        }
+
+        return $url;
     }
 
     /**
      * Shorthand for build()
-     *
      * @return string
+     * @throws \Exception
      */
     public function __toString()
     {
-        if ($this->url !== null && !$this->changed) {
+        if ($this->url !== null) {
             return (string)$this->url;
         }
 
@@ -101,34 +141,23 @@ class Url
     }
 
 
-    public function setHost(string $host): void
+    public function setHost(string $host)
     {
-        $this->changed = true;
         $this->host = $host;
     }
 
     public function getHost(): ?string
     {
         return $this->host;
-
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getScheme(): ?string
+    public function getScheme(): string
     {
         return $this->scheme;
     }
-
-    /**
-     * @return string|null
-     */
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
 
     /**
      * @param string $scheme
@@ -136,12 +165,41 @@ class Url
      */
     public function setScheme(string $scheme): Url
     {
-        $this->changed = true;
         $this->scheme = $scheme;
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
 
+    /**
+     * @return string|null
+     */
+    public function getFragment(): ?string
+    {
+        return $this->fragment;
+    }
+
+    /**
+     * @param string|null $fragment
+     * @return Url
+     */
+    public function setFragment(?string $fragment): Url
+    {
+        $this->fragment = $fragment;
+        return $this;
+    }
+
+    public function removeFragment(): static
+    {
+        $this->fragment = null;
+        return $this;
+    }
 
     /**
      * @param string $path
@@ -149,7 +207,6 @@ class Url
      */
     public function setPath(string $path): Url
     {
-        $this->changed = true;
         $this->path = $path;
         return $this;
     }
