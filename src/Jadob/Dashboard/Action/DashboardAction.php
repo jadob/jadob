@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Action;
 
 use Closure;
-use DateTimeImmutable;
 use DateTimeInterface;
+use Jadob\Contracts\Dashboard\DashboardContextInterface;
 use Jadob\Dashboard\ActionType;
 use Jadob\Dashboard\Configuration\Dashboard;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\Configuration\NewObjectConfiguration;
 use Jadob\Dashboard\CrudOperationType;
-use Jadob\Dashboard\DashboardContext;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\OperationHandler;
@@ -68,23 +67,20 @@ class DashboardAction
 
     /**
      * @param Request $request
+     * @param DashboardContextInterface $context
      * @return Response
+     * @throws DashboardException
      * @throws LoaderError
      * @throws ReflectionException
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(
+        Request $request,
+        DashboardContextInterface $context
+    ): Response
     {
         $action = $request->query->get(QueryStringParamName::ACTION);
-
-        $context = new DashboardContext(
-            DateTimeImmutable::createFromFormat(
-                'U',
-                (string)$request->server->get('REQUEST_TIME')
-            )
-        );
-
 
         if ($action === null) {
             return $this->handleDashboard(
