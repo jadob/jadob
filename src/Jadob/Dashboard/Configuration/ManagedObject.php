@@ -5,12 +5,14 @@ namespace Jadob\Dashboard\Configuration;
 
 use Jadob\Dashboard\Exception\ConfigurationException;
 use Jadob\Dashboard\Exception\DashboardException;
+use JetBrains\PhpStorm\Pure;
 
 class ManagedObject
 {
     protected ListConfiguration $listConfiguration;
     protected string $objectFqcn;
     protected ?NewObjectConfiguration $newObjectConfiguration = null;
+    protected ?EditConfiguration $editConfiguration = null;
 
     protected function __construct(string $objectFqcn, ListConfiguration $listConfiguration)
     {
@@ -18,9 +20,9 @@ class ManagedObject
         $this->listConfiguration = $listConfiguration;
     }
 
-    public static function create(string $objectFqcn): self
+    public static function create(string $objectFqcn, ListConfiguration $configuration): self
     {
-        return new self($objectFqcn, new ListConfiguration());
+        return new self($objectFqcn, $configuration);
     }
 
     /**
@@ -40,19 +42,25 @@ class ManagedObject
      */
     public static function fromArray(string $objectFqcn, array $configuration): self
     {
-        $self = self::create($objectFqcn);
-
         if(!isset($configuration['list'])) {
-            throw new ConfigurationException('Missing "list" key for "%s" object.', $objectFqcn);
+            throw new ConfigurationException(sprintf('Missing "list" key for "%s" object.', $objectFqcn));
         }
 
-        $self->listConfiguration->setFieldsToShow($configuration['list']['fields'] ?? []);
-        $self->listConfiguration->setResultsPerPage($configuration['list']['results_per_page'] ?? 25);
-        $self->listConfiguration->setOperations($self->entityOperationsFromArray($configuration['list']['operations'] ?? []));
+        if(!is_array($configuration['list'])) {
+            throw new ConfigurationException(sprintf('Key "list" for "%s" object is not an array', $objectFqcn));
+        }
+
+        $listConfiguration = ListConfiguration::create($objectFqcn, $configuration['list']);
+        $self = self::create($objectFqcn, $listConfiguration);
 
         if(isset($configuration['new'])) {
             $self->newObjectConfiguration = NewObjectConfiguration::fromArray($configuration['new']);
         }
+
+        if(isset($configuration['edit'])) {
+            $self->editConfiguration = EditConfiguration::fromArray($configuration['edit']);
+        }
+
 
         return $self;
     }
@@ -70,27 +78,27 @@ class ManagedObject
         return $this->newObjectConfiguration;
     }
 
+    /**
+     * @return EditConfiguration|null
+     */
+    public function getEditConfiguration(): ?EditConfiguration
+    {
+        return $this->editConfiguration;
+    }
 
     /**
-     * @param array $operations
-     * @return array
-     * @throws DashboardException
+     * @param EditConfiguration|null $editConfiguration
+     * @return ManagedObject
      */
-    protected function entityOperationsFromArray(array $operations): array
+    public function setEditConfiguration(?EditConfiguration $editConfiguration): ManagedObject
     {
-        $output = [];
-        foreach ($operations as $operationName => $operationConfig) {
-            $output[$operationName] = new EntityOperation(
-                $operationName,
-                $operationConfig['label'],
-                $operationConfig['handler_fqcn'] ?? null,
-                $operationConfig['handler_method'] ?? null,
-                $operationConfig['transform'] ?? null,
-                $operationConfig['force_persist'] ?? false
-            );
-        }
+        $this->editConfiguration = $editConfiguration;
+        return $this;
+    }
 
-        return $output;
+    public function hasEditConfiguration(): bool
+    {
+        return $this->editConfiguration !== null;
     }
 
 }
