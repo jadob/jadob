@@ -442,7 +442,7 @@ class DashboardAction
 
     }
 
-    public function handleOperation(Request $request, DashboardContext $context)
+    public function handleOperation(Request $request, DashboardContextInterface $context)
     {
         $this->logger->debug('handleOperation invoked');
         $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
