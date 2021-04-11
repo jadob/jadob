@@ -77,7 +77,7 @@ class Url
         $this->fragment = $output['fragment'] ?? null;
 
         if (isset($output['query'])) {
-            parse_url(
+            parse_str(
                 $output['query'],
                 $this->query
             );
@@ -236,6 +236,14 @@ class Url
     public function getPort(): ?int
     {
         return $this->port;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQuery(): array
+    {
+        return $this->query;
     }
 
 }

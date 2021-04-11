@@ -18,4 +18,17 @@ class UrlTest extends TestCase
         self::assertSame(null, $url->getPort());
     }
 
+    public function testQueryProcessing()
+    {
+        $url = new Url('https://example.com?key1=val1&key2[]=val2');
+
+        self::assertSame(
+            [
+                'key1' => 'val1',
+                'key2' => ['val2']
+            ],
+            $url->getQuery()
+        );
+
+    }
 }
