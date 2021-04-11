@@ -4,11 +4,29 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Configuration;
 
 
+use Jadob\Dashboard\Exception\ConfigurationException;
+use Jadob\Dashboard\Exception\DashboardException;
+
 class ListConfiguration
 {
     protected array $fieldsToShow = [];
+
+    /**
+     * @var array<string, EntityOperation>
+     */
     protected array $operations = [];
+
     protected int $resultsPerPage = 25;
+
+    /**
+     * @var array<string,PredefinedCriteria>
+     */
+    protected array $predefinedCriteria = [];
+
+    protected function __construct(array $fieldsToShow)
+    {
+        $this->fieldsToShow = $fieldsToShow;
+    }
 
     /**
      * @return array
@@ -16,14 +34,6 @@ class ListConfiguration
     public function getFieldsToShow(): array
     {
         return $this->fieldsToShow;
-    }
-
-    /**
-     * @param array $fieldsToShow
-     */
-    public function setFieldsToShow(array $fieldsToShow): void
-    {
-        $this->fieldsToShow = $fieldsToShow;
     }
 
     /**
@@ -42,25 +52,68 @@ class ListConfiguration
         return $this->resultsPerPage;
     }
 
-    /**
-     * @param int $resultsPerPage
-     */
-    public function setResultsPerPage(int $resultsPerPage): void
-    {
-        $this->resultsPerPage = $resultsPerPage;
-    }
-
-    /**
-     * @param array $operations
-     */
-    public function setOperations(array $operations): void
-    {
-        $this->operations = $operations;
-    }
-
-
-    public function getOperation(string $operationName)
+    public function getOperation(string $operationName): EntityOperation
     {
         return $this->operations[$operationName];
+    }
+
+    /**
+     * @param string $for
+     * @param array $config
+     * @return ListConfiguration
+     * @throws ConfigurationException
+     */
+    public static function create(string $for, array $config): ListConfiguration
+    {
+        if (!isset($config['fields'])) {
+            throw new ConfigurationException(sprintf('Missing "fields" key for "%s" object!', $for));
+        }
+
+        if (!is_array($config['fields'])) {
+            throw new ConfigurationException(sprintf('Value for "fields" key for "%s" object must be an array!', $for));
+        }
+
+        $self = new self($config['fields']);
+
+        if (isset($config['results_per_page']) && !is_int($config['results_per_page'])) {
+            throw new ConfigurationException(sprintf('Value for "results_per_page" key for "%s" object must be an int!', $for));
+        }
+
+        if (isset($config['results_per_page'])) {
+            $self->resultsPerPage = $config['results_per_page'];
+        }
+
+        if (isset($config['operations']) && !is_array($config['operations'])) {
+            throw new ConfigurationException(sprintf('Value for "operations" key for "%s" object must be an array!', $for));
+        }
+
+        if (isset($config['operations'])) {
+            foreach ($config['operations'] as $operationName => $operationConfig) {
+                if (!is_string($operationName)) {
+                    throw new ConfigurationException(
+                        sprintf(
+                            'Key operations.%s for "%s" object is invalid and must be an string!',
+                            $operationName,
+                            $for
+                        )
+                    );
+                }
+
+                if (!is_array($operationConfig)) {
+                    throw new ConfigurationException(
+                        sprintf(
+                            'Value for operations.%s key for "%s" object must be an array!',
+                            $operationName,
+                            $for
+                        )
+                    );
+                }
+
+
+                $self->operations[$operationName] = EntityOperation::fromArray($operationName, $operationConfig);
+            }
+        }
+
+        return $self;
     }
 }
