@@ -8,4 +8,5 @@ class CrudOperationType
 {
     public const LIST = 'list';
     public const NEW = 'new';
+    public const EDIT = 'edit';
 }
