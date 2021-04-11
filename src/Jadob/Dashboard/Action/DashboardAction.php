@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Action;
 
 use Closure;
+use DateTimeImmutable;
 use DateTimeInterface;
-use Jadob\Contracts\Dashboard\DashboardContextInterface;
 use Jadob\Dashboard\ActionType;
 use Jadob\Dashboard\Configuration\Dashboard;
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
+use Jadob\Dashboard\Configuration\NewObjectConfiguration;
 use Jadob\Dashboard\CrudOperationType;
-use Jadob\Dashboard\Bridge\Jadob\DashboardContext;
+use Jadob\Dashboard\DashboardContext;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\OperationHandler;
@@ -73,9 +74,17 @@ class DashboardAction
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function __invoke(Request $request, DashboardContextInterface $context): Response
+    public function __invoke(Request $request): Response
     {
         $action = $request->query->get(QueryStringParamName::ACTION);
+
+        $context = new DashboardContext(
+            DateTimeImmutable::createFromFormat(
+                'U',
+                (string)$request->server->get('REQUEST_TIME')
+            )
+        );
+
 
         if ($action === null) {
             return $this->handleDashboard(
@@ -158,6 +167,7 @@ class DashboardAction
             return new Response(
                 $this->twig->render(
                     '@JadobDashboard/crud/list.html.twig', [
+                        'managed_object' => $managedObjectConfiguration,
                         'dashboard_config' => $this->configuration,
                         'list' => $list,
                         'fields' => $fieldsToExtract,
@@ -171,7 +181,9 @@ class DashboardAction
             );
         }
 
-        if ($operation === CrudOperationType::NEW) {
+        if ($operation === CrudOperationType::NEW || $operation === CrudOperationType::EDIT) {
+            $isEdit = $operation === CrudOperationType::EDIT;
+
             $objectConfig = $this->configuration->getManagedObjectConfiguration($objectFqcn);
             if (!$objectConfig->hasNewObjectConfiguration()) {
                 throw new DashboardException(
@@ -179,11 +191,23 @@ class DashboardAction
                 );
             }
 
+            /** @var NewObjectConfiguration $newConfiguration */
             $newConfiguration = $objectConfig->getNewObjectConfiguration();
             $formBuilder = $newConfiguration->getFormFactory();
 
             /** @var FormInterface $form */
             $form = $formBuilder($this->formFactory);
+
+            if($isEdit) {
+                $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
+                $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+                if($object === null) {
+                    throw new DashboardException(sprintf('There is no object "%s" with ID "%s"!', $objectFqcn, $objectId));
+                }
+
+                $form->setData($object);
+            }
+
             if ($form === null) {
                 throw new RuntimeException('Form factory does not returned a Form!');
             }
@@ -210,6 +234,7 @@ class DashboardAction
                 )
             );
         }
+
         throw new RuntimeException('JDASH0003: Not implemented yet');
     }
 
