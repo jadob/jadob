@@ -54,7 +54,7 @@ class Url
         }
     }
 
-    protected function parse(string $url)
+    protected function parse(string $url): void
     {
         $output = \parse_url($url);
 
@@ -143,9 +143,10 @@ class Url
     }
 
 
-    public function setHost(string $host)
+    public function setHost(string $host): self
     {
         $this->host = $host;
+        return $this;
     }
 
     public function getHost(): ?string
@@ -197,7 +198,7 @@ class Url
         return $this;
     }
 
-    public function removeFragment(): static
+    public function removeFragment(): Url
     {
         $this->fragment = null;
         return $this;
@@ -224,7 +225,6 @@ class Url
             throw new \InvalidArgumentException('Given $value parameter should be scalar or array');
         }
 
-        $this->changed = true;
         $this->query[$key] = $value;
 
         return $this;
