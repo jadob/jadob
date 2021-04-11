@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\Tests;
 
 use DateTimeImmutable;
+use Jadob\Dashboard\Bridge\Jadob\DashboardContext;
 use Jadob\Dashboard\Configuration\EntityOperation;
-use Jadob\Dashboard\DashboardContext;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\Tests\Fixtures\Cat;
 use Jadob\Dashboard\Tests\Fixtures\InvokableService;
 use Jadob\Dashboard\Tests\Fixtures\Tuna;
+use Jadob\Security\Auth\User\User;
 use Psr\Log\NullLogger;
 
 class OperationHandlerTest extends BaseDashboardTestCase
@@ -20,7 +21,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     {
         $dateTime = new DateTimeImmutable('2021-03-20');
         $cat = new Cat('Mruczek', 'American Shorthair');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
 
         $doctrineMock = $this->getObjectManagerMock();
 
@@ -57,7 +58,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     {
         $dateTime = new DateTimeImmutable('2021-03-20');
         $cat = new Cat('Andrew', 'Munchkin');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
 
         $operation = new EntityOperation(
             'dashboard_test',
@@ -91,7 +92,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     public function testHandlerWillCallMethodOnObjectWhenNoHandlerFqcnPassed(): void
     {
         $dateTime = new DateTimeImmutable('2021-03-20');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
 
         $operation = new EntityOperation(
             'dashboard_test',
@@ -128,7 +129,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     public function testHandlerWillCatchExceptionAndPassItOn(): void
     {
         $dateTime = new DateTimeImmutable('2021-03-20');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
 
         $cat = new Cat('Chodge', 'Foldex');
 
@@ -166,7 +167,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     {
 
         $dateTime = new DateTimeImmutable('2021-03-20');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
         $food = new Tuna();
 
         $cat = $this->getMockBuilder(Cat::class)
@@ -201,7 +202,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
     {
 
         $dateTime = new DateTimeImmutable('2021-03-20');
-        $context = new DashboardContext($dateTime);
+        $context = new DashboardContext($dateTime, new User('miki', 'miki'));
         $cat = new Cat('cheezburger', 'Lykoi');
 
         $operationHandler = new OperationHandler(
