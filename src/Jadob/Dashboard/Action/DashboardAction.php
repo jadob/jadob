@@ -237,6 +237,7 @@ class DashboardAction
     /**
      * @param Dashboard $dashboard
      * @param DashboardConfiguration $dashboardConfiguration
+     * @param DashboardContextInterface $context
      * @param Request $request
      * @return Response
      * @throws LoaderError
@@ -246,7 +247,7 @@ class DashboardAction
     protected function handleDashboard(
         Dashboard $dashboard,
         DashboardConfiguration $dashboardConfiguration,
-        DashboardContext $context,
+        DashboardContextInterface $context,
         Request $request
     ): Response
     {
