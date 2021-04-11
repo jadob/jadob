@@ -40,6 +40,8 @@ class Url
      */
     protected $fragment;
 
+    protected ?int $port = null;
+
     /**
      * Url constructor.
      * @param string|null $url
@@ -228,5 +230,12 @@ class Url
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
+    public function getPort(): ?int
+    {
+        return $this->port;
+    }
 
 }
