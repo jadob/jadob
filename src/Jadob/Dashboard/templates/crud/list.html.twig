@@ -48,12 +48,20 @@
                 {% endfor %}
                 {% if operations|length > 0 %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                        {% for operation in operations %}
-                            <a href="{{ dashboard_path_object_operation(object_fqcn, obj.id, operation.name) }}" class="text-gray-500 font-bold text-xs hover:text-gray-800 focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease">
-                                {{ operation.label|trans }}
-                            </a>
-
-                        {% endfor %}
+                        <div class="grid grid-cols-1 divide-y divide-gray-300">
+                            {% if managed_object.hasEditConfiguration %}
+                                {% include '@JadobDashboard/partials/list_operation.html.twig' with {
+                                    path: dashboard_path_object_edit(object_fqcn, obj.id),
+                                    label: 'dashboard.crud_operation.edit'|trans
+                                } %}
+                            {% endif %}
+                            {% for operation in operations %}
+                                {% include '@JadobDashboard/partials/list_operation.html.twig' with {
+                                    path: dashboard_path_object_operation(object_fqcn, obj.id, operation.name),
+                                    label: operation.label|trans
+                                } %}
+                            {% endfor %}
+                        </div>
                     </td>
                 {% endif %}
 
