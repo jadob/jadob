@@ -53,11 +53,7 @@ class DashboardProvider implements ServiceProviderInterface
                 return new PathGenerator($container->get(UrlGeneratorInterface::class));
             },
             OperationHandler::class => static function (ContainerInterface $container): OperationHandler {
-                return new OperationHandler(
-                    $container,
-                    $container->get(LoggerInterface::class),
-                    $container->get(DoctrineOrmObjectManager::class)
-                );
+                return new OperationHandler($container, $container->get(LoggerInterface::class));
             }
         ];
     }
