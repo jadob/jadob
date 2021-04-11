@@ -14,4 +14,11 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Jadob/Url/Tests"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+    </issueHandlers>
 </psalm>
