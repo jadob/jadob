@@ -30,7 +30,7 @@
                         {{ f }}
                     </th>
                 {% endfor %}
-                {% if operations|length > 0 %}
+                {% if operations|length > 0 or managed_object.hasEditConfiguration %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Operations
                 </th>
@@ -46,7 +46,7 @@
                     {{ obj[f] }}
                 </td>
                 {% endfor %}
-                {% if operations|length > 0 %}
+                {% if operations|length > 0 or managed_object.hasEditConfiguration %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         <div class="grid grid-cols-1 divide-y divide-gray-300">
                             {% if managed_object.hasEditConfiguration %}
