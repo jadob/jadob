@@ -15,6 +15,8 @@ class DashboardConfiguration
      */
     protected array $managedObjects = [];
 
+    protected array $actions = [];
+
     protected string $defaultDashboardName;
 
     /**
@@ -34,6 +36,12 @@ class DashboardConfiguration
             );
 
             $self->dashboards[$name] = $dashboardObj;
+        }
+
+        if(isset($config['actions']) && is_array($config['actions'])) {
+            foreach ($config['actions'] as $actionName => $actionConfig) {
+                $self->actions[$actionName] = ActionConfiguration::fromArray($actionConfig);
+            }
         }
 
         if(isset($config['managed_objects']) && is_array($config['managed_objects'])) {
@@ -78,5 +86,13 @@ class DashboardConfiguration
     public function getManagedObjectConfiguration(string $objectFqcn): ManagedObject
     {
         return $this->managedObjects[$objectFqcn];
+    }
+
+    /**
+     * @return array
+     */
+    public function getActions(): array
+    {
+        return $this->actions;
     }
 }
