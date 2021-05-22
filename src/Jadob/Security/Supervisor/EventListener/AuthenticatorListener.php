@@ -13,9 +13,11 @@ use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\IdentityStorage;
+use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\RequestAttribute;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,6 +95,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
 
 
     /**
+     * @TODO: this must be moved to supervisor
      * @param Request $request
      * @param RequestSupervisorInterface $supervisor
      * @return Response|null
@@ -124,6 +127,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
         return $supervisor->handleAuthenticationSuccess($request, $user);
     }
 
+    //@TODO: this must be moved to supervisor
     protected function handleNonStatelessRequest(RequestContext $context, RequestSupervisorInterface $supervisor): ?Response
     {
         $request = $context->getRequest();
@@ -164,10 +168,31 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
             }
 
             $this->identityStorage->setUser($user, $request->getSession(), get_class($supervisor));
+            $this->eventDispatcher->dispatch(
+                new UserEvent(
+                    $user,
+                    UserEvent::CONTEXT_AUTHENTICATED,
+                    $supervisor
+                )
+            );
+
             return $supervisor->handleAuthenticationSuccess($request, $user);
         }
 
         $userFromStorage = $this->identityStorage->getUser($request->getSession(), get_class($supervisor));
+        if ($userFromStorage !== null) {
+            /** @var UserEvent $userAfterEvents */
+            $userAfterEvents = $this->eventDispatcher->dispatch(
+                    new UserEvent(
+                        $userFromStorage,
+                        UserEvent::CONTEXT_TAKEN_FROM_SESSION,
+                        $supervisor
+                    )
+                );
+
+            $userFromStorage = $userAfterEvents->getUser();
+        }
+
         $context->setUser($userFromStorage);
 
         /**
