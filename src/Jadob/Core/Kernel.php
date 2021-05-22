@@ -293,6 +293,13 @@ class Kernel
             });
 
             foreach ($services as $serviceName => $serviceObject) {
+                if(!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
+                    throw new \RuntimeException(
+                        sprintf(
+                            'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
+                        )
+                    );
+                }
                 $containerBuilder->add($serviceName, $serviceObject);
             }
 
