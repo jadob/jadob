@@ -8,6 +8,7 @@ use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\RequestContext;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
+use Jadob\Security\Auth\Event\UserEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
@@ -26,25 +27,19 @@ use function get_class;
  */
 class AuthenticatorListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
-
-    /**
-     * @var Supervisor
-     */
     protected Supervisor $supervisor;
-
-    /**
-     * @var IdentityStorage
-     */
     protected IdentityStorage $identityStorage;
+    protected EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @param Supervisor $supervisor
-     * @param IdentityStorage $identityStorage
-     */
-    public function __construct(Supervisor $supervisor, IdentityStorage $identityStorage)
+    public function __construct(
+        Supervisor $supervisor,
+        IdentityStorage $identityStorage,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->supervisor = $supervisor;
         $this->identityStorage = $identityStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -138,7 +133,13 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
             try {
                 //2. Handle Authentication
                 $credentials = $supervisor->extractCredentialsFromRequest($request);
-                if ($credentials === null || $credentials === false || count($credentials) === 0) {
+                if ($credentials === null) {
+                    throw new \LogicException(
+                        sprintf('%s::extractCredentialsFromRequest should not return null.', get_class($supervisor))
+                    );
+                }
+
+                if ($credentials === false || count($credentials) === 0) {
                     throw UserNotFoundException::emptyCredentials();
                 }
 
