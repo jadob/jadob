@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
+use Jadob\Bridge\Doctrine\Persistence\ServiceProvider\PersistenceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -175,29 +176,28 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
             ConsoleRunner::addCommands($console);
         }
 
-        if ($container->has(ManagerRegistry::class)) {
-            /** @var DoctrineManagerRegistry $managerRegistry */
-            $managerRegistry = $container->get(ManagerRegistry::class);
-            foreach ($config['managers'] as $connectionName => $configuration) {
 
-                $serviceName = sprintf('doctrine.orm.%s', $connectionName);
+        /** @var DoctrineManagerRegistry $managerRegistry */
+        $managerRegistry = $container->get(ManagerRegistry::class);
+        foreach ($config['managers'] as $connectionName => $configuration) {
 
-                $managerRegistry->addManager(
-                    $connectionName,
-                    $container->get($serviceName)
-                );
+            $serviceName = sprintf('doctrine.orm.%s', $connectionName);
 
-                if($configuration['default']) {
-                    $managerRegistry->setDefaultManagerName($connectionName);
-                }
+            $managerRegistry->addManager(
+                $connectionName,
+                $container->get($serviceName)
+            );
+
+            if ($configuration['default']) {
+                $managerRegistry->setDefaultManagerName($connectionName);
             }
         }
     }
 
     /**
+     * @return void
      * @throws ReflectionException
      *
-     * @return void
      */
     protected function registerAnnotations(): void
     {
@@ -206,13 +206,13 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
     }
 
     /**
-     * @return DoctrineDBALProvider::class[]
-     *
-     * @psalm-return array{0: DoctrineDBALProvider::class}
+     * @return array
+     * @psalm-return class-string[]
      */
     public function getParentProviders(): array
     {
         return [
+            PersistenceProvider::class,
             DoctrineDBALProvider::class
         ];
     }
