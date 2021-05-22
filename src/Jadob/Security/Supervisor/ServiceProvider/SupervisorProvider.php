@@ -8,6 +8,8 @@ use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Security\Auth\EventListener\RefreshUserListener;
 use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Auth\ServiceProvider\AuthProvider;
 use Jadob\Security\Supervisor\EventListener\AuthenticatorListener;
@@ -73,18 +75,28 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
      */
     public function onContainerBuild(Container $container, $config)
     {
-
         /** @var Supervisor $supervisor */
         $supervisor = $container->get(Supervisor::class);
         /** @var IdentityStorage $identityStorage */
         $identityStorage = $container->get('auth.user.storage');
-
-        $container->get(EventDispatcherInterface::class)->addListener(
-            new AuthenticatorListener($supervisor, $identityStorage)
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $container->get(EventDispatcherInterface::class);
+        $eventDispatcher->addListener(
+            new AuthenticatorListener(
+                $supervisor,
+                $identityStorage,
+                $eventDispatcher
+            )
         );
 
-        $container->get(EventDispatcherInterface::class)->addListener(
+        $eventDispatcher->addListener(
             new AuthorizerListener()
+        );
+
+        $eventDispatcher->addListener(
+            new RefreshUserListener(
+                $supervisor
+            )
         );
     }
 
