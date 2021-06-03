@@ -6,7 +6,24 @@
 {% endset %}
 {% set dashboard_name = 'crud-list' %}
 {% block content %}
-    <div class="container mx-auto">
+    {% if managed_object.listConfiguration.predefinedCriteria|length > 0 %}
+    <div class="container my-3 mx-auto">
+        <p class="text-gray-600 font-bold tracking-wide">Predefined Criteria:</p>
+        <ul>
+            {% for name, criteria in managed_object.listConfiguration.predefinedCriteria %}
+            <li>
+                <a
+                        class="text-gray-600 hover:text-gray-400"
+                        href="{{ dashboard_path_object_list(object_fqcn,current_page, criteria) }}">
+                    {{ criteria.label }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="container my-3 mx-auto">
         <a href="{{ dashboard_path_object_new(object_fqcn) }}"
            class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 mr-2 rounded-md text-base font-medium">
             + Add new
@@ -34,7 +51,7 @@
                     {{ f }}
                 </th>
             {% endfor %}
-            {% if operations|length > 0 or managed_object.hasEditConfiguration %}
+            {% if current_criteria == null and operations|length > 0 or managed_object.hasEditConfiguration %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Operations
                 </th>
@@ -57,7 +74,7 @@
                         </label>
                     </td>
                 {% endfor %}
-                {% if operations|length > 0 or managed_object.hasEditConfiguration %}
+                {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration)  %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         <div class="grid grid-cols-1 divide-y divide-gray-300">
                             {% if managed_object.hasEditConfiguration %}
