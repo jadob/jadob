@@ -12,4 +12,5 @@ class QueryStringParamName
     public const CRUD_OPERATION = 'op';
     public const OBJECT_ID = 'id';
     public const OPERATION_NAME = 'opname';
+    public const LIST_CRITERIA = 'criteria';
 }
