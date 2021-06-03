@@ -5,6 +5,7 @@ namespace Jadob\Dashboard\ObjectManager;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Jadob\Dashboard\Exception\DashboardException;
 
 class DoctrineOrmObjectManager
@@ -50,6 +51,13 @@ class DoctrineOrmObjectManager
         $this->em->flush();
     }
 
+    /**
+     * @psalm-param class-string $objectFqcn
+     * @param string $objectFqcn
+     * @param string|int $objectId
+     * @return object
+     * @throws DashboardException
+     */
     public function getOneById(string $objectFqcn, $objectId): object
     {
         $object = $this->em->find($objectFqcn, $objectId);
@@ -65,5 +73,10 @@ class DoctrineOrmObjectManager
         }
 
         return $object;
+    }
+
+    public function getObjectRepository(string $objectFqcn): \Doctrine\Persistence\ObjectRepository
+    {
+        return $this->em->getRepository($objectFqcn);
     }
 }
