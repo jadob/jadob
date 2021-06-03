@@ -153,40 +153,66 @@ class DashboardAction
 
             $pageNumber = $request->query->getInt(QueryStringParamName::CRUD_CURRENT_PAGE, 1);
             $resultsPerPage = $listConfiguration->getResultsPerPage();
-            $pagesCount = $this->doctrineOrmObjectManager->getPagesCount($objectFqcn, $resultsPerPage);
 
-            $objects = $this->doctrineOrmObjectManager->read(
-                $objectFqcn,
-                $pageNumber,
-                $resultsPerPage
-            );
+            $criteria = null;
+            /** @var string|null $criteriaName */
+            $criteriaName = $request->query->get(QueryStringParamName::LIST_CRITERIA);
+
+
+            if ($criteriaName === null) {
+                $pagesCount = $this->doctrineOrmObjectManager->getPagesCount($objectFqcn, $resultsPerPage);
+                $objects = $this->doctrineOrmObjectManager->read(
+                    $objectFqcn,
+                    $pageNumber,
+                    $resultsPerPage
+                );
+            } else {
+                $objectRepo = $this->doctrineOrmObjectManager->getObjectRepository($objectFqcn);
+                $criteria = $managedObjectConfiguration
+                    ->getListConfiguration()
+                    ->getPredefinedCriteria()[$criteriaName];
+                $methodToCall = $criteria->getMethod();
+
+                $objects = $objectRepo->$methodToCall();
+                if(!is_array($objects)) {
+                    throw new DashboardException('Return from predefined criteria must be an array!');
+                }
+
+                $pagesCount = 1;
+            }
 
             $list = [];
             $fieldsToExtract = $listConfiguration->getFieldsToShow();
 
-            foreach ($objects as $object) {
-                $objectArray = [];
-                $reflectionObject = new ReflectionClass($object);
+            if($criteria === null || (!$criteria->isCustomResultSet())) {
+                foreach ($objects as $object) {
+                    $objectArray = [];
+                    $reflectionObject = new ReflectionClass($object);
 
-                foreach ($fieldsToExtract as $fieldToExtract) {
-                    $prop = $reflectionObject->getProperty($fieldToExtract);
-                    $prop->setAccessible(true);
-                    $val = $prop->getValue($object);
+                    foreach ($fieldsToExtract as $fieldToExtract) {
+                        $prop = $reflectionObject->getProperty($fieldToExtract);
+                        $prop->setAccessible(true);
 
-                    if ($val instanceof DateTimeInterface) {
-                        $val = $val->format('Y-m-d H:i:s');
+                        $val = $prop->getValue($object);
+
+                        if ($val instanceof DateTimeInterface) {
+                            $val = $val->format('Y-m-d H:i:s');
+                        }
+
+                        $objectArray[$fieldToExtract] = $val;
                     }
 
-                    $objectArray[$fieldToExtract] = $val;
+                    $list[] = $objectArray;
                 }
-
-                $list[] = $objectArray;
+            } elseif($criteria->isCustomResultSet()) {
+                $fieldsToExtract = array_keys(reset($objects));
+                $list = $objects;
             }
-
 
             return new Response(
                 $this->twig->render(
                     '@JadobDashboard/crud/list.html.twig', [
+                        'current_criteria' => $criteria,
                         'managed_object' => $managedObjectConfiguration,
                         'dashboard_config' => $this->configuration,
                         'list' => $list,
@@ -213,31 +239,45 @@ class DashboardAction
 
             /** @var NewObjectConfiguration $newConfiguration */
             $newConfiguration = $objectConfig->getNewObjectConfiguration();
-            $formBuilder = $newConfiguration->getFormFactory();
 
-            /** @var FormInterface $form */
-            $form = $formBuilder($this->formFactory);
+            if ($newConfiguration->getFormFactory() !== null) {
+                /** @var Closure $formBuilder */
+                $formBuilder = $newConfiguration->getFormFactory();
+                /** @var FormInterface|null $form */
+                $form = $formBuilder($this->formFactory);
 
-            if($isEdit) {
-                $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
-                $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
-                if($object === null) {
-                    throw new DashboardException(sprintf('There is no object "%s" with ID "%s"!', $objectFqcn, $objectId));
+                if ($form === null) {
+                    throw new RuntimeException('Form factory does not returned a Form!');
                 }
 
-                $form->setData($object);
+            } elseif ($newConfiguration->getFormClass() !== null) {
+                /** @var string $formClass */
+                $formClass = $newConfiguration->getFormClass();
+                $object = null;
+                if ($isEdit) {
+                    /** @var string $objectId */
+                    $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
+                    /** @var null|object $object */
+                    $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+                    if ($object === null) {
+                        throw new DashboardException(sprintf('There is no object "%s" with ID "%s"!', $objectFqcn, $objectId));
+                    }
+                }
+                $form = $this->formFactory->create($formClass, $object);
+            } else {
+                throw new DashboardException('There is no way to create a form.');
             }
 
-            if ($form === null) {
-                throw new RuntimeException('Form factory does not returned a Form!');
-            }
 
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $createdObject = $form->getData();
 
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var object $createdObject */
+                $createdObject = $form->getData();
                 if ($newConfiguration->hasBeforeInsertHook()) {
-                    $newConfiguration->getBeforeInsertHook()($createdObject);
+                    /** @var callable $beforeInsertHook */
+                    $beforeInsertHook = $newConfiguration->getBeforeInsertHook();
+                    $beforeInsertHook($createdObject, $form);
                 }
 
                 $this->doctrineOrmObjectManager->persist($createdObject);
@@ -291,6 +331,14 @@ class DashboardAction
         );
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws LoaderError
+     * @throws ReflectionException
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     protected function handleImport(Request $request): Response
     {
         $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
@@ -304,6 +352,7 @@ class DashboardAction
 
         $forms = [];
         foreach ($imports as $key => $import) {
+            /** @var array $import */
             if ($import['type'] === 'csv_upload') {
                 $form['title'] = $import['name'];
                 $form['name'] = $key;
@@ -361,7 +410,9 @@ class DashboardAction
                                 throw new RuntimeException('Could not use before_insert hook as it is not a closure!');
                             }
 
-                            $import['before_insert']($instance);
+                            /** @var callable $beforeInsertCallback */
+                            $beforeInsertCallback = $import['before_insert'];
+                            $beforeInsertCallback($instance);
                         }
 
                         $this->doctrineOrmObjectManager->persist($instance);
