@@ -104,8 +104,32 @@ class DashboardAction
         if ($action === ActionType::OPERATION) {
             return $this->handleOperation($request, $context);
         }
+
+        if($action === ActionType::BATCH_OPERATION) {
+            return $this->handleBatchOperation($request, $context);
+        }
     }
 
+
+    protected function handleBatchOperation(Request $request, DashboardContextInterface $context): Response
+    {
+        $this->logger->debug('handleOperation invoked');
+        $objectFqcn = $request->query->get(QueryStringParamName::OBJECT_NAME);
+        $operationName = $request->request->get('operation');
+        $managedObjectConfiguration = $this->configuration->getManagedObjectConfiguration($objectFqcn);
+
+        $this->logger->debug('Getting information about operation');
+        $operation = $managedObjectConfiguration->getListConfiguration()->getOperation($operationName);
+        $this->logger->debug('Getting object from persistence');
+        foreach ($request->request->get('id') as $objectId) {
+            $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+            $this->logger->debug(sprintf('Continuing to invoke an operation "%s"', $operationName));
+            $this->operationHandler->processOperation($operation, $object, $context);
+            $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
+        }
+
+        return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
+    }
     /**
      * @param Request $request
      * @return Response
