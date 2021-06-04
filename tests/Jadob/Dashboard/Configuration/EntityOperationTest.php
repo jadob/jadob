@@ -1,12 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\Tests\Configuration;
+namespace Jadob\Dashboard\Configuration;
 
-use Jadob\Dashboard\Configuration\EntityOperation;
-use Jadob\Dashboard\Configuration\ListConfiguration;
 use Jadob\Dashboard\Exception\ConfigurationException;
-use Jadob\Dashboard\Tests\Fixtures\Cat;
 use PHPUnit\Framework\TestCase;
 
 class EntityOperationTest extends TestCase

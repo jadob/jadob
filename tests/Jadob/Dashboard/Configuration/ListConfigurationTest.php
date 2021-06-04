@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\Tests\Configuration;
+namespace Jadob\Dashboard\Configuration;
 
-use Jadob\Dashboard\Configuration\ListConfiguration;
 use Jadob\Dashboard\Exception\ConfigurationException;
-use Jadob\Dashboard\Tests\Fixtures\Cat;
+use Jadob\Dashboard\Fixtures\Cat;
 use PHPUnit\Framework\TestCase;
 
 class ListConfigurationTest extends TestCase
@@ -13,7 +12,7 @@ class ListConfigurationTest extends TestCase
     public function testPassingConfigurationWithoutListOfFieldsWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
-        self::expectExceptionMessage('Missing "fields" key for "Jadob\Dashboard\Tests\Fixtures\Cat" object!');
+        self::expectExceptionMessage('Missing "fields" key for "Jadob\Dashboard\Fixtures\Cat" object!');
 
         ListConfiguration::create(Cat::class, []);
     }
@@ -21,7 +20,7 @@ class ListConfigurationTest extends TestCase
     public function testPassingConfigurationWithInvalidListOfFieldsWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
-        self::expectExceptionMessage('Value for "fields" key for "Jadob\Dashboard\Tests\Fixtures\Cat" object must be an array!');
+        self::expectExceptionMessage('Value for "fields" key for "Jadob\Dashboard\Fixtures\Cat" object must be an array!');
 
         ListConfiguration::create(Cat::class, ['fields' => false]);
     }
@@ -29,7 +28,7 @@ class ListConfigurationTest extends TestCase
     public function testPassingConfigurationWithInvalidResultsPerPageWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
-        self::expectExceptionMessage('Value for "results_per_page" key for "Jadob\Dashboard\Tests\Fixtures\Cat" object must be an int!');
+        self::expectExceptionMessage('Value for "results_per_page" key for "Jadob\Dashboard\Fixtures\Cat" object must be an int!');
 
         ListConfiguration::create(Cat::class, ['fields' => [], 'results_per_page' => 'none of them']);
     }
@@ -47,7 +46,7 @@ class ListConfigurationTest extends TestCase
     public function testPassingConfigurationWithInvalidOperationsWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
-        self::expectExceptionMessage('Value for "operations" key for "Jadob\Dashboard\Tests\Fixtures\Cat" object must be an array!');
+        self::expectExceptionMessage('Value for "operations" key for "Jadob\Dashboard\Fixtures\Cat" object must be an array!');
 
         ListConfiguration::create(Cat::class, ['fields' => [], 'operations' => false]);
 
@@ -56,7 +55,7 @@ class ListConfigurationTest extends TestCase
     public function testPassingConfigurationWithIntAsOperationNameWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
-        self::expectExceptionMessage('Key operations.1 for "Jadob\Dashboard\Tests\Fixtures\Cat" object is invalid and must be an string!');
+        self::expectExceptionMessage('Key operations.1 for "Jadob\Dashboard\Fixtures\Cat" object is invalid and must be an string!');
 
         ListConfiguration::create(Cat::class, ['fields' => [], 'operations' => [
             1 => []

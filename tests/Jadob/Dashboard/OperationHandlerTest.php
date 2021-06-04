@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\Tests;
+namespace Jadob\Dashboard;
 
 use DateTimeImmutable;
 use Jadob\Dashboard\Bridge\Jadob\DashboardContext;
 use Jadob\Dashboard\Configuration\EntityOperation;
 use Jadob\Dashboard\Exception\DashboardException;
-use Jadob\Dashboard\OperationHandler;
-use Jadob\Dashboard\Tests\Fixtures\Cat;
-use Jadob\Dashboard\Tests\Fixtures\InvokableService;
-use Jadob\Dashboard\Tests\Fixtures\Tuna;
+use Jadob\Dashboard\Fixtures\Cat;
+use Jadob\Dashboard\Fixtures\InvokableService;
+use Jadob\Dashboard\Fixtures\Tuna;
 use Jadob\Security\Auth\User\User;
 use Psr\Log\NullLogger;
 

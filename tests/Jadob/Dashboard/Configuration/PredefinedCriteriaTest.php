@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\Tests\Configuration;
+namespace Jadob\Dashboard\Configuration;
 
-use Jadob\Dashboard\Configuration\PredefinedCriteria;
 use Jadob\Dashboard\Exception\ConfigurationException;
 use PHPUnit\Framework\TestCase;
 

@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\Tests;
-
+namespace Jadob\Dashboard;
 
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
