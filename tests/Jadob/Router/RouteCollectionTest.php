@@ -1,15 +1,10 @@
 <?php
 
-namespace Jadob\Router\Tests;
+namespace Jadob\Router;
 
-use Jadob\Router\Route;
-use Jadob\Router\RouteCollection;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RouteCollectionTest
- *
- * @package Jadob\Router\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

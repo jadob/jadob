@@ -1,14 +1,11 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Router\Tests;
+namespace Jadob\Router;
 
-use Jadob\Router\Context;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ContextTest
- *
- * @package Jadob\Router\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

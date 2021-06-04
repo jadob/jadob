@@ -1,17 +1,11 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Router\Tests;
+namespace Jadob\Router;
 
-use Jadob\Router\Context;
-use Jadob\Router\Route;
-use Jadob\Router\RouteCollection;
-use Jadob\Router\Router;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RouterTest
- *
- * @package Jadob\Router\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -32,7 +26,6 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $router = new Router($collection);
 
-        //$this->assertInstanceOf(Context::class, $router->getContext());
         $this->assertEquals('my.domain.com', $router->getContext()->getHost());
     }
 
@@ -47,7 +40,6 @@ class RouterTest extends TestCase
         $this->assertEquals('my.domain.com', $router->getContext()->getHost());
         $router->setContext($customContext);
 
-        //$this->assertInstanceOf(Context::class, $router->getContext());
         $this->assertEquals('my.newdomain.com', $router->getContext()->getHost());
     }
 
@@ -104,7 +96,6 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpAndCustomPortGenerating(): void
     {
-
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
@@ -116,7 +107,6 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpAndDefaultPortGenerating(): void
     {
-
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['SERVER_PORT'] = 80;
 
@@ -131,7 +121,6 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpsAndCustomPortGenerating(): void
     {
-
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['SERVER_PORT'] = 9876;
         $_SERVER['HTTPS'] = 'on';
@@ -145,7 +134,6 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpsAndDefaultPortGenerating(): void
     {
-
         $_SERVER['SERVER_PORT'] = 443;
         $_SERVER['HTTPS'] = 'on';
 
@@ -159,7 +147,6 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpAndHttpsPortGenerating(): void
     {
-
         $_SERVER['SERVER_PORT'] = 443;
 
         $routeCollection = new RouteCollection();
