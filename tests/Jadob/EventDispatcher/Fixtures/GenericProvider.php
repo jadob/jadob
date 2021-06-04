@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventDispatcher\Tests\Fixtures;
+namespace Jadob\EventDispatcher\Fixtures;
 
 
+use Jadob\EventDispatcher\Fixtures\GenericStoppableEvent;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 class GenericProvider implements ListenerProviderInterface

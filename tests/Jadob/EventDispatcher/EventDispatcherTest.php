@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventDispatcher\Tests;
+namespace Jadob\EventDispatcher;
 
 
-use Jadob\EventDispatcher\EventDispatcher;
-use Jadob\EventDispatcher\Tests\Fixtures\GenericPriorityEventProvider;
-use Jadob\EventDispatcher\Tests\Fixtures\GenericProvider;
-use Jadob\EventDispatcher\Tests\Fixtures\GenericStoppableEvent;
+use Jadob\EventDispatcher\Fixtures\GenericPriorityEventProvider;
+use Jadob\EventDispatcher\Fixtures\GenericProvider;
+use Jadob\EventDispatcher\Fixtures\GenericStoppableEvent;
 use PHPUnit\Framework\TestCase;
 
 class EventDispatcherTest extends TestCase
