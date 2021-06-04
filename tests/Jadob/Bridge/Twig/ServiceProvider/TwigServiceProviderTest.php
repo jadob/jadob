@@ -39,7 +39,7 @@ class TwigServiceProviderTest extends TestCase
             'cache' => false,
             'strict_variables' => true,
             'templates_paths' => [
-                'JadobTest' => '../../templates'
+                'JadobTest' => '../templates'
             ],
             'globals' => [
                 'test1' => 'test1',
@@ -81,7 +81,7 @@ class TwigServiceProviderTest extends TestCase
             'cache' => true,
             'strict_variables' => true,
             'templates_paths' => [
-                'JadobTest' => '../../templates'
+                'JadobTest' => '../templates'
             ],
             'globals' => [
                 'test1' => 'test1',
@@ -117,7 +117,7 @@ class TwigServiceProviderTest extends TestCase
             'cache' => true,
             'strict_variables' => true,
             'templates_paths' => [
-                'JadobTest' => '../../templates'
+                'JadobTest' => '../templates'
             ],
             'extensions' => [
                 'webpack_manifest' => [
