@@ -1,9 +1,8 @@
 <?php
 
-namespace Jadob\FeatureFlag\Tests;
+namespace Jadob\FeatureFlag;
 
 use Jadob\FeatureFlag\Condition\BooleanCondition;
-use Jadob\FeatureFlag\FeatureFlag;
 use PHPUnit\Framework\TestCase;
 
 class FeatureFlagTest extends TestCase

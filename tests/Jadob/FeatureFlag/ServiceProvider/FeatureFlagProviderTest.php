@@ -1,10 +1,11 @@
 <?php
 
-namespace Jadob\FeatureFlag\Tests\ServiceProvider;
+declare(strict_types=1);
+
+namespace Jadob\FeatureFlag\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\FeatureFlag\FeatureFlag;
-use Jadob\FeatureFlag\ServiceProvider\FeatureFlagProvider;
 use PHPUnit\Framework\TestCase;
 
 class FeatureFlagProviderTest extends TestCase
@@ -13,7 +14,6 @@ class FeatureFlagProviderTest extends TestCase
     {
         $provider = new FeatureFlagProvider();
 
-        //config node
         $this->assertEquals('feature_flags', $provider->getConfigNode());
 
         $config = [

@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\FeatureFlag\Tests\Condition;
+namespace Jadob\FeatureFlag\Condition;
 
-use Jadob\FeatureFlag\Condition\SemverCondition;
 use PHPUnit\Framework\TestCase;
 
 /**
