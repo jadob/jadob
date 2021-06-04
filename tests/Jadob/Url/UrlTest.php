@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Url\Tests;
+namespace Jadob\Url;
 
-use Jadob\Url\Url;
-use Monolog\Test\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
 {
