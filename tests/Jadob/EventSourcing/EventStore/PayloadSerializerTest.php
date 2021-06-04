@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\Tests\EventStore;
+namespace Jadob\EventSourcing\EventStore;
 
-use Jadob\EventSourcing\EventStore\PayloadSerializer;
 use Monolog\Test\TestCase;
 
 /**
