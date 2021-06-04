@@ -1,11 +1,11 @@
 <?php
 
-namespace Jadob\Bridge\Twig\Tests\ServiceProvider;
+declare(strict_types=1);
+
+namespace Jadob\Bridge\Twig\ServiceProvider;
 
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
-use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
-use Jadob\Core\AbstractBootstrap;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
 use PHPUnit\Framework\TestCase;
@@ -13,11 +13,7 @@ use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
 
-
 /**
- * Class TwigServiceProviderTest
- *
- * @package Jadob\Bridge\Twig\Tests\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

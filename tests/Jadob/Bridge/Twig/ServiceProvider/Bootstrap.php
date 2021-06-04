@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\Bridge\Twig\Tests\ServiceProvider;
+namespace Jadob\Bridge\Twig\ServiceProvider;
 
 
 use Jadob\Core\AbstractBootstrap;

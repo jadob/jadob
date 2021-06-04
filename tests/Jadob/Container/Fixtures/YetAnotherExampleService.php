@@ -1,11 +1,7 @@
 <?php
 
-namespace Jadob\Container\Tests\Fixtures;
+namespace Jadob\Container\Fixtures;
 
-/**
- * @internal
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
- */
 class YetAnotherExampleService
 {
 

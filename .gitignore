@@ -5,3 +5,4 @@
 /composer.lock
 /qa_report/
 /infection.log
+/.phpunit.result.cache

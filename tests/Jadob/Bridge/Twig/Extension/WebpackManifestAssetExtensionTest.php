@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Twig\Tests\Extension;
+namespace Jadob\Bridge\Twig\Extension;
 
-use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Twig\TwigFunction;

@@ -1,8 +1,9 @@
 <?php
 
-namespace Jadob\Config\Tests;
+declare(strict_types=1);
 
-use Jadob\Config\Config;
+namespace Jadob\Config;
+
 use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase

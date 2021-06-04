@@ -1,16 +1,12 @@
 <?php
 
-namespace Jadob\Container\Tests\Fixtures\ServiceProvider;
+namespace Jadob\Container\Fixtures\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\Container\Tests\Fixtures\ExampleService;
-use Jadob\Container\Tests\Fixtures\YetAnotherExampleService;
+use Jadob\Container\Fixtures\ExampleService;
+use Jadob\Container\Fixtures\YetAnotherExampleService;
 
-/**
- * @internal
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
- */
 class AServiceProvider implements ServiceProviderInterface
 {
 

@@ -1,17 +1,13 @@
 <?php
 
-namespace Jadob\Container\Tests;
+namespace Jadob\Container;
 
-use Jadob\Container\Container;
-use Jadob\Container\Tests\Fixtures\AService;
-use Jadob\Container\Tests\Fixtures\CService;
+use Jadob\Container\Fixtures\AService;
+use Jadob\Container\Fixtures\CService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class ContainerTest
- *
- * @package Jadob\Container\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license proprietary
  */

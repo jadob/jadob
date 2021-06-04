@@ -1,13 +1,11 @@
 <?php
 
-namespace Jadob\Container\Tests;
+namespace Jadob\Container;
 
-use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
-use Jadob\Container\Tests\Fixtures\ExampleService;
-use Jadob\Container\Tests\Fixtures\ServiceProvider\AInvalidServiceProvider;
-use Jadob\Container\Tests\Fixtures\ServiceProvider\AServiceProvider;
-use Jadob\Container\Tests\Fixtures\YetAnotherExampleService;
+use Jadob\Container\Fixtures\ExampleService;
+use Jadob\Container\Fixtures\ServiceProvider\AInvalidServiceProvider;
+use Jadob\Container\Fixtures\ServiceProvider\AServiceProvider;
+use Jadob\Container\Fixtures\YetAnotherExampleService;
 use PHPUnit\Framework\TestCase;
 
 class ContainerBuilderTest extends TestCase
@@ -15,7 +13,7 @@ class ContainerBuilderTest extends TestCase
     public function testClosureAddedViaMethodWillBeAddedToFactories(): void
     {
 
-        $factory = static function (): Fixtures\ExampleService {
+        $factory = static function (): ExampleService {
             return new ExampleService();
         };
 
@@ -44,11 +42,10 @@ class ContainerBuilderTest extends TestCase
     public function testBuildWillBreakWhenInvalidProviderPassed(): void
     {
         $this->expectException(\Jadob\Container\Exception\ContainerBuildException::class);
-        $this->expectDeprecationMessage('Class Jadob\Container\Tests\Fixtures\ServiceProvider\AInvalidServiceProvider cannot be used as an service provider');
+        $this->expectExceptionMessage('Class Jadob\Container\Fixtures\ServiceProvider\AInvalidServiceProvider cannot be used as an service provider');
         $builder = new ContainerBuilder();
 
         $builder->setServiceProviders([AInvalidServiceProvider::class]);
-
-        $container = $builder->build();
+        $builder->build();
     }
 }

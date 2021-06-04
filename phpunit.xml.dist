@@ -16,8 +16,7 @@
   <logging/>
   <testsuites>
     <testsuite name="Jadob Framework Test Suite">
-      <directory>./src/Jadob/*/Tests/</directory>
-      <directory>./src/Jadob/Bridge/*/Tests/</directory>
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

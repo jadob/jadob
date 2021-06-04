@@ -1,18 +1,13 @@
 <?php
 
-namespace Jadob\Container\Tests;
+namespace Jadob\Container;
 
-use Jadob\Container\Container;
-use Jadob\Container\Definition;
-use Jadob\Container\Tests\Fixtures\ExampleService;
-use Jadob\Container\Tests\Fixtures\YetAnotherExampleService;
+use Jadob\Container\Fixtures\ExampleService;
+use Jadob\Container\Fixtures\YetAnotherExampleService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class DefinitionTest
- *
- * @package Jadob\Container\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -25,7 +20,7 @@ class DefinitionTest extends TestCase
         $container->add(ExampleService::class, $example = new ExampleService());
 
 
-        $factory = function (ContainerInterface $container): Fixtures\YetAnotherExampleService {
+        $factory = function (ContainerInterface $container): YetAnotherExampleService {
             return new YetAnotherExampleService();
         };
 

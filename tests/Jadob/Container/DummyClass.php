@@ -1,10 +1,8 @@
 <?php
 
-namespace Jadob\Container\Tests;
+namespace Jadob\Container;
 
 /**
- * @internal
- * @package Jadob\Container\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
