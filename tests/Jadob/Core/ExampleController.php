@@ -1,14 +1,10 @@
 <?php
 
-namespace Jadob\Core\Tests;
+namespace Jadob\Core;
 
 
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @internal
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
- */
 class ExampleController
 {
     /**

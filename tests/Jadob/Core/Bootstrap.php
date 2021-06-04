@@ -1,13 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Core\Tests;
+namespace Jadob\Core;
 
-use Jadob\Core\AbstractBootstrap;
 
 /**
- * Class Bootstrap
- *
- * @package Jadob\Core\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

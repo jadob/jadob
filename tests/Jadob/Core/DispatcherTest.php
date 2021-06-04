@@ -1,11 +1,10 @@
 <?php
+declare(strict_types=1);
 
-namespace Jadob\Core\Tests;
+namespace Jadob\Core;
 
 use Jadob\Container\Container;
-use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
-use Jadob\Core\RequestContext;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Router\Route;
 use Jadob\Router\RouteCollection;
@@ -16,9 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 /**
- * Class DispatcherTest
- *
- * @package Jadob\Core\Tests
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

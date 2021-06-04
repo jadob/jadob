@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Core\Tests\Event;
+namespace Jadob\Core\Event;
 
-
-use Jadob\Core\Event\AfterControllerEvent;
 use Jadob\Core\RequestContext;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
