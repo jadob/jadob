@@ -1,31 +1,23 @@
 <?php
 
-declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore;
 
-use Doctrine\DBAL\Connection;
+
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Connection;
 use Jadob\EventSourcing\AbstractDomainEvent;
 use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
 use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
-use Jadob\EventSourcing\EventStore\Storage\DBALConnectionUtility;
 use PDO;
+use Prooph\ServiceBus\CommandBus;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use Throwable;
-use function count;
-use function get_class;
-use function str_replace;
 
-/**
- * @deprecated
- * @TODO   this one should be EventStorage related, and EventStore should be separated
- * @author takbardzoimiki <mikolajczajkowsky@gmail.com>
- * @license MIT
- */
-class DBALEventStore implements EventStoreInterface
+class DbalEventStore implements EventStoreInterface
 {
+
     /**
      * unsupported Yet
      * All events are stored in single table.
@@ -60,54 +52,43 @@ class DBALEventStore implements EventStoreInterface
     /**
      * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
-
-    /**
-     * @var ProjectionManager
-     */
-    protected $projectionManager;
-
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
+    protected LoggerInterface $logger;
 
     /**
      * @var PayloadSerializer
      */
-    protected $payloadSerializer;
+    protected PayloadSerializer $payloadSerializer;
 
     /**
      * @var DBALConnectionUtility
      */
     protected $utility;
 
+    protected CommandBus $commandBus;
+
     /**
      * DBALEventStore constructor.
      *
      * @param Connection $connection
      * @param LoggerInterface $logger
-     * @param ProjectionManager|null $projectionManager
-     * @param EventDispatcher|null $eventDispatcher
+     * @param CommandBus $commandBus
      */
     public function __construct(
         Connection $connection,
         LoggerInterface $logger,
-        ?ProjectionManager $projectionManager = null,
-        ?EventDispatcher $eventDispatcher = null
+        CommandBus $commandBus
     )
     {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->payloadSerializer = new PayloadSerializer();
-        $this->projectionManager = $projectionManager ?? new ProjectionManager();
-        $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
-        $this->utility = new DBALConnectionUtility($connection);
+        $this->commandBus = $commandBus;
+        $this->utility = new DbalConnectionUtility($connection);
     }
 
     /**
@@ -115,13 +96,13 @@ class DBALEventStore implements EventStoreInterface
      * @throws EventStoreException
      * @throws DBALException
      * @throws ReflectionException
+     * @throws \JsonException
      */
-    public function saveAggregateRoot(AbstractAggregateRoot $aggregateRoot)
+    public function saveAggregate(AbstractAggregateRoot $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
         $aggregateType = get_class($aggregateRoot);
-        $timestamp = (new \DateTime())->format('Y-m-d H:i:s');
 
         $this->ensureAggregatesMetadataTableExists();
         $this->ensureThereIsATableForAggregate($aggregateId);
@@ -135,7 +116,7 @@ class DBALEventStore implements EventStoreInterface
                 [
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'timestamp' => $timestamp
+                    'timestamp' => $this->dateTimeToTimestamp($aggregateRoot->getCreatedAt())
                 ]
             );
         }
@@ -153,7 +134,10 @@ class DBALEventStore implements EventStoreInterface
                     'event_type' => $eventType,
                     'aggregate_version' => $eventVersion,
                     'payload' => $payload,
-                    'timestamp' => $timestamp
+                    /**
+                     * To avoid collisions, each event has it's own timestamp in milliseconds
+                     */
+                    'timestamp' => $this->dateTimeToTimestamp($event->recordedAt())
                 ]
             );
         }
@@ -172,9 +156,7 @@ class DBALEventStore implements EventStoreInterface
         //update snapshot here
 
         foreach ($events as $event) {
-            //TODO drop ProjectionManager as a separate class and replace it with another EventDispatcher instance
-            $this->projectionManager->emit($event);
-            $this->eventDispatcher->emit($event);
+            $this->commandBus->dispatch($event);
         }
 
     }
@@ -245,5 +227,24 @@ class DBALEventStore implements EventStoreInterface
     public function fixTableName(string $tableName): string
     {
         return str_replace('-', '_', $tableName);
+    }
+
+    /**
+     * Watch out: timestamp is in MILLISECONDS
+     * @param \DateTimeInterface $dateTime
+     * @return int
+     */
+    protected function dateTimeToTimestamp(\DateTimeInterface $dateTime): int {
+        return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
+    }
+
+    public function getAggregateMetadata(string $aggregateId): AggregateMetadata
+    {
+        // TODO: Implement getAggregateMetadata() method.
+    }
+
+    public function saveAggregateMetadata(AggregateMetadata $metadata): void
+    {
+        // TODO: Implement saveAggregateMetadata() method.
     }
 }
