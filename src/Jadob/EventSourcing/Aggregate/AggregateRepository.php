@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\Aggregate;
 
-use Jadob\EventSourcing\AbstractDomainEvent;
-use Jadob\EventStore\EventStoreInterface;
-use RuntimeException;
-use function get_class;
-use function json_decode;
+
+use Jadob\EventSourcing\EventStore\DateTimeFactory;
+use Jadob\EventSourcing\EventStore\EventStoreInterface;
+use Jadob\EventSourcing\EventStore\PayloadSerializer;
 
 /**
  * Class AggregateRepository
@@ -20,94 +19,95 @@ class AggregateRepository
     /**
      * @var EventStoreInterface
      */
-    protected $eventStore;
+    protected EventStoreInterface $eventStore;
+
+    protected PayloadSerializer $serializer;
 
     /**
      * @var string
      */
-    protected $aggregateType;
+    protected string $aggregateType;
 
-    protected $snapshotStore;
-
-    /**
-     * @var AbstractAggregateRoot[]
-     */
-    protected $commitedEvents = [];
 
     /**
      * AggregateRepository constructor.
      *
      * @param EventStoreInterface $eventStore
-     * @param string              $aggregateType
+     * @param PayloadSerializer $serializer
+     * @param string $aggregateType
      */
-    public function __construct(EventStoreInterface $eventStore, string $aggregateType)
+    public function __construct(EventStoreInterface $eventStore, PayloadSerializer $serializer, string $aggregateType)
     {
         $this->eventStore = $eventStore;
+        $this->serializer = $serializer;
         $this->aggregateType = $aggregateType;
     }
 
-    public function get(string $id): AbstractAggregateRoot
+    /**
+     * @param string $id
+     * @return AggregateRootInterface
+     * @throws AggregateException
+     * @throws \JsonException
+     * @throws \ReflectionException
+     */
+    public function get(string $id): AggregateRootInterface
     {
-        //użyj snapshot store jesli istnieje i agregat wspiera snapshoty - mają zaimplementowany RecreateFromSnapshotInterface
-        //@TODO dorobić obsługę snapshotów
-        if ($this->snapshotStore !== null) {
-            // 1. Sprawdz jaka jest najnowsza wersja strumienia dla agregatu
-            // 2. Pobierz snapshot
-            // 3. Pobierz z EventStore zdarzenia które wystąpiły od momentu utworzenia snapshotu
-            // 4. Pododawaj je do Agregatu
-            // 5. Zwróc agregat
-        }
+//        //użyj snapshot store jesli istnieje i agregat wspiera snapshoty - mają zaimplementowany RecreateFromSnapshotInterface
+//        //@TODO dorobić obsługę snapshotów
+//        if ($this->snapshotStore !== null) {
+//            // 1. Sprawdz jaka jest najnowsza wersja strumienia dla agregatu
+//            // 2. Pobierz snapshot
+//            // 3. Pobierz z EventStore zdarzenia które wystąpiły od momentu utworzenia snapshotu
+//            // 4. Pododawaj je do Agregatu
+//            // 5. Zwróc agregat
+//        }
 
         //pobierz wszystkie zdarzenia w strumieniu
-        $events = $this->eventStore->getStream($id);
+        $events = $this->eventStore->getEventsByAggregateId($id);
 
-        if(\count($events) === 0) {
-            throw new AggregateException('No events found in store for Stream ID '.$id);
+        if (\count($events) === 0) {
+            throw new AggregateException('No events found in store for Stream ID ' . $id);
         }
 
-        //Pooznaczaj wszystkie pobrane zdarzenia jako zacommitowane
+        $eventsForAggregate = [];
         foreach ($events as $eventArray) {
-            //recreate event
-            /**
- * @var AbstractDomainEvent $eventFqcn 
-*/
-            $eventFqcn = $eventArray['event_type'];
-
-            $event = $eventFqcn::fromArray(json_decode($eventArray['payload'], true, 512, JSON_THROW_ON_ERROR));
-            $event->setAggregateVersion((int)$eventArray['aggregate_version']);
-            $event->setAggregateId($eventArray['aggregate_id']);
-
-            //Zablokuj możliwość oddtwarzania agregatu
-            if ($event->getAggregateId() !== $id) {
-                throw new RuntimeException('Found event that does not belongs to aggregate #' . $id);
+            if ($eventArray['aid'] !== $id) {
+                throw new AggregateException('Found event that does not belongs to aggregate #' . $id);
             }
 
-            //@TODO w jaki sposób szybciej/efektywniej trzymać informacje o zarządanych zdarzeniach?
-            //1. Tablica obiektów?
-            //2. Tablica spl_object_hashy obiektów?
-            //3. SplObjectStorage?
-            //4. Może jakaś inna struktura danych?
-            $this->commitedEvents[] = $event;
+            /**
+             * @var DomainEventInterface $eventFqcn
+             */
+            $eventFqcn = $eventArray['ety'];
+
+            $event = $eventFqcn::recreate(
+                $this->serializer->deserialize($eventArray['pld']),
+                $eventArray['eid'],
+                $eventArray['aid'],
+                $eventArray['agv'],
+                DateTimeFactory::createFromMilliseconds($eventArray['tme'])
+            );
+
+            $eventsForAggregate[] = $event;
         }
 
-        //Odtwórz agregat
+
         /**
- * @var AbstractAggregateRoot $aggregateFqcn 
-*/
+         * @var AbstractAggregateRoot $aggregateFqcn
+         */
         $aggregateFqcn = $this->aggregateType;
 
         //@TODO extract version from $events
         //@TODO commitedEvents może zawierać eventy z wielu agregatów, trzeba przerobić
-        return $aggregateFqcn::recreate($id, count($events), $this->commitedEvents);
+        return $aggregateFqcn::recreate($id, count($events), $eventsForAggregate);
     }
 
-    public function store(AbstractAggregateRoot $aggregateRoot): void
+    public function store(AggregateRootInterface $aggregateRoot): void
     {
         if (get_class($aggregateRoot) !== $this->aggregateType) {
-            throw new RuntimeException('Given Aggregate is not managed by this AggregateRepository. ');
+            throw new AggregateException('Given Aggregate is not managed by this AggregateRepository.');
         }
 
-        $this->eventStore->saveAggregateRoot($aggregateRoot);
-
+        $this->eventStore->saveAggregate($aggregateRoot);
     }
 }
