@@ -114,6 +114,22 @@ class ListConfiguration
             }
         }
 
+        if(isset($config['predefined_criteria']) && is_array($config['predefined_criteria'])) {
+            foreach ($config['predefined_criteria'] as $name => $predefinedCriteriaConfig) {
+                $self->predefinedCriteria[$name] = PredefinedCriteria::create($name, $predefinedCriteriaConfig);
+            }
+        }
+
         return $self;
     }
+
+    /**
+     * @return array<string, PredefinedCriteria>
+     */
+    public function getPredefinedCriteria(): array
+    {
+        return $this->predefinedCriteria;
+    }
+
+
 }
