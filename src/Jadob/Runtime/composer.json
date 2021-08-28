@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/runtime",
+  "license": "MIT",
+  "description": "Runtime component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Runtime\\": ""
+    }
+  }
+}

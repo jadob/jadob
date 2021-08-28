@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-doctrine-annotations",
+  "license": "MIT",
+  "description": "doctrine/annotations Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Doctrine\\Annotations\\": ""
+    }
+  }
+}

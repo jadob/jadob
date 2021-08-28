@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/container",
+  "license": "MIT",
+  "description": "Container component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Container\\": ""
+    }
+  }
+}

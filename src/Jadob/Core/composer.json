@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/core",
+  "license": "MIT",
+  "description": "Core component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Core\\": ""
+    }
+  }
+}

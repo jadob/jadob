@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-doctrine-persistence",
+  "license": "MIT",
+  "description": "doctrine/persistence Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Doctrine\\Persistence\\": ""
+    }
+  }
+}

@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/contracts-dashboard",
+  "license": "MIT",
+  "description": "Dashboard Contracts Component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Contracts\\Dashboard\\": ""
+    }
+  }
+}

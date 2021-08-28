@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/url",
+  "license": "MIT",
+  "description": "URL component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Url\\": ""
+    }
+  }
+}

@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-doctrine-orm",
+  "license": "MIT",
+  "description": "doctrine/orm Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Doctrine\\ORM\\": ""
+    }
+  }
+}

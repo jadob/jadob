@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-symfony-form",
+  "license": "MIT",
+  "description": "symfony/form Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Symfony\\Form\\": ""
+    }
+  }
+}

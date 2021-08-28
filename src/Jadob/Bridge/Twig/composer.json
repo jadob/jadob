@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-twig",
+  "license": "MIT",
+  "description": "Twig Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Twig\\": ""
+    }
+  }
+}

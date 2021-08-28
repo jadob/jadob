@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-doctrine-migrations",
+  "license": "MIT",
+  "description": "doctrine/migrations Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Doctrine\\Migrations\\": ""
+    }
+  }
+}

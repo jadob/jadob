@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/bridge-aws-ses",
+  "license": "MIT",
+  "description": "AWS SES Bridge",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Bridge\\Aws\\Ses\\": ""
+    }
+  }
+}

@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/config",
+  "license": "MIT",
+  "description": "Config component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Config\\": ""
+    }
+  }
+}
