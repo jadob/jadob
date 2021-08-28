@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/event-sourcing",
+  "license": "MIT",
+  "description": "Event Sourcing component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\EventSourcing\\": ""
+    }
+  }
+}
