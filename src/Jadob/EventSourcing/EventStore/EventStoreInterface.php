@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore;
 
-use Jadob\EventSourcing\AbstractDomainEvent;
-use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
+use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 
 /**
  * Interface EventStoreInterface
@@ -16,16 +15,18 @@ use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
 interface EventStoreInterface
 {
     /**
-     * @param  AbstractAggregateRoot $aggregateRoot
+     * @param AggregateRootInterface $aggregateRoot
      * @return void
      */
-    public function saveAggregateRoot(AbstractAggregateRoot $aggregateRoot);
+    public function saveAggregate(AggregateRootInterface $aggregateRoot);
 
     /**
-     * @TODO   refactor name
-     * @param  string $streamName
-     * @return AbstractDomainEvent[]
+     * @param string $streamName
+     * @return array of event before deserialization
      */
     public function getStream(string $streamName): array;
 
+    public function getAggregateMetadata(string $aggregateId): AggregateMetadata;
+
+    public function saveAggregateMetadata(AggregateMetadata $metadata): void;
 }
