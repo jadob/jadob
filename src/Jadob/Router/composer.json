@@ -1,0 +1,8 @@
+{
+  "name": "jadob/router",
+  "description": "Matches requests to controllers.",
+  "license": "MIT",
+  "autoload": {
+
+  }
+}
