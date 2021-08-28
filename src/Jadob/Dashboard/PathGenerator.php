@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Jadob\Dashboard;
 
 
+use Jadob\Dashboard\Configuration\PredefinedCriteria;
+
 class PathGenerator
 {
     protected UrlGeneratorInterface $urlGenerator;
@@ -13,16 +15,23 @@ class PathGenerator
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getPathForObjectList(string $objectFqcn, int $page = 1): string
+    public function getPathForObjectList(string $objectFqcn, int $page = 1, ?PredefinedCriteria $criteria = null): string
     {
+
+        $params = [
+            QueryStringParamName::ACTION => ActionType::CRUD,
+            QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
+            QueryStringParamName::OBJECT_NAME => $objectFqcn,
+            QueryStringParamName::CRUD_CURRENT_PAGE => $page,
+        ];
+
+        if($criteria !== null) {
+            $params[QueryStringParamName::LIST_CRITERIA] = $criteria->getName();
+        }
+
         return $this->urlGenerator->generateRoute(
             'jadob_dashboard_action',
-            [
-                QueryStringParamName::ACTION => ActionType::CRUD,
-                QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
-                QueryStringParamName::OBJECT_NAME => $objectFqcn,
-                QueryStringParamName::CRUD_CURRENT_PAGE => $page
-            ]
+            $params
         );
     }
 
