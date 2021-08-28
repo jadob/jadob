@@ -16,6 +16,7 @@ class PayloadSerializer
     /**
      * @param array $payload
      * @return string
+     * @throws \JsonException
      */
     public function serialize(array $payload): string
     {
