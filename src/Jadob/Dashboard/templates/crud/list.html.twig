@@ -6,7 +6,24 @@
 {% endset %}
 {% set dashboard_name = 'crud-list' %}
 {% block content %}
-    <div class="container mx-auto">
+    {% if managed_object.listConfiguration.predefinedCriteria|length > 0 %}
+    <div class="container my-3 mx-auto">
+        <p class="text-gray-600 font-bold tracking-wide">Predefined Criteria:</p>
+        <ul>
+            {% for name, criteria in managed_object.listConfiguration.predefinedCriteria %}
+            <li>
+                <a
+                        class="text-gray-600 hover:text-gray-400"
+                        href="{{ dashboard_path_object_list(object_fqcn,current_page, criteria) }}">
+                    {{ criteria.label }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="container my-3 mx-auto">
         <a href="{{ dashboard_path_object_new(object_fqcn) }}"
            class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 mr-2 rounded-md text-base font-medium">
             + Add new
@@ -22,31 +39,31 @@
     </div>
 
     <div class="container my-3">
-    <table class="border-collapse w-full">
-        <thead>
-        <tr>
-            {% for f in fields %}
-                <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                    {{ f }}
-                </th>
-            {% endfor %}
-            {% if operations|length > 0 or managed_object.hasEditConfiguration %}
+        <table class="border-collapse w-full">
+            <thead>
+            <tr>
+                {% for f in fields %}
+                    <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                        {{ f }}
+                    </th>
+                {% endfor %}
+                {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration) %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Operations
                 </th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for obj in list %}
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for obj in list %}
             <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
                 {% for f in fields %}
-                    <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-                        {# <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"></span> #}
-                        {{ obj[f] }}
-                    </td>
+                <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+{#                    <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"></span>#}
+                    {{ obj[f] }}
+                </td>
                 {% endfor %}
-                {% if operations|length > 0 or managed_object.hasEditConfiguration %}
+                {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration)  %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         <div class="grid grid-cols-1 divide-y divide-gray-300">
                             {% if managed_object.hasEditConfiguration %}
@@ -66,11 +83,11 @@
                 {% endif %}
 
             </tr>
-        {% endfor %}
+            {% endfor %}
 
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     <div class="container mx-auto">
         <div class="float-right">
             {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
