@@ -6,20 +6,17 @@ namespace Jadob\Security\Supervisor\EventListener;
 
 use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\RequestContext;
-use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Jadob\Security\Auth\Event\UserEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\InvalidCredentialsException;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\IdentityStorage;
-use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\RequestAttribute;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function get_class;
 
