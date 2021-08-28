@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\EventSourcing\Aggregate;
 
 use Jadob\EventSourcing\AbstractDomainEvent;
+use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionException;
 use function get_called_class;
@@ -14,22 +15,51 @@ use function get_called_class;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-abstract class AbstractAggregateRoot
+abstract class AbstractAggregateRoot implements AggregateRootInterface
 {
     /**
+     * Fresh Aggregate does not have any events applied.
+     * Version will be bumped with each event recored (@see AbstractAggregateRoot::recordThat())
      * @var int
      */
-    private $aggregateVersion = 0;
+    private int $aggregateVersion = 0;
 
     /**
-     * @var AbstractDomainEvent[]
+     * @var DomainEventInterface[]
      */
-    protected $recordedEvents = [];
+    protected array $recordedEvents = [];
+    protected array $events = [];
 
     /**
      * @var string
      */
-    private $aggregateId;
+    private string $aggregateId;
+
+    private \DateTimeInterface $createdAt;
+
+    /**
+     * Use this in your aggregates to warm your object quickly.
+     * @throws \Exception
+     */
+    protected function __construct()
+    {
+//        @trigger_error(
+//            'Calling constructor of AbstractAggregateRoot is deprecated, use assignAggregateId and assignRecordTimestamp instead.',
+//            E_USER_DEPRECATED
+//        );
+        $this->assignAggregateId();
+        $this->assignRecordTimestamp();
+    }
+
+
+    public function assignAggregateId()
+    {
+        $this->aggregateId = Uuid::uuid4()->toString();
+    }
+    protected function assignRecordTimestamp()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      *
@@ -48,10 +78,6 @@ abstract class AbstractAggregateRoot
         $self->aggregateVersion = $version;
 
         foreach ($events as $event) {
-            /** @var AbstractDomainEvent $event */
-            $event->setAggregateId($aggregateId);
-            $event->setAggregateVersion($event['_version']);
-            unset($event['_version']);
             $self->apply($event);
         }
 
@@ -88,7 +114,8 @@ abstract class AbstractAggregateRoot
     final protected function recordThat(object $event): void
     {
         $this->aggregateVersion++;
-        $this->recordedEvents[$this->aggregateVersion] = $event;
+        $this->recordedEvents[(string)$this->aggregateVersion] = $event;
+        $this->events[(string)$this->aggregateVersion] = $event;
 
         if ($event instanceof AbstractDomainEvent) {
             $event->setAggregateId($this->getAggregateId());
@@ -96,6 +123,25 @@ abstract class AbstractAggregateRoot
         }
 
         $this->apply($event); //send to apply() so user can handle the state change
+    }
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getCreatedAt(): \DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Allow to override aggregate ID generated in this class or set your own.
+     * @param string $aggregateId
+     * @return AbstractAggregateRoot
+     */
+    protected function setAggregateId(string $aggregateId): AbstractAggregateRoot
+    {
+        $this->aggregateId = $aggregateId;
+        return $this;
     }
 
 }
