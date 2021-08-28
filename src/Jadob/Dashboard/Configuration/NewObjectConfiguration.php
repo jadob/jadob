@@ -9,30 +9,47 @@ use Jadob\Dashboard\Exception\ConfigurationException;
 
 class NewObjectConfiguration
 {
-    protected \Closure $formFactory;
+    protected ?\Closure $formFactory = null;
+    protected ?string $formClass = null;
     protected ?\Closure $beforeInsert = null;
 
-    /**
-     * @return \Closure
-     */
-    public function getFormFactory(): \Closure
+
+    private function __construct()
     {
-        return $this->formFactory;
     }
 
-
+    /**
+     * @param array $config
+     * @return NewObjectConfiguration
+     * @throws ConfigurationException
+     */
     public static function fromArray(array $config): self
     {
-        if(!isset($config['form_factory'])) {
-            throw new ConfigurationException('Missing "form_factory" entry for new object configuration.');
+        if (!isset($config['form_factory']) && !isset($config['form_class'])) {
+            throw new ConfigurationException('Missing "form_factory" or "form_class" entry for new object configuration.');
+        }
+
+        if(isset($config['form_class']) && isset($config['form_factory'])) {
+            throw new ConfigurationException('Cannot use both "form_factory" and "form_class" for new object configuration!');
         }
 
         if (isset($config['before_insert']) && !($config['before_insert'] instanceof Closure)) {
             throw new ConfigurationException('Could not use before_insert hook as it is not a closure!');
         }
 
+        if (isset($config['form_factory']) && !($config['form_factory'] instanceof Closure)) {
+            throw new ConfigurationException('Value of "form_factory" must be a closure!');
+        }
+
+        if (isset($config['form_class']) && !is_string($config['form_class'])) {
+            throw new ConfigurationException('Value of "form_class" must be a string!');
+        }
+
+
         $self = new self();
-        $self->formFactory = $config['form_factory'];
+        $self->formFactory = $config['form_factory'] ?? null;
+        $self->formClass = $config['form_class'] ?? null;
+        $self->beforeInsert = $config['before_insert'] ?? null;
         return $self;
     }
 
@@ -48,5 +65,22 @@ class NewObjectConfiguration
     {
         return $this->beforeInsert !== null;
     }
+
+    /**
+     * @return Closure|null
+     */
+    public function getFormFactory(): ?Closure
+    {
+        return $this->formFactory;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFormClass(): ?string
+    {
+        return $this->formClass;
+    }
+
 
 }
