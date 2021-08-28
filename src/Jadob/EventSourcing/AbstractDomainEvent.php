@@ -4,70 +4,90 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing;
 
+use Jadob\EventSourcing\Aggregate\DomainEventInterface;
+use Ulid\Ulid;
+
 /**
  * Base class for domain events in aggregate roots.
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-abstract class AbstractDomainEvent
+abstract class AbstractDomainEvent implements DomainEventInterface
 {
-    /**
-     * @var int
-     */
-    private $aggregateVersion;
+    protected int $aggregateVersion;
+    protected string $aggregateId;
+    protected string $eventId;
+    protected \DateTimeInterface $recordedAt;
+    protected array $attributes = [];
+
+
+    protected function assignEventId()
+    {
+        $this->eventId = (string)Ulid::generate();
+    }
+
+    protected function assignRecordTimestamp()
+    {
+        $this->recordedAt = new \DateTimeImmutable();
+    }
 
     /**
-     * @var string
+     * @deprecated
+     * AbstractDomainEvent constructor.
      */
-    private $aggregateId;
+    public function __construct()
+    {
+//        @trigger_error(
+//            'Calling constructor of AbstractDomainEvent is deprecated, use assignEventId and assignRecordTimestamp instead.',
+//            E_USER_DEPRECATED
+//        );
+        $this->assignEventId();
+        $this->assignRecordTimestamp();
+    }
 
-    /**
-     * @param string $aggregateId
-     *
-     * @return void
-     */
     public function setAggregateId(string $aggregateId): void
     {
         $this->aggregateId = $aggregateId;
     }
 
-    /**
-     * @param int $version
-     *
-     * @return void
-     */
+
     public function setAggregateVersion(int $version): void
     {
         $this->aggregateVersion = $version;
     }
 
-    /**
-     * @return string
-     */
+
     public function getAggregateId(): string
     {
         return $this->aggregateId;
     }
 
-    /**
-     * @return int
-     */
+
     public function getAggregateVersion(): int
     {
         return $this->aggregateVersion;
     }
 
     /**
-     * Used for event serialization
-     * Return value from this method is passed through PayloadSerializer and sent to EventStore
-     * @return array
+     * @return \DateTimeInterface
      */
-    abstract public function toArray(): array;
+    public function recordedAt(): \DateTimeInterface
+    {
+        return $this->recordedAt;
+    }
 
-    /**
-     * Used for reconstruct event from EventStore
-     * @param array $payload unserialized array which has been received earlier from toArray() method
-     * @return self
-     */
-    abstract public static function fromArray(array $payload): self;
+    public function getEventId(): string
+    {
+        return $this->eventId;
+    }
+
+    public function addAttribute(string $name, string $value): void
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
 }
