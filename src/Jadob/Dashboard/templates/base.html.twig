@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ page_title }}</title>
     <link href="{{ asset_aliased('tailwind2') }}" rel="stylesheet">
+    {% include '@JadobDashboard/partials/head_scripts.html.twig' %}
 </head>
 <body>
 
@@ -71,5 +72,6 @@
         </div>
     </div>
 </main>
+{% include '@JadobDashboard/partials/body_scripts.html.twig' %}
 </body>
 </html>
