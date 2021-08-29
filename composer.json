@@ -39,5 +39,30 @@
     "psr-0": {
       "Jadob\\": "tests/"
     }
+  },
+  "replace": {
+    "jadob/core": "self.version",
+    "jadob/event-sourcing": "self.version",
+    "jadob/config": "self.version",
+    "jadob/router": "self.version",
+    "jadob/bridge-doctrine-migrations": "self.version",
+    "jadob/bridge-doctrine-dbal": "self.version",
+    "jadob/bridge-doctrine-annotations": "self.version",
+    "jadob/bridge-doctrine-persistence": "self.version",
+    "jadob/bridge-doctrine-orm": "self.version",
+    "jadob/bridge-aws-ses": "self.version",
+    "jadob/bridge-aws": "self.version",
+    "jadob/bridge-monolog": "self.version",
+    "jadob/bridge-symfony-form": "self.version",
+    "jadob/bridge-symfony-translation": "self.version",
+    "jadob/bridge-twig": "self.version",
+    "jadob/container": "self.version",
+    "jadob/dashboard": "self.version",
+    "jadob/url": "self.version",
+    "jadob/runtime": "self.version",
+    "jadob/feature-flag": "self.version",
+    "jadob/event-dispatcher": "self.version",
+    "jadob/contracts-dashboard": "self.version",
+    "jadob/debug": "self.version"
   }
 }
