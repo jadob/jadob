@@ -14,6 +14,7 @@ use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
+use Jadob\Security\Auth\User\UserInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -389,6 +390,18 @@ class Dispatcher
             || $className === RequestContext::class
         ) {
             return $context;
+        }
+
+        if (
+            in_array(UserInterface::class, class_parents($className), true)
+            || $className === UserInterface::class
+        ) {
+            $user = $context->getUser();
+            if($user === null) {
+                throw new \Exception('Could not autowire user to controller as user seem to be not authenticated.');
+            }
+
+            return $user;
         }
 
         if ($context->isPsr7Compliant()) {
