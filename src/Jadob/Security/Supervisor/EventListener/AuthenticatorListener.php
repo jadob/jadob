@@ -121,6 +121,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
                 throw InvalidCredentialsException::invalidCredentials();
             }
         } catch (AuthenticationException $exception) {
+            $request->attributes->set(RequestAttribute::AUTHENTICATION_FAIL_REASON, $exception->getMessage());
             return $supervisor->handleAuthenticationFailure($exception, $request);
         }
 
@@ -166,6 +167,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
                 }
 
             } catch (AuthenticationException $exception) {
+                $request->attributes->set(RequestAttribute::AUTHENTICATION_FAIL_REASON, $exception->getMessage());
                 return $supervisor->handleAuthenticationFailure($exception, $request);
             }
 
