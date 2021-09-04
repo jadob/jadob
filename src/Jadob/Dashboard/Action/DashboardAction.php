@@ -128,6 +128,9 @@ class DashboardAction
             $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
         }
 
+        if($request->server->has('HTTP_REFERER')) {
+            return new RedirectResponse($request->server->get('HTTP_REFERER'));
+        }
         return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
     }
     /**

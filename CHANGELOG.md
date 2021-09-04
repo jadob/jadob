@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Supervisor] Authentication fail reasons are stored in request attributes
 - [Core] User can now be injected directly to controller
+### Changed
+- [Dashboard] User is redirected to referer after batch operation
 ### Fixed
 - [Supervisor] User is now added to RequestContext in stateless supervisors
 
