@@ -75,7 +75,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
 
         //At first, handle stateless
         if ($requestSupervisor->isStateless()) {
-            $response = $this->handleStatelessRequest($event->getRequest(), $requestSupervisor);
+            $response = $this->handleStatelessRequest($event->getContext(), $requestSupervisor);
 
             if ($response !== null) {
                 $event->setResponse($response);
@@ -96,12 +96,13 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
 
     /**
      * @TODO: this must be moved to supervisor
-     * @param Request $request
+     * @param RequestContext $request
      * @param RequestSupervisorInterface $supervisor
      * @return Response|null
      */
-    protected function handleStatelessRequest(Request $request, RequestSupervisorInterface $supervisor): ?Response
+    protected function handleStatelessRequest(RequestContext $context, RequestSupervisorInterface $supervisor): ?Response
     {
+        $request = $context->getRequest();
         try {
             $credentials = $supervisor->extractCredentialsFromRequest($request);
 
@@ -123,6 +124,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
             return $supervisor->handleAuthenticationFailure($exception, $request);
         }
 
+        $context->setUser($user);
         $this->identityStorage->setUser($user, $request->getSession(), get_class($supervisor));
         return $supervisor->handleAuthenticationSuccess($request, $user);
     }
