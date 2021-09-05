@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1]
+### Added
+- [Supervisor] Authentication fail reasons are stored in request attributes
+- [Core] User can now be injected directly to controller
+### Changed
+- [Dashboard] User is redirected to referer after batch operation
+### Fixed
+- [Supervisor] User is now added to RequestContext in stateless supervisors
+
+
 ## [0.2.0] - 2021-08-29
 ### Added
 - [EventSourcing] added DynamoDB Event Store

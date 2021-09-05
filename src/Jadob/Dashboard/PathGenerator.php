@@ -84,4 +84,17 @@ class PathGenerator
         );
     }
 
+    public function getPathForBatchOperation(string $objectFqcn): string
+    {
+        return $this->urlGenerator->generateRoute(
+            'jadob_dashboard_action',
+            [
+                QueryStringParamName::ACTION => ActionType::BATCH_OPERATION,
+                QueryStringParamName::OBJECT_NAME => $objectFqcn,
+            ]
+        );
+    }
+
+
+
 }

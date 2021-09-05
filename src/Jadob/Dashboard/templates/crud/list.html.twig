@@ -39,29 +39,40 @@
     </div>
 
     <div class="container my-3">
-        <table class="border-collapse w-full">
-            <thead>
-            <tr>
-                {% for f in fields %}
-                    <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
-                        {{ f }}
-                    </th>
-                {% endfor %}
-                {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration) %}
+    <form action="{{ dashboard_path_batch_object_operation(object_fqcn) }}" method="POST">
+    <table class="border-collapse w-full">
+        <thead>
+        <tr>
+            <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                #
+            </th>
+            {% for f in fields %}
+                <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
+                    {{ f }}
+                </th>
+            {% endfor %}
+            {% if current_criteria == null and operations|length > 0 or managed_object.hasEditConfiguration %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Operations
                 </th>
-                {% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for obj in list %}
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in list %}
             <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                {% for f in fields %}
                 <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
-{#                    <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"></span>#}
-                    {{ obj[f] }}
+                    <label>
+                        <input type="checkbox" name="id[]" value="{{ obj.id }}" id="check_for_{{ obj.id }}">
+                    </label>
                 </td>
+                {% for f in fields %}
+                    <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                        {# <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"></span> #}
+                        <label for="check_for_{{ obj.id }}">
+                        {{ obj[f] }}
+                        </label>
+                    </td>
                 {% endfor %}
                 {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration)  %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
@@ -83,11 +94,32 @@
                 {% endif %}
 
             </tr>
-            {% endfor %}
+        {% endfor %}
 
 
             </tbody>
         </table>
+
+
+       <div class="mt-2 p-2 border-2 border-gray-300">
+           <p>Batch operations:</p>
+           {% for op in managed_object.listConfiguration.operations %}
+               <div>
+                   <label>
+                       <input type="radio" name="operation" value="{{ op.name }}">
+                       {{ op.label }}
+                   </label>
+               </div>
+           {% endfor %}
+           <button type="submit" class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 rounded-md text-base font-medium">
+               Submit
+           </button>
+       </div>
+
+    </form>
+
+
+
     <div class="container mx-auto">
         <div class="float-right">
             {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
