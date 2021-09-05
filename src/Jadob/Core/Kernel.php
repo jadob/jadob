@@ -331,7 +331,7 @@ class Kernel
         }
 
         $this->fileStreamHandler = new StreamHandler(
-            $this->bootstrap->getLogsDir() . '/' . $this->env . '.log',
+            $this->bootstrap->getDefaultLogStream($this->env),
             $logLevel
         );
 

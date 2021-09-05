@@ -54,4 +54,11 @@ interface BootstrapInterface
      */
     public function getServiceProviders(string $env): array;
 
+    /**
+     * Where to send logs by default?
+     * @param string $env
+     * @return string
+     */
+    public function getDefaultLogStream(string $env): string;
+
 }

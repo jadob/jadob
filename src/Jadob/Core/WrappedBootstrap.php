@@ -50,4 +50,9 @@ class WrappedBootstrap implements BootstrapInterface
     {
         return $this->parent->getServiceProviders($env);
     }
+
+    public function getDefaultLogStream(string $env): string
+    {
+        return $this->parent->getDefaultLogStream($env);
+    }
 }

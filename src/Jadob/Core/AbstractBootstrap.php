@@ -45,4 +45,9 @@ abstract class AbstractBootstrap implements BootstrapInterface
     {
         return $this->getCacheDir() . '/logs';
     }
+
+    public function getDefaultLogStream(string $env): string
+    {
+        return sprintf('%s/%s.log', $this->getLogsDir(), $env);
+    }
 }
