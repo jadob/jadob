@@ -48,7 +48,7 @@ class Context
      * @return self
      * @throws RouterException
      */
-    public static function fromBaseUrl(string $baseUrl)
+    public static function fromBaseUrl(string $baseUrl): Context
     {
         $url = parse_url($baseUrl);
 
@@ -75,6 +75,10 @@ class Context
 
         if(isset($url['scheme']) && $url['scheme'] === 'https') {
             $self->setSecure(true);
+        }
+
+        if(isset($url['path'])) {
+            $self->setAlias($url['path']);
         }
 
         return $self;

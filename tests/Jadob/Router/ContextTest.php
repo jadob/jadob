@@ -51,4 +51,31 @@ class ContextTest extends TestCase
         $this->assertEquals('my.domain.com', $context->getHost());
         $this->assertEquals(8001, $context->getPort());
     }
+
+    public function testFromBaseUrlWithProtocolAndHostnameAndCustomPort(): void
+    {
+        $context = Context::fromBaseUrl('https://evil.corp:1234');
+
+        self::assertTrue($context->isSecure());
+        self::assertEquals(1234, $context->getPort());
+        self::assertEquals('evil.corp', $context->getHost());
+    }
+
+
+    public function testFromBaseUrlWithProtocolAndHostnameAndBasePath(): void
+    {
+        $context = Context::fromBaseUrl('https://evil.corp/_hello');
+
+        self::assertEquals('evil.corp', $context->getHost());
+        self::assertEquals('/_hello', $context->getAlias());
+    }
+
+
+    public function testFromBaseUrlWithInvalidPayload(): void
+    {
+        $this->expectException(RouterException::class);
+        $this->expectExceptionMessage('Unable to create context from base url: Missing hostname');
+
+        Context::fromBaseUrl('this definitely is not an url');
+    }
 }
