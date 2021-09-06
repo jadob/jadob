@@ -16,7 +16,7 @@ class EditConfiguration
      * @return static
      * @throws ConfigurationException
      */
-    public static function fromArray(array $data): static
+    public static function fromArray(array $data): self
     {
         if(
             !isset($data['inherit_new_form'])
