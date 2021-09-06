@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\RouterException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,9 +21,9 @@ class ContextTest extends TestCase
         $context->setPort(1234);
         $context->setHost('example.com');
 
-        $this->assertTrue($context->isSecure());
-        $this->assertEquals('example.com', $context->getHost());
-        $this->assertEquals(1234, $context->getPort());
+        self::assertTrue($context->isSecure());
+        self::assertEquals('example.com', $context->getHost());
+        self::assertEquals(1234, $context->getPort());
     }
 
     public function testCreatingContextObjectFromSuperglobalArrays(): void
@@ -34,9 +35,9 @@ class ContextTest extends TestCase
 
         $context = Context::fromGlobals();
 
-        $this->assertTrue($context->isSecure());
-        $this->assertEquals('my.domain.com', $context->getHost());
-        $this->assertEquals(8001, $context->getPort());
+        self::assertTrue($context->isSecure());
+        self::assertEquals('my.domain.com', $context->getHost());
+        self::assertEquals(8001, $context->getPort());
     }
 
     public function testCheckingHttpHostHasAColon(): void
@@ -47,9 +48,9 @@ class ContextTest extends TestCase
 
         $context = Context::fromGlobals();
 
-        $this->assertTrue($context->isSecure());
-        $this->assertEquals('my.domain.com', $context->getHost());
-        $this->assertEquals(8001, $context->getPort());
+        self::assertTrue($context->isSecure());
+        self::assertEquals('my.domain.com', $context->getHost());
+        self::assertEquals(8001, $context->getPort());
     }
 
     public function testFromBaseUrlWithProtocolAndHostnameAndCustomPort(): void
