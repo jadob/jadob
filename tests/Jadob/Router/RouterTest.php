@@ -26,7 +26,7 @@ class RouterTest extends TestCase
         $collection = new RouteCollection();
         $router = new Router($collection);
 
-        $this->assertEquals('my.domain.com', $router->getContext()->getHost());
+        self::assertEquals('my.domain.com', $router->getContext()->getHost());
     }
 
     public function testRouterContextOverriding(): void
@@ -37,10 +37,10 @@ class RouterTest extends TestCase
         $router = new Router($collection, Context::fromGlobals());
 
 
-        $this->assertEquals('my.domain.com', $router->getContext()->getHost());
+        self::assertEquals('my.domain.com', $router->getContext()->getHost());
         $router->setContext($customContext);
 
-        $this->assertEquals('my.newdomain.com', $router->getContext()->getHost());
+        self::assertEquals('my.newdomain.com', $router->getContext()->getHost());
     }
 
 
@@ -100,7 +100,7 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
 
-        $this->assertEquals('http://my.domain.com:8001/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+        self::assertEquals('http://my.domain.com:8001/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
 
 
     }
@@ -114,7 +114,7 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
 
-        $this->assertEquals('http://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+        self::assertEquals('http://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
 
 
     }
@@ -129,7 +129,7 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
 
-        $this->assertEquals('https://my.domain.com:9876/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+        self::assertEquals('https://my.domain.com:9876/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
     }
 
     public function testFullRouteWithHttpsAndDefaultPortGenerating(): void
@@ -141,7 +141,7 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
 
-        $this->assertEquals('https://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+        self::assertEquals('https://my.domain.com/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
 
     }
 
@@ -153,8 +153,18 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
         $router = new Router($routeCollection);
 
-        $this->assertEquals('http://my.domain.com:443/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
+        self::assertEquals('http://my.domain.com:443/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
 
+    }
+
+    public function testPathGenerationWithNonNullAlias()
+    {
+        $context = Context::fromBaseUrl('https://evil.corp/_api');
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
+        $router = new Router($routeCollection, $context);
+
+        self::assertEquals('/_api/user/5/stuff', $router->generateRoute('get_user_stuff', ['id' => 5]));
     }
 
 }
