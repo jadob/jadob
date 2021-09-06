@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jadob\EventSourcing\EventStore;
 
 
@@ -8,6 +7,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Connection;
 use Jadob\EventSourcing\AbstractDomainEvent;
 use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
+use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
 use PDO;
 use Prooph\ServiceBus\CommandBus;
@@ -92,13 +92,11 @@ class DbalEventStore implements EventStoreInterface
     }
 
     /**
-     * @param AbstractAggregateRoot $aggregateRoot
      * @throws EventStoreException
      * @throws DBALException
-     * @throws ReflectionException
      * @throws \JsonException
      */
-    public function saveAggregate(AbstractAggregateRoot $aggregateRoot)
+    public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
@@ -246,5 +244,10 @@ class DbalEventStore implements EventStoreInterface
     public function saveAggregateMetadata(AggregateMetadata $metadata): void
     {
         // TODO: Implement saveAggregateMetadata() method.
+    }
+
+    public function getEventsByAggregateId(string $aggregateId): array
+    {
+        // TODO: Implement getEventsByAggregateId() method.
     }
 }

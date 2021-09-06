@@ -21,10 +21,10 @@ interface EventStoreInterface
     public function saveAggregate(AggregateRootInterface $aggregateRoot);
 
     /**
-     * @param string $streamName
+     * @param string $aggregateId
      * @return array of event before deserialization
      */
-    public function getStream(string $streamName): array;
+    public function getEventsByAggregateId(string $aggregateId): array;
 
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata;
 
