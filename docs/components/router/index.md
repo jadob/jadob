@@ -65,5 +65,48 @@ Where:
 In this case, array-key has a symbolic meaning and would be ignored.
 
 
+## Creating an instance of Router:
+
+Following example will create a `Router` instance will all values taken from superglobals:
+````
+$context = Context::fromGlobals();
+$routeCollection = new RouteCollection();
+
+$router = new Router($routeCollection, $context);
+````
+
+### Setting a base hostname:
+
+Use `Context::fromBaseUrl()`:
+
+````
+$context = Context::fromBaseUrl('https://example.com');
+$routeCollection = new RouteCollection();
+
+$router = new Router($routeCollection, $context);
+````
+
+In this case, superglobals will be ignored and router will create all URLs with HTTPS and `example.com` as a host by default.
+
+### Setting an alias:
+You can use `Context::fromBaseUrl()` and path will be used as an alias:
+````
+$context = Context::fromBaseUrl('https://example.com/_api');
+$routeCollection = new RouteCollection();
+
+$router = new Router($routeCollection, $context);
+````
+
+Or set them manually by using `Context#setAlias()`:
+
+````
+$context = Context::fromBaseUrl('https://example.com');
+$context->setAlias('/_api');
+$routeCollection = new RouteCollection();
+
+$router = new Router($routeCollection, $context);
+````
+
+
 
 
