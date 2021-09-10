@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Core] Added `BootstrapInterface::getDefaultLogStream`
 - [Router] Allow to set alias in `Context::fromBaseUrl`
 
-## [0.2.1] - 2021-08-29
+## [0.2.1] - Unreleased
 ### Added
 - [Supervisor] Authentication fail reasons are stored in request attributes
 - [Core] User can now be injected directly to controller
