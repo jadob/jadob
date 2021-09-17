@@ -60,6 +60,8 @@
     "jadob/dashboard": "self.version",
     "jadob/url": "self.version",
     "jadob/runtime": "self.version",
+    "jadob/typed-aws": "self.version",
+    "jadob/typed-aws-lambda": "self.version",
     "jadob/feature-flag": "self.version",
     "jadob/event-dispatcher": "self.version",
     "jadob/contracts-dashboard": "self.version",

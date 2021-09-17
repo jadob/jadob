@@ -3,6 +3,8 @@
   "license": "MIT",
   "description": "AWS Lambda Types",
   "autoload": {
-
+    "psr-4": {
+      "Jadob\\Typed\\Aws\\Lambda\\": ""
+    }
   }
 }

@@ -3,6 +3,11 @@
   "license": "MIT",
   "description": "AWS Types",
   "autoload": {
-
+    "psr-4": {
+      "Jadob\\Typed\\Aws\\": ""
+    }
+  },
+  "replace": {
+    "jadob/typed-aws-lambda": "self.version"
   }
 }

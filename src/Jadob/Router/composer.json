@@ -3,6 +3,8 @@
   "description": "Matches requests to controllers.",
   "license": "MIT",
   "autoload": {
-
+    "psr-4": {
+      "Jadob\\Router\\": ""
+    }
   }
 }
