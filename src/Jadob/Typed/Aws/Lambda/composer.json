@@ -1,0 +1,8 @@
+{
+  "name": "jadob/typed-aws-lambda",
+  "license": "MIT",
+  "description": "AWS Lambda Types",
+  "autoload": {
+
+  }
+}

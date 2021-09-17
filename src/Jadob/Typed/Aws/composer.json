@@ -1,0 +1,8 @@
+{
+  "name": "jadob/typed-aws",
+  "license": "MIT",
+  "description": "AWS Types",
+  "autoload": {
+
+  }
+}
