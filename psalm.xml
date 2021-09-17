@@ -17,7 +17,7 @@
     <issueHandlers>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
-                <directory name="src/Jadob/Url/Tests"/>
+                <directory name="tests/Jadob/Url"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
     </issueHandlers>
