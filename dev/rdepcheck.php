@@ -109,8 +109,12 @@ foreach ($nestedPackages as $packagePath => $nestedPackagePaths) {
         if(!isset($corePackage['replace'][$nestedPackageName])) {
             $errors[] = sprintf('%s: missing replace.%s ', $packagePath, $nestedPackageName);
         }
-    }
 
+
+        if(count($nestedPackage['autoload']) === 0) {
+            $errors[] = sprintf('%s: no entries in "autoload" section ', $nestedPackagePath);
+        }
+    }
 }
 
 if (count($errors) > 0) {
