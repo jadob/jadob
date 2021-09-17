@@ -1,6 +1,7 @@
 <?php
 /**
- * rdepcheck.php
+ * Performs a deep dive in your project and checks if your nested composer.json files are valid.
+ * @license MIT
  */
 
 
@@ -65,6 +66,9 @@ foreach ($packagesFound as $package) {
             }
         }
 
+        /**
+         * jadob/jadob is MIT licensed so each subcomponents must be MIT licensed too.
+         */
         if ($composerFile['license'] !== 'MIT') {
             $errors[] = sprintf('%s: invalid license (should be MIT, uppercased)', $package);
         }
@@ -94,7 +98,14 @@ foreach ($nestedPackages as $packagePath => $nestedPackagePaths) {
         $nestedPackage = getJsonContents($nestedPackagePath);
         $nestedPackageName = $nestedPackage['name'];
 
-
+        /**
+         * There must be an "replace" entry on each composer.json in parent directory.
+         * Example:
+         * /composer.json - replaces X, Y and Z
+         * /X/composer.json - replaces Y and Z
+         * /X/Y/composer.json - replaces Z
+         * /X/Y/Z/composer.json - no nested projects, provides no replaces
+         */
         if(!isset($corePackage['replace'][$nestedPackageName])) {
             $errors[] = sprintf('%s: missing replace.%s ', $packagePath, $nestedPackageName);
         }
