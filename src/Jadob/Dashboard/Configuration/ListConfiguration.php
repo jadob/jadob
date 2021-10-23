@@ -16,6 +16,11 @@ class ListConfiguration
      */
     protected array $operations = [];
 
+    /**
+     * @var array<string, EntityRedirectOperation>
+     */
+    protected array $redirects = [];
+
     protected int $resultsPerPage = 25;
 
     /**
@@ -43,6 +48,15 @@ class ListConfiguration
     {
         return $this->operations;
     }
+
+    /**
+     * @return EntityRedirectOperation[]
+     */
+    public function getRedirects(): array
+    {
+        return $this->redirects;
+    }
+
 
     /**
      * @return int
@@ -111,6 +125,17 @@ class ListConfiguration
 
 
                 $self->operations[$operationName] = EntityOperation::fromArray($operationName, $operationConfig);
+            }
+        }
+
+        if(isset($config['redirects']) && is_array($config['redirects'])) {
+            foreach ($config['redirects'] as $name => $redirectConfig) {
+                $self->redirects[$name] = new EntityRedirectOperation(
+                    $name,
+                    $redirectConfig['label'],
+                    $redirectConfig['path'],
+                    $redirectConfig['transform']
+                );
             }
         }
 

@@ -220,12 +220,14 @@ class DashboardAction
                         'current_criteria' => $criteria,
                         'managed_object' => $managedObjectConfiguration,
                         'list' => $list,
+                        'objects_list' => $objects,
                         'fields' => $fieldsToExtract,
                         'object_fqcn' => $objectFqcn,
                         'results_per_page' => $resultsPerPage,
                         'current_page' => $pageNumber,
                         'pages_count' => $pagesCount,
-                        'operations' => $listConfiguration->getOperations()
+                        'operations' => $listConfiguration->getOperations(),
+                        'redirects' => $listConfiguration->getRedirects()
                     ]
                 )
             );
