@@ -51,7 +51,7 @@
                     {{ f }}
                 </th>
             {% endfor %}
-            {% if current_criteria == null and operations|length > 0 or managed_object.hasEditConfiguration %}
+            {% if current_criteria == null and (operations|length > 0 or redirects|length > 0 or managed_object.hasEditConfiguration) %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     Operations
                 </th>
@@ -59,7 +59,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for obj in list %}
+        {% for key,obj in list %}
             <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
                 <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                     <label>
@@ -74,7 +74,7 @@
                         </label>
                     </td>
                 {% endfor %}
-                {% if current_criteria == null and (operations|length > 0 or managed_object.hasEditConfiguration)  %}
+                {% if current_criteria == null and (operations|length > 0 or redirects|length > 0 or managed_object.hasEditConfiguration)  %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         <div class="grid grid-cols-1 divide-y divide-gray-300">
                             {% if managed_object.hasEditConfiguration %}
@@ -88,6 +88,13 @@
                                     path: dashboard_path_object_operation(object_fqcn, obj.id, operation.name),
                                     label: operation.label|trans
                                 } %}
+                            {% endfor %}
+
+                            {% for redirect in redirects %}
+                                    {% include '@JadobDashboard/partials/list_operation.html.twig' with {
+                                        path: dashboard_path_object_redirect(redirect, objects_list[key]),
+                                        label: redirect.label|trans
+                                    } %}
                             {% endfor %}
                         </div>
                     </td>
