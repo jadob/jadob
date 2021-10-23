@@ -219,7 +219,6 @@ class DashboardAction
                     '@JadobDashboard/crud/list.html.twig', [
                         'current_criteria' => $criteria,
                         'managed_object' => $managedObjectConfiguration,
-                        'dashboard_config' => $this->configuration,
                         'list' => $list,
                         'fields' => $fieldsToExtract,
                         'object_fqcn' => $objectFqcn,
@@ -294,7 +293,6 @@ class DashboardAction
             return new Response(
                 $this->twig->render(
                     '@JadobDashboard/crud/new.html.twig', [
-                        'dashboard_config' => $this->configuration,
                         'form' => $form->createView(),
                         'object_fqcn' => $objectFqcn,
                     ]
@@ -329,7 +327,6 @@ class DashboardAction
             $this->twig->render(
                 '@JadobDashboard/dashboard.html.twig', [
                     'dashboard_name' => sprintf('dashboard-%s', $dashboard->getName()),
-                    'dashboard_config' => $dashboardConfiguration,
                     'dashboard' => $dashboard,
                     'request_date' => $requestDate,
                     'request' => $request
@@ -516,7 +513,6 @@ class DashboardAction
             $this->twig->render(
                 '@JadobDashboard/import.html.twig', [
                     'object_fqcn' => $objectFqcn,
-                    'dashboard_config' => $this->configuration,
                     'forms' => $forms
                 ]
             )
