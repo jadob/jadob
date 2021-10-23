@@ -5,7 +5,6 @@ namespace Jadob\Dashboard\Configuration;
 
 use Jadob\Dashboard\Exception\ConfigurationException;
 use Jadob\Dashboard\Exception\DashboardException;
-use JetBrains\PhpStorm\Pure;
 
 class ManagedObject
 {
