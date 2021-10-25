@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Router;
 
 use Jadob\Router\Exception\RouterException;
+use LogicException;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -229,6 +230,10 @@ class Route
      */
     public static function fromArray(array $data)
     {
+        if(isset($data['method'])) {
+            throw new LogicException('Invalid key "method". Did you mean "methods"?');
+        }
+
         if (!isset($data['name'])) {
             throw new RouterException('Missing "name" key in $data.');
         }

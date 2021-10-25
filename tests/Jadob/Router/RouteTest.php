@@ -2,6 +2,8 @@
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\RouterException;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -119,5 +121,15 @@ class RouteTest extends TestCase
         ];
 
         Route::fromArray($route);
+    }
+
+    public function testRouteWillPreventFromMistakingMethodWithMethods()
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Invalid key "method". Did you mean "methods"?');
+
+        Route::fromArray([
+            'method' => 'GET'
+        ]);
     }
 }
