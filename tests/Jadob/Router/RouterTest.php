@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\MethodNotAllowedException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -167,4 +168,30 @@ class RouterTest extends TestCase
         self::assertEquals('/_api/user/5/stuff', $router->generateRoute('get_user_stuff', ['id' => 5]));
     }
 
+    public function testMultipleMethodsOnTheSamePath(): void
+    {
+        $routeCollection = new RouteCollection();
+
+        $routeCollection->addRoute(new Route('pet_remove', '/pets', null, null, null, ['DELETE']));
+        $routeCollection->addRoute(new Route('pet_add', '/pets', null, null, null, ['POST']));
+        $routeCollection->addRoute(new Route('pet_list', '/pets', null, null, null, ['GET']));
+        $router = new Router($routeCollection);
+
+        $route = $router->matchRoute('/pets', 'POST');
+
+        self::assertEquals('pet_add', $route->getName());
+    }
+
+    public function testMultipleMethodsOnTheSamePathButThereIsAnotherOneInRequest(): void
+    {
+        self::expectException(MethodNotAllowedException::class);
+
+        $routeCollection = new RouteCollection();
+
+        $routeCollection->addRoute(new Route('pet_add', '/pets', null, null, null, ['POST']));
+        $routeCollection->addRoute(new Route('pet_list', '/pets', null, null, null, ['GET']));
+        $router = new Router($routeCollection);
+
+        $router->matchRoute('/pets', 'PATCH');
+    }
 }
