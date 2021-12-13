@@ -14,6 +14,7 @@ use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
+use Jadob\Dashboard\Twig\DashboardConfigurationExtension;
 use Jadob\Dashboard\Twig\DashboardExtension;
 use Jadob\Dashboard\Twig\DashboardRoutingExtension;
 use Jadob\Dashboard\UrlGeneratorInterface;
@@ -81,6 +82,7 @@ class DashboardProvider implements ServiceProviderInterface
 
             $twig->addExtension(new DashboardExtension($container->get(ComponentProcessor::class)));
             $twig->addExtension(new DashboardRoutingExtension($container->get(PathGenerator::class)));
+            $twig->addExtension(new DashboardConfigurationExtension($container->get(DashboardConfiguration::class)));
         }
     }
 }
