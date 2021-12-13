@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Container] added support for parameter
 - [Container] injecting parameters to services via `InjecParam` attribute
+- [Dashboard] Registered more Twig extensions
+- Adding parameters in configuration
 
 ## [0.2.3] - 2021-09-17
 ### Added

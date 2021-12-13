@@ -23,6 +23,7 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\ServiceProvider\RouterServiceProvider;
 use Jadob\Runtime\RuntimeFactory;
 use Jadob\Runtime\RuntimeInterface;
+use LogicException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -30,6 +31,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -195,6 +197,13 @@ class Kernel
 
         $configArray = $this->config->toArray();
         $this->container = $builder->build($configArray);
+        
+        /** @var array<array-key, string|int|float|array> $parameters */
+        $parameters = $configArray['parameters'] ?? [];
+        
+        foreach ($parameters as $paramKey => $paramVal) {
+            $this->container->addParameter($paramKey, $paramVal);
+        }
 
         /** @var SessionHandlerFactory $sessionHandlerFactory */
         $sessionHandlerFactory = $this->container->get(SessionHandlerFactory::class);
@@ -294,7 +303,7 @@ class Kernel
 
             foreach ($services as $serviceName => $serviceObject) {
                 if(!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
-                    throw new \RuntimeException(
+                    throw new RuntimeException(
                         sprintf(
                             'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
                         )
@@ -392,5 +401,31 @@ class Kernel
     public function setPsr7Compliant(bool $psr7Compliant): void
     {
         $this->psr7Compliant = $psr7Compliant;
+    }
+
+    /**
+     * @param string[] $envsToCheck
+     */
+    public static function checkEnvsPresence(array $envsToCheck): void
+    {
+        foreach ($envsToCheck as $variable) {
+            if (!isset($_ENV[$variable])) {
+                throw new LogicException(sprintf('Missing "%s" env.', $variable));
+            }
+        }
+    }
+
+    /**
+     * If your app relies on some extension (e.g, oci8, amqp), call this method before Kernel class instantiation
+     * to ensure that given extensions are installed. If not, execution will be stopped.
+     * @param string[] $extsToCheck
+     */
+    public static function checkExtensionsPresence(array $extsToCheck): void
+    {
+        foreach ($extsToCheck as $variable) {
+            if (!extension_loaded($variable)) {
+                throw new RuntimeException(sprintf('Missing "%s" extension.', $variable));
+            }
+        }
     }
 }

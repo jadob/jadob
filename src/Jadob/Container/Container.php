@@ -54,7 +54,7 @@ class Container implements ContainerInterface
     protected bool $locked = false;
 
     /**
-     * @var array
+     * @var array<string, string|int|float|array?
      */
     protected array $parameters = [];
 
@@ -312,21 +312,18 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param string $key
-     * @param false|string $value
-     *
      * @return void
      */
-    public function addParameter(string $key, $value): void
+    public function addParameter(string $key, string|int|float|array $value): void
     {
         $this->parameters[$key] = $value;
     }
 
     /**
      * @param string $key
-     * @return mixed
+     * @return string|int|float|array
      */
-    public function getParameter(string $key)
+    public function getParameter(string $key): string|int|float|array
     {
         if (!isset($this->parameters[$key])) {
             throw new RuntimeException('Could not find "' . $key . '" parameter');
@@ -348,16 +345,18 @@ class Container implements ContainerInterface
         if (!class_exists($className)) {
             throw new AutowiringException('Unable to autowire class "' . $className . '", as it does not exists.');
         }
+
         $classReflection = new ReflectionClass($className);
+        $constructor = $classReflection->getConstructor();
 
         //no dependencies required, we can just instantiate them and return
-        if ($classReflection->getConstructor() === null) {
+        if ($constructor === null) {
             $object = new $className();
             $this->add($className, $object);
             return $object;
         }
 
-        $constructor = $classReflection->getConstructor();
+
         $arguments = $constructor->getParameters();
         $argumentsToInject = [];
 
