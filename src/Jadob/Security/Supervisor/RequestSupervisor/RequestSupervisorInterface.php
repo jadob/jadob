@@ -29,7 +29,7 @@ interface RequestSupervisorInterface
     /**
      * Checks if request contains credentials.
      * Method is not called when stateless.
-     *
+     * @TODO: refactor - method is useless for stateless things so it should not be present in interface
      * @param  Request $request
      * @return bool
      */
@@ -64,7 +64,7 @@ interface RequestSupervisorInterface
      *
      * @param AuthenticationException $exception
      * @param Request $request
-     * @return Response
+     * @return Response|null
      */
     public function handleAuthenticationFailure(AuthenticationException $exception, Request $request): ?Response;
 
