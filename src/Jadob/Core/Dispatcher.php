@@ -43,42 +43,18 @@ use function method_exists;
  */
 class Dispatcher
 {
-
-    /**
-     * @var Container
-     */
     protected Container $container;
 
     protected bool $verbose = false;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected ?EventDispatcherInterface $eventDispatcher;
+    protected EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var array
-     */
     protected array $config;
 
-    /**
-     * @var LoggerInterface
-     */
     protected LoggerInterface $logger;
 
-    /**
-     * @var PsrHttpFactory
-     */
     protected PsrHttpFactory $psrHttpFactory;
 
-    /**
-     * Dispatcher constructor.
-     *
-     * @param array $config
-     * @param Container $container
-     * @param LoggerInterface $logger
-     * @param EventDispatcherInterface|null $eventDispatcher
-     */
     public function __construct(
         array $config,
         Container $container,
@@ -201,14 +177,14 @@ class Dispatcher
     }
 
     /**
-     * @param  $controllerClassName
-     * @return mixed
+     * @psalm-param class-string $controllerClassName
+     * @param string $controllerClassName
      * @throws AutowiringException
      * @throws KernelException
      * @throws ReflectionException
      * @throws ServiceNotFoundException
      */
-    protected function autowireControllerClass($controllerClassName)
+    protected function autowireControllerClass(string $controllerClassName): object
     {
 
         $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
@@ -224,6 +200,7 @@ class Dispatcher
                 sprintf('Skipping autowiring for "%s" as it does not have a constructor.', $controllerClassName)
             );
 
+            /** @psalm-suppress MixedMethodCall */
             return new $controllerClassName;
         }
 
