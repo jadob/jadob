@@ -263,10 +263,6 @@ class DashboardAction
                 $form = $formBuilder($this->formFactory);
                 $form->setData($object);
 
-                if ($form === null) {
-                    throw new RuntimeException('Form factory does not returned a Form!');
-                }
-
             } elseif ($newConfiguration->getFormClass() !== null) {
                 /** @var string $formClass */
                 $formClass = $newConfiguration->getFormClass();
