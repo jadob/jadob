@@ -246,11 +246,22 @@ class DashboardAction
             /** @var NewObjectConfiguration $newConfiguration */
             $newConfiguration = $objectConfig->getNewObjectConfiguration();
 
+            if ($isEdit) {
+                /** @var string $objectId */
+                $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
+                /** @var null|object $object */
+                $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+                if ($object === null) {
+                    throw new DashboardException(sprintf('There is no object "%s" with ID "%s"!', $objectFqcn, $objectId));
+                }
+            }
+
             if ($newConfiguration->getFormFactory() !== null) {
                 /** @var Closure $formBuilder */
                 $formBuilder = $newConfiguration->getFormFactory();
                 /** @var FormInterface|null $form */
                 $form = $formBuilder($this->formFactory);
+                $form->setData($object);
 
                 if ($form === null) {
                     throw new RuntimeException('Form factory does not returned a Form!');
@@ -259,16 +270,6 @@ class DashboardAction
             } elseif ($newConfiguration->getFormClass() !== null) {
                 /** @var string $formClass */
                 $formClass = $newConfiguration->getFormClass();
-                $object = null;
-                if ($isEdit) {
-                    /** @var string $objectId */
-                    $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
-                    /** @var null|object $object */
-                    $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
-                    if ($object === null) {
-                        throw new DashboardException(sprintf('There is no object "%s" with ID "%s"!', $objectFqcn, $objectId));
-                    }
-                }
                 $form = $this->formFactory->create($formClass, $object);
             } else {
                 throw new DashboardException('There is no way to create a form.');
