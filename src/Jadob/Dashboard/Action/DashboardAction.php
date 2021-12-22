@@ -245,6 +245,7 @@ class DashboardAction
 
             /** @var NewObjectConfiguration $newConfiguration */
             $newConfiguration = $objectConfig->getNewObjectConfiguration();
+            $object = null;
 
             if ($isEdit) {
                 /** @var string $objectId */
