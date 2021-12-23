@@ -43,9 +43,11 @@
     <table class="border-collapse w-full">
         <thead>
         <tr>
+            {% if current_criteria == null %}
             <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                 #
             </th>
+            {% endif %}
             {% for f in fields %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     {{ f }}
@@ -61,17 +63,19 @@
         <tbody>
         {% for key,obj in list %}
             <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+                {% if current_criteria == null %}
                 <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                     <label>
                         <input type="checkbox" name="id[]" value="{{ obj.id }}" id="check_for_{{ obj.id }}">
                     </label>
                 </td>
+                {% endif %}
                 {% for f in fields %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         {# <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"></span> #}
-                        <label for="check_for_{{ obj.id }}">
+                        {% if current_criteria == null %}<label for="check_for_{{ obj.id }}">{% endif %}
                         {{ obj[f] }}
-                        </label>
+                            {% if current_criteria == null %}</label>{% endif %}
                     </td>
                 {% endfor %}
                 {% if current_criteria == null and (operations|length > 0 or redirects|length > 0 or managed_object.hasEditConfiguration)  %}
