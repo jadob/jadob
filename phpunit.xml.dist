@@ -15,8 +15,8 @@
   </coverage>
   <logging/>
   <testsuites>
-    <testsuite name="Jadob Framework Test Suite">
-      <directory>./tests</directory>
+    <testsuite name="unit">
+      <directory>./tests/unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>

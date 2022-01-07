@@ -37,7 +37,7 @@
   },
   "autoload-dev": {
     "psr-0": {
-      "Jadob\\": "tests/"
+      "Jadob\\": "tests/unit/"
     }
   },
   "replace": {
