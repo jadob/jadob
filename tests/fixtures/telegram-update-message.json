@@ -1,0 +1,23 @@
+{
+  "update_id": 1234567890,
+  "message": {
+    "message_id": 44,
+    "from": {
+      "id": 2345678901,
+      "is_bot": false,
+      "first_name": "Tony",
+      "last_name": "Stark",
+      "username": "WarMachine68",
+      "language_code": "en"
+    },
+    "chat": {
+      "id": 3456789012,
+      "first_name": "Tony",
+      "last_name": "Stark",
+      "username": "WarMachine68",
+      "type": "private"
+    },
+    "date": 1641516702,
+    "text": "That is so much better than \"Iron Patriot.\""
+  }
+}
