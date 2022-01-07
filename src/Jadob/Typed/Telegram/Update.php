@@ -13,6 +13,7 @@ class Update
     {
         $self = new self();
         $self->id = $data['update_id'] ?? null;
+        return $self;
     }
 
     public function getId(): ?int
