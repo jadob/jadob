@@ -1,0 +1,10 @@
+{
+  "name": "jadob/typed-telegram",
+  "description": "Telegram Messenger API types",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Typed\\Telegram\\": ""
+    }
+  }
+}

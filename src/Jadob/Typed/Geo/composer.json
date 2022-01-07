@@ -1,0 +1,10 @@
+{
+  "name": "jadob/typed-geo",
+  "description": "geography-related types for PHP",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Typed\\Geo\\": ""
+    }
+  }
+}

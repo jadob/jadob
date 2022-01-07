@@ -62,6 +62,8 @@
     "jadob/runtime": "self.version",
     "jadob/typed-aws": "self.version",
     "jadob/typed-aws-lambda": "self.version",
+    "jadob/typed-geo": "self.version",
+    "jadob/typed-telegram": "self.version",
     "jadob/feature-flag": "self.version",
     "jadob/event-dispatcher": "self.version",
     "jadob/contracts-dashboard": "self.version",
