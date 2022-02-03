@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\SymfonyConsoleBridge\ServiceProvider;
+namespace Jadob\Bridge\Symfony\Console\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;

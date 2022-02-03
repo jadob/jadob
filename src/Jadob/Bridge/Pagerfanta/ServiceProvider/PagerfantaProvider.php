@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\PagerfantaBridge\ServiceProvider;
+namespace Jadob\Bridgee\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Jadob\PagerfantaBridge\Twig\Extension\PagerfantaExtension;
+use Jadob\Bridge\Pagerfanta\Twig\Extension\PagerfantaExtension;
 
 /**
  * Class PagerfantaProvider

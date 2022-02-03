@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\PagerfantaBridge\Twig\Extension;
+namespace Jadob\Bridge\Pagerfanta\Twig\Extension;
 
 use Jadob\Router\Router;
 use Pagerfanta\Pagerfanta;
