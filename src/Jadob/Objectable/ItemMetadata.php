@@ -12,7 +12,7 @@ use Jadob\Objectable\Annotation\Header;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-final class RowMetadata
+final class ItemMetadata
 {
     /**
      * @var Header[]
@@ -44,9 +44,9 @@ final class RowMetadata
 
     /**
      * @param Header[] $headers
-     * @return RowMetadata
+     * @return ItemMetadata
      */
-    public function setHeaders(array $headers): RowMetadata
+    public function setHeaders(array $headers): ItemMetadata
     {
         $this->headers = $headers;
         return $this;
@@ -70,9 +70,9 @@ final class RowMetadata
 
     /**
      * @param ActionField[] $actionFields
-     * @return RowMetadata
+     * @return ItemMetadata
      */
-    public function setActionFields(array $actionFields): RowMetadata
+    public function setActionFields(array $actionFields): ItemMetadata
     {
         $this->actionFields = $actionFields;
         return $this;
