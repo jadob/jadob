@@ -3,4 +3,4 @@ install-tools:
 	composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 
 cs-fix:
-	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --allow-risky=yes
