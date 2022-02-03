@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use function array_merge;
 use Exception;
+use function fastcgi_finish_request;
+use function file_exists;
+use function function_exists;
+use function in_array;
+use function is_array;
 use Jadob\Bridge\Monolog\LoggerFactory;
 use Jadob\Config\Config;
 use Jadob\Container\Container;
@@ -37,12 +43,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use function array_merge;
-use function fastcgi_finish_request;
-use function file_exists;
-use function function_exists;
-use function in_array;
-use function is_array;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -122,7 +122,6 @@ class Kernel
      */
     public function __construct($env, BootstrapInterface $bootstrap, bool $deferLogs = false)
     {
-
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
@@ -141,15 +140,13 @@ class Kernel
         $this->eventDispatcher = new EventDispatcher();
         $this->contextStore = new RequestContextStore();
         $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
-
-
     }
 
     private function wrapBootstrapClass(BootstrapInterface $bootstrap, RuntimeInterface $runtime): BootstrapInterface
     {
         $runtimeTmpDir = $runtime->getTmpDir();
 
-        if($runtimeTmpDir === null) {
+        if ($runtimeTmpDir === null) {
             return $bootstrap;
         }
 
@@ -180,7 +177,7 @@ class Kernel
          * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
          * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
          */
-        $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
+        $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
 
         $context = new RequestContext($requestId, $request, $this->psr7Compliant);
 
@@ -302,11 +299,11 @@ class Kernel
             });
 
             foreach ($services as $serviceName => $serviceObject) {
-                if(!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
+                if (!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
                     throw new RuntimeException(
-                        sprintf(
+                        
                             'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
-                        )
+                        
                     );
                 }
                 $containerBuilder->add($serviceName, $serviceObject);
@@ -356,7 +353,6 @@ class Kernel
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
-
     }
 
     public function setContainer(ContainerInterface $container): void

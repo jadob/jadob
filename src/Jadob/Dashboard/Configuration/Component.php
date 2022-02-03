@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 class Component
 {
     protected string $title;
@@ -50,6 +49,4 @@ class Component
     {
         return $this->context;
     }
-
-
 }

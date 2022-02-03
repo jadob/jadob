@@ -1,4 +1,6 @@
-<?php use Jadob\Core\Kernel;
+<?php declare(strict_types=1);
+use Jadob\Core\Kernel;
+
 /**
  * @var $exception Exception 
 */?><!DOCTYPE html>

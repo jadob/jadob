@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 use Jadob\Dashboard\Exception\ConfigurationException;
+use RuntimeException;
 
 class DashboardConfiguration
 {
@@ -28,7 +28,6 @@ class DashboardConfiguration
     {
         $self = new self();
         foreach ($config['dashboards'] as $name => $dashboardDef) {
-
             $dashboardObj = new Dashboard(
                 $name,
                 Grid::fromArray($dashboardDef['grid'] ?? []),
@@ -38,16 +37,15 @@ class DashboardConfiguration
             $self->dashboards[$name] = $dashboardObj;
         }
 
-        if(isset($config['actions']) && is_array($config['actions'])) {
+        if (isset($config['actions']) && is_array($config['actions'])) {
             foreach ($config['actions'] as $actionName => $actionConfig) {
                 $self->actions[$actionName] = ActionConfiguration::fromArray($actionConfig);
             }
         }
 
-        if(isset($config['managed_objects']) && is_array($config['managed_objects'])) {
+        if (isset($config['managed_objects']) && is_array($config['managed_objects'])) {
             foreach ($config['managed_objects'] as $managedObjectFqcn => $managedObjectConfig) {
-
-                if(is_string($managedObjectFqcn) && is_array($managedObjectConfig)) {
+                if (is_string($managedObjectFqcn) && is_array($managedObjectConfig)) {
                     $self->managedObjects[$managedObjectFqcn] = ManagedObject::fromArray($managedObjectFqcn, $managedObjectConfig);
                     continue;
                 }
@@ -58,12 +56,11 @@ class DashboardConfiguration
                         $managedObjectConfig
                     )
                 );
-
             }
         }
 
-        if(!isset($config['default_dashboard'])) {
-            throw new \RuntimeException('There is no default dashboard defined!');
+        if (!isset($config['default_dashboard'])) {
+            throw new RuntimeException('There is no default dashboard defined!');
         }
 
         $self->defaultDashboardName = $config['default_dashboard'];

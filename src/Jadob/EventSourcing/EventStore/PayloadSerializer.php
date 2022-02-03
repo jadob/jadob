@@ -6,6 +6,7 @@ namespace Jadob\EventSourcing\EventStore;
 
 use function json_decode;
 use function json_encode;
+use JsonException;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -16,7 +17,7 @@ class PayloadSerializer
     /**
      * @param array $payload
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function serialize(array $payload): string
     {

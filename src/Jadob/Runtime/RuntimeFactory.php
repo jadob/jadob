@@ -13,12 +13,11 @@ use Jadob\Runtime\Type\OsxRuntime;
  */
 class RuntimeFactory
 {
-
     public static function fromGlobals(): RuntimeInterface
     {
         $systemName = php_uname('s');
 
-        if($systemName === 'Darwin') {
+        if ($systemName === 'Darwin') {
             return new OsxRuntime();
         }
 

@@ -28,5 +28,4 @@ class StaticPageController extends AbstractController
         $template = $route->getParams()['template_name'];
         return new Response($this->renderTemplate($template));
     }
-
 }

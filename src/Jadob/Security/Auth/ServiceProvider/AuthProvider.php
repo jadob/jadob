@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\ServiceProvider;
 
+use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Security\Auth\Command\GeneratePasswordHashCommand;
@@ -27,7 +29,7 @@ class AuthProvider implements ServiceProviderInterface
 
     /**
      * {@inheritdoc}
-     * @return \Closure[]
+     * @return Closure[]
      * @psalm-return array{'auth.user.storage': pure-callable(\Jadob\Container\Container):\Jadob\Security\Auth\IdentityStorage}
      */
     public function register($config)

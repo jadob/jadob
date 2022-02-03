@@ -1,22 +1,20 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\PagerfantaBridge\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\PagerfantaBridge\Twig\Extension\PagerfantaExtension;
 
 /**
  * Class PagerfantaProvider
  *
- * @package Jadob\PagerfantaBridge\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class PagerfantaProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode()
     {
         return null;

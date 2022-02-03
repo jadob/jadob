@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\ServiceProvider;
 
@@ -19,5 +20,4 @@ interface ParentProviderInterface
      * @return string[] Parent Class names
      */
     public function getParentProviders();
-
 }

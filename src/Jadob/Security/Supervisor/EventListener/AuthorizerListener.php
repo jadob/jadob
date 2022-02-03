@@ -30,13 +30,11 @@ class AuthorizerListener implements ListenerProviderInterface, ListenerProviderP
     {
         $context = $event->getContext();
 
-        if(
+        if (
             $context->getUser() === null
             && $context->getRequest()->attributes->get(RequestAttribute::SUPERVISOR_ANONYMOUS_ALLOWED) === true
         ) {
             return;
         }
-
-
     }
 }

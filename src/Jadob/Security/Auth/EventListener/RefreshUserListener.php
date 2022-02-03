@@ -11,7 +11,6 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 class RefreshUserListener implements ListenerProviderInterface
 {
-
     protected Supervisor $supervisor;
 
     public function __construct(Supervisor $supervisor)
@@ -22,7 +21,7 @@ class RefreshUserListener implements ListenerProviderInterface
 
     public function getListenersForEvent(object $event): iterable
     {
-        if($event instanceof UserEvent) {
+        if ($event instanceof UserEvent) {
             return [
                 [$this, 'refreshUser']
             ];
@@ -33,12 +32,12 @@ class RefreshUserListener implements ListenerProviderInterface
 
     public function refreshUser(UserEvent $event)
     {
-        if(!$event->isTakenFromIdentityStorage()) {
+        if (!$event->isTakenFromIdentityStorage()) {
             return;
         }
 
         $oldUser = $event->getUser();
-        if(!($oldUser instanceof RefreshableUserInterface)) {
+        if (!($oldUser instanceof RefreshableUserInterface)) {
             return;
         }
 

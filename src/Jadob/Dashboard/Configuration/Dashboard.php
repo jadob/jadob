@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 class Dashboard
 {
     protected string $name;

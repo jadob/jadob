@@ -1,18 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore;
 
-
+use DateTimeInterface;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Connection;
 use Jadob\EventSourcing\AbstractDomainEvent;
-use Jadob\EventSourcing\Aggregate\AbstractAggregateRoot;
 use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
+use JsonException;
 use PDO;
 use Prooph\ServiceBus\CommandBus;
 use Psr\Log\LoggerInterface;
-use ReflectionException;
 use Throwable;
 
 class DbalEventStore implements EventStoreInterface
@@ -82,8 +82,7 @@ class DbalEventStore implements EventStoreInterface
         Connection $connection,
         LoggerInterface $logger,
         CommandBus $commandBus
-    )
-    {
+    ) {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->payloadSerializer = new PayloadSerializer();
@@ -94,7 +93,7 @@ class DbalEventStore implements EventStoreInterface
     /**
      * @throws EventStoreException
      * @throws DBALException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
@@ -156,7 +155,6 @@ class DbalEventStore implements EventStoreInterface
         foreach ($events as $event) {
             $this->commandBus->dispatch($event);
         }
-
     }
 
     public function hasAggregateMetadata(string $aggregateId): bool
@@ -229,10 +227,11 @@ class DbalEventStore implements EventStoreInterface
 
     /**
      * Watch out: timestamp is in MILLISECONDS
-     * @param \DateTimeInterface $dateTime
+     * @param DateTimeInterface $dateTime
      * @return int
      */
-    protected function dateTimeToTimestamp(\DateTimeInterface $dateTime): int {
+    protected function dateTimeToTimestamp(DateTimeInterface $dateTime): int
+    {
         return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
     }
 

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\ServiceProvider;
 
-
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -18,7 +17,6 @@ use Jadob\Dashboard\Twig\DashboardConfigurationExtension;
 use Jadob\Dashboard\Twig\DashboardExtension;
 use Jadob\Dashboard\Twig\DashboardRoutingExtension;
 use Jadob\Dashboard\UrlGeneratorInterface;
-use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
@@ -26,7 +24,6 @@ use Twig\Loader\FilesystemLoader;
 
 class DashboardProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode()
     {
         return 'dashboard';

@@ -30,7 +30,6 @@ class Psr3QueryLogger implements SQLLogger
      */
     public function __construct(LoggerInterface $logger)
     {
-
         $this->logger = $logger;
     }
 

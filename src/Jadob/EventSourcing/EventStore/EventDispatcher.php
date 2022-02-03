@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore;
 
+use function get_class;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use function get_class;
-
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -17,7 +16,6 @@ use function get_class;
  */
 class EventDispatcher
 {
-
     protected $listeners = [];
 
     /**

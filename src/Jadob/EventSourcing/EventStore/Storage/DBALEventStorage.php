@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\EventSourcing\EventStore\Storage;
 
 use Doctrine\DBAL\Connection;
+
 //use Jadob\EventSourcing\EventStore\Storage\EventStorageInterface;
 
 /**
@@ -68,5 +69,4 @@ class DBALEventStorage implements EventStorageInterface
             'aggregate_table_prefix' => 'aggregate_'
         ];
     }
-
 }

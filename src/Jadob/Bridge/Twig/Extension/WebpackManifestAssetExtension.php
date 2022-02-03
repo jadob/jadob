@@ -46,7 +46,6 @@ class WebpackManifestAssetExtension extends AbstractExtension
      */
     public function getAssetFromManifest(string $assetName): string
     {
-
         if (isset($this->manifest[$assetName])) {
             return $this->manifest[$assetName];
         }

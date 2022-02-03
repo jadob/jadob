@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\EventStore;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
+use function count;
 use DateTimeInterface;
 use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\EventStore\DynamoDb\AttributeName;
@@ -14,7 +16,6 @@ use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
 use Jadob\MessageBus\ServiceBus;
 use JsonException;
 use Psr\Log\LoggerInterface;
-use function count;
 
 /**
  * Access Patterns:
@@ -33,7 +34,6 @@ use function count;
  */
 class DynamoDbEventStore implements EventStoreInterface
 {
-
     private const MAX_TRANSACTION_ITEMS = 25;
 
     private DynamoDbClient $dynamoDbClient;
@@ -61,8 +61,7 @@ class DynamoDbEventStore implements EventStoreInterface
         LoggerInterface $logger,
         ServiceBus $commandBus,
         array $extensions = []
-    )
-    {
+    ) {
         $this->dynamoDbClient = $dynamoDbClient;
         $this->table = $table;
         $this->logger = $logger;
@@ -78,7 +77,6 @@ class DynamoDbEventStore implements EventStoreInterface
      */
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
-
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
         $aggregateType = get_class($aggregateRoot);
@@ -175,7 +173,6 @@ class DynamoDbEventStore implements EventStoreInterface
      */
     public function getEventsByAggregateId(string $aggregateId): array
     {
-
         $params = [
             'TableName' => $this->table->getTableName(),
             'KeyConditionExpression' => '#pk = :pk AND begins_with(#sk, :sk)',
@@ -272,6 +269,6 @@ class DynamoDbEventStore implements EventStoreInterface
      */
     protected function dateTimeToTimestamp(DateTimeInterface $dateTime): int
     {
-        return (int)($dateTime->getTimestamp() . $dateTime->format('v'));
+        return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
     }
 }

@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace Jadob\Core\Exception;
 
+use Exception;
+
 /**
  * Class KernelException
  *
- * @package Jadob\Core\Exception
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class KernelException extends \Exception
+class KernelException extends Exception
 {
     /**
      * @param string $routeName
@@ -20,5 +21,4 @@ class KernelException extends \Exception
     {
         return new self('Route "' . $routeName . '" should provide a valid FQCN or Closure, null given');
     }
-
 }

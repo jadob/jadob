@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core\Event;
 
@@ -55,6 +56,4 @@ class AfterControllerEvent
     {
         return $this->context;
     }
-
-
 }

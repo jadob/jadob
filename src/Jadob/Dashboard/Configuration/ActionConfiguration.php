@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 class ActionConfiguration
 {
-
     protected string $path;
 
     protected string $label;
@@ -34,5 +32,4 @@ class ActionConfiguration
     {
         return $this->label;
     }
-
 }

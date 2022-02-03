@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use Closure;
+use function is_array;
 use Jadob\Container\Event\ContainerBuildStartedEvent;
 use Jadob\Container\Event\ProviderRegisteredEvent;
 use Jadob\Container\Event\ProviderRegistrationStartedEvent;
@@ -11,12 +13,10 @@ use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use function is_array;
 
 /**
  * Class ContainerBuilder
  *
- * @package Jadob\Container
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -73,7 +73,7 @@ class ContainerBuilder
     {
         $this->emit(new ServiceAddedEvent($serviceName));
 
-        if ($definition instanceof \Closure) {
+        if ($definition instanceof Closure) {
             $this->factories[$serviceName] = $definition;
             return $this;
         }

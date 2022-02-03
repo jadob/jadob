@@ -10,7 +10,6 @@ namespace Jadob\Security\Auth\Exception;
  */
 class UserNotFoundException extends AuthenticationException
 {
-
     public static function userNotFound(): self
     {
         return new self('security.user_not_found');
@@ -20,5 +19,4 @@ class UserNotFoundException extends AuthenticationException
     {
         return new self('security.empty_credentials');
     }
-
 }

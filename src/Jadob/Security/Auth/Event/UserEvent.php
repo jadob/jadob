@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Security\Auth\Event;
 
-
 use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 
@@ -28,8 +27,7 @@ class UserEvent
         UserInterface $user,
         int $context,
         RequestSupervisorInterface $requestSupervisor
-    )
-    {
+    ) {
         $this->user = $user;
         $this->context = $context;
         $this->requestSupervisor = $requestSupervisor;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
+use Closure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
@@ -16,6 +17,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\Persistence\ManagerRegistry;
+use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Bridge\Doctrine\Persistence\ServiceProvider\PersistenceProvider;
@@ -25,6 +27,7 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\Console\Application;
@@ -50,7 +53,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
      * @TODO add support for multiple cache types
      * {@inheritdoc}
      *
-     * @return \Closure[]
+     * @return Closure[]
      *
      * @psalm-return array<string, \Closure(ContainerInterface):EntityManager>
      */
@@ -68,10 +71,9 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
         $defaultManagerName = null;
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
-
-            if (isset($configuration['default']) && (bool)$configuration['default']) {
+            if (isset($configuration['default']) && (bool) $configuration['default']) {
                 if ($defaultManagerName !== null) {
-                    throw new \InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
+                    throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
                 }
 
                 $defaultManagerName = $managerName;
@@ -145,7 +147,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
                     $configuration,
                     $container->get(EventManager::class)
                 );
-
             };
         }
 
@@ -180,7 +181,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
         /** @var DoctrineManagerRegistry $managerRegistry */
         $managerRegistry = $container->get(ManagerRegistry::class);
         foreach ($config['managers'] as $connectionName => $configuration) {
-
             $serviceName = sprintf('doctrine.orm.%s', $connectionName);
 
             $managerRegistry->addManager(
@@ -201,7 +201,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
      */
     protected function registerAnnotations(): void
     {
-        $configurationClassDirectory = \dirname((new \ReflectionClass(Configuration::class))->getFileName());
+        $configurationClassDirectory = \dirname((new ReflectionClass(Configuration::class))->getFileName());
         require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
     }
 

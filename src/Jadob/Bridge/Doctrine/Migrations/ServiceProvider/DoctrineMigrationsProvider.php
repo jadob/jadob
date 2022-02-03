@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
 
-
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
-use Doctrine\Migrations\Configuration\Migration\PhpFile;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\Command\DiffCommand;
 use Doctrine\Migrations\Tools\Console\Command\DumpSchemaCommand;
@@ -21,7 +19,6 @@ use Doctrine\Migrations\Tools\Console\Command\SyncMetadataCommand;
 use Doctrine\Migrations\Tools\Console\Command\VersionCommand;
 use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineORMProvider;
 use Jadob\Container\Container;
-use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
@@ -29,7 +26,6 @@ use Symfony\Component\Console\Application;
 
 class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProviderInterface
 {
-
     public function getConfigNode()
     {
         return 'doctrine_migrations';
@@ -41,7 +37,6 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
         $ormMigrations = $config['orm'];
         foreach ($ormMigrations as $managerName => $migrationConfig) {
             $factory = static function (ContainerInterface $container) use ($managerName, $migrationConfig): DependencyFactory {
-
                 $migrationConfigObj = new ConfigurationArray($migrationConfig);
                 $em = $container->get(sprintf('doctrine.orm.%s', $managerName));
 

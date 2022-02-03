@@ -24,5 +24,4 @@ interface UserInterface
      * @return mixed
      */
     public function getUsername();
-
 }

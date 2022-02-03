@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace Jadob\Dashboard\ObjectManager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Jadob\Dashboard\Exception\DashboardException;
 
 class DoctrineOrmObjectManager
 {
-
     protected EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -27,7 +25,7 @@ class DoctrineOrmObjectManager
 
         $objectsCount = $objectsCountQuery['count'] ?? 0;
 
-        return (int)ceil(($objectsCount / $resultsPerPage));
+        return (int) ceil(($objectsCount / $resultsPerPage));
     }
 
     public function read(string $objectFqcn, int $pageNumber, int $resultsPerPage)
@@ -41,7 +39,6 @@ class DoctrineOrmObjectManager
                 $resultsPerPage,
                 (($pageNumber - 1) * $resultsPerPage)
             );
-
     }
 
     public function persist(object $object): void

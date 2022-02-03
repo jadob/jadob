@@ -9,7 +9,6 @@ use Jadob\Security\Auth\User\UserInterface;
 
 class DashboardContext implements DashboardContextInterface
 {
-
     protected DateTimeInterface $requestDateTime;
 
     protected UserInterface $user;
@@ -28,7 +27,7 @@ class DashboardContext implements DashboardContextInterface
     public function hasRole(string $roleName): bool
     {
         foreach ($this->user->getRoles() as $role) {
-            if($role === $roleName) {
+            if ($role === $roleName) {
                 return true;
             }
         }

@@ -1,14 +1,13 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\Dashboard\Configuration;
-
 
 use Jadob\Dashboard\Exception\ConfigurationException;
 
 class EditConfiguration
 {
-
     protected bool $inheritNewForm = false;
 
     /**
@@ -18,7 +17,7 @@ class EditConfiguration
      */
     public static function fromArray(array $data): self
     {
-        if(
+        if (
             !isset($data['inherit_new_form'])
             && !is_bool($data['inherit_new_form'])
         ) {
@@ -38,5 +37,4 @@ class EditConfiguration
     {
         return $this->inheritNewForm;
     }
-
 }

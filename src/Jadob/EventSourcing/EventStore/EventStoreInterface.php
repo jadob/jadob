@@ -9,7 +9,6 @@ use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 /**
  * Interface EventStoreInterface
  *
- * @package Jadob\EventStore
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  */
 interface EventStoreInterface

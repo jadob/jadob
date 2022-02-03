@@ -92,7 +92,5 @@ class SesMailer
         }
 
         $result = $this->sesClient->sendEmail($command);
-
-
     }
 }

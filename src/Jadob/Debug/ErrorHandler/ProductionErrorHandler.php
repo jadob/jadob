@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Debug\ErrorHandler;
 
+use ErrorException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -10,7 +13,6 @@ use Psr\Log\LoggerInterface;
  */
 class ProductionErrorHandler implements ErrorHandlerInterface
 {
-
     protected $logger;
 
     public function __construct(LoggerInterface $logger)
@@ -44,7 +46,7 @@ class ProductionErrorHandler implements ErrorHandlerInterface
 
                     //According to documentation, it is intended to use error number as a severity
                     //@see https://www.php.net/manual/en/errorexception.construct.php
-                    throw new \ErrorException($errstr, $errno, $errno, $errfile, $errline);
+                    throw new ErrorException($errstr, $errno, $errno, $errfile, $errline);
                 }
             );
         }
@@ -59,7 +61,7 @@ class ProductionErrorHandler implements ErrorHandlerInterface
         $logger = $this->logger;
         if (PHP_SAPI !== 'cli') {
             set_exception_handler(
-                static function (\Throwable $exception) use ($logger) {
+                static function (Throwable $exception) use ($logger) {
                     \http_response_code(500);
 
                     $logger->critical(

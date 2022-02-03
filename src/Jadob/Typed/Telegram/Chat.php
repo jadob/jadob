@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Telegram;
 
-
 class Chat
 {
-
     protected ?string $username = null;
 
     /**
@@ -38,6 +36,4 @@ class Chat
         $this->username = $username;
         return $this;
     }
-
-
 }

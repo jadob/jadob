@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\EventStore\Exception;
-
 
 class AggregateMetadataNotFoundException extends EventStoreException
 {

@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class WrappedBootstrap implements BootstrapInterface
 {
-
     protected BootstrapInterface $parent;
     protected ?string $cacheDir;
 

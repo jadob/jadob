@@ -41,22 +41,22 @@ class ManagedObject
      */
     public static function fromArray(string $objectFqcn, array $configuration): self
     {
-        if(!isset($configuration['list'])) {
+        if (!isset($configuration['list'])) {
             throw new ConfigurationException(sprintf('Missing "list" key for "%s" object.', $objectFqcn));
         }
 
-        if(!is_array($configuration['list'])) {
+        if (!is_array($configuration['list'])) {
             throw new ConfigurationException(sprintf('Key "list" for "%s" object is not an array', $objectFqcn));
         }
 
         $listConfiguration = ListConfiguration::create($objectFqcn, $configuration['list']);
         $self = self::create($objectFqcn, $listConfiguration);
 
-        if(isset($configuration['new'])) {
+        if (isset($configuration['new'])) {
             $self->newObjectConfiguration = NewObjectConfiguration::fromArray($configuration['new']);
         }
 
-        if(isset($configuration['edit'])) {
+        if (isset($configuration['edit'])) {
             $self->editConfiguration = EditConfiguration::fromArray($configuration['edit']);
         }
 
@@ -99,5 +99,4 @@ class ManagedObject
     {
         return $this->editConfiguration !== null;
     }
-
 }

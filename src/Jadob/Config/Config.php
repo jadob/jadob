@@ -29,8 +29,7 @@ class Config
         array $extensions = [],
         int $level = 1,
         array $parameters = []
-    )
-    {
+    ) {
         //remove trailing slash
         $directory = \rtrim($directory, '/');
         $subdirectoriesToScan = \str_repeat('/*', $level);

@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use function call_user_func_array;
 use Closure;
+use Exception;
+use function get_class;
+use function gettype;
+use function in_array;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -15,6 +20,7 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\User\UserInterface;
+use function method_exists;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -30,11 +36,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use function call_user_func_array;
-use function get_class;
-use function gettype;
-use function in_array;
-use function method_exists;
 
 /**
  * @internal
@@ -60,8 +61,7 @@ class Dispatcher
         Container $container,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->config = $config;
         $this->container = $container;
         $this->logger = $logger;
@@ -186,8 +186,7 @@ class Dispatcher
      */
     protected function autowireControllerClass(string $controllerClassName): object
     {
-
-        $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
+        $autowireEnabled = (bool) $this->config['autowire_controller_arguments'];
 
         $reflection = new ReflectionClass($controllerClassName);
         $classConstructor = $reflection->getConstructor();
@@ -201,7 +200,7 @@ class Dispatcher
             );
 
             /** @psalm-suppress MixedMethodCall */
-            return new $controllerClassName;
+            return new $controllerClassName();
         }
 
         $arguments = [];
@@ -270,9 +269,8 @@ class Dispatcher
         $methodName,
         array $routerParams,
         RequestContext $context
-    ): array
-    {
-        $autowireEnabled = (bool)$this->config['autowire_controller_arguments'];
+    ): array {
+        $autowireEnabled = (bool) $this->config['autowire_controller_arguments'];
         $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 
         $methodParameters = $methodReflection->getParameters();
@@ -374,8 +372,8 @@ class Dispatcher
             || $className === UserInterface::class
         ) {
             $user = $context->getUser();
-            if($user === null) {
-                throw new \Exception('Could not autowire user to controller as user seem to be not authenticated.');
+            if ($user === null) {
+                throw new Exception('Could not autowire user to controller as user seem to be not authenticated.');
             }
 
             return $user;
@@ -405,5 +403,4 @@ class Dispatcher
         }
         return null;
     }
-
 }

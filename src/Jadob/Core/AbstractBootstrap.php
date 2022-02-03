@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core;
 
@@ -8,7 +9,6 @@ namespace Jadob\Core;
  * By default, Jadob uses php-pds standards (@see https://github.com/php-pds/skeleton)
  * but you can override this to your own needs.
  *
- * @package Jadob\Core
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

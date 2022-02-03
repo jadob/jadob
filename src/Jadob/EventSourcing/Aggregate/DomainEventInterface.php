@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\Aggregate;
 
+use DateTimeInterface;
 
 interface DomainEventInterface
 {
@@ -13,10 +15,10 @@ interface DomainEventInterface
      * @param string $eventId
      * @param string $aggregateId
      * @param int $version
-     * @param \DateTimeInterface $recordedAt
+     * @param DateTimeInterface $recordedAt
      * @return self
      */
-    public static function recreate(array $payload, string $eventId, string $aggregateId, int $version, \DateTimeInterface $recordedAt): self;
+    public static function recreate(array $payload, string $eventId, string $aggregateId, int $version, DateTimeInterface $recordedAt): self;
 
     /**
      * Used for event serialization
@@ -39,5 +41,4 @@ interface DomainEventInterface
     public function getAttributes(): array;
 
     public function getEventId(): string;
-
 }

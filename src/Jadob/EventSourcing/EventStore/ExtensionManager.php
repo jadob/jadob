@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\EventStore;
-
 
 use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\Aggregate\DomainEventInterface;
@@ -26,7 +26,6 @@ class ExtensionManager
     public function __construct(array $extensions)
     {
         $this->extensions = $extensions;
-
     }
 
     public function dispatchOnAggregateCreate(AggregateRootInterface $aggregate, AggregateMetadata $metadata)

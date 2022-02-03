@@ -31,7 +31,7 @@ class PredefinedCriteria
         $self->method = $config['method'];
         $self->label = $config['label'];
 
-        if(isset($config['custom_result_set']) && is_bool($config['custom_result_set'])) {
+        if (isset($config['custom_result_set']) && is_bool($config['custom_result_set'])) {
             $self->customResultSet = $config['custom_result_set'];
         }
 
@@ -69,5 +69,4 @@ class PredefinedCriteria
     {
         return $this->customResultSet;
     }
-
 }

@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use function array_keys;
+use function class_exists;
 use Closure;
+use function in_array;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
-use function array_keys;
-use function class_exists;
-use function in_array;
 
 /**
  * @TODO:   maybe some arrayaccess? Fixed services?
- * @package Jadob\Container
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -66,7 +66,6 @@ class Container implements ContainerInterface
      */
     public function __construct(array $services = null, array $factories = null)
     {
-
         if ($services !== null) {
             $this->services = $services;
         }
@@ -150,7 +149,7 @@ class Container implements ContainerInterface
         }
 
         $factory = $this->factories[$factoryName];
-        $reflectionMethod = new \ReflectionMethod($factory, '__invoke');
+        $reflectionMethod = new ReflectionMethod($factory, '__invoke');
 
         /**
          * There is no return type defined in factory, return null as at this moment is not possible to resolve
@@ -164,15 +163,15 @@ class Container implements ContainerInterface
         $returnRypeReflection = $reflectionMethod->getReturnType();
         $returnType = $returnRypeReflection->getName();
 
-        if (
+        return (bool) (
             $returnType === $interfaceToCheck
             || in_array($interfaceToCheck, class_implements($returnType), true)
             || in_array($interfaceToCheck, class_parents($returnType), true)
-        ) {
-            return true;
-        }
+        ) 
+             
+        
 
-        return false;
+         ;
     }
 
     /**
@@ -278,7 +277,6 @@ class Container implements ContainerInterface
      */
     public function add(string $id, object $object)
     {
-
         $definition = new Definition($object);
         $this->definitions[$id] = $definition;
 

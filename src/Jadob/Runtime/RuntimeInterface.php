@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Runtime;
 
-
 interface RuntimeInterface
 {
 
@@ -18,5 +17,4 @@ interface RuntimeInterface
      * @return string
      */
     public function getVersion(): string;
-
 }

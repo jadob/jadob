@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
+use Closure;
 use Jadob\Router\Exception\RouterException;
 use LogicException;
 
@@ -30,7 +31,7 @@ class Route
     protected $action;
 
     /**
-     * @var string|\Closure
+     * @var string|Closure
      */
     protected $controller;
 
@@ -230,7 +231,7 @@ class Route
      */
     public static function fromArray(array $data)
     {
-        if(isset($data['method'])) {
+        if (isset($data['method'])) {
             throw new LogicException('Invalid key "method". Did you mean "methods"?');
         }
 

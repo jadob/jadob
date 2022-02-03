@@ -51,6 +51,5 @@ class ConsoleProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-
     }
 }

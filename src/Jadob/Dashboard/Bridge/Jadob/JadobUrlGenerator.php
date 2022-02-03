@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Bridge\Jadob;
 
-
 use Jadob\Dashboard\UrlGeneratorInterface;
 use Jadob\Router\Router;
 
 class JadobUrlGenerator implements UrlGeneratorInterface
 {
-
     protected Router $router;
 
 

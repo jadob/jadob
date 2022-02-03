@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Twig;
 
-
 use Jadob\Dashboard\Configuration\DashboardConfiguration;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -14,8 +13,7 @@ class DashboardConfigurationExtension extends AbstractExtension
 
     public function __construct(
         DashboardConfiguration $configuration
-    )
-    {
+    ) {
         $this->configuration = $configuration;
     }
 
@@ -31,5 +29,4 @@ class DashboardConfigurationExtension extends AbstractExtension
     {
         return $this->configuration;
     }
-
 }

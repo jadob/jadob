@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Jadob\EventSourcing\EventStore;
 
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * @deprecated to be replaced with Event Dispatcher
@@ -32,8 +34,8 @@ class ProjectionManager
         $projectionsNotified = 0;
         $eventType = \get_class($event);
         foreach ($this->projections as $listener) {
-            $listenerReflection = new \ReflectionClass($listener);
-            foreach ($listenerReflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            $listenerReflection = new ReflectionClass($listener);
+            foreach ($listenerReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $paramsCount = $method->getNumberOfParameters();
                 if ($paramsCount > 1) {
                     continue; //only one argument allowed so far
@@ -53,7 +55,7 @@ class ProjectionManager
             }
         }
 
-        if($projectionsNotified === 0) {
+        if ($projectionsNotified === 0) {
             $this->logger->notice('There is no projections for '.$eventType.' Class.');
         }
     }

@@ -1,20 +1,19 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\EventStore;
 
+use DateTimeInterface;
 
 class AggregateMetadata
 {
-
-
     private string $aggregateId;
     private string $aggregateType;
-    private \DateTimeInterface $createdAt;
+    private DateTimeInterface $createdAt;
 
-    public function __construct(string $aggregateId, string $aggregateType, \DateTimeInterface $createdAt)
+    public function __construct(string $aggregateId, string $aggregateType, DateTimeInterface $createdAt)
     {
-
         $this->aggregateId = $aggregateId;
         $this->aggregateType = $aggregateType;
         $this->createdAt = $createdAt;
@@ -37,12 +36,10 @@ class AggregateMetadata
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }
-
-
 }

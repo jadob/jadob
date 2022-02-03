@@ -7,7 +7,6 @@ use Jadob\Core\RequestContextStore;
 
 class StickyParameterStore implements ParameterStoreInterface
 {
-
     protected RequestContextStore $contextStore;
 
     public function __construct(RequestContextStore $contextStore)

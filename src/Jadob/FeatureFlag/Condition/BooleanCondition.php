@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\FeatureFlag\Condition;
 
@@ -36,7 +37,7 @@ class BooleanCondition implements ConditionInterface
      */
     public function verifyFeature($conditions): bool
     {
-        return (bool)$conditions;
+        return (bool) $conditions;
     }
 
     /**

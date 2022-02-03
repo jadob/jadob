@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Jadob\Debug\ErrorHandler;
 
-use ErrorException;
-use Psr\Log\LoggerInterface;
-use Throwable;
 use function debug_backtrace;
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+use const E_DEPRECATED;
+use const E_USER_DEPRECATED;
 use function error_log;
+use ErrorException;
 use function get_class;
 use function htmlspecialchars;
 use function http_response_code;
@@ -17,17 +18,15 @@ use function is_array;
 use function is_object;
 use function is_resource;
 use function is_scalar;
+use const PHP_SAPI;
+use Psr\Log\LoggerInterface;
 use function set_error_handler;
 use function set_exception_handler;
-use const DEBUG_BACKTRACE_IGNORE_ARGS;
-use const E_DEPRECATED;
-use const E_USER_DEPRECATED;
-use const PHP_SAPI;
+use Throwable;
 
 /**
  * TODO Separate logger for deprecations?
  *
- * @package Jadob\Debug\ErrorHandler
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

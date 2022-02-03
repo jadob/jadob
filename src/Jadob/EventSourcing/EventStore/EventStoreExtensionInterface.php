@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\EventStore;
-
 
 use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\Aggregate\DomainEventInterface;
 
 /**
  * Extend your event store features by adding your own.
- * @package Jadob\EventSourcing\EventStore
  * @author pizzaminded <miki@calorietool.com>
  * @license proprietary
  */

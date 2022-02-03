@@ -3,16 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Twig;
 
-
+use DateTimeInterface;
 use Jadob\Dashboard\Component\ComponentProcessor;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\ExtensionInterface;
 use Twig\TwigFunction;
 
 class DashboardExtension extends AbstractExtension
 {
-
     protected ComponentProcessor $componentProcessor;
 
     public function __construct(ComponentProcessor $componentProcessor)
@@ -31,10 +29,9 @@ class DashboardExtension extends AbstractExtension
     public function getComponentData(
         string $providerFqcn,
         Request $request,
-        \DateTimeInterface $requestDateTime,
+        DateTimeInterface $requestDateTime,
         array $context
-    ): array
-    {
+    ): array {
         return $this->componentProcessor->getComponentData($providerFqcn, $request, $requestDateTime, $context);
     }
 

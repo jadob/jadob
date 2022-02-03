@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Jadob\Url;
 
+use Exception;
+use InvalidArgumentException;
+use RuntimeException;
+
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
@@ -94,17 +98,17 @@ class Url
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function build(): string
     {
         $isHttpUrl = in_array(mb_strtolower($this->getScheme()), ['http', 'https'], true);
         if ($this->scheme === null) {
-            throw new \RuntimeException('Missing scheme in URL Object');
+            throw new RuntimeException('Missing scheme in URL Object');
         }
 
         if ($this->host === null && $isHttpUrl) {
-            throw new \RuntimeException('Missing host in URL Object');
+            throw new RuntimeException('Missing host in URL Object');
         }
 
 
@@ -131,12 +135,12 @@ class Url
     /**
      * Shorthand for build()
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function __toString()
     {
         if ($this->url !== null) {
-            return (string)$this->url;
+            return (string) $this->url;
         }
 
         return $this->build();
@@ -222,7 +226,7 @@ class Url
     public function addQueryParameter(string $key, $value): self
     {
         if (!is_scalar($value) && !is_array($value)) {
-            throw new \InvalidArgumentException('Given $value parameter should be scalar or array');
+            throw new InvalidArgumentException('Given $value parameter should be scalar or array');
         }
 
         $this->query[$key] = $value;
@@ -245,5 +249,4 @@ class Url
     {
         return $this->query;
     }
-
 }

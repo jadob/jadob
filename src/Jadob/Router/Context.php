@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router;
 
-use Jadob\Router\Exception\RouterException;
 use function explode;
+use Jadob\Router\Exception\RouterException;
 use function strlen;
 use function substr;
 
@@ -52,18 +53,18 @@ class Context
     {
         $url = parse_url($baseUrl);
 
-        if(!is_array($url)) {
+        if (!is_array($url)) {
             throw new RouterException('Unable to create context from base url: Invalid URL passed');
         }
 
-        if(!isset($url['host'])) {
+        if (!isset($url['host'])) {
             throw new RouterException('Unable to create context from base url: Missing hostname');
         }
 
         $host = $url['host'];
-        if(isset($url['port'])) {
+        if (isset($url['port'])) {
             $port = $url['port'];
-        } elseif($url['scheme'] === 'http') {
+        } elseif ($url['scheme'] === 'http') {
             $port = 80;
         } else {
             $port = 443;
@@ -73,11 +74,11 @@ class Context
         $self->setHost($host)
             ->setPort($port);
 
-        if(isset($url['scheme']) && $url['scheme'] === 'https') {
+        if (isset($url['scheme']) && $url['scheme'] === 'https') {
             $self->setSecure(true);
         }
 
-        if(isset($url['path'])) {
+        if (isset($url['path'])) {
             $self->setAlias($url['path']);
         }
 
@@ -89,14 +90,13 @@ class Context
      */
     public static function fromGlobals()
     {
-
         $context = new self();
 
         $context->setSecure(isset($_SERVER['HTTPS']));
 
         $host = $_SERVER['HTTP_HOST'] ?? null;
 
-        if (strpos($host, ':') === false) {
+        if (!str_contains($host, ':')  ) {
             $context->setHost($host);
             $context->setPort($_SERVER['SERVER_PORT'] ?? null);
 
@@ -106,7 +106,7 @@ class Context
         $explodedHost = explode(':', $host);
 
         $context->setHost($explodedHost[0]);
-        $context->setPort((int)$explodedHost[1]);
+        $context->setPort((int) $explodedHost[1]);
 
         //check for alias
         //@TODO: check for CONTEXT_DOCUMENT_ROOT for Apache
@@ -116,7 +116,7 @@ class Context
         $requestUri = $_SERVER['REQUEST_URI'];
 
         //trim query string
-        if(($questionMarkPosition = strpos($requestUri, '?')) !== false) {
+        if (($questionMarkPosition = strpos($requestUri, '?')) !== false) {
             $requestUri = substr($requestUri, 0, $questionMarkPosition);
         }
 
@@ -204,7 +204,4 @@ class Context
         $this->alias = $alias;
         return $this;
     }
-
-
-
 }

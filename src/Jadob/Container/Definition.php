@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use Closure;
 use Jadob\Container\Exception\ContainerBuildException;
 
 /**
@@ -85,7 +87,7 @@ class Definition
     {
         $service = $this->service;
 
-        if ($service instanceof \Closure) {
+        if ($service instanceof Closure) {
             $service = $service($container);
         }
 
@@ -109,5 +111,4 @@ class Definition
     {
         return $this->created;
     }
-
 }

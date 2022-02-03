@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Component;
 
-
+use DateTimeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 interface ComponentProviderInterface
 {
-
-    public function getData(Request $request, \DateTimeInterface $requestDateTime, array $context): array;
+    public function getData(Request $request, DateTimeInterface $requestDateTime, array $context): array;
     public function getTemplatePath(): string;
 }

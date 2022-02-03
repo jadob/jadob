@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHa
  */
 class SessionHandlerFactory
 {
-
     public function create()
     {
         return new NativeFileSessionHandler();

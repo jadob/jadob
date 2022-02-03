@@ -10,7 +10,6 @@ use Twig\TwigFunction;
 /**
  * Class DebugExtension
  *
- * @package Jadob\Debug\Twig\Extension
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Persistence;
 
-
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
+use Exception;
 
 class DoctrineManagerRegistry implements ManagerRegistry
 {
@@ -31,7 +30,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getConnection($name = null)
     {
-        if ($name == null) {
+        if ($name === null) {
             return $this->connections[$this->defaultConnection];
         }
 
@@ -55,7 +54,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getManager($name = null)
     {
-        if($name === null) {
+        if ($name === null) {
             return $this->managers[$this->defaultManager];
         }
 
@@ -69,12 +68,12 @@ class DoctrineManagerRegistry implements ManagerRegistry
 
     public function resetManager($name = null)
     {
-        throw new \Exception('resetManager NIY');
+        throw new Exception('resetManager NIY');
     }
 
     public function getAliasNamespace($alias)
     {
-        throw new \Exception('resetManager NIY');
+        throw new Exception('resetManager NIY');
     }
 
     public function getManagerNames()
@@ -84,7 +83,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getRepository($persistentObject, $persistentManagerName = null)
     {
-        throw new \Exception('resetManager NIY');
+        throw new Exception('resetManager NIY');
     }
 
     public function getManagerForClass($class)
@@ -94,7 +93,6 @@ class DoctrineManagerRegistry implements ManagerRegistry
                 $manager->getClassMetadata($class);
                 return $manager;
             } catch (MappingException $_) {
-
             }
         }
 

@@ -15,6 +15,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -41,15 +42,15 @@ class EventStoreProvider implements ServiceProviderInterface
     public function register($config)
     {
         if (!isset($config['connection_name'])) {
-            throw new \RuntimeException('Missing connection_name option in event_store configuration. ');
+            throw new RuntimeException('Missing connection_name option in event_store configuration. ');
         }
 
         return [
             ProjectionManager::class => function (ContainerInterface $container) use ($config) {
-                    $projectionManager = new ProjectionManager($container->get(LoggerInterface::class));
-                    foreach ($config['projections'] as $projectionService) {
-                        $projectionManager->addProjection($container->get($projectionService));
-                    }
+                $projectionManager = new ProjectionManager($container->get(LoggerInterface::class));
+                foreach ($config['projections'] as $projectionService) {
+                    $projectionManager->addProjection($container->get($projectionService));
+                }
 
                 return $projectionManager;
             },
@@ -59,7 +60,7 @@ class EventStoreProvider implements ServiceProviderInterface
             EventStoreInterface::class => function (ContainerInterface $container) use ($config) {
                 $separateLogger = true;
                 if (isset($config['separate_logger'])) {
-                    $separateLogger = (bool)$config['separate_logger'];
+                    $separateLogger = (bool) $config['separate_logger'];
                 }
 
                 $connectionName = $config['connection_name'];

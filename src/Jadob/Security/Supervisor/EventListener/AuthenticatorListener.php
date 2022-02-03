@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Security\Supervisor\EventListener;
 
+use function get_class;
 use Jadob\Core\Event\BeforeControllerEvent;
 use Jadob\Core\RequestContext;
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
@@ -15,10 +16,10 @@ use Jadob\Security\Auth\IdentityStorage;
 use Jadob\Security\Supervisor\RequestAttribute;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Jadob\Security\Supervisor\Supervisor;
+use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Symfony\Component\HttpFoundation\Response;
-use function get_class;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -34,8 +35,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
         Supervisor $supervisor,
         IdentityStorage $identityStorage,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->supervisor = $supervisor;
         $this->identityStorage = $identityStorage;
         $this->eventDispatcher = $eventDispatcher;
@@ -87,7 +87,6 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
         }
 
         return $event;
-
     }
 
 
@@ -138,7 +137,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
                 //2. Handle Authentication
                 $credentials = $supervisor->extractCredentialsFromRequest($request);
                 if ($credentials === null) {
-                    throw new \LogicException(
+                    throw new LogicException(
                         sprintf('%s::extractCredentialsFromRequest should not return null.', get_class($supervisor))
                     );
                 }
@@ -162,7 +161,6 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
                 if ($verified === false) {
                     throw InvalidCredentialsException::invalidCredentials();
                 }
-
             } catch (AuthenticationException $exception) {
                 $request->attributes->set(RequestAttribute::AUTHENTICATION_FAIL_REASON, $exception->getMessage());
                 return $supervisor->handleAuthenticationFailure($exception, $request);

@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 use Jadob\Dashboard\Exception\ConfigurationException;
-use Jadob\Dashboard\Exception\DashboardException;
 
 class ListConfiguration
 {
@@ -128,7 +126,7 @@ class ListConfiguration
             }
         }
 
-        if(isset($config['redirects']) && is_array($config['redirects'])) {
+        if (isset($config['redirects']) && is_array($config['redirects'])) {
             foreach ($config['redirects'] as $name => $redirectConfig) {
                 $self->redirects[$name] = new EntityRedirectOperation(
                     $name,
@@ -139,7 +137,7 @@ class ListConfiguration
             }
         }
 
-        if(isset($config['predefined_criteria']) && is_array($config['predefined_criteria'])) {
+        if (isset($config['predefined_criteria']) && is_array($config['predefined_criteria'])) {
             foreach ($config['predefined_criteria'] as $name => $predefinedCriteriaConfig) {
                 $self->predefinedCriteria[$name] = PredefinedCriteria::create($name, $predefinedCriteriaConfig);
             }
@@ -155,6 +153,4 @@ class ListConfiguration
     {
         return $this->predefinedCriteria;
     }
-
-
 }

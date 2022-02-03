@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Debug\ErrorHandler;
 
@@ -7,7 +8,6 @@ use Psr\Log\LoggerInterface;
 /**
  * Class HandlerFactory
  *
- * @package Jadob\Debug\ErrorHandler
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

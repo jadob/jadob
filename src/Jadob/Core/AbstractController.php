@@ -6,7 +6,6 @@ namespace Jadob\Core;
 use InvalidArgumentException;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Jadob\Security\Auth\User\UserInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormFactory;
@@ -142,5 +141,4 @@ abstract class AbstractController
     {
         $this->container->get(LoggerInterface::class)->log($level, $message, $context);
     }
-
 }

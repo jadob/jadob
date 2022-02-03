@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core;
 
@@ -6,7 +7,6 @@ namespace Jadob\Core;
  * Interface for framework bootstrapping class.
  * This one must be implemented by your Bootstrap class.
  *
- * @package Jadob\Core
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  */
 interface BootstrapInterface
@@ -60,5 +60,4 @@ interface BootstrapInterface
      * @return string
      */
     public function getDefaultLogStream(string $env): string;
-
 }

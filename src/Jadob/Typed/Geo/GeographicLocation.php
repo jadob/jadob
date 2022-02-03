@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GeographicLocation
 {
-
     protected Latitude $latitude;
 
     protected Longitude $longitude;

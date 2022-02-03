@@ -14,7 +14,6 @@ use Twig\TwigFunction;
 /**
  * Class PagerfantaProvider
  *
- * @package Jadob\PagerfantaBridge\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

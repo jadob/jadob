@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
+use Closure;
 use Jadob\Dashboard\Exception\ConfigurationException;
 use Jadob\Dashboard\Exception\DashboardException;
 
@@ -13,11 +13,11 @@ class EntityOperation
     protected string $label;
     protected ?string $handlerFqcn = null;
     protected ?string $handlerMethod = null;
-    protected ?\Closure $argumentTransformer = null;
+    protected ?Closure $argumentTransformer = null;
     protected bool $forcePersist = false;
 
 
-    public function __construct(string $name, string $label, ?string $handlerFqcn = null, ?string $handlerMethod = null, ?\Closure $argumentTransformer = null, bool $forcePersist = false)
+    public function __construct(string $name, string $label, ?string $handlerFqcn = null, ?string $handlerMethod = null, ?Closure $argumentTransformer = null, bool $forcePersist = false)
     {
         if ($handlerFqcn === null && $handlerMethod === null) {
             throw new DashboardException(sprintf('There should be handler FQCN, handler method or both of them defined in "%s" operation', $name));
@@ -29,7 +29,6 @@ class EntityOperation
         $this->handlerMethod = $handlerMethod;
         $this->argumentTransformer = $argumentTransformer;
         $this->forcePersist = $forcePersist;
-
     }
 
     /**
@@ -65,9 +64,9 @@ class EntityOperation
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getArgumentTransformer(): ?\Closure
+    public function getArgumentTransformer(): ?Closure
     {
         return $this->argumentTransformer;
     }

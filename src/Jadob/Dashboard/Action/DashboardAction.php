@@ -37,7 +37,6 @@ use Twig\Error\SyntaxError;
 
 class DashboardAction
 {
-
     protected Environment $twig;
     protected DashboardConfiguration $configuration;
     protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
@@ -54,8 +53,7 @@ class DashboardAction
         PathGenerator $pathGenerator,
         OperationHandler $operationHandler,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->twig = $twig;
         $this->configuration = $configuration;
         $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
@@ -78,8 +76,7 @@ class DashboardAction
     public function __invoke(
         Request $request,
         DashboardContextInterface $context
-    ): Response
-    {
+    ): Response {
         $action = $request->query->get(QueryStringParamName::ACTION);
 
         if ($action === null) {
@@ -105,7 +102,7 @@ class DashboardAction
             return $this->handleOperation($request, $context);
         }
 
-        if($action === ActionType::BATCH_OPERATION) {
+        if ($action === ActionType::BATCH_OPERATION) {
             return $this->handleBatchOperation($request, $context);
         }
     }
@@ -128,7 +125,7 @@ class DashboardAction
             $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
         }
 
-        if($request->server->has('HTTP_REFERER')) {
+        if ($request->server->has('HTTP_REFERER')) {
             return new RedirectResponse($request->server->get('HTTP_REFERER'));
         }
         return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
@@ -178,7 +175,7 @@ class DashboardAction
                 $methodToCall = $criteria->getMethod();
 
                 $objects = $objectRepo->$methodToCall();
-                if(!is_array($objects)) {
+                if (!is_array($objects)) {
                     throw new DashboardException('Return from predefined criteria must be an array!');
                 }
 
@@ -188,7 +185,7 @@ class DashboardAction
             $list = [];
             $fieldsToExtract = $listConfiguration->getFieldsToShow();
 
-            if($criteria === null || (!$criteria->isCustomResultSet())) {
+            if ($criteria === null || (!$criteria->isCustomResultSet())) {
                 foreach ($objects as $object) {
                     $objectArray = [];
                     $reflectionObject = new ReflectionClass($object);
@@ -208,7 +205,7 @@ class DashboardAction
 
                     $list[] = $objectArray;
                 }
-            } elseif($criteria->isCustomResultSet()) {
+            } elseif ($criteria->isCustomResultSet()) {
                 $fieldsToExtract = array_keys(reset($objects));
                 $list = $objects;
             }
@@ -263,7 +260,6 @@ class DashboardAction
                 /** @var FormInterface|null $form */
                 $form = $formBuilder($this->formFactory);
                 $form->setData($object);
-
             } elseif ($newConfiguration->getFormClass() !== null) {
                 /** @var string $formClass */
                 $formClass = $newConfiguration->getFormClass();
@@ -318,9 +314,7 @@ class DashboardAction
         DashboardConfiguration $dashboardConfiguration,
         DashboardContextInterface $context,
         Request $request
-    ): Response
-    {
-
+    ): Response {
         $requestDate = $context->getRequestDateTime();
 
         return new Response(
@@ -439,7 +433,6 @@ class DashboardAction
             }
 
             if ($import['type'] === 'paste_csv') {
-
                 $form['title'] = $import['name'];
                 $form['name'] = $key;
                 $formObject = $this
@@ -452,8 +445,6 @@ class DashboardAction
 
                 $formObject->handleRequest($request);
                 if ($formObject->isSubmitted() && $formObject->isValid()) {
-
-
                     $this->logger->info('Form submitted, proceeding to handle upload.');
                     $content = $formObject->get('content')->getData();
                     $splittedContent = explode(PHP_EOL, $content);
@@ -517,7 +508,6 @@ class DashboardAction
                 ]
             )
         );
-
     }
 
     public function handleOperation(Request $request, DashboardContextInterface $context)
@@ -537,6 +527,5 @@ class DashboardAction
         $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
 
         return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
-
     }
 }

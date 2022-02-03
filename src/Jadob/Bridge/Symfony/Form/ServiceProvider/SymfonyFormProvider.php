@@ -6,6 +6,7 @@ namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use ReflectionException;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -39,7 +40,7 @@ class SymfonyFormProvider implements ServiceProviderInterface
      * @return (\Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
      *
      * @psalm-return array{symfony.validator: \Symfony\Component\Validator\Validator\ValidatorInterface, symfony.form.factory: \Closure(Container):\Symfony\Component\Form\FormFactoryInterface}
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
@@ -101,7 +102,5 @@ class SymfonyFormProvider implements ServiceProviderInterface
                 )
             );
         }
-
-
     }
 }

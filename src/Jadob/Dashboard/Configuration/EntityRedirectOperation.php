@@ -3,20 +3,19 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
+use Closure;
 
 class EntityRedirectOperation
 {
-
     protected string $name;
     protected string $label;
     protected string $path;
-    protected ?\Closure $argumentTransformer = null;
+    protected ?Closure $argumentTransformer = null;
 
 
 
-    public function __construct(string $name, string $label, string $path, ?\Closure $argumentTransformer = null)
+    public function __construct(string $name, string $label, string $path, ?Closure $argumentTransformer = null)
     {
-
         $this->name = $name;
         $this->label = $label;
         $this->path = $path;
@@ -48,11 +47,10 @@ class EntityRedirectOperation
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getArgumentTransformer(): ?\Closure
+    public function getArgumentTransformer(): ?Closure
     {
         return $this->argumentTransformer;
     }
-
 }

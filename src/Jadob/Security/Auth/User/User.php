@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\User;
 
 /**
  * Example User object, that can be used in your app.
  *
- * @package Jadob\Security\Auth\User
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

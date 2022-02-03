@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore\Extension;
 
-
 use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
 use Jadob\EventSourcing\Aggregate\DomainEventInterface;
 use Jadob\EventSourcing\EventStore\AggregateMetadata;
@@ -11,7 +10,6 @@ use Jadob\EventSourcing\EventStore\EventStoreExtensionInterface;
 
 class EventHashExtension implements EventStoreExtensionInterface
 {
-
     public const ATTRIBUTE = 'hash';
 
     /**

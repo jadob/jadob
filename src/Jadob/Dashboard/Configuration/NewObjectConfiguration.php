@@ -1,17 +1,17 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\Dashboard\Configuration;
-
 
 use Closure;
 use Jadob\Dashboard\Exception\ConfigurationException;
 
 class NewObjectConfiguration
 {
-    protected ?\Closure $formFactory = null;
+    protected ?Closure $formFactory = null;
     protected ?string $formClass = null;
-    protected ?\Closure $beforeInsert = null;
+    protected ?Closure $beforeInsert = null;
 
 
     private function __construct()
@@ -29,7 +29,7 @@ class NewObjectConfiguration
             throw new ConfigurationException('Missing "form_factory" or "form_class" entry for new object configuration.');
         }
 
-        if(isset($config['form_class']) && isset($config['form_factory'])) {
+        if (isset($config['form_class']) && isset($config['form_factory'])) {
             throw new ConfigurationException('Cannot use both "form_factory" and "form_class" for new object configuration!');
         }
 
@@ -54,9 +54,9 @@ class NewObjectConfiguration
     }
 
     /**
-     * @return \Closure|null
+     * @return Closure|null
      */
-    public function getBeforeInsertHook(): ?\Closure
+    public function getBeforeInsertHook(): ?Closure
     {
         return $this->beforeInsert;
     }
@@ -81,6 +81,4 @@ class NewObjectConfiguration
     {
         return $this->formClass;
     }
-
-
 }

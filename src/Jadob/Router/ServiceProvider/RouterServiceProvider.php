@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
+use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\RequestContextStore;
@@ -13,7 +14,6 @@ use Jadob\Router\StickyParameterStore;
 use Psr\Container\ContainerInterface;
 
 /**
- * @package Jadob\Router\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -30,7 +30,7 @@ class RouterServiceProvider implements ServiceProviderInterface
 
     /**
      * @param  $config
-     * @return \Closure[]
+     * @return Closure[]
      */
     public function register($config)
     {
@@ -47,11 +47,11 @@ class RouterServiceProvider implements ServiceProviderInterface
                     $context->setPort($config['context']['port']);
                 }
 
-                if(isset($config['context']['base_url'])) {
+                if (isset($config['context']['base_url'])) {
                     $context = Context::fromBaseUrl($config['context']['base_url']);
                 }
 
-                if(isset($config['force_https']) && (bool)$config['force_https'] === true) {
+                if (isset($config['force_https']) && (bool) $config['force_https'] === true) {
                     $context->setSecure(true);
                 }
 
@@ -64,7 +64,6 @@ class RouterServiceProvider implements ServiceProviderInterface
                     )
                 );
             }];
-
     }
 
     /**

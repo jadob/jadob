@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
-use Jadob\Router\Exception\MethodNotAllowedException;
-use Jadob\Router\Exception\RouteNotFoundException;
-use Jadob\Router\Exception\RouterException;
-use Symfony\Component\HttpFoundation\Request;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
@@ -17,9 +13,13 @@ use function count;
 use function http_build_query;
 use function in_array;
 use function is_array;
+use Jadob\Router\Exception\MethodNotAllowedException;
+use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Exception\RouterException;
 use function preg_match;
 use function str_replace;
 use function strtoupper;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -56,8 +56,7 @@ class Router
         ?Context $context = null,
         array $config = [],
         ?ParameterStoreInterface $paramStore = null
-    )
-    {
+    ) {
         $this->routeCollection = $routeCollection;
 
         $defaultConfig = [
@@ -125,7 +124,6 @@ class Router
                 && preg_match($pathRegex, $path, $matches) > 0
                 && $this->hostMatches($route, $this->context->getHost(), $parameters)
             ) {
-
                 if (count(($routeMethods = $route->getMethods())) > 0
                     && !in_array($method, $routeMethods, true)
                 ) {
@@ -231,7 +229,7 @@ class Router
                 foreach ($params as $key => $param) {
                     $isFound = 0;
                     if (!is_array($param)) {
-                        $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
+                        $convertedPath = str_replace('{' . $key . '}', (string) $param, $convertedPath, $isFound);
                     }
 
                     if ($isFound !== 0 && is_array($param)) {
@@ -272,14 +270,12 @@ class Router
                         . $this->context->getHost()
                         . $port
                         . $convertedPath;
-
                 }
                 return $convertedPath;
             }
         }
 
         throw new RouteNotFoundException('Route "' . $name . '" is not defined');
-
     }
 
 
@@ -290,7 +286,6 @@ class Router
         preg_match_all($regexp, $path, $matches);
 
         return end($matches);
-
     }
 
     /**

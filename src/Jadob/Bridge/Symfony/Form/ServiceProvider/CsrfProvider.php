@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -36,7 +36,6 @@ class CsrfProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-
         return [
             'symfony.csrf.token.manager' => function (Container $container) {
                 $csrfGenerator = new UriSafeTokenGenerator();
@@ -53,7 +52,5 @@ class CsrfProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-
-
     }
 }

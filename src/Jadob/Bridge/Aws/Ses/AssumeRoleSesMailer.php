@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Aws\Ses;
 
-
 use Aws\Sdk;
 use Symfony\Component\Mime\Email;
 
@@ -15,7 +14,6 @@ use Symfony\Component\Mime\Email;
  */
 class AssumeRoleSesMailer extends SesMailer
 {
-
     protected Sdk $sdk;
     protected string $roleToAssumeArn;
     protected ?array $assumedCredentials = null;

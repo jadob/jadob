@@ -10,7 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Class GeneratePasswordHashCommand
  *
- * @package Jadob\Security\Auth\Command
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

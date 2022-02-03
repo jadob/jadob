@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\CommandBus;
 
+use Closure;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -37,7 +39,7 @@ class CommandBus
     public function addRoute(string $commandFqcn, callable $handler): self
     {
         if (isset($this->routing[$commandFqcn])) {
-            throw new \RuntimeException('Handler for class ' . $commandFqcn . ' is already registered.');
+            throw new RuntimeException('Handler for class ' . $commandFqcn . ' is already registered.');
         }
 
         $this->routing[$commandFqcn] = $handler;
@@ -56,7 +58,7 @@ class CommandBus
 
         try {
             if (!isset($this->routing[$commandFqcn])) {
-                throw new \RuntimeException('There is no handler for ' . $commandFqcn . ' command.');
+                throw new RuntimeException('There is no handler for ' . $commandFqcn . ' command.');
             }
 
             $result = null;
@@ -70,7 +72,7 @@ class CommandBus
                 $result = $handler($command);
             }
 
-            if ($handler instanceof \Closure) {
+            if ($handler instanceof Closure) {
                 $dispatchingMethodUsed = 'closure';
                 $this->logger->info('Handler for event ' . $commandFqcn . ' is Closure and it has been called.');
                 $result = $handler($command);
@@ -78,12 +80,10 @@ class CommandBus
 
             $this->logger->info('Command ' . $commandFqcn . ' has been dispatched via ' . $dispatchingMethodUsed);
             return $result;
-
         } catch (Throwable $e) {
             $this->logger->critical('An error occured during command handling: ' . $e->getMessage(), $e->getTrace());
             throw $e;
         }
-
     }
 
     protected function isHandlerInvokableClass(callable $object): bool

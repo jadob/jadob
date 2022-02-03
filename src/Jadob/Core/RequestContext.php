@@ -138,6 +138,4 @@ class RequestContext
         $this->user = $user;
         return $this;
     }
-
-
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use Jadob\EventSourcing\Aggregate\DomainEventInterface;
 use Ulid\Ulid;
 
@@ -17,18 +19,18 @@ abstract class AbstractDomainEvent implements DomainEventInterface
     protected int $aggregateVersion;
     protected string $aggregateId;
     protected string $eventId;
-    protected \DateTimeInterface $recordedAt;
+    protected DateTimeInterface $recordedAt;
     protected array $attributes = [];
 
 
     protected function assignEventId()
     {
-        $this->eventId = (string)Ulid::generate();
+        $this->eventId = (string) Ulid::generate();
     }
 
     protected function assignRecordTimestamp()
     {
-        $this->recordedAt = new \DateTimeImmutable();
+        $this->recordedAt = new DateTimeImmutable();
     }
 
     /**
@@ -69,9 +71,9 @@ abstract class AbstractDomainEvent implements DomainEventInterface
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function recordedAt(): \DateTimeInterface
+    public function recordedAt(): DateTimeInterface
     {
         return $this->recordedAt;
     }

@@ -10,5 +10,4 @@ namespace Jadob\Container\Exception;
  */
 class AutowiringException extends ContainerException
 {
-
 }

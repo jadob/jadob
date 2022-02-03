@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\ServiceProvider;
 
@@ -7,7 +8,6 @@ use Jadob\Container\Container;
 /**
  * Class AbstractServiceProvider
  *
- * @package Jadob\Container\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -21,7 +21,6 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-
     }
 
     /**
@@ -29,6 +28,5 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-
     }
 }

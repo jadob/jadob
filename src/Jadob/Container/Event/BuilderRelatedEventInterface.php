@@ -6,5 +6,4 @@ namespace Jadob\Container\Event;
 
 interface BuilderRelatedEventInterface
 {
-
 }

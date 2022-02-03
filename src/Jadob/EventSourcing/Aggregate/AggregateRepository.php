@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\Aggregate;
 
-
 use Jadob\EventSourcing\EventStore\DateTimeFactory;
 use Jadob\EventSourcing\EventStore\EventStoreInterface;
 use Jadob\EventSourcing\EventStore\PayloadSerializer;
+use JsonException;
+use ReflectionException;
 
 /**
  * Class AggregateRepository
  *
- * @package Jadob\EventSourcing\Aggregate
  */
 class AggregateRepository
 {
@@ -47,8 +47,8 @@ class AggregateRepository
      * @param string $id
      * @return AggregateRootInterface
      * @throws AggregateException
-     * @throws \JsonException
-     * @throws \ReflectionException
+     * @throws JsonException
+     * @throws ReflectionException
      */
     public function get(string $id): AggregateRootInterface
     {

@@ -6,8 +6,8 @@ namespace Jadob\Security\Supervisor;
 use Jadob\Security\Auth\UserProviderInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use function spl_object_hash;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -66,5 +66,4 @@ class Supervisor
     {
         return $this->userProviders[spl_object_hash($supervisor)];
     }
-
 }

@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Annotations\ServiceProvider;
 
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\FilesystemCache;
 use Jadob\Container\Container;
-use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 class DoctrineAnnotationsProvider implements ServiceProviderInterface
 {
@@ -30,8 +26,8 @@ class DoctrineAnnotationsProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        if(!isset($config['annotations'])) {
-            throw new \RuntimeException('There is no "annotations" section in "doctrine" config node."');
+        if (!isset($config['annotations'])) {
+            throw new RuntimeException('There is no "annotations" section in "doctrine" config node."');
         }
 
         $annotationsConfig = $config['annotations'];

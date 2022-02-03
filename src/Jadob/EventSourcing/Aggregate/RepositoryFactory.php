@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\EventSourcing\Aggregate;
-
 
 use Jadob\EventSourcing\EventStore\EventStoreInterface;
 use Jadob\EventSourcing\EventStore\PayloadSerializer;
@@ -15,8 +15,7 @@ class RepositoryFactory
     public function __construct(
         EventStoreInterface $eventStore,
         PayloadSerializer $serializer
-    )
-    {
+    ) {
         $this->eventStore = $eventStore;
         $this->serializer = $serializer;
     }

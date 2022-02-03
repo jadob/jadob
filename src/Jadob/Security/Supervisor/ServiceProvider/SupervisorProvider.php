@@ -46,7 +46,6 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
     {
         return [
             Supervisor::class => static function (ContainerInterface $container) use ($config) {
-
                 $logger = new Logger('supervisor', [
                     $container->get('logger.handler.default')
                 ]);

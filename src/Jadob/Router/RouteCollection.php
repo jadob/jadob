@@ -1,20 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router;
 
 use ArrayAccess;
+use function count;
 use Countable;
+use function is_string;
 use Iterator;
 use Jadob\Router\Exception\RouterException;
-use function count;
-use function is_integer;
-use function is_string;
 use function key;
 use function next;
 use function reset;
 
 /**
- * @package Jadob\Router
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -85,7 +84,6 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
         }
 
         return $this;
-
     }
 
     /**
@@ -241,7 +239,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
              * Prevents from passing invalid values to further processing.
              * @TODO drop it or refactor, as input typehints should handle this too
              */
-            if (is_integer($routeName) && is_string($routeArray)) {
+            if (is_int($routeName) && is_string($routeArray)) {
                 throw new RouterException('Route or collection"' . $routeArray . '" looks malformed. Please provide a valid array as a value for this route.');
             }
 
@@ -257,7 +255,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
                 /**
                  * In collections, only prefix is required.
                  */
-                if(isset($routeArray['host'])) {
+                if (isset($routeArray['host'])) {
                     $nestedRouteCollection->setHost($routeArray['host']);
                 }
 
@@ -265,7 +263,6 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
             } else {
                 if (!isset($routeArray['name'])) {
                     $routeArray['name'] = $routeName;
-
                 }
                 $routeCollection->addRoute(Route::fromArray($routeArray));
             }
@@ -273,5 +270,4 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
 
         return $routeCollection;
     }
-
 }

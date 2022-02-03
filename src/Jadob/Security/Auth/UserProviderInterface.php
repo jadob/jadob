@@ -12,7 +12,6 @@ use Jadob\Security\Auth\User\UserInterface;
  */
 interface UserProviderInterface
 {
-
     public function getUserByUsername(string $name): ?UserInterface;
 
     public function getUserById(string $id): ?UserInterface;

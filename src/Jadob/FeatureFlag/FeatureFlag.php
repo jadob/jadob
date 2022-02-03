@@ -1,6 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\FeatureFlag;
+
 use Jadob\FeatureFlag\Condition\ConditionInterface;
 use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
 
@@ -24,7 +26,6 @@ use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
  * ]
  *
  * @see     https://martinfowler.com/articles/feature-toggles.html
- * @package Jadob\FeatureFlag
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -68,8 +69,7 @@ class FeatureFlag
      */
     public function isEnabled($name): bool
     {
-
-        if(!isset($this->config[$name])) {
+        if (!isset($this->config[$name])) {
             throw new MissingFeatureRulesException('Feature "'.$name.'" is not defined.');
         }
 
@@ -78,12 +78,11 @@ class FeatureFlag
         foreach ($rulesForFeature as $key => $value) {
             $result = $this->conditions[$key]->verifyFeature($value);
 
-            if(!$result) {
+            if (!$result) {
                 return false;
             }
         }
 
         return true;
-
     }
 }

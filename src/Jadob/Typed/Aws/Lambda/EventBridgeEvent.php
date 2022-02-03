@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Aws\Lambda;
 
-
 /**
  * @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/aws-lambda/trigger/eventbridge.d.ts
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -28,5 +27,4 @@ class EventBridgeEvent
      * @var array
      */
     protected array $detail;
-
 }

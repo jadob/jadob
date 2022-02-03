@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Configuration;
 
-
 class Grid
 {
 
@@ -39,5 +38,4 @@ class Grid
     {
         return $this->components;
     }
-
 }

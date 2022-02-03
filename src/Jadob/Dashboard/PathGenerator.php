@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard;
 
-
 use Jadob\Dashboard\Configuration\EntityRedirectOperation;
 use Jadob\Dashboard\Configuration\PredefinedCriteria;
 
@@ -18,7 +17,6 @@ class PathGenerator
 
     public function getPathForObjectList(string $objectFqcn, int $page = 1, ?PredefinedCriteria $criteria = null): string
     {
-
         $params = [
             QueryStringParamName::ACTION => ActionType::CRUD,
             QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
@@ -26,7 +24,7 @@ class PathGenerator
             QueryStringParamName::CRUD_CURRENT_PAGE => $page,
         ];
 
-        if($criteria !== null) {
+        if ($criteria !== null) {
             $params[QueryStringParamName::LIST_CRITERIA] = $criteria->getName();
         }
 
@@ -103,7 +101,4 @@ class PathGenerator
             ]
         );
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\FeatureFlag\ServiceProvider;
 
@@ -9,7 +10,6 @@ use Jadob\FeatureFlag\FeatureFlag;
 /**
  * Class FeatureFlagProvider
  *
- * @package Jadob\FeatureFlag\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

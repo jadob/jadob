@@ -6,5 +6,4 @@ namespace Jadob\Container\Event;
 
 class ServiceRequestedEvent implements ContainerRelatedEventInterface
 {
-
 }

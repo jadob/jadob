@@ -14,7 +14,7 @@ class DeferredLogger extends Logger
     /**
      * {@inheritDoc}
      */
-    public function addRecord(int $level, string $message, array $context = array()): bool
+    public function addRecord(int $level, string $message, array $context = []): bool
     {
         //save timestamo
         //store it
@@ -33,6 +33,4 @@ class DeferredLogger extends Logger
     {
         $this->close();
     }
-
-
 }

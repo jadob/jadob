@@ -10,7 +10,6 @@ namespace Jadob\Security\Auth\Exception;
  */
 class InvalidCredentialsException extends AuthenticationException
 {
-
     public static function invalidCredentials(): self
     {
         return new self('security.invalid_credentials');

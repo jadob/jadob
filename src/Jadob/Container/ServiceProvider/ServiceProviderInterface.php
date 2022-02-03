@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\ServiceProvider;
 
@@ -8,7 +9,6 @@ use Jadob\Container\Exception\ServiceNotFoundException;
 /**
  * @TODO:   Maybe we should add here 'getDefaultConfiguration' method, which will be merged with user-defined config?
  * Interface ServiceProviderInterface
- * @package Jadob\Container\ServiceProvider
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -54,6 +54,4 @@ interface ServiceProviderInterface
      * @return ServiceProviderInterface[]
      */
     //    public function getParentProviders();
-
-
 }

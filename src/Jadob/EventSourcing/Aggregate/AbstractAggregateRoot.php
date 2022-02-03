@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\Aggregate;
 
+use DateTime;
+use DateTimeInterface;
+use Exception;
+use function get_called_class;
 use Jadob\EventSourcing\AbstractDomainEvent;
 use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionException;
-use function get_called_class;
 
 /**
  * Base class for aggregate roots.
@@ -35,11 +38,11 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
      */
     private string $aggregateId;
 
-    private \DateTimeInterface $createdAt;
+    private DateTimeInterface $createdAt;
 
     /**
      * Use this in your aggregates to warm your object quickly.
-     * @throws \Exception
+     * @throws Exception
      */
     protected function __construct()
     {
@@ -58,7 +61,7 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
     }
     protected function assignRecordTimestamp()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
     }
 
     /**
@@ -114,8 +117,8 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
     final protected function recordThat(object $event): void
     {
         $this->aggregateVersion++;
-        $this->recordedEvents[(string)$this->aggregateVersion] = $event;
-        $this->events[(string)$this->aggregateVersion] = $event;
+        $this->recordedEvents[(string) $this->aggregateVersion] = $event;
+        $this->events[(string) $this->aggregateVersion] = $event;
 
         if ($event instanceof AbstractDomainEvent) {
             $event->setAggregateId($this->getAggregateId());
@@ -126,9 +129,9 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
     }
 
     /**
-     * @return \DateTimeInterface
+     * @return DateTimeInterface
      */
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -143,5 +146,4 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
         $this->aggregateId = $aggregateId;
         return $this;
     }
-
 }

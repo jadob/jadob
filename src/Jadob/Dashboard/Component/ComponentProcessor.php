@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Component;
 
-
+use DateTimeInterface;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 
 class ComponentProcessor
@@ -19,17 +20,14 @@ class ComponentProcessor
     public function getComponentData(
         string $providerFqcn,
         Request $request,
-        \DateTimeInterface $requestDateTime,
+        DateTimeInterface $requestDateTime,
         array $context
     ): array {
-
-
         $this->assertProviderUsability($providerFqcn);
 
         /** @var ComponentProviderInterface $provider */
         $provider = $this->container->get($providerFqcn);
         return $provider->getData($request, $requestDateTime, $context);
-
     }
 
     public function getComponentTemplate(string $providerFqcn): string
@@ -43,12 +41,12 @@ class ComponentProcessor
 
     /**
      * @param string $providerFqcn
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function assertProviderUsability(string $providerFqcn): void
     {
-        if(!in_array(ComponentProviderInterface::class, class_implements($providerFqcn), true)) {
-            throw new \RuntimeException(
+        if (!in_array(ComponentProviderInterface::class, class_implements($providerFqcn), true)) {
+            throw new RuntimeException(
                 sprintf(
                     'Class "%s" should implement "%s" if it should be used to provide data to dashboard components.',
                     $providerFqcn,
