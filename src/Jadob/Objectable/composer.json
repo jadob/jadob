@@ -1,5 +1,5 @@
 {
-  "name": "pizzaminded/objectable",
+  "name": "jadob/objectable",
   "type": "library",
   "description": "Convert your php objects into html table",
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Pizzaminded\\Objectable\\": ""
+      "Jadob\\Objectable\\": ""
     }
   }
 }
