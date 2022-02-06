@@ -13,6 +13,7 @@ class UpdateTest extends TestCase
     {
         $data = FixtureHelper::getJson('telegram-update-message');
         $update = Update::fromArray($data);
+
         self::assertSame(1234567890, $update->getId());
     }
 }
