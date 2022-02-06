@@ -4,7 +4,7 @@
   "description": "Telegram webhook handler",
   "autoload": {
     "psr-4": {
-      "Jadob\\Webhook\\Handler\\Telegram": ""
+      "Jadob\\Webhook\\Provider\\Telegram\\": ""
     }
   }
 }
