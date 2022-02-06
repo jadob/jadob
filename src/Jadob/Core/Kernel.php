@@ -56,7 +56,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.3.0';
+    public const VERSION = '0.4.0';
 
     /**
      * If true, application log will be saved while destructing objects
