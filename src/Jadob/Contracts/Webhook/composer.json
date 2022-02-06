@@ -1,1 +1,10 @@
-{}
+{
+  "name": "jadob/contracts-webhook",
+  "license": "MIT",
+  "description": "Webhook handler",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Contracts\\Webhook\\": ""
+    }
+  }
+}

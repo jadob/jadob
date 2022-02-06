@@ -57,6 +57,7 @@
     "jadob/bridge-symfony-translation": "self.version",
     "jadob/bridge-twig": "self.version",
     "jadob/container": "self.version",
+    "jadob/contracts-webhook": "self.version",
     "jadob/dashboard": "self.version",
     "jadob/url": "self.version",
     "jadob/runtime": "self.version",
@@ -67,6 +68,9 @@
     "jadob/feature-flag": "self.version",
     "jadob/event-dispatcher": "self.version",
     "jadob/contracts-dashboard": "self.version",
-    "jadob/debug": "self.version"
+    "jadob/debug": "self.version",
+    "jadob/webhook-handler": "self.version",
+    "jadob/webhook-provider-telegram": "self.version",
+    "jadob/objectable": "self.version"
   }
 }
