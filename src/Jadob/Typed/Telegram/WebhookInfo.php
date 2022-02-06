@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Telegram;
 
-
 class WebhookInfo
 {
     protected ?string $url = null;
@@ -34,5 +33,4 @@ class WebhookInfo
         $this->url = $url;
         return $this;
     }
-
 }

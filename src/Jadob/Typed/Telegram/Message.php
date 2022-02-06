@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Telegram;
 
-use Webmozart\Assert\Assert;
-
 class Message
 {
     protected ?array $photo = null;
@@ -13,7 +11,7 @@ class Message
     {
         $self = new self();
 
-        if(isset($data['photo'])) {
+        if (isset($data['photo'])) {
             $self->photo = [];
             foreach ($data['photo'] as $photo) {
                 $self->photo[] = PhotoSize::fromArray($photo);
