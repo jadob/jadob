@@ -12,6 +12,7 @@ namespace Jadob\Objectable\Annotation;
  * @author pizzaminded <miki@calorietool.com>
  * @license MIT
  */
+#[\Attribute]
 class Row
 {
 }

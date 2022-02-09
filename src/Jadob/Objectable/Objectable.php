@@ -23,6 +23,7 @@ use function htmlentities;
 use function is_array;
 
 /**
+ * @deprecated
  * @author pizzaminded <miki@calorietool.com>
  * @license MIT
  */
