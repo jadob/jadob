@@ -1,0 +1,49 @@
+{
+  "message_id": 9999,
+  "from": {
+    "id": 1234567890123,
+    "is_bot": false,
+    "first_name": "Tony",
+    "last_name": "Stark",
+    "username": "WarMachine68",
+    "language_code": "en"
+  },
+  "chat": {
+    "id": 32106549870,
+    "first_name": "Tony",
+    "last_name": "Stark",
+    "username": "WarMachine68",
+    "type": "private"
+  },
+  "date": 147852369,
+  "photo": [
+    {
+      "file_id": "FILE_ID",
+      "file_unique_id": "FILE_UNIQUE_ID_1",
+      "file_size": 1223,
+      "width": 67,
+      "height": 90
+    },
+    {
+      "file_id": "FILE_ID",
+      "file_unique_id": "FILE_UNIQUE_ID_2",
+      "file_size": 15255,
+      "width": 240,
+      "height": 320
+    },
+    {
+      "file_id": "FILE_ID",
+      "file_unique_id": "FILE_UNIQUE_ID_3",
+      "file_size": 62783,
+      "width": 600,
+      "height": 800
+    },
+    {
+      "file_id": "FILE_ID",
+      "file_unique_id": "FILE_UNIQUE_ID_4",
+      "file_size": 81045,
+      "width": 960,
+      "height": 1280
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "jadob/webhook-provider-telegram",
+  "license": "MIT",
+  "description": "Telegram webhook handler",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Webhook\\Provider\\Telegram\\": ""
+    }
+  }
+}
