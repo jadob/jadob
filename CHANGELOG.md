@@ -4,12 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2022-02-10
+### Added
+- First packages are now fully split and ready to be used instead of installing the whole `jadob/jadob` dep
+
 ## [0.4.1] - 2022-02-06
 ## Fixed
 - [webhook-provider-telegram] fixed namespaces in composer.json
 
 ## [0.4.0] - 2022-02-06
-## Added
+### Added
 - New `jadob/webhook-handler` stub
 - New `jadob/webhook-provider-telegram` stub
 - New `jadob/contracts-webhook` stub
@@ -17,17 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - More Telegram types
 - Added PHP-CS-Fixer processing
 
-## Changed
+### Changed
 - Almost any file was processed by php-cs-fixer
 
-## Removed
+### Removed
 - Support for PHP7 has been dropped.
 
 ## [0.3.0] - 2022-01-07
-## Added
+### Added
 - Added `jadob/typed-geo` component
 - Added `jadob/typed-telegram` component
-## Changed
+### Changed
 - new test directory structure
 
 ## [0.2.6] - 2021-12-23
