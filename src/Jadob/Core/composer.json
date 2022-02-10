@@ -8,6 +8,12 @@
     }
   },
   "require": {
-    "jadob/runtime": "^0.4.1"
+    "jadob/runtime": "^0.4.1",
+    "jadob/bridge-monolog": "^0.4.1",
+    "jadob/debug": "^0.4.1",
+    "jadob/event-dispatcher": "^0.4.1",
+    "jadob/config": "^0.4.1",
+    "jadob/container": "^0.4.1",
+    "jadob/router": "^0.4.1"
   }
 }
