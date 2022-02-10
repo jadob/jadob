@@ -8,3 +8,7 @@
 /.phpunit.result.cache
 /.php-cs-fixer.cache
 /tools
+/src/Jadob/Core/vendor
+/src/Jadob/Core/composer.lock
+/src/Jadob/Bridge/Monolog/vendor
+/src/Jadob/Bridge/Monolog/composer.lock
