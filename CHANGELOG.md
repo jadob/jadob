@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2022-02-13
+### Added
+- [Dashboard] new contracts 
+
+### Changed
+- [Objectable] bumped vendors
+
 ## [0.4.2] - 2022-02-10
 ### Added
 - First packages are now fully split and ready to be used instead of installing the whole `jadob/jadob` dep
