@@ -32,7 +32,7 @@ class AssumeRoleSesMailer extends SesMailer
         $this->config = $config;
     }
 
-    public function send(Email $email)
+    public function send(Email $email): void
     {
         if ($this->assumedCredentials === null) {
             $stsClient = $this->sdk->createSts();

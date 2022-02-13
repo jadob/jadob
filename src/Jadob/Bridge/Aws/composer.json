@@ -9,5 +9,8 @@
   },
   "replace": {
     "jadob/bridge-aws-ses": "self.version"
+  },
+  "require": {
+    "symfony/mime": "^6.0"
   }
 }

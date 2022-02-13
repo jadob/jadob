@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Aws\\Ses\\": ""
     }
+  },
+  "require": {
+    "symfony/mime": "^6.0"
   }
 }
