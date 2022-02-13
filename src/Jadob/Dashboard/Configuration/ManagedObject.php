@@ -10,6 +10,7 @@ class ManagedObject
 {
     protected ListConfiguration $listConfiguration;
     protected string $objectFqcn;
+    protected ?string $objectManager = null;
     protected ?NewObjectConfiguration $newObjectConfiguration = null;
     protected ?EditConfiguration $editConfiguration = null;
 
@@ -60,6 +61,9 @@ class ManagedObject
             $self->editConfiguration = EditConfiguration::fromArray($configuration['edit']);
         }
 
+        if(isset($configuration['object_manager'])) {
+            $self->objectManager = $configuration['object_manager'];
+        }
 
         return $self;
     }
@@ -98,5 +102,13 @@ class ManagedObject
     public function hasEditConfiguration(): bool
     {
         return $this->editConfiguration !== null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getObjectManager(): ?string
+    {
+        return $this->objectManager;
     }
 }

@@ -16,6 +16,7 @@ use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
 use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\QueryStringParamName;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -37,31 +38,17 @@ use Twig\Error\SyntaxError;
 
 class DashboardAction
 {
-    protected Environment $twig;
-    protected DashboardConfiguration $configuration;
-    protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
-    protected FormFactoryInterface $formFactory;
-    protected PathGenerator $pathGenerator;
-    protected OperationHandler $operationHandler;
-    protected LoggerInterface $logger;
 
     public function __construct(
-        Environment $twig,
-        DashboardConfiguration $configuration,
-        DoctrineOrmObjectManager $doctrineOrmObjectManager,
-        FormFactoryInterface $formFactory,
-        PathGenerator $pathGenerator,
-        OperationHandler $operationHandler,
-        LoggerInterface $logger
-    ) {
-        $this->twig = $twig;
-        $this->configuration = $configuration;
-        $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
-        $this->formFactory = $formFactory;
-        $this->pathGenerator = $pathGenerator;
-        $this->operationHandler = $operationHandler;
-        $this->logger = $logger;
-    }
+        protected Environment $twig,
+        protected ContainerInterface $container,
+        protected DashboardConfiguration $configuration,
+        protected DoctrineOrmObjectManager $doctrineOrmObjectManager,
+        protected FormFactoryInterface $formFactory,
+        protected PathGenerator $pathGenerator,
+        protected OperationHandler $operationHandler,
+        protected LoggerInterface $logger
+    ) {}
 
     /**
      * @param Request $request
@@ -282,7 +269,7 @@ class DashboardAction
                     $beforeInsertHook($createdObject, $form);
                 }
 
-                $this->doctrineOrmObjectManager->persist($createdObject);
+                $this->getObjectManagerForObject($objectFqcn)->persist($createdObject);
                 return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
             }
 
@@ -527,5 +514,15 @@ class DashboardAction
         $this->logger->debug(sprintf('Operation "%s" invoked, returning to list view.', $operationName));
 
         return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
+    }
+
+    protected function getObjectManagerForObject(string $objectFqcn): DoctrineOrmObjectManager {
+        $customObjectManager = $this->configuration->getManagedObjectConfiguration($objectFqcn);
+
+        if($customObjectManager->getObjectManager() !== null) {
+            return $this->container->get($customObjectManager->getObjectManager());
+        }
+
+        return $this->doctrineOrmObjectManager;
     }
 }
