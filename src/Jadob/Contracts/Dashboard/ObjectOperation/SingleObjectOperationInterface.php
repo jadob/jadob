@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\SingleObjectOperation;
+namespace Jadob\Contracts\Dashboard\ObjectOperation;
 
-use Jadob\Core\RequestContext;
-use Jadob\Dashboard\Configuration\ManagedObject;
+use Jadob\Contracts\Dashboard\DashboardContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -13,8 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 interface SingleObjectOperationInterface
 {
     public function handle(
-        RequestContext $context,
-        ManagedObject $object,
+        DashboardContextInterface $context,
+        object $object,
         ?string $objectId
     ): Response;
 
