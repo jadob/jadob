@@ -2,15 +2,28 @@
 {% set page_title = 'Show object' %}
 {% set page_header = object_fqcn|split('\\')|last %}
 {% set page_subheader %}
-   Add new object
+    Add new object
 {% endset %}
 {% set dashboard_name = 'crud-add' %}
 {% block content %}
     <div class="container mx-auto">
-        <ul>
-            {% for key, val in list %}
-                <li><strong>{{ key }}:</strong> {{ val }}</li>
-            {% endfor %}
-        </ul>
+        {% for key, val in list %}
+            <div class="flex">
+                <div class="w-1/4 text-right font-bold p-2">{{ key }}</div>
+                <div class="p-2">
+                    {% if val is null %}
+                        {% include '@JadobDashboard/type_representations/null.html.twig' %}
+                    {% elseif dashboard_val_is_true(val) %}
+                        {% include '@JadobDashboard/type_representations/true.html.twig' %}
+                    {% elseif dashboard_val_is_false(val) %}
+                        {% include '@JadobDashboard/type_representations/false.html.twig' %}
+                    {% else %}
+                        {{ val }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
+
+
 {% endblock %}
