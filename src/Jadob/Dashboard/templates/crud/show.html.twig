@@ -1,0 +1,16 @@
+{% extends '@JadobDashboard/base.html.twig' %}
+{% set page_title = 'Show object' %}
+{% set page_header = object_fqcn|split('\\')|last %}
+{% set page_subheader %}
+   Add new object
+{% endset %}
+{% set dashboard_name = 'crud-add' %}
+{% block content %}
+    <div class="container mx-auto">
+        <ul>
+            {% for key, val in list %}
+                <li><strong>{{ key }}:</strong> {{ val }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

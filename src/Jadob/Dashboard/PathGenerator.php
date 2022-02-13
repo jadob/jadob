@@ -59,6 +59,19 @@ class PathGenerator
         );
     }
 
+    public function getPathForObjectShow(string $objectFqcn, $objectId): string
+    {
+        return $this->urlGenerator->generateRoute(
+            'jadob_dashboard_action',
+            [
+                QueryStringParamName::ACTION => ActionType::CRUD,
+                QueryStringParamName::CRUD_OPERATION => CrudOperationType::SHOW,
+                QueryStringParamName::OBJECT_ID => (string)$objectId,
+                QueryStringParamName::OBJECT_NAME => $objectFqcn
+            ]
+        );
+    }
+
     public function getPathForImport(string $objectFqcn): string
     {
         return $this->urlGenerator->generateRoute(

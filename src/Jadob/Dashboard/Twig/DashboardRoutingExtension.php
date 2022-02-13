@@ -20,6 +20,7 @@ class DashboardRoutingExtension extends AbstractExtension
     {
         return [
             new TwigFunction('dashboard_path_object_list', [$this->pathGenerator, 'getPathForObjectList']),
+            new TwigFunction('dashboard_path_object_show', [$this->pathGenerator, 'getPathForObjectShow']),
             new TwigFunction('dashboard_path_object_new', [$this->pathGenerator, 'getPathForObjectNew']),
             new TwigFunction('dashboard_path_object_edit', [$this->pathGenerator, 'getPathForObjectEdit']),
             new TwigFunction('dashboard_path_object_import', [$this->pathGenerator, 'getPathForImport']),

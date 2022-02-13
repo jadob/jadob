@@ -5,6 +5,7 @@ namespace Jadob\Dashboard;
 
 class CrudOperationType
 {
+    public const SHOW = 'show';
     public const LIST = 'list';
     public const NEW = 'new';
     public const EDIT = 'edit';

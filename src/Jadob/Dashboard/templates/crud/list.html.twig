@@ -81,6 +81,10 @@
                 {% if current_criteria == null and (operations|length > 0 or redirects|length > 0 or managed_object.hasEditConfiguration)  %}
                     <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
                         <div class="grid grid-cols-1 divide-y divide-gray-300">
+                            {% include '@JadobDashboard/partials/list_operation.html.twig' with {
+                                path: dashboard_path_object_show(object_fqcn, obj.id),
+                                label: 'dashboard.crud_operation.show'|trans
+                            } %}
                             {% if managed_object.hasEditConfiguration %}
                                 {% include '@JadobDashboard/partials/list_operation.html.twig' with {
                                     path: dashboard_path_object_edit(object_fqcn, obj.id),

@@ -13,6 +13,7 @@ use Jadob\Dashboard\Configuration\NewObjectConfiguration;
 use Jadob\Dashboard\CrudOperationType;
 use Jadob\Dashboard\Exception\DashboardException;
 use Jadob\Dashboard\ObjectManager\DoctrineOrmObjectManager;
+use Jadob\Dashboard\ObjectOperation\ShowOperation;
 use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\QueryStringParamName;
@@ -47,7 +48,8 @@ class DashboardAction
         protected FormFactoryInterface $formFactory,
         protected PathGenerator $pathGenerator,
         protected OperationHandler $operationHandler,
-        protected LoggerInterface $logger
+        protected LoggerInterface $logger,
+        protected ShowOperation $showOperation
     ) {}
 
     /**
@@ -78,7 +80,7 @@ class DashboardAction
         $action === mb_strtolower($action);
 
         if ($action === ActionType::CRUD) {
-            return $this->handleCrudOperation($request);
+            return $this->handleCrudOperation($request, $context);
         }
 
         if ($action === ActionType::IMPORT) {
@@ -126,7 +128,7 @@ class DashboardAction
      * @throws SyntaxError
      * @throws DashboardException
      */
-    protected function handleCrudOperation(Request $request): Response
+    protected function handleCrudOperation(Request $request, DashboardContextInterface $context): Response
     {
         $operation = mb_strtolower($request->query->get(QueryStringParamName::CRUD_OPERATION));
         /** @psalm-var class-string $objectFqcn */
@@ -283,6 +285,21 @@ class DashboardAction
             );
         }
 
+        if($operation === CrudOperationType::SHOW) {
+            /** @var string $objectId */
+            $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
+            /** @var null|object $object */
+            $object = $this->doctrineOrmObjectManager->getOneById($objectFqcn, $objectId);
+
+
+            $response = $this->showOperation->handle(
+                $context,
+                $object,
+                $objectId
+            );
+
+            return $response;
+        }
         throw new RuntimeException('JDASH0003: Not implemented yet');
     }
 
