@@ -12,7 +12,7 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
-use Jadob\Bridge\Doctrine\DBAL\Logger\Psr3QueryLogger;
+use Jadob\Bridge\Doctrine\DBAL\Logger\Psr11QueryLogger;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
@@ -77,8 +77,8 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             return $logger;
         };
 
-        $services['doctrine.dbal.query.logger'] = function (ContainerInterface $container): Psr3QueryLogger {
-            $logger = new Psr3QueryLogger(
+        $services['doctrine.dbal.query.logger'] = function (ContainerInterface $container): Psr11QueryLogger {
+            $logger = new Psr11QueryLogger(
                 $container->get('doctrine.dbal.logger')
             );
 

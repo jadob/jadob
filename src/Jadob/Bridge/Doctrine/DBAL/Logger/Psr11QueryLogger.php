@@ -10,18 +10,12 @@ use Psr\Log\LoggerInterface;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Psr3QueryLogger implements SQLLogger
+class Psr11QueryLogger implements SQLLogger
 {
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @var array
-     */
-    protected $recentQuery;
+    protected array $recentQuery = [];
 
     /**
      * Psr3QueryLogger constructor.
