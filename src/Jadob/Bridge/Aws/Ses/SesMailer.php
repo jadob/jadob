@@ -34,7 +34,7 @@ class SesMailer
     /**
      * @param Email $email
      */
-    public function send(Email $email)
+    public function send(Email $email): void
     {
         $charset = 'UTF-8';
         $plainToEmails = [];
