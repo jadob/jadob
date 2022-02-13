@@ -89,9 +89,7 @@ class Router
         }
 
         $hostRegex = $this->getRegex($route->getHost());
-        if ($hostRegex !== false
-            && preg_match($hostRegex, $host, $matches) > 0
-        ) {
+        if (preg_match($hostRegex, $host, $matches) > 0) {
             $matchedAttributes = $this->transformMatchesToParameters($matches);
             return true;
         }
@@ -117,11 +115,10 @@ class Router
              * @var Route $route
              */
             $pathRegex = $this->getRegex($route->getPath());
-            //@TODO: maybe we should break here if $pathRegex === false?
             $parameters = $route->getParams();
 
-            if ($pathRegex !== false
-                && preg_match($pathRegex, $path, $matches) > 0
+            if (
+                preg_match($pathRegex, $path, $matches) > 0
                 && $this->hostMatches($route, $this->context->getHost(), $parameters)
             ) {
                 if (count(($routeMethods = $route->getMethods())) > 0
@@ -164,15 +161,16 @@ class Router
     }
 
     /**
-     * @param $pattern
      * @param null|string $pattern
      *
-     * @return bool|string
+     * @throws RouterException
      */
-    protected function getRegex(?string $pattern)
+    protected function getRegex(?string $pattern): string
     {
         if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', $pattern)) {
-            return false; // Invalid pattern
+            throw new RouterException(
+                sprintf('Unable to match route as phrase "%s" contains illegal characters.',$pattern)
+            );
         }
 
         $allowedParamChars = '[a-zA-Z0-9\.\_\-]+';
