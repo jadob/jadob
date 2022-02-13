@@ -94,6 +94,7 @@ class Context
 
         $context->setSecure(isset($_SERVER['HTTPS']));
 
+        /** @var string $host */
         $host = $_SERVER['HTTP_HOST'] ?? null;
 
         if (!str_contains($host, ':')  ) {
@@ -112,7 +113,7 @@ class Context
         //@TODO: check for CONTEXT_DOCUMENT_ROOT for Apache
         //@TODO: check how does aliases are resolved in nginx
 
-        //URI requested by client
+        /** @var string $requestUri */
         $requestUri = $_SERVER['REQUEST_URI'];
 
         //trim query string
@@ -122,6 +123,7 @@ class Context
 
         /**
          * some SAPIs like cli-server does not register PATH_INFO when we are on / request
+         * @psalm-var string $pathInfo
          */
         $pathInfo = $_SERVER['PATH_INFO'] ?? '/';
 

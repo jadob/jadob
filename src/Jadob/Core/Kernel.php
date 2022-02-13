@@ -59,21 +59,9 @@ class Kernel
     public const VERSION = '0.4.3';
 
     /**
-     * If true, application log will be saved while destructing objects
-     *
-     * @var bool
-     */
-    protected bool $deferLogs = false;
-
-    /**
      * @var Config
      */
     private $config;
-
-    /**
-     * @var string (dev/prod)
-     */
-    private $env;
 
     /**
      * @var Container
@@ -120,17 +108,18 @@ class Kernel
      * @throws KernelException
      * @throws Exception
      */
-    public function __construct($env, BootstrapInterface $bootstrap, bool $deferLogs = false)
+    public function __construct(
+        protected string $env,
+        BootstrapInterface $bootstrap,
+        protected bool $deferLogs = false
+    )
     {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
 
         $this->runtime = RuntimeFactory::fromGlobals();
-        $env = strtolower($env);
-        $this->env = $env;
         $this->bootstrap = $this->wrapBootstrapClass($bootstrap, $this->runtime);
-        $this->deferLogs = $deferLogs;
         $this->logger = $this->initializeLogger();
 
         $errorHandler = HandlerFactory::factory($env, $this->logger);

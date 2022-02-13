@@ -70,6 +70,7 @@ class DashboardProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         if ($container->has(Environment::class)) {
+            /** @var Environment $twig */
             $twig = $container->get(Environment::class);
 
             $loader = $twig->getLoader();

@@ -41,13 +41,11 @@ class SesMailer
         foreach ($email->getTo() as $address) {
             $plainToEmails[] = $address->toString();
         }
-        unset($address);
 
         $plainReplyToEmails = [];
         foreach ($email->getReplyTo() as $address) {
             $plainReplyToEmails[] = $address->toString();
         }
-        unset($address);
 
         $from = $email->getFrom();
         $plainFromAddress = reset($from)->toString();
@@ -78,7 +76,7 @@ class SesMailer
 
         /**
          * Enables support for cross-account mailing
-         * (Use case: your app is deployed on ACCOUNT1, but you have to send emails from ACCOUNT2
+         * (Use case: your app is deployed on ACCOUNT1, but you have to send emails from ACCOUNT2)
          * @see https://docs.aws.amazon.com/ses/latest/DeveloperGuide/sending-authorization-delegate-sender-tasks-email.html
          */
         if (isset($this->config['source_arn'])) {
@@ -91,6 +89,6 @@ class SesMailer
             $command['ReturnPathArn'] = $this->config['return_path_arn'];
         }
 
-        $result = $this->sesClient->sendEmail($command);
+        $this->sesClient->sendEmail($command);
     }
 }

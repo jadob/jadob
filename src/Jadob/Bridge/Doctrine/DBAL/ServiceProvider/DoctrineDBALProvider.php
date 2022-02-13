@@ -17,6 +17,7 @@ use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use LogicException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -61,6 +62,13 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
         if (isset($config['types'])) {
             foreach ($config['types'] as $name => $class) {
+                if(!is_string($class) || !is_string($name)) {
+                    throw new LogicException(
+                        'Cannot register DBAL types as its name or value is not a string'
+                    );
+                }
+
+                /** @var class-string<Type> $class */
                 Type::addType($name, $class);
             }
         }

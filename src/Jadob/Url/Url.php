@@ -14,10 +14,7 @@ use RuntimeException;
  */
 class Url
 {
-    /**
-     * @var string
-     */
-    protected $url;
+    protected ?string $url = null;
 
     /**
      * @var string
@@ -140,7 +137,7 @@ class Url
     public function __toString()
     {
         if ($this->url !== null) {
-            return (string) $this->url;
+            return $this->url;
         }
 
         return $this->build();
