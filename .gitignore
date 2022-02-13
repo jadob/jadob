@@ -13,6 +13,10 @@
 /src/Jadob/Core/composer.lock
 /src/Jadob/Bridge/Monolog/vendor
 /src/Jadob/Bridge/Monolog/composer.lock
+/src/Jadob/Bridge/Aws/vendor
+/src/Jadob/Bridge/Aws/composer.lock
+/src/Jadob/Bridge/Aws/Ses/vendor
+/src/Jadob/Bridge/Aws/Ses/composer.lock
 /src/Jadob/Bridge/Twig/vendor
 /src/Jadob/Bridge/Twig/composer.lock
 /src/Jadob/EventDispatcher/vendor
