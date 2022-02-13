@@ -41,9 +41,9 @@ class Route
     protected $host;
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * @var null|RouteCollection
@@ -152,7 +152,7 @@ class Route
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getParams(): array
     {

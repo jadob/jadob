@@ -30,6 +30,6 @@ class PayloadSerializer
      */
     public function deserialize(string $serialized): array
     {
-        return json_decode($serialized, true);
+        return (array)json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
     }
 }

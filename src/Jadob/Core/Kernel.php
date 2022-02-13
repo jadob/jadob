@@ -200,7 +200,7 @@ class Kernel
 
         $context->setSession($session);
         $this->contextStore->push($context);
-
+        /** @var array $dispatcherConfig */
         $dispatcherConfig = $configArray['framework']['dispatcher'];
         $dispatcherLogger = new Logger('dispatcher', [$this->fileStreamHandler]);
         $dispatcher = new Dispatcher(

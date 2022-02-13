@@ -71,6 +71,10 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
         $defaultManagerName = null;
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
+            if(!is_string($managerName)) {
+                throw new \LogicException('All Doctrine ORM Manager names must be an string.');
+            }
+
             if (isset($configuration['default']) && (bool) $configuration['default']) {
                 if ($defaultManagerName !== null) {
                     throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
