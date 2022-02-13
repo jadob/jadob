@@ -264,7 +264,7 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function has($id)
+    public function has($id): bool
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
     }

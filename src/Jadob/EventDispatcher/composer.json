@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\EventDispatcher\\": ""
     }
+  },
+  "require": {
+    "psr/event-dispatcher": "^1.0"
   }
 }

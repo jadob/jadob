@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Doctrine\\Annotations\\": ""
     }
+  },
+  "require": {
+    "doctrine/annotations": "^1.13"
   }
 }

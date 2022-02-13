@@ -23,7 +23,7 @@ use ReflectionException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * @deprecated this would be removed soon.
+ * @deprecated
  * @author pizzaminded <miki@calorietool.com>
  * @license MIT
  */
@@ -324,7 +324,7 @@ class Objectable
         return $value;
     }
 
-    protected function extractRowMetadata($object): RowMetadata
+    protected function extractRowMetadata($object): ItemMetadata
     {
         $class = get_class($object);
         $reflectionClass = new ReflectionClass($class);
@@ -342,7 +342,7 @@ class Objectable
             throw new ObjectableException('Class "' . $class . '" has no ' . Row::class . ' annotation defined.');
         }
 
-        $rowMetadata = new RowMetadata();
+        $rowMetadata = new ItemMetadata();
         $rowMetadata->setHeaders($this->fetchHeadersFromObjectReflection($reflectionClass));
         $rowMetadata->setActionFields($this->fetchActionFieldsFromObjectReflection($reflectionClass));
 

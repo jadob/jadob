@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Doctrine\\DBAL\\": ""
     }
+  },
+  "require" : {
+    "doctrine/dbal": ">= 2.13"
   }
 }

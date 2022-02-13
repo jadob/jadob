@@ -6,5 +6,10 @@
     "psr-4": {
       "Jadob\\Bridge\\Twig\\": ""
     }
+  },
+  "require": {
+    "twig/twig": "^3.3",
+    "symfony/twig-bridge": "^6.0",
+    "symfony/form": "^6.0"
   }
 }
