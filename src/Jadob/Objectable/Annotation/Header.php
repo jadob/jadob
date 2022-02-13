@@ -6,8 +6,8 @@ namespace Jadob\Objectable\Annotation;
 /**
  * @Annotation
  * @Target({"PROPERTY"})
+ * @deprecated use Field instead.
  *
- * @TODO: add some constructor
  * @author pizzaminded <miki@calorietool.com>
  * @license MIT
  */
