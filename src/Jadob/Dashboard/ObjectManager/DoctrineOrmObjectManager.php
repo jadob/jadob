@@ -6,6 +6,10 @@ namespace Jadob\Dashboard\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Jadob\Dashboard\Exception\DashboardException;
 
+/**
+ * @deprecated This class will be removed (or strongly refactored to have another purpose) in favor of ObjectManagerInterface
+ * From jadob/contracts-dashboard.
+ */
 class DoctrineOrmObjectManager
 {
     protected EntityManagerInterface $em;

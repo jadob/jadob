@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Objectable;
 
+use function count;
 use Countable;
 use DateTime;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
+use function get_class;
+use function htmlentities;
+use function is_array;
 use Jadob\Objectable\Annotation\ActionField;
 use Jadob\Objectable\Annotation\Header;
 use Jadob\Objectable\Annotation\Row;
@@ -17,12 +21,9 @@ use Jadob\Objectable\Transformer\ValueTransformerInterface;
 use ReflectionClass;
 use ReflectionException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use function count;
-use function get_class;
-use function htmlentities;
-use function is_array;
 
 /**
+ * @deprecated this would be removed soon.
  * @author pizzaminded <miki@calorietool.com>
  * @license MIT
  */
