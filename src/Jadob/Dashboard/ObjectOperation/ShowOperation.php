@@ -21,7 +21,7 @@ class ShowOperation implements SingleObjectOperationInterface
     {
     }
 
-    public function handle(DashboardContextInterface $context, object $object, ?string $objectId): ?Response
+    public function handle(DashboardContextInterface $context, object $object, ?string $objectId): Response
     {
         return new Response(
             $this->twig->render(
