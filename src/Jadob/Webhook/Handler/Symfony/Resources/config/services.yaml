@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  Jadob\Webhook\Handler\Service\RequestHandler: ~
+  Jadob\Webhook\Handler\Service\ProviderRegistry: ~
+  Jadob\Webhook\Handler\Controller\WebhookAction:
+    tags:
+      - 'controller.service_arguments'
+
+  #
+  # provider: telegram
+  #
+  Jadob\Webhook\Provider\Telegram\TelegramWebhookProvider:
+    tags:
+      - 'jadob.webhook_handler'
