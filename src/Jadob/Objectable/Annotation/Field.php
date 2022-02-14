@@ -11,7 +11,9 @@ class Field
         protected string $name,
         protected int $order,
         protected array $context = [],
-        protected bool $stringable = false
+        protected bool $stringable = false,
+        protected bool $flat = false,
+        protected ?string $flatProperty = null
     )
     {}
 
@@ -43,6 +45,23 @@ class Field
     {
         return $this->name;
     }
+
+    /**
+     * @return bool
+     */
+    public function isFlat(): bool
+    {
+        return $this->flat;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFlatProperty(): ?string
+    {
+        return $this->flatProperty;
+    }
+
 
 
 }
