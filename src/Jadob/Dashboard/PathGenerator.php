@@ -53,7 +53,7 @@ class PathGenerator
             [
                 QueryStringParamName::ACTION => ActionType::CRUD,
                 QueryStringParamName::CRUD_OPERATION => CrudOperationType::EDIT,
-                QueryStringParamName::OBJECT_ID => $objectId,
+                QueryStringParamName::OBJECT_ID => (string)$objectId,
                 QueryStringParamName::OBJECT_NAME => $objectFqcn
             ]
         );
@@ -90,7 +90,7 @@ class PathGenerator
             [
                 QueryStringParamName::ACTION => ActionType::OPERATION,
                 QueryStringParamName::OBJECT_NAME => $objectFqcn,
-                QueryStringParamName::OBJECT_ID => $objectId,
+                QueryStringParamName::OBJECT_ID => (string)$objectId,
                 QueryStringParamName::OPERATION_NAME => $operationName
             ]
         );
