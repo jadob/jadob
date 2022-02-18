@@ -48,6 +48,7 @@ class ItemProcessor
                 //TODO: there should be some array intersection or something similar
                 foreach ($context as $singleContext) {
                     if ($instance->hasContext($singleContext)) {
+                        $reflectionProperty->setAccessible(true);
                         $val = $reflectionProperty->getValue($item);
 
                         $output[$instance->getName()] = $val;
