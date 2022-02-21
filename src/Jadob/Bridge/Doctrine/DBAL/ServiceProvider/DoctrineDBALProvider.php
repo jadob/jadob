@@ -8,7 +8,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
@@ -137,22 +137,19 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     public function onContainerBuild(Container $container, $config)
     {
         if ($container->has('console')) {
-            $helperSet = new HelperSet(
-                [
-                    'db' => new ConnectionHelper($container->get('doctrine.dbal.default'))
-                ]
-            );
-
             /**
              * @var Application $console
              */
             $console = $container->get('console');
 
-            $console->setHelperSet($helperSet);
+            $connectionProvider = new SingleConnectionProvider(
+                $container->get('doctrine.dbal.default')
+            );
+
             $console->addCommands(
                 [
-                    new ReservedWordsCommand(),
-                    new RunSqlCommand()
+                    new ReservedWordsCommand($connectionProvider),
+                    new RunSqlCommand($connectionProvider)
                 ]
             );
         }
