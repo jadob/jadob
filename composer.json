@@ -56,6 +56,7 @@
     "jadob/bridge-aws-ses": "self.version",
     "jadob/bridge-aws": "self.version",
     "jadob/bridge-monolog": "self.version",
+    "jadob/bridge-symfony-console": "self.version",
     "jadob/bridge-symfony-form": "self.version",
     "jadob/bridge-symfony-translation": "self.version",
     "jadob/bridge-twig": "self.version",
