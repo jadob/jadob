@@ -14,4 +14,11 @@ interface EventExtractorInterface
     public function canProcess(Request $request): bool;
 
     public function extractEvent(Request $request): object;
+
+    /**
+     * wraps received payload into domain-specific event class which will be sent to event dispatcher.
+     * @param object $object
+     * @return object
+     */
+    public function wrapEvent(object $object): object;
 }
