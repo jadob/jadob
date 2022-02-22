@@ -89,7 +89,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->routes[$offset]);
     }
@@ -97,7 +97,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->routes[$offset];
     }
@@ -105,7 +105,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->routes[$offset] = $value;
     }
@@ -113,7 +113,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->routes[$offset]);
     }
@@ -121,7 +121,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->routes);
     }
@@ -129,25 +129,19 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * @return Route
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->routes);
     }
 
-    /**
-     * @return int|null|string
-     */
-    public function key()
+    public function key(): mixed
     {
         return key($this->routes);
     }
 
-    /**
-     * @return Route
-     */
-    public function next()
+    public function next(): void
     {
-        return next($this->routes);
+        next($this->routes);
     }
 
     /**
@@ -161,7 +155,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->routes);
     }
