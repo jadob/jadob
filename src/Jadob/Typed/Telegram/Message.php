@@ -35,6 +35,11 @@ class Message
             }
         }
 
+        if(isset($data['entities'])) {
+            foreach ($data['entities'] as $entity) {
+                $self->entities[] = MessageEntity::fromArray($entity);
+            }
+        }
         return $self;
     }
 
