@@ -1,0 +1,10 @@
+{
+  "name": "jadob/security-supervisor",
+  "license": "MIT",
+  "description": "Security-Supervisor component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Security\\Supervisor\\": ""
+    }
+  }
+}

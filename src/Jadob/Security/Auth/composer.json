@@ -1,0 +1,10 @@
+{
+  "name": "jadob/security-auth",
+  "license": "MIT",
+  "description": "Security-Auth component",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Security\\Auth\\": ""
+    }
+  }
+}
