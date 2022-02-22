@@ -94,17 +94,17 @@ class Context
 
         $context->setSecure(isset($_SERVER['HTTPS']));
 
-        /** @var string $host */
+        /** @var string|null $host */
         $host = $_SERVER['HTTP_HOST'] ?? null;
 
-        if (!str_contains($host, ':')  ) {
+        if (!str_contains((string)$host, ':')  ) {
             $context->setHost($host);
             $context->setPort($_SERVER['SERVER_PORT'] ?? null);
 
             return $context;
         }
 
-        $explodedHost = explode(':', $host);
+        $explodedHost = explode(':', (string)$host);
 
         $context->setHost($explodedHost[0]);
         $context->setPort((int) $explodedHost[1]);
