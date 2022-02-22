@@ -10,7 +10,7 @@ class Field
     public function __construct(
         protected string $name,
         protected int $order,
-        protected array $context = [],
+        protected array $context = ['default'],
         protected bool $stringable = false,
         protected bool $flat = false,
         protected ?string $flatProperty = null
