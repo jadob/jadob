@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.8] - 2022-02-22
+### Added
+- more types for typed-telegram
+- security-supervisor i security-auth now can be used as a standalone package
+
+### Fixed
+- [Router] Context does not return exceptions while in CLI mode
+
+### Changed
+- [Webhook/Provider/Telegram] TelegramEventExtractor will not accept malformed JSON
+- Downgraded doctrine/cache
+- Bumped infection/infection
+- [Objectable] Field has now `default` context as a default context
+
+### Removed
+- [Objectable] dropped obsolete files
+
 ## [0.4.7] - 2022-02-22
 ### Removed
 - [Bridge/Doctrine/DBAL] Removed HelperSet in favor of SingleConnectionProvider
