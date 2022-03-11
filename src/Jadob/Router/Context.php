@@ -99,7 +99,13 @@ class Context
 
         if (!str_contains((string)$host, ':')  ) {
             $context->setHost($host);
-            $context->setPort($_SERVER['SERVER_PORT'] ?? null);
+
+            $port = null;
+            if(isset($_SERVER['SERVER_PORT']) && is_string($_SERVER['SERVER_PORT'])) {
+                $port = (int)$_SERVER['SERVER_PORT'];
+            }
+
+            $context->setPort($port);
 
             return $context;
         }
