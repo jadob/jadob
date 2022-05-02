@@ -15,13 +15,14 @@ class PathGenerator
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function getPathForObjectList(string $objectFqcn, int $page = 1, ?PredefinedCriteria $criteria = null): string
+    public function getPathForObjectList(string $objectFqcn, int $page = 1, ?PredefinedCriteria $criteria = null, array $orderBy = []): string
     {
         $params = [
             QueryStringParamName::ACTION => ActionType::CRUD,
             QueryStringParamName::CRUD_OPERATION => CrudOperationType::LIST,
             QueryStringParamName::OBJECT_NAME => $objectFqcn,
             QueryStringParamName::CRUD_CURRENT_PAGE => $page,
+            QueryStringParamName::ORDER_BY => $orderBy
         ];
 
         if ($criteria !== null) {

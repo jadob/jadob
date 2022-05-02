@@ -147,14 +147,15 @@ class DashboardAction
             $criteria = null;
             /** @var string|null $criteriaName */
             $criteriaName = $request->query->get(QueryStringParamName::LIST_CRITERIA);
-
+            $orderBy = (array)$request->query->get(QueryStringParamName::ORDER_BY, []);
 
             if ($criteriaName === null) {
                 $pagesCount = $this->doctrineOrmObjectManager->getPagesCount($objectFqcn, $resultsPerPage);
                 $objects = $this->doctrineOrmObjectManager->read(
                     $objectFqcn,
                     $pageNumber,
-                    $resultsPerPage
+                    $resultsPerPage,
+                    $orderBy
                 );
             } else {
                 $objectRepo = $this->doctrineOrmObjectManager->getObjectRepository($objectFqcn);
@@ -207,6 +208,7 @@ class DashboardAction
                         'managed_object' => $managedObjectConfiguration,
                         'list' => $list,
                         'objects_list' => $objects,
+                        'order_by' => $orderBy,
                         'fields' => $fieldsToExtract,
                         'object_fqcn' => $objectFqcn,
                         'results_per_page' => $resultsPerPage,

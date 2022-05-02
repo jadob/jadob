@@ -1,20 +1,20 @@
 {% if current_page - 1 > 0 %}
-    <a href="{{ dashboard_path_object_list(object_fqcn, 1) }}"
+    <a href="{{ dashboard_path_object_list(object_fqcn, 1, criteria, order_by) }}"
        class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
         &lt;&lt; First Page
     </a>
-    <a href="{{ dashboard_path_object_list(object_fqcn, current_page-1) }}"
+    <a href="{{ dashboard_path_object_list(object_fqcn, current_page-1, criteria, order_by) }}"
        class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
         &lt; Previous page
     </a>
 {% endif %}
 
     {% if current_page + 1 <= pages_count %}
-        <a href="{{ dashboard_path_object_list(object_fqcn, current_page+1) }}"
+        <a href="{{ dashboard_path_object_list(object_fqcn, current_page+1, criteria, order_by) }}"
            class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
             Next Page &gt;
         </a>
-        <a href="{{ dashboard_path_object_list(object_fqcn, pages_count) }}"
+        <a href="{{ dashboard_path_object_list(object_fqcn, pages_count, criteria, order_by) }}"
            class="text-gray-300 bg-gray-800 hover:bg-gray-400 hover:text-white px-3 py-2 ml-2 rounded-md text-base font-medium">
             Last Page &gt;&gt;
         </a>

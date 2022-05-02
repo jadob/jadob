@@ -32,14 +32,14 @@ class DoctrineOrmObjectManager
         return (int) ceil(($objectsCount / $resultsPerPage));
     }
 
-    public function read(string $objectFqcn, int $pageNumber, int $resultsPerPage)
+    public function read(string $objectFqcn, int $pageNumber, int $resultsPerPage, array $orderBy = [])
     {
         return $this
             ->em
             ->getRepository($objectFqcn)
             ->findBy(
                 [],
-                null,
+                $orderBy,
                 $resultsPerPage,
                 (($pageNumber - 1) * $resultsPerPage)
             );

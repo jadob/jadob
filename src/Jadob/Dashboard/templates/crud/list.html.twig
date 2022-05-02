@@ -34,7 +34,7 @@
         </a>
 
         <div class="float-right">
-            {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
+            {% include '@JadobDashboard/partials/list_pagination.html.twig' with {criteria: current_criteria} %}
         </div>
     </div>
 
@@ -51,6 +51,8 @@
             {% for f in fields %}
                 <th class="p-3 font-bold bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">
                     {{ f }}
+                    <a href="{{ dashboard_path_object_list(object_fqcn, 1, current_criteria, {(f): 'ASC'}) }}">{% include '@JadobDashboard/icons/arrow_up.html.twig' %}</a>
+                    <a href="{{ dashboard_path_object_list(object_fqcn, 1, current_criteria, {(f): 'DESC'}) }}">{% include '@JadobDashboard/icons/arrow_down.html.twig' %}</a>
                 </th>
             {% endfor %}
             {% if current_criteria == null and (operations|length > 0 or redirects|length > 0 or managed_object.hasEditConfiguration) %}
@@ -137,7 +139,7 @@
 
     <div class="container mx-auto">
         <div class="float-right">
-            {% include '@JadobDashboard/partials/list_pagination.html.twig' %}
+            {% include '@JadobDashboard/partials/list_pagination.html.twig' with {criteria: current_criteria} %}
         </div>
     </div>
 {% endblock %}
