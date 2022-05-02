@@ -7,10 +7,14 @@ namespace Jadob\Bridge\Dynamite\ServiceProvider;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Dynamite\Dynamite;
+use Dynamite\ItemManager;
 use Dynamite\ItemManagerRegistry;
+use Dynamite\ItemSerializer;
 use Dynamite\Mapping\CachedItemMappingReader;
 use Dynamite\Mapping\ItemMappingReader;
+use Dynamite\PrimaryKey\KeyFormatResolver;
 use Dynamite\TableConfiguration;
+use Dynamite\TableSchema;
 use Jadob\Bridge\Doctrine\Annotations\ServiceProvider\DoctrineAnnotationsProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
@@ -63,14 +67,14 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
 
         $instanceServiceIds = [];
         foreach ($config['tables'] as $instanceName => $table) {
-            $instanceDef = static function (ContainerInterface $container) use ($table, $annotationReaderId, $useCache): Dynamite {
+            $instanceDef = static function (ContainerInterface $container) use ($table, $annotationReaderId, $useCache): ItemManager {
                 $clientId = DynamoDbClient::class;
 
                 if (isset($table['connection'])) {
                     $clientId = $table['connection'];
                 }
 
-                $tableConfiguration = new TableConfiguration(
+                $tableSchema = new TableSchema(
                     $table['table_name'],
                     $table['partition_key_name'],
                     $table['sort_key_name'],
@@ -78,14 +82,16 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
                 );
 
                 /** @noinspection MissingService */
-                return new Dynamite(
+                return new ItemManager(
                     $container->get($clientId),
-                    $container->get('dynamite.logger'),
-                    $container->get($annotationReaderId),
-                    $tableConfiguration,
+                    $tableSchema,
+                    $container->get('dynamite.item_mapping_reader'),
                     $table['managed_objects'],
+                    $container->get(ItemSerializer::class),
+                    $container->get(KeyFormatResolver::class),
+                    $container->get('dynamite.logger'),
                     new Marshaler(),
-                    $container->get('dynamite.item_mapping_reader')
+                    $container->get($annotationReaderId),
                 );
             };
 
@@ -94,12 +100,22 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
             $output[$instanceServiceId] = $instanceDef;
         }
 
+        $output[ItemSerializer::class] = static function(): ItemSerializer {
+            return new ItemSerializer();
+        };
+
+        $output[KeyFormatResolver::class] = static function(): KeyFormatResolver {
+            $kfr = new KeyFormatResolver();
+
+            return $kfr;
+        };
+
         $output[ItemManagerRegistry::class] = static function (ContainerInterface $container) use ($instanceServiceIds): ItemManagerRegistry {
 
             $registry = new ItemManagerRegistry();
 
             foreach ($instanceServiceIds as $instanceName => $instanceServiceId) {
-                $registry->addManagedTable($instanceName, $container->get($instanceServiceId));
+                $registry->addManagedTable($container->get($instanceServiceId));
             }
 
             return $registry;
