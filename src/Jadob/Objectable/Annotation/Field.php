@@ -13,7 +13,8 @@ class Field
         protected array $context = ['default'],
         protected bool $stringable = false,
         protected bool $flat = false,
-        protected ?string $flatProperty = null
+        protected ?string $flatProperty = null,
+        protected ?string $dateFormat = null
     )
     {}
 
@@ -62,6 +63,11 @@ class Field
         return $this->flatProperty;
     }
 
-
-
+    /**
+     * @return string|null
+     */
+    public function getDateFormat(): ?string
+    {
+        return $this->dateFormat;
+    }
 }

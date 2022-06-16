@@ -63,6 +63,16 @@ class ItemProcessor
                             }
                         }
 
+                        if($val instanceof \DateTimeInterface) {
+                            $dateFormat = $instance->getDateFormat();
+                            if($dateFormat === null) {
+                                throw new \LogicException('Could not process DateTime object as there is no dateFormat passed in Field.');
+                            }
+
+                            $output[$instance->getName()] = $val->format($dateFormat);
+                            continue;
+                        }
+
                         if ($instance->isStringable()) {
                             $output[$instance->getName()] = (string) $val;
                             continue;
@@ -71,6 +81,10 @@ class ItemProcessor
                         if ($instance->isFlat()) {
                             // todo: check if val is an object
                             $flattenedVal = $this->extractItemValues($val, $context);
+
+                            if (count($flattenedVal) === 0) {
+                                throw new \LogicException('Cannot pick a property as no values has been serialized from object.');
+                            }
 
                             if (count($flattenedVal) === 1) {
                                 $output[$instance->getName()] = reset($flattenedVal);
@@ -82,10 +96,7 @@ class ItemProcessor
                                     throw new \LogicException('$flatProperty cannot be null when there is more than one element to choose.');
                                 }
                                 $output[$instance->getName()] = $flattenedVal[$instance->getFlatProperty()];
-                                continue;
                             }
-
-                            // todo: check if flattenedVal === 0
                         }
                     }
                 }
