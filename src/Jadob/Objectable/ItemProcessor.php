@@ -79,6 +79,12 @@ class ItemProcessor
                         }
 
                         if ($instance->isFlat()) {
+                            //TODO: add allowNull in attribute?
+                            if($val === null) {
+                                $output[$instance->getName()] = null;
+                                continue;
+                            }
+
                             // todo: check if val is an object
                             $flattenedVal = $this->extractItemValues($val, $context);
 
