@@ -83,7 +83,12 @@ class ItemProcessor
                             $flattenedVal = $this->extractItemValues($val, $context);
 
                             if (count($flattenedVal) === 0) {
-                                throw new \LogicException('Cannot pick a property as no values has been serialized from object.');
+                                throw new \LogicException(
+                                    sprintf(
+                                        'Cannot pick a value from "%s" as no properties has been serialized from object.',
+                                        get_class($val)
+                                    )
+                                );
                             }
 
                             if (count($flattenedVal) === 1) {
