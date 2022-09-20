@@ -6,5 +6,9 @@
     "psr-4": {
       "Jadob\\Bridge\\Symfony\\Translation\\": ""
     }
+  },
+  "require": {
+    "symfony/translation": "^6.1",
+    "symfony/translation-contracts": "^3.1"
   }
 }

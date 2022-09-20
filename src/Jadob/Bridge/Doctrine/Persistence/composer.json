@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Doctrine\\Persistence\\": ""
     }
+  },
+  "require": {
+    "doctrine/persistence": "^2.4"
   }
 }
