@@ -4,7 +4,10 @@
  * @license MIT
  */
 
-
+$thirdPartyPackagesVersions = [
+    'symfony/form' => '>= 5.4.4 || >= 6.0.5',
+    'symfony/twig-bridge' => '>= 5.4.4 || >= 6.0.5'
+];
 function println(string $line): void
 {
     echo $line . PHP_EOL;
@@ -30,13 +33,9 @@ function getNestedJsonPackages(string $path): array
     return $packagesFound;
 }
 
-println('Im going to check your composer.json files!');
-
 
 $cwd = getcwd();
 
-
-println('Scanning src dir.');
 
 $nestedPackages = [];
 
@@ -54,7 +53,6 @@ if (count($packagesFound) === 0) {
 
 $requiredKey = ['name', 'license', 'description', 'autoload'];
 
-println('Checking for basic composer.json issues.');
 foreach ($packagesFound as $package) {
     try {
         $composerFile = getJsonContents($package);
@@ -89,9 +87,6 @@ foreach ($packagesFound as $package) {
     }
 }
 
-println('Checking for nesting replaces.');
-
-
 foreach ($nestedPackages as $packagePath => $nestedPackagePaths) {
     $corePackage = getJsonContents($packagePath);
     foreach ($nestedPackagePaths as $nestedPackagePath) {
@@ -114,6 +109,25 @@ foreach ($nestedPackages as $packagePath => $nestedPackagePaths) {
         if(count($nestedPackage['autoload']) === 0) {
             $errors[] = sprintf('%s: no entries in "autoload" section ', $nestedPackagePath);
         }
+
+        $nestedPackageRequires = $nestedPackage['require'] ?? [];
+
+        if(count($nestedPackageRequires) > 0) {
+            foreach ($nestedPackageRequires as $requiredPackageName => $requiredPackageVersion) {
+                if(
+                    isset($thirdPartyPackagesVersions[$requiredPackageName])
+                    && $thirdPartyPackagesVersions[$requiredPackageName] !== $requiredPackageVersion
+                ) {
+                    $errors[] = sprintf(
+                        '%s: version of require.%s should be %s ',
+                        $nestedPackagePath,
+                        $requiredPackageName,
+                        $thirdPartyPackagesVersions[$requiredPackageName]
+                    );
+                }
+
+            }
+        }
     }
 }
 
@@ -121,7 +135,7 @@ if (count($errors) > 0) {
     println('Got Errors:');
 
     foreach ($errors as $error) {
-        println($error);
+        println('- '.$error);
     }
 
     die(1);
