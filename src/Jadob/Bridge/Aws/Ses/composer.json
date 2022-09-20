@@ -8,6 +8,6 @@
     }
   },
   "require": {
-    "symfony/mime": "^6.0"
+    "symfony/mime": ">= 5.4.4 || >= 6.0.5"
   }
 }

@@ -5,8 +5,8 @@
   "license": "MIT",
   "require": {
     "php": "^8",
-    "doctrine/annotations": "^1.7",
-    "symfony/property-access": "^5"
+    "doctrine/annotations": "^1.13",
+    "symfony/property-access": ">= 5.4.4 || >= 6.0.5"
   },
   "autoload": {
     "psr-4": {

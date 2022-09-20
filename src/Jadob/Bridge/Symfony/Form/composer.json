@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Symfony\\Form\\": ""
     }
+  },
+  "require": {
+    "symfony/validator": ">= 5.4.4 || >= 6.0.5"
   }
 }

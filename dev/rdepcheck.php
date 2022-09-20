@@ -5,9 +5,19 @@
  */
 
 $thirdPartyPackagesVersions = [
+    'doctrine/annotations' => '^1.13',
+    'doctrine/cache' => '^1.11',
+    'doctrine/dbal' => '>= 2.13',
+    'doctrine/orm' => '>= 2.8',
+    'php' => '^8',
     'symfony/form' => '>= 5.4.4 || >= 6.0.5',
-    'symfony/twig-bridge' => '>= 5.4.4 || >= 6.0.5'
+    'symfony/mime' => '>= 5.4.4 || >= 6.0.5',
+    'symfony/property-access' => '>= 5.4.4 || >= 6.0.5',
+    'symfony/twig-bridge' => '>= 5.4.4 || >= 6.0.5',
+    'symfony/validator' => '>= 5.4.4 || >= 6.0.5',
+    'twig/twig' => '>= 3.3.8'
 ];
+
 function println(string $line): void
 {
     echo $line . PHP_EOL;
