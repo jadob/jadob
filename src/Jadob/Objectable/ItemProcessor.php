@@ -45,7 +45,6 @@ class ItemProcessor
                 /** @var Field $instance */
                 $instance = $fieldAttr->newInstance();
 
-                //TODO: there should be some array intersection or something similar
                 foreach ($context as $singleContext) {
                     if ($instance->hasContext($singleContext)) {
                         $reflectionProperty->setAccessible(true);
@@ -79,13 +78,11 @@ class ItemProcessor
                         }
 
                         if ($instance->isFlat()) {
-                            //TODO: add allowNull in attribute?
                             if($val === null) {
                                 $output[$instance->getName()] = null;
                                 continue;
                             }
 
-                            // todo: check if val is an object
                             $flattenedVal = $this->extractItemValues($val, $context);
 
                             if (count($flattenedVal) === 0) {
