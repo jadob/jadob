@@ -19,5 +19,5 @@ interface ParentProviderInterface
     /**
      * @return string[] Parent Class names
      */
-    public function getParentProviders();
+    public function getParentProviders(): array;
 }
