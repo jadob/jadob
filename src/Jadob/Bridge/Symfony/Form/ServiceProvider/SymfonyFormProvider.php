@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
+use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use ReflectionException;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
@@ -23,7 +25,7 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SymfonyFormProvider implements ServiceProviderInterface
+class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInterface
 {
 
     /**
@@ -78,29 +80,38 @@ class SymfonyFormProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        if ($container->has('twig')) {
+        /**
+         * @var \Twig\Environment $twig
+         */
+        $twig = $container->get('twig');
+        $formEngine = new TwigRendererEngine($config['forms'], $twig);
+
+        $twig->addRuntimeLoader(
+            new FactoryRuntimeLoader(
+                [
+                    FormRenderer::class => function () use ($formEngine) {
+                        return new FormRenderer($formEngine);
+                    },
+                ]
+            )
+        );
+
+        $twig->addExtension(new FormExtension());
+        $twig->addExtension(
+            new TranslationExtension(
+                $container->get(TranslatorInterface::class)
+            )
+        );
+
+    }
+
+    public function getParentProviders(): array
+    {
+        return [
             /**
-             * @var \Twig\Environment $twig
+             * This has to be registered BEFORE as there are twig extensions to be installed
              */
-            $twig = $container->get('twig');
-            $formEngine = new TwigRendererEngine($config['forms'], $twig);
-
-            $twig->addRuntimeLoader(
-                new FactoryRuntimeLoader(
-                    [
-                        FormRenderer::class => function () use ($formEngine) {
-                            return new FormRenderer($formEngine);
-                        },
-                    ]
-                )
-            );
-
-            $twig->addExtension(new FormExtension());
-            $twig->addExtension(
-                new TranslationExtension(
-                    $container->get(TranslatorInterface::class)
-                )
-            );
-        }
+            TwigProvider::class
+        ];
     }
 }
