@@ -172,7 +172,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
 
             //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
             $helperSet = new HelperSet([
-                'db' => new ConnectionHelper($container->get('doctrine.dbal.default')),
                 'em' => new EntityManagerHelper($container->get('doctrine.orm.default'))
             ]);
 
