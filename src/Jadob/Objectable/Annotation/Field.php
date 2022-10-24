@@ -9,6 +9,11 @@ class Field
 
     public function __construct(
         protected string $name,
+        /**
+         * @deprecated - this seems kinda useless, so maybe make it optional?
+         * No one cares about field order in JSON.
+         * @var int
+         */
         protected int $order,
         protected array $context = ['default'],
         protected bool $stringable = false,
