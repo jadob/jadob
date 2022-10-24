@@ -44,14 +44,4 @@ interface ServiceProviderInterface
      * @throws ServiceNotFoundException
      */
     public function onContainerBuild(Container $container, $config);
-
-
-    /**
-     * Caution: this is an experimental feature.
-     * Returns a list of Providers that current provider is dependent from.
-     * These ones can be ignored or missing in Bootstrap#getServiceProviders().
-     *
-     * @return ServiceProviderInterface[]
-     */
-    //    public function getParentProviders();
 }
