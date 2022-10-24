@@ -8,7 +8,6 @@ namespace Jadob\Container\ServiceProvider;
  * Parent providers are registered BEFORE the current one. Also they are skipped in further execution, so there is
  * no chance to instantiate provider more than once.
  *
- *
  * @see docs/components/container/parent-providers.md
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
@@ -17,7 +16,7 @@ interface ParentProviderInterface
 {
 
     /**
-     * @return string[] Parent Class names
+     * @return class-string[] Parent Class names
      */
     public function getParentProviders(): array;
 }

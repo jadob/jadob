@@ -102,7 +102,7 @@ class SupervisorProvider implements ServiceProviderInterface, ParentProviderInte
     /**
      * @inheritDoc
      */
-    public function getParentProviders()
+    public function getParentProviders(): array
     {
         return [
             AuthProvider::class

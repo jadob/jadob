@@ -21,6 +21,7 @@ use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineORMProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use LogicException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
@@ -60,7 +61,7 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
             $console = $container->get('console');
 
             if(!isset($config['orm'])) {
-                throw new \LogicException('You need to configure ORM to use migrations.');
+                throw new LogicException('You need to configure ORM to use migrations.');
             }
 
             $ormManagers = array_keys($config['orm']);
@@ -83,7 +84,7 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
         }
     }
 
-    public function getParentProviders()
+    public function getParentProviders(): array
     {
         return [
             DoctrineORMProvider::class
