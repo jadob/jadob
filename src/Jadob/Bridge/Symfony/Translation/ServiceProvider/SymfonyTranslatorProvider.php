@@ -74,7 +74,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
                 $sourcesGlob = glob($sourcesPath);
 
                 $sourcesRegexp = sprintf(
-                    '@%s\/translations\/(?<locale>[A-Za-z]{2})\/(?<domain>[a-zA-Z]*).php@i',
+                    '@%s\/translations\/(?<locale>[A-Za-z]{2})\/(?<domain>[_a-zA-Z]*).php@i',
                     $bootstrap->getConfigDir()
                 );
 
