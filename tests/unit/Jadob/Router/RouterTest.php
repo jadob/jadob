@@ -94,22 +94,10 @@ class RouterTest extends TestCase
         $this->assertEquals('/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2]));
 
     }
-
-    public function testFullRouteWithHttpAndCustomPortGenerating(): void
-    {
-        $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
-        $router = new Router($routeCollection);
-
-        self::assertEquals('http://my.domain.com:8001/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2], true));
-
-
-    }
-
     public function testFullRouteWithHttpAndDefaultPortGenerating(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
-        $_SERVER['SERVER_PORT'] = 80;
+        $_SERVER['SERVER_PORT'] = '80';
 
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));
@@ -123,7 +111,7 @@ class RouterTest extends TestCase
     public function testFullRouteWithHttpsAndCustomPortGenerating(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
-        $_SERVER['SERVER_PORT'] = 9876;
+        $_SERVER['SERVER_PORT'] = '9876';
         $_SERVER['HTTPS'] = 'on';
 
         $routeCollection = new RouteCollection();
@@ -135,7 +123,7 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpsAndDefaultPortGenerating(): void
     {
-        $_SERVER['SERVER_PORT'] = 443;
+        $_SERVER['SERVER_PORT'] = '443';
         $_SERVER['HTTPS'] = 'on';
 
         $routeCollection = new RouteCollection();
@@ -148,7 +136,7 @@ class RouterTest extends TestCase
 
     public function testFullRouteWithHttpAndHttpsPortGenerating(): void
     {
-        $_SERVER['SERVER_PORT'] = 443;
+        $_SERVER['SERVER_PORT'] = '443';
 
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff'));

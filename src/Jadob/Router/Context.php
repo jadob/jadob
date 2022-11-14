@@ -101,6 +101,7 @@ class Context
             $context->setHost($host);
 
             $port = null;
+            // @TODO: is that is_string check required?
             if(isset($_SERVER['SERVER_PORT']) && is_string($_SERVER['SERVER_PORT'])) {
                 $port = (int)$_SERVER['SERVER_PORT'];
             }

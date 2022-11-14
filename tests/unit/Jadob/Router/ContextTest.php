@@ -30,7 +30,7 @@ class ContextTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
         $_SERVER['HTTPS'] = true;
-        $_SERVER['SERVER_PORT'] = 8001;
+        $_SERVER['SERVER_PORT'] = '8001';
 
 
         $context = Context::fromGlobals();
