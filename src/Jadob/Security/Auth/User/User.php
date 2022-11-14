@@ -5,7 +5,7 @@ namespace Jadob\Security\Auth\User;
 
 /**
  * Example User object, that can be used in your app.
- *
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
