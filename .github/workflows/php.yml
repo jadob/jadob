@@ -7,10 +7,6 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.0']
-        composer-versions:
-          - composer:v1
-        composer-deps:
-          - stable
     steps:
     - uses: actions/checkout@v2
 
@@ -18,10 +14,10 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: ${{ matrix.composer-versions }}
+        tools: composer:v2
 
     - name: Install dependencies
-      run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
+      run: composer update --prefer-stable --prefer-dist --no-interaction
     - name: Run Infection
       run: vendor/bin/infection
   psalm:
@@ -30,8 +26,6 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.0']
-        composer-versions:
-          - composer:v1
         composer-deps:
           - stable
     steps:
@@ -41,7 +35,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: ${{ matrix.composer-versions }}
+        tools: composer:v2
 
     - name: Install dependencies
       run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
@@ -56,8 +50,6 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.0','8.1']
-        composer-versions:
-          - composer:v1
         composer-deps:
           - stable
           - lowest
@@ -69,7 +61,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        tools: ${{ matrix.composer-versions }}
+        tools: composer:v2
 
     - name: Validate composer.json and composer.lock
       run: composer validate
