@@ -12,6 +12,7 @@ class NewObjectConfiguration
     protected ?Closure $formFactory = null;
     protected ?string $formClass = null;
     protected ?Closure $beforeInsert = null;
+    protected ?Closure $formTransformHook = null;
 
 
     private function __construct()
@@ -37,6 +38,10 @@ class NewObjectConfiguration
             throw new ConfigurationException('Could not use before_insert hook as it is not a closure!');
         }
 
+        if (isset($config['form_transform_hook']) && !($config['form_transform_hook'] instanceof Closure)) {
+            throw new ConfigurationException('Could not use form_transform_hook as it is not a closure!');
+        }
+
         if (isset($config['form_factory']) && !($config['form_factory'] instanceof Closure)) {
             throw new ConfigurationException('Value of "form_factory" must be a closure!');
         }
@@ -50,6 +55,7 @@ class NewObjectConfiguration
         $self->formFactory = $config['form_factory'] ?? null;
         $self->formClass = $config['form_class'] ?? null;
         $self->beforeInsert = $config['before_insert'] ?? null;
+        $self->formTransformHook = $config['form_transform_hook'] ?? null;
         return $self;
     }
 
@@ -65,6 +71,20 @@ class NewObjectConfiguration
     {
         return $this->beforeInsert !== null;
     }
+
+    public function hasFormTransformHook(): bool
+    {
+        return $this->formTransformHook !== null;
+    }
+
+    /**
+     * @return Closure|null
+     */
+    public function getFormTransformHook(): ?Closure
+    {
+        return $this->formTransformHook;
+    }
+
 
     /**
      * @return Closure|null
