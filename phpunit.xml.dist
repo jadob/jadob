@@ -8,6 +8,10 @@
       <file>src/Jadob/Debug/templates/error_view.php</file>
       <file>src/Jadob/Debug/templates/profiler.php</file>
       <file>src/Jadob/Config/Tests/includes/2/with_parameter.php</file>
+      <file>src/Jadob/Objectable/resources/templates/php_default/action_field.php</file>
+      <file>src/Jadob/Objectable/resources/templates/php_default/no_results_found.php</file>
+      <file>src/Jadob/Objectable/resources/templates/php_default/single.php</file>
+      <file>src/Jadob/Objectable/resources/templates/php_default/table.php</file>
     </exclude>
     <report>
       <html outputDirectory="coverage" lowUpperBound="35" highLowerBound="70"/>
