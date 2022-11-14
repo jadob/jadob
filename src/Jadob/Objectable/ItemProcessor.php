@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Jadob\Objectable;
 
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Collections\Collection;
 use Jadob\Objectable\Annotation\Field;
 use Jadob\Objectable\Annotation\Translate;
+use LogicException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -40,7 +42,6 @@ class ItemProcessor
         foreach ($props as $reflectionProperty) {
             $attrs = $reflectionProperty->getAttributes(Field::class);
             $translations = $reflectionProperty->getAttributes(Translate::class);
-            $shouldExtract = false;
             foreach ($attrs as $fieldAttr) {
                 /** @var Field $instance */
                 $instance = $fieldAttr->newInstance();
@@ -62,15 +63,29 @@ class ItemProcessor
                             }
                         }
 
-                        if($val instanceof \DateTimeInterface) {
+                        if ($val instanceof \DateTimeInterface) {
                             $dateFormat = $instance->getDateFormat();
-                            if($dateFormat === null) {
-                                throw new \LogicException('Could not process DateTime object as there is no dateFormat passed in Field.');
+                            if ($dateFormat === null) {
+                                throw new LogicException('Could not process DateTime object as there is no dateFormat passed in Field.');
                             }
 
                             $output[$instance->getName()] = $val->format($dateFormat);
                             continue;
                         }
+
+                        /**
+                         * Enables support for doctrine/orm entities, or any other lib that utilises doctrine/collections.
+                         */
+                        if($val instanceof Collection) {
+                            $collectionItems = $val->toArray();
+                            $processedCollectionItems = [];
+                            foreach ($collectionItems as $collectionItem) {
+                                $processedCollectionItems[] = $this->extractItemValues($collectionItem, $context);
+                            }
+
+                            $output[$instance->getName()] = $processedCollectionItems;
+                        }
+
 
                         if ($instance->isStringable()) {
                             $output[$instance->getName()] = (string) $val;
@@ -78,7 +93,7 @@ class ItemProcessor
                         }
 
                         if ($instance->isFlat()) {
-                            if($val === null) {
+                            if ($val === null) {
                                 $output[$instance->getName()] = null;
                                 continue;
                             }
@@ -86,12 +101,7 @@ class ItemProcessor
                             $flattenedVal = $this->extractItemValues($val, $context);
 
                             if (count($flattenedVal) === 0) {
-                                throw new \LogicException(
-                                    sprintf(
-                                        'Cannot pick a value from "%s" as no properties has been serialized from object.',
-                                        get_class($val)
-                                    )
-                                );
+                                throw new LogicException(sprintf('Cannot pick a value from "%s" as no properties has been serialized from object.', get_class($val)));
                             }
 
                             if (count($flattenedVal) === 1) {
@@ -101,7 +111,7 @@ class ItemProcessor
 
                             if (count($flattenedVal) > 1) {
                                 if ($instance->getFlatProperty() === null) {
-                                    throw new \LogicException('$flatProperty cannot be null when there is more than one element to choose.');
+                                    throw new LogicException('$flatProperty cannot be null when there is more than one element to choose.');
                                 }
                                 $output[$instance->getName()] = $flattenedVal[$instance->getFlatProperty()];
                             }
