@@ -46,11 +46,6 @@ class AuthProvider implements ServiceProviderInterface
      */
     public function onContainerBuild(Container $container, $config)
     {
-        if ($container->has('console')) {
-            /** @var Application $console */
-            $console = $container->get('console');
 
-            $console->add(new GeneratePasswordHashCommand());
-        }
     }
 }
