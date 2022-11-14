@@ -267,6 +267,20 @@ class DashboardAction
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var object $createdObject */
                 $createdObject = $form->getData();
+
+                if($newConfiguration->hasFormTransformHook()) {
+                    $formTransformHook = $newConfiguration->getFormTransformHook();
+                    $createdObject = $formTransformHook($createdObject);
+
+                    if(is_object($createdObject) === false) {
+                        throw new \LogicException(
+                            sprintf(
+                                '"form_transport_hook" for object %s must return an object.',
+                                $objectFqcn
+                            )
+                        );
+                    }
+                }
                 if ($newConfiguration->hasBeforeInsertHook()) {
                     /** @var callable $beforeInsertHook */
                     $beforeInsertHook = $newConfiguration->getBeforeInsertHook();
