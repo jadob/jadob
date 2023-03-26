@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Bridge\\Symfony\\Console\\": ""
     }
+  },
+  "require": {
+    "symfony/console": "^6.2"
   }
 }
