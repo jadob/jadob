@@ -108,9 +108,6 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
     public function getParentProviders(): array
     {
         return [
-            /**
-             * This has to be registered BEFORE as there are twig extensions to be installed
-             */
             TwigProvider::class
         ];
     }
