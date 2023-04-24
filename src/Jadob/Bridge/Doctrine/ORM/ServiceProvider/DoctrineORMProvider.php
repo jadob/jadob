@@ -66,7 +66,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
             throw new RuntimeException('There is no "managers" section in config.doctrine_orm node.');
         }
 
-        $annotationsRegistered = false;
         $services = [];
         $defaultManagerName = null;
 
@@ -89,13 +88,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
                 $managerConfig,
                 &$annotationsRegistered
             ): EntityManager {
-
-                //TODO remove if it will keep breaking
-                if (!$annotationsRegistered) {
-                    $annotationsRegistered = true;
-                    $this->registerAnnotations();
-                }
-
                 $isProd = $container->get(Kernel::class)->getEnv() === 'prod';
 
                 $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir()
@@ -195,17 +187,6 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
                 $managerRegistry->setDefaultManagerName($connectionName);
             }
         }
-    }
-
-    /**
-     * @return void
-     * @throws ReflectionException
-     *
-     */
-    protected function registerAnnotations(): void
-    {
-        $configurationClassDirectory = \dirname((new ReflectionClass(Configuration::class))->getFileName());
-        require_once $configurationClassDirectory . '/Mapping/Driver/DoctrineAnnotations.php';
     }
 
     /**
