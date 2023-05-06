@@ -175,17 +175,6 @@ class ContainerBuilder
         return $this;
     }
 
-
-    public function has(string $id): bool
-    {
-        if(array_key_exists($id, $this->services)) {
-            return true;
-        }
-
-        return array_key_exists($id, $this->definitions);
-    }
-
-
     /**
      * @param string $providerClass
      * @return ServiceProviderInterface
