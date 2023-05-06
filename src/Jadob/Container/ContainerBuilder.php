@@ -34,6 +34,11 @@ class ContainerBuilder
     protected $factories = [];
 
     /**
+     * @var array<string|class-string, Definition>
+     */
+    protected array $definitions = [];
+
+    /**
      * @var ServiceProviderInterface[]
      */
     protected $instantiatedProviders = [];
