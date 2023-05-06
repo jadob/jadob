@@ -30,6 +30,18 @@ In release description paste the contents of given version from `CHANGELOG.md`.
 Release invokes a bunch of scripts responsible for splitting components, pushing them to read-only
 repos and updating packagist information. That will take a minute or two.
 
+
+## PHPUnit test groups
+Please add `@group (group)` with these groups to each test you add:
+
+- `container`
+- - `container-definitions`
+- - `container-service-providers`
+- - `container-builder`
+
+You can add 
+Add here more of them when needed.
+
 ## New package checklist:
 - Package is MIT-licensed
 - Package has its own 1composer.json 1file
