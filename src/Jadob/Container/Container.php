@@ -351,13 +351,13 @@ class Container implements ContainerInterface
      * @param string $from
      * @param string $to
      * @return Container
+     * @throws ContainerException
      */
     public function alias(string $from, string $to): Container
     {
-
         //factories will create different stuff each time so we need to instantiate them
-        if (isset($this->factories[$from])) {
-            $this->instantiateFactory($from);
+        if (isset($this->definitions[$from])) {
+            $this->createServiceFromDefinition($from);
         }
 
         if (isset($this->services[$from])) {
