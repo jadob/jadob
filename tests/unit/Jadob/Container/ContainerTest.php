@@ -93,13 +93,26 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(stdClass::class, $container->findObjectByClassName(stdClass::class));
     }
 
-    //
-    public function testContainerCanAutowireClassWithKnownDepedencies()
+
+    public function testContainerCanAutowireClassWithKnownDependencies()
     {
         $container = new Container();
         $container->add(AService::class, new AService());
         $serviceC = $container->autowire(CService::class);
 
         $this->assertSame($container->get(AService::class), $serviceC->getService());
+    }
+
+    /**
+     * @throws ContainerLockedException
+     * @throws Exception\ContainerException
+     * @throws ServiceNotFoundException
+     */
+    public function testGetWillAutowireServiceIfPresentInDefinitions()
+    {
+        $container = new Container();
+        $container->add(AService::class, AService::class);
+        $service = $container->get(AService::class);
+        self::assertIsObject($service);
     }
 }

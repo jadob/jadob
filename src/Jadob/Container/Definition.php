@@ -63,7 +63,7 @@ class Definition
     /**
      * @return object
      */
-    public function getService(): object
+    public function getService(): string|object
     {
         return $this->service;
     }

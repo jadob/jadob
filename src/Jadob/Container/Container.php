@@ -74,7 +74,7 @@ class Container implements ContainerInterface
      * @throws ServiceNotFoundException
      * @throws ContainerException
      */
-    public function get($serviceName): object
+    public function get(string $serviceName): object
     {
         /**
          * Return service if exists
@@ -101,7 +101,7 @@ class Container implements ContainerInterface
     /**
      * @throws ContainerException
      */
-    private function unwrapDefinition(Definition $definition, int $wrapsCount = 0): object
+    private function unwrapDefinition(Definition $definition, int $wrapsCount = 0): string|object
     {
 
         if ($wrapsCount >= self::MAX_DEFINITION_WRAPS) {
@@ -328,7 +328,7 @@ class Container implements ContainerInterface
      * @return Definition
      * @throws ContainerLockedException
      */
-    public function add(string $id, object $object)
+    public function add(string $id, string|object $object)
     {
         if ($this->locked) {
             throw new ContainerLockedException('Could not add any services as container is locked.');
