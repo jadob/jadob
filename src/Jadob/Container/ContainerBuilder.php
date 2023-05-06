@@ -189,9 +189,7 @@ class ContainerBuilder
         return $this->factories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function has(string $id): bool
     {
         return isset($this->services[$id]) || isset($this->factories[$id]);
