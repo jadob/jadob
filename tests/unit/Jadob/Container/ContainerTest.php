@@ -68,19 +68,27 @@ class ContainerTest extends TestCase
     }
 
 
+    /**
+     * @group container
+     * @group container-find-by-fqcn
+     * @return void
+     * @throws ContainerLockedException
+     * @throws Exception\ContainerException
+     * @throws \ReflectionException
+     */
     public function testGettingServicesByItsClassName(): void
     {
         $container = new Container(
-            [], ['dummy2' => function () {
+            ['dummy2' => function () {
                 return new DummyClass();
             }]
         );
 
-        $container->add('dummy', new \stdClass());
+        $container->add('dummy', new stdClass());
 
         $this->assertInstanceOf(Container::class, $container->findObjectByClassName(ContainerInterface::class));
         $this->assertInstanceOf(DummyClass::class, $container->findObjectByClassName(DummyClass::class));
-        $this->assertInstanceOf(\stdClass::class, $container->findObjectByClassName(\stdClass::class));
+        $this->assertInstanceOf(stdClass::class, $container->findObjectByClassName(stdClass::class));
     }
 
     //

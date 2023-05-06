@@ -38,6 +38,7 @@ Please add `@group (group)` with these groups to each test you add:
 - - `container-definitions`
 - - `container-service-providers`
 - - `container-builder`
+- - `container-find-by-fqcn`
 
 You can add 
 Add here more of them when needed.
