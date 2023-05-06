@@ -68,8 +68,14 @@ class Container implements ContainerInterface
      * @throws ServiceNotFoundException
      * @throws ContainerException
      */
-    public function get($serviceName)
+    public function get($serviceName): object
     {
+        /**
+         * Return service if exists
+         */
+        if (isset($this->services[$serviceName])) {
+            return $this->services[$serviceName];
+        }
 
         /**
          * Check there is a factory for given service
@@ -81,12 +87,7 @@ class Container implements ContainerInterface
             return $this->instantiateFactory($serviceName);
         }
 
-        /**
-         * Return service if exists
-         */
-        if (isset($this->services[$serviceName])) {
-            return $this->services[$serviceName];
-        }
+
 
         /**
          * if reached this moment, the only thing we need to do, is to break
