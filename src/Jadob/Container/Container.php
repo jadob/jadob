@@ -30,7 +30,7 @@ class Container implements ContainerInterface
 {
 
     /**
-     * @var array<string, object>
+     * @var array<string|class-string, Definition>
      */
     protected array $definitions = [];
 
