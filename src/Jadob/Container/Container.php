@@ -18,6 +18,7 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
+use function sprintf;
 
 /**
  * @TODO:   maybe some arrayaccess? Fixed services?
@@ -335,7 +336,12 @@ class Container implements ContainerInterface
     public function autowire(string $className): object
     {
         if (!class_exists($className)) {
-            throw new AutowiringException('Unable to autowire class "' . $className . '", as it does not exists.');
+            throw new AutowiringException(
+                sprintf(
+                    'Unable to autowire class "%s", as it does not exists.',
+                    $className
+                )
+            );
         }
 
         $classReflection = new ReflectionClass($className);
