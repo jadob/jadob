@@ -33,6 +33,11 @@ class Definition
     protected $methodCalls = [];
 
     /**
+     * @var string[]
+     */
+    protected $tags = [];
+
+    /**
      * Definition constructor.
      *
      * @param mixed $service
@@ -112,5 +117,10 @@ class Definition
     public function isCreated(): bool
     {
         return $this->created;
+    }
+
+    public function addTag(string $tag): void
+    {
+        $this->tags[] = $tag;
     }
 }
