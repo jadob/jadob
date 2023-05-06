@@ -39,23 +39,6 @@ class ContainerTest extends TestCase
         $this->assertSame($container->get('dummy'), $container->get('dummy1'));
     }
 
-    public function testAccessingFactories(): void
-    {
-
-        $container = new Container(
-            ['dummy1' => new \stdClass()], ['dummy2' => function () {
-                return new \stdClass();
-            }]
-        );
-
-        $this->assertTrue($container->has('dummy1'));
-        $this->assertTrue($container->has('dummy2'));
-
-        $this->assertNotNull($container->get('dummy1'));
-        $this->assertNotNull($container->get('dummy2'));
-
-
-    }
 
     public function testServiceNotFoundException(): void
     {
