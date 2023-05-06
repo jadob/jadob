@@ -53,10 +53,10 @@ class Container implements ContainerInterface
      */
     protected array $parameters = [];
 
-    public function __construct(array $services = null)
+    public function __construct(array $definitions = null)
     {
-        if ($services !== null) {
-            $this->services = $services;
+        if ($definitions !== null) {
+            $this->definitions = $definitions;
         }
     }
 
