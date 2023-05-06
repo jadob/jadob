@@ -82,8 +82,8 @@ class Definition
     }
 
     /**
-     * Creates an instance of service basing on passed configuration 
-     *
+     * Creates an instance of service basing on passed configuration
+     * @deprecated
      * @param  Container $container
      * @return mixed
      * @throws ContainerBuildException
