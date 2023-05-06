@@ -6,6 +6,7 @@ namespace Jadob\Container;
 
 use Jadob\Container\Exception\ContainerLockedException;
 use function array_keys;
+use function call_user_func_array;
 use function class_exists;
 use Closure;
 use function in_array;
@@ -19,15 +20,17 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
+use function is_object;
 use function sprintf;
 
 /**
- * @TODO:   maybe some arrayaccess? Fixed services?
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class Container implements ContainerInterface
 {
+
+    private const MAX_DEFINITION_WRAPS = 10;
 
     /**
      * @var array<string|class-string, Definition>
@@ -53,17 +56,12 @@ class Container implements ContainerInterface
      */
     protected array $parameters = [];
 
+
     public function __construct(array $definitions = [])
     {
         foreach ($definitions as $serviceId => $definition) {
             if (($definition instanceof Definition) === false) {
-                // @TODO: or maybe should be quietly wrap it into Definition?
-                throw new ContainerException(
-                    sprintf(
-                        'Service "%s" is not a Definition.',
-                        $serviceId
-                    )
-                );
+                $definitions[$serviceId] = new Definition($definition);
             }
         }
 
@@ -87,9 +85,9 @@ class Container implements ContainerInterface
             return $this->services[$serviceName];
         }
 
-
-
-
+        if (isset($this->definitions[$serviceName])) {
+            return $this->createServiceFromDefinition($serviceName);
+        }
 
         /**
          * if reached this moment, the only thing we need to do, is to break
@@ -123,7 +121,7 @@ class Container implements ContainerInterface
     /**
      * @throws ContainerException
      */
-    private function createServiceFromDefinition(string $serviceId)
+    private function createServiceFromDefinition(string $serviceId): object
     {
         /**
          * Do not instantiate if exists
@@ -153,36 +151,43 @@ class Container implements ContainerInterface
             );
         }
 
+        // our toy can be better if we put some new parts:
+        foreach ($definition->getMethodCalls() as $methodCall) {
+            call_user_func_array(
+                [
+                    $service,
+                    $methodCall->getMethodName()
+                ],
+                $methodCall->getArguments()
+            );
+        }
 
+        // thank u santa, this is the best gift ever!
+        $this->services[$serviceId] = $service;
+
+        return $service;
 
     }
 
 
     /**
      * Turns a factory into service.
-     * @deprecated
-     * @param string $factoryName
+     * @param Closure $factory
      * @return mixed
+     * @throws ContainerException
      */
-    protected function instantiateFactory(string $factoryName)
+    protected function instantiateFactory(Closure $factory): object
     {
-        /**
-         * Do not instantiate factories if it has been instantiated
-         */
-        if (isset($this->services[$factoryName])) {
-            return $this->services[$factoryName];
-        }
-
-
-        $service = $this->factories[$factoryName]($this);
+        $service = $factory($this);
 
         if (!is_object($service)) {
-            throw new ContainerException('Factory "' . $factoryName . '" should return an object, ' . gettype($service) . ' returned');
+            throw new ContainerException(sprintf(
+                'Factory should return an object, %s returned',
+                gettype($service)
+            ));
         }
 
-        $this->services[$factoryName] = $service;
-        unset($this->factories[$factoryName]);
-        return $this->services[$factoryName];
+        return $service;
     }
 
     /**
@@ -191,13 +196,8 @@ class Container implements ContainerInterface
      * @return bool|null
      * @throws ReflectionException
      */
-    protected function factoryReturnImplements(string $factoryName, string $interfaceToCheck): ?bool
+    protected function factoryReturnImplements(Closure $factory, string $interfaceToCheck): ?bool
     {
-        if (!isset($this->factories[$factoryName])) {
-            return null;
-        }
-
-        $factory = $this->factories[$factoryName];
         $reflectionMethod = new ReflectionMethod($factory, '__invoke');
 
         /**
@@ -213,8 +213,8 @@ class Container implements ContainerInterface
         $returnType = $returnRypeReflection->getName();
 
         return $returnType === $interfaceToCheck
-        || in_array($interfaceToCheck, class_implements($returnType), true)
-        || in_array($interfaceToCheck, class_parents($returnType), true);
+            || in_array($interfaceToCheck, class_implements($returnType), true)
+            || in_array($interfaceToCheck, class_parents($returnType), true);
     }
 
     /**
@@ -222,6 +222,7 @@ class Container implements ContainerInterface
      *
      * @return array
      * @throws ReflectionException
+     * @throws ContainerException
      */
     public function getObjectsImplementing(string $interfaceClassName): array
     {
@@ -233,24 +234,34 @@ class Container implements ContainerInterface
             }
         }
 
-        foreach (array_keys($this->factories) as $factoryName) {
-            /**
-             * When given factory has got a return type defined, use it and check that returned class implements
-             * requested interface
-             *
-             * Also, factoryReturnImplements() returns bool|null, so explicitly check for return type
-             */
-            if ($this->factoryReturnImplements($factoryName, $interfaceClassName) === false) {
-                continue;
-            }
+        foreach ($this->definitions as $definition) {
 
-            /**
-             * If given factory does not have return type defined, instantiate them
-             */
-            $service = $this->instantiateFactory($factoryName);
+            $unwrappedDefinition = $this->unwrapDefinition($definition);
 
-            if ($service instanceof $interfaceClassName) {
-                $objects[] = $service;
+            if ($unwrappedDefinition instanceof Closure) {
+                /**
+                 * When given factory has got a return type defined, use it and check that returned class implements
+                 * requested interface
+                 *
+                 * Also, factoryReturnImplements() returns bool|null, so explicitly check for return type
+                 */
+                if ($this->factoryReturnImplements($unwrappedDefinition, $interfaceClassName) === false) {
+                    continue;
+                }
+
+                /**
+                 * If given factory does not have return type defined, instantiate them
+                 */
+                $service = $this->instantiateFactory($unwrappedDefinition);
+
+                if ($service instanceof $interfaceClassName) {
+                    $objects[] = $service;
+                }
+            } else {
+                if ($unwrappedDefinition instanceof $interfaceClassName) {
+                    // @TODO: we might autowire a service here, i guess
+                    $objects[] = $unwrappedDefinition;
+                }
             }
         }
 
@@ -284,20 +295,25 @@ class Container implements ContainerInterface
          * When factory will request yet another service, it will be created and removed from $this->factories,
          * BUT these ones are still present in current foreach
          */
-        foreach (array_keys($this->factories) as $factoryName) {
+        foreach ($this->definitions as $definition) {
+            $unwrapped = $this->unwrapDefinition($definition);
 
-            /**
-             * Use factory return check as this method works similar to getObjectsImplementing()
-             * @see self::getObjectsImplementing()
-             */
-            if ($this->factoryReturnImplements($factoryName, $className) === false) {
-                continue;
-            }
+            if ($unwrapped instanceof Closure) {
+                /**
+                 * Use factory return check as this method works similar to getObjectsImplementing()
+                 * @see self::getObjectsImplementing()
+                 */
+                if ($this->factoryReturnImplements($unwrapped, $className) === false) {
+                    continue;
+                }
 
-            $service = $this->instantiateFactory($factoryName);
+                $service = $this->instantiateFactory($unwrapped);
 
-            if ($service instanceof $className) {
-                return $service;
+                if ($service instanceof $className) {
+                    return $service;
+                }
+            } else {
+                return $this->autowire($className);
             }
         }
 
@@ -321,7 +337,7 @@ class Container implements ContainerInterface
      */
     public function add(string $id, object $object)
     {
-        if($this->locked) {
+        if ($this->locked) {
             throw new ContainerLockedException('Could not add any services as container is locked.');
         }
 
@@ -352,6 +368,8 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @param string $key
+     * @param string|int|float|array $value
      * @return void
      */
     public function addParameter(string $key, string|int|float|array $value): void
@@ -417,7 +435,7 @@ class Container implements ContainerInterface
                 try {
                     $argumentsToInject[] = $this->autowire($argumentClass);
                 } catch (ContainerException $autowiringException) {
-                    //TODO Named constructors
+                    //@TODO sprintf
                     throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
                 }
             }
@@ -437,13 +455,13 @@ class Container implements ContainerInterface
     {
         //no nulls allowed
         if ($parameter->getType() === null) {
-            //TODO Named constructors
+            //@TODO use sprintf
             throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
         }
 
         //only classes allowed so far
         if ($parameter->getType()->isBuiltin()) {
-            //TODO Named constructors
+            //@TODO use sprintf
             throw new AutowiringException('Unable to autowire class "' . $className . '", as "$' . $parameter->name . '" constructor argument requires a scalar value');
         }
     }
