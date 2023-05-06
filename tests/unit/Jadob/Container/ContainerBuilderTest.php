@@ -26,6 +26,16 @@ class ContainerBuilderTest extends TestCase
 
     }
 
+    /**
+     * @group container
+     * @group container-definitions
+     * @group container-service-providers
+     * @group container-builder
+     * @return void
+     * @throws Exception\ContainerBuildException
+     * @throws Exception\ContainerException
+     * @throws Exception\ServiceNotFoundException
+     */
     public function testContainerBuildingWithoutConfigPassed(): void
     {
         $builder = new ContainerBuilder();
