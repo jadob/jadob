@@ -102,15 +102,6 @@ class Definition
         return $service;
     }
 
-    /**
-     * @deprecated - it is used once in the whole codebase, and does not bring any information that may be useful
-     * outside of this class.
-     * @return bool
-     */
-    public function isCreated(): bool
-    {
-        return $this->created;
-    }
 
     public function addTag(string $tag): void
     {
