@@ -69,8 +69,6 @@ class Container implements ContainerInterface
     }
 
     /**
-     * This methods does not try to autowire services.
-     *
      * @param string $serviceName
      * @return mixed
      * @throws ServiceNotFoundException
@@ -143,12 +141,7 @@ class Container implements ContainerInterface
 
         // make sure our present is running fine
         if (is_object($service) === false) {
-            throw new ContainerException(
-                sprintf(
-                    'Factory for "%s" does not returned an object.',
-                    $serviceId
-                )
-            );
+            $service = $this->autowire($service);
         }
 
         // our toy can be better if we put some new parts:
