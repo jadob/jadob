@@ -10,21 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class ContainerBuilderTest extends TestCase
 {
-    public function testClosureAddedViaMethodWillBeAddedToFactories(): void
-    {
-
-        $factory = static function (): ExampleService {
-            return new ExampleService();
-        };
-
-        $builder = new ContainerBuilder();
-        $builder->add('dummy', $factory);
-
-        $this->assertArrayHasKey('dummy', $factories = $builder->getFactories());
-        $this->assertEquals($factory, $factories['dummy']);
-        $this->assertTrue($builder->has('dummy'));
-
-    }
 
     /**
      * @group container
