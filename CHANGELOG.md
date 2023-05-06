@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- [Docs] Merged framework related development docs into one file
+
+
 ## [0.4.15] - 2023-03-26
 ### Fixed
 - [BridgeSymfonyConsole] added `symfony/console` to `composer.json`
