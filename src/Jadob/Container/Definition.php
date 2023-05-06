@@ -37,10 +37,9 @@ class Definition
      */
     protected $tags = [];
 
-    public function __construct(object $service, bool $created = false)
+    public function __construct(object $service)
     {
         $this->service = $service;
-        $this->created = $created;
     }
 
     public function addMethodCall(string $methodName, array $arguments = []): self
