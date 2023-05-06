@@ -163,15 +163,9 @@ class Container implements ContainerInterface
         $returnRypeReflection = $reflectionMethod->getReturnType();
         $returnType = $returnRypeReflection->getName();
 
-        return (bool) (
-            $returnType === $interfaceToCheck
-            || in_array($interfaceToCheck, class_implements($returnType), true)
-            || in_array($interfaceToCheck, class_parents($returnType), true)
-        ) 
-             
-        
-
-         ;
+        return $returnType === $interfaceToCheck
+        || in_array($interfaceToCheck, class_implements($returnType), true)
+        || in_array($interfaceToCheck, class_parents($returnType), true);
     }
 
     /**
