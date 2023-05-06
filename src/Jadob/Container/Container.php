@@ -96,6 +96,62 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @throws ContainerException
+     */
+    private function unwrapDefinition(Definition $definition, int $wrapsCount = 0): object
+    {
+
+        if ($wrapsCount >= self::MAX_DEFINITION_WRAPS) {
+            throw new ContainerException('Could not unwrap a definition as is it wrapped too much.');
+        }
+
+        $service = $definition->getService();
+        if ($service instanceof Definition) {
+            $service = $this->unwrapDefinition($definition, ++$wrapsCount);
+        }
+
+        return $service;
+    }
+
+    /**
+     * @throws ContainerException
+     */
+    private function createServiceFromDefinition(string $serviceId)
+    {
+        /**
+         * Do not instantiate if exists
+         */
+        if (isset($this->services[$serviceId])) {
+            return $this->services[$serviceId];
+        }
+
+        // Pick a present from under the tree
+        $definition = $this->definitions[$serviceId];
+
+        // unwrap them
+        $service = $this->unwrapDefinition($definition);
+
+        // put some batteries to our gift, if needed
+        if ($service instanceof Closure) {
+            $service = $this->instantiateFactory($service);
+        }
+
+        // make sure our present is running fine
+        if (is_object($service) === false) {
+            throw new ContainerException(
+                sprintf(
+                    'Factory for "%s" does not returned an object.',
+                    $serviceId
+                )
+            );
+        }
+
+
+
+    }
+
+
+    /**
      * Turns a factory into service.
      * @deprecated
      * @param string $factoryName
