@@ -12,10 +12,6 @@ use Jadob\Container\Exception\ContainerBuildException;
  */
 class Definition
 {
-    /**
-     * @var bool
-     */
-    protected $created = false;
 
     /**
      * @var mixed
