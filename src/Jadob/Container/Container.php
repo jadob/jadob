@@ -415,7 +415,7 @@ class Container implements ContainerInterface
         //no dependencies required, we can just instantiate them and return
         if ($constructor === null) {
             $object = new $className();
-            $this->add($className, $object);
+            $this->services[$className] = $object;
             return $object;
         }
 
@@ -442,7 +442,7 @@ class Container implements ContainerInterface
         }
 
         $service = new $className(...$argumentsToInject);
-        $this->add($className, $service);
+        $this->services[$className] = $service;
         return $service;
     }
 
