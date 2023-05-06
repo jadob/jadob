@@ -27,11 +27,6 @@ class ContainerBuilder
      */
     protected $services = [];
 
-    /**
-     * @deprecated
-     * @var array
-     */
-    protected $factories = [];
 
     /**
      * @var array<string|class-string, Definition>
@@ -79,12 +74,12 @@ class ContainerBuilder
     {
         $this->emit(new ServiceAddedEvent($serviceName));
 
-        if ($definition instanceof Closure) {
-            $this->factories[$serviceName] = $definition;
+        if($definition instanceof Definition) {
+            $this->definitions[$serviceName] = $definition;
             return $this;
         }
 
-        $this->services[$serviceName] = $definition;
+        $this->definitions[$serviceName] = new Definition($definition);
         return $this;
     }
 
@@ -181,18 +176,13 @@ class ContainerBuilder
     }
 
 
-    /**
-     * @return array
-     */
-    public function getFactories(): array
-    {
-        return $this->factories;
-    }
-
-
     public function has(string $id): bool
     {
-        return isset($this->services[$id]) || isset($this->factories[$id]);
+        if(array_key_exists($id, $this->services)) {
+            return true;
+        }
+
+        return array_key_exists($id, $this->definitions);
     }
 
 

@@ -42,13 +42,6 @@ class Container implements ContainerInterface
     protected array $services = [];
 
     /**
-     * Closures, arrays, components that can be used to instantiate a new service.
-     *
-     * @var array<string, object>
-     */
-    protected array $factories = [];
-
-    /**
      * If true, adding new services/aliases will throw an exception.
      *
      * @var bool
@@ -60,20 +53,10 @@ class Container implements ContainerInterface
      */
     protected array $parameters = [];
 
-    /**
-     * Container constructor.
-     *
-     * @param array|null $services
-     * @param array|null $factories
-     */
-    public function __construct(array $services = null, array $factories = null)
+    public function __construct(array $services = null)
     {
         if ($services !== null) {
             $this->services = $services;
-        }
-
-        if ($factories !== null) {
-            $this->factories = $factories;
         }
     }
 
@@ -113,7 +96,7 @@ class Container implements ContainerInterface
 
     /**
      * Turns a factory into service.
-     *
+     * @deprecated
      * @param string $factoryName
      * @return mixed
      */
@@ -280,12 +263,6 @@ class Container implements ContainerInterface
 
         $definition = new Definition($object);
         $this->definitions[$id] = $definition;
-
-        if ($object instanceof Closure) {
-            $this->factories[$id] = $object;
-        } else {
-            $this->services[$id] = $object;
-        }
 
         return $definition;
     }
