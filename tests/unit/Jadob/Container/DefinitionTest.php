@@ -57,4 +57,12 @@ class DefinitionTest extends TestCase
 
     }
 
+    public function testTagging()
+    {
+        $definition = new Definition(ExampleService::class);
+
+        $definition->addTag('leszke');
+
+        self::assertEquals('leszke', $definition->getTags()[0]);
+    }
 }

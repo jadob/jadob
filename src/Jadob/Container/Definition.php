@@ -123,4 +123,13 @@ class Definition
     {
         $this->tags[] = $tag;
     }
+
+    /**
+     * @return string[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
 }
