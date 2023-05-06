@@ -9,6 +9,7 @@ use Jadob\Container\Fixtures\CService;
 use Jadob\Container\Fixtures\ExampleService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use stdClass;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -20,7 +21,7 @@ class ContainerTest extends TestCase
     public function testServicesAliasing(): void
     {
 
-        $container = new Container(['dummy' => new \stdClass()]);
+        $container = new Container(['dummy' => new stdClass()]);
         $container->alias('dummy', 'dummy1');
 
         $this->assertSame($container->get('dummy'), $container->get('dummy1'));
@@ -30,10 +31,11 @@ class ContainerTest extends TestCase
     public function testFactoriesAliasing(): void
     {
         $container = new Container(
-            [], ['dummy' => function () {
-                return new \stdClass();
+            ['dummy' => function () {
+                return new stdClass();
             }]
         );
+
         $container->alias('dummy', 'dummy1');
 
         $this->assertSame($container->get('dummy'), $container->get('dummy1'));
@@ -42,8 +44,8 @@ class ContainerTest extends TestCase
 
     public function testServiceNotFoundException(): void
     {
-        $this->expectException(\Jadob\Container\Exception\ServiceNotFoundException::class);
-        $this->expectExceptionMessage('Service missing is not found in container.');
+        $this->expectException(ServiceNotFoundException::class);
+        $this->expectExceptionMessage('Service "missing" is not found in container.');
         $container = new Container();
 
         $container->get('missing');
