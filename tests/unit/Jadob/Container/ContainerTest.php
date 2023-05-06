@@ -2,8 +2,11 @@
 
 namespace Jadob\Container;
 
+use Jadob\Container\Exception\ContainerLockedException;
+use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\Fixtures\AService;
 use Jadob\Container\Fixtures\CService;
+use Jadob\Container\Fixtures\ExampleService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
@@ -62,6 +65,16 @@ class ContainerTest extends TestCase
 
         $container->get('missing');
 
+    }
+
+    public function testContainerLocking(): void
+    {
+        $this->expectException(ContainerLockedException::class);
+        $this->expectExceptionMessage('Could not add any services as container is locked.');
+        $container = new Container();
+        $container->lock();
+
+        $container->add('service', new ExampleService());
     }
 
     public function testContainerIsPsr11Compatible(): void

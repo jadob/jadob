@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use Jadob\Container\Exception\ContainerLockedException;
 use function array_keys;
 use function class_exists;
 use Closure;
@@ -269,9 +270,14 @@ class Container implements ContainerInterface
      * @param $object
      *
      * @return Definition
+     * @throws ContainerLockedException
      */
     public function add(string $id, object $object)
     {
+        if($this->locked) {
+            throw new ContainerLockedException('Could not add any services as container is locked.');
+        }
+
         $definition = new Definition($object);
         $this->definitions[$id] = $definition;
 
@@ -399,5 +405,14 @@ class Container implements ContainerInterface
             //TODO Named constructors
             throw new AutowiringException('Unable to autowire class "' . $className . '", as "$' . $parameter->name . '" constructor argument requires a scalar value');
         }
+    }
+
+    /**
+     * Prevents adding new services to container.
+     * @return void
+     */
+    public function lock(): void
+    {
+        $this->locked = true;
     }
 }
