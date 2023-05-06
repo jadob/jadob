@@ -53,11 +53,21 @@ class Container implements ContainerInterface
      */
     protected array $parameters = [];
 
-    public function __construct(array $definitions = null)
+    public function __construct(array $definitions = [])
     {
-        if ($definitions !== null) {
-            $this->definitions = $definitions;
+        foreach ($definitions as $serviceId => $definition) {
+            if (($definition instanceof Definition) === false) {
+                // @TODO: or maybe should be quietly wrap it into Definition?
+                throw new ContainerException(
+                    sprintf(
+                        'Service "%s" is not a Definition.',
+                        $serviceId
+                    )
+                );
+            }
         }
+
+        $this->definitions = $definitions;
     }
 
     /**
