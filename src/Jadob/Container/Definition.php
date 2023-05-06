@@ -37,13 +37,7 @@ class Definition
      */
     protected $tags = [];
 
-    /**
-     * Definition constructor.
-     *
-     * @param mixed $service
-     * @param bool  $created
-     */
-    public function __construct($service, bool $created = false)
+    public function __construct(object $service, bool $created = false)
     {
         $this->service = $service;
         $this->created = $created;
