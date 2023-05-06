@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
-use Closure;
 use function is_array;
 use Jadob\Container\Event\ContainerBuildStartedEvent;
 use Jadob\Container\Event\ProviderRegisteredEvent;
@@ -22,12 +21,6 @@ use Jadob\Container\ServiceProvider\ServiceProviderInterface;
  */
 class ContainerBuilder
 {
-    /**
-     * @var array
-     */
-    protected $services = [];
-
-
     /**
      * @var array<string|class-string, Definition>
      */
@@ -66,11 +59,11 @@ class ContainerBuilder
     }
 
     /**
-     * @param string $serviceName
+     * @param string|class-string $serviceName
      * @param mixed $definition
      * @return $this
      */
-    public function add($serviceName, $definition): self
+    public function add(string $serviceName, object $definition): self
     {
         $this->emit(new ServiceAddedEvent($serviceName));
 
@@ -125,7 +118,7 @@ class ContainerBuilder
             $this->emit(new ProviderRegisteredEvent($serviceProvider));
         }
 
-        $container = new Container($this->services, $this->factories);
+        $container = new Container($this->definitions);
 
         foreach ($this->instantiatedProviders as $provider) {
             $configNodeKey = $provider->getConfigNode();
