@@ -84,7 +84,12 @@ class Container implements ContainerInterface
         /**
          * if reached this moment, the only thing we need to do, is to break
          */
-        throw new ServiceNotFoundException('Service ' . $serviceName . ' is not found in container.');
+        throw new ServiceNotFoundException(
+            sprintf(
+                'Service "%s" is not found in container.',
+                $serviceName
+            )
+        );
     }
 
     /**
