@@ -28,6 +28,7 @@ class ContainerBuilder
     protected $services = [];
 
     /**
+     * @deprecated
      * @var array
      */
     protected $factories = [];
