@@ -77,15 +77,7 @@ class Container implements ContainerInterface
             return $this->services[$serviceName];
         }
 
-        /**
-         * Check there is a factory for given service
-         */
-        if (isset($this->factories[$serviceName])) {
-            /**
-             * instantiateFactory() adds them to $this->services, so we can just return them here
-             */
-            return $this->instantiateFactory($serviceName);
-        }
+
 
 
 
