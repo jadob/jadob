@@ -90,7 +90,7 @@ class ContainerTest extends TestCase
 
         $this->assertInstanceOf(Container::class, $container->findObjectByClassName(ContainerInterface::class));
         $this->assertInstanceOf(DummyClass::class, $container->findObjectByClassName(DummyClass::class));
-        $this->assertInstanceOf(stdClass::class, $container->findObjectByClassName(stdClass::class));
+        $this->assertInstanceOf(AService::class, $container->findObjectByClassName(AService::class));
     }
 
 
