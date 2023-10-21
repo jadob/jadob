@@ -116,6 +116,10 @@ class ItemProcessor
                                 $output[$instance->getName()] = $flattenedVal[$instance->getFlatProperty()];
                             }
                         }
+
+                        if(is_object($val)) {
+                            $output[$instance->getName()] = $this->extractItemValues($val, $context);
+                        }
                     }
                 }
             }
