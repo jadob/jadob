@@ -18,7 +18,7 @@ class DoctrineAnnotationsProvider implements ServiceProviderInterface
      */
     public function getConfigNode()
     {
-        return 'doctrine';
+        return null;
     }
 
     /**
@@ -26,12 +26,6 @@ class DoctrineAnnotationsProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
-        if (!isset($config['annotations'])) {
-            throw new RuntimeException('There is no "annotations" section in "doctrine" config node."');
-        }
-
-        $annotationsConfig = $config['annotations'];
-
         AnnotationRegistry::registerLoader('class_exists');
 
         $factory = static function(): Reader {
