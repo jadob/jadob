@@ -15,6 +15,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\FormFactoryBuilderInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
@@ -55,7 +56,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
 
         return [
             'symfony.validator' => $validator->getValidator(),
-            'symfony.form.factory' => static function (Container $container) {
+            'symfony.form.factory' => static function (Container $container): FormFactoryBuilderInterface {
                 $formFactoryBuilder = Forms::createFormFactoryBuilder()
                     ->addExtension(new HttpFoundationExtension())
                     ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
