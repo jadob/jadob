@@ -63,6 +63,25 @@ class Container implements ContainerInterface
     public function __construct(array $definitions = [])
     {
         foreach ($definitions as $serviceId => $definition) {
+            /**
+             * Each factory must have an return type, otherwise there may be false-positive service not found exceptionw
+             */
+            $service = $definition->getService();
+            if($service instanceof Closure) {
+                $closureReflection = new \ReflectionFunction($service);
+                if($closureReflection->getReturnType() === null) {
+                    throw new ContainerException(
+                        sprintf(
+                            'Factory for service "%s" is missing a return type.',
+                            $serviceId
+                        )
+                    );
+                }
+            }
+
+            /**
+             * If someting is not an definition, wrap it
+             */
             if (($definition instanceof Definition) === false) {
                 $definitions[$serviceId] = new Definition($definition);
             }
