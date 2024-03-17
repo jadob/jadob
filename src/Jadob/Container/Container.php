@@ -305,8 +305,8 @@ class Container implements ContainerInterface
                 if ($service instanceof $className) {
                     return $service;
                 }
-            } else {
-                return $this->autowire($className);
+            } elseif(get_class($service) === $className) {
+                return $service;
             }
         }
 
