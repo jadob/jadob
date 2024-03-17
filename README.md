@@ -8,14 +8,14 @@ There is no production-ready version at this time. Use at your own risk.
 
 ## Introduction
 
-Jadob is a PHP7 application framework, based on Symfony components. It comes with the most important
+Jadob is a PHP8 application framework, based on Symfony components. It comes with the most important
 stuff needed to start developing your PHP project.
-Jadob uses Twig for templating and Doctrine ORM/DBAL/ODM for SQL and MongoDB databases support.
+Jadob uses Twig for templating and Doctrine ORM/DBAL for SQL databases support.
 
 
 ## Requirements
 
-- PHP 8.1.0 or higher
+- PHP 8.2.0 or higher
 
 ## Things that need to be done before `1.0.0` release
 
