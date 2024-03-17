@@ -57,6 +57,9 @@ class Container implements ContainerInterface
     protected array $parameters = [];
 
 
+    /**
+     * @param array<string, object|Definition> $definitions
+     */
     public function __construct(array $definitions = [])
     {
         foreach ($definitions as $serviceId => $definition) {
