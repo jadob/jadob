@@ -1,3 +1,3 @@
 # jadob/dashboard
 
-Build backoffices quickly.
+At this time this package should be considered deprecated.
