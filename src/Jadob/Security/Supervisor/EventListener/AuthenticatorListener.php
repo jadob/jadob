@@ -22,6 +22,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -80,7 +81,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
             return $event;
         }
 
-        $response = $this->handleNonStatelessRequest($event->getContext(), $requestSupervisor);
+        $response = $this->handleStatefulRequest($event->getContext(), $requestSupervisor);
 
         if ($response !== null) {
             $event->setResponse($response);
@@ -127,7 +128,7 @@ class AuthenticatorListener implements ListenerProviderInterface, ListenerProvid
     }
 
     //@TODO: this must be moved to supervisor
-    protected function handleNonStatelessRequest(RequestContext $context, RequestSupervisorInterface $supervisor): ?Response
+    protected function handleStatefulRequest(RequestContext $context, RequestSupervisorInterface $supervisor): ?Response
     {
         $request = $context->getRequest();
 

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use function trim;
 
 /**
+ * @deprecated
  * Provides some helper methods for improving authentication process.
  * @license MIT
  */

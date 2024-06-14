@@ -8,6 +8,9 @@ use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Jadob\Security\Supervisor\RequestAttribute;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+/**
+ * @deprecated
+ */
 class AuthorizerListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function getListenersForEvent(object $event): iterable

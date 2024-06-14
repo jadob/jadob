@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -101,6 +102,7 @@ interface RequestSupervisorInterface
     public function supports(Request $request): bool;
 
     /**
+     * @deprecated - A HttpUnauthorizedException will be thrown and handleAuthenticationFailure will be triggered.
      * Called when authentication is required and user is not logged in.
      * @return Response
      */

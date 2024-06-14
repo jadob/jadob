@@ -20,6 +20,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
+ * @deprecated
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

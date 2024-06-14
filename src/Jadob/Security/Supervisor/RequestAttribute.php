@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Security\Supervisor;
 
 /**
+ * @deprecated
  * Supervisor listeners appends these attributes to request object for use throughout the request.
  */
 class RequestAttribute

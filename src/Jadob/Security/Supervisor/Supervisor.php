@@ -10,6 +10,7 @@ use function spl_object_hash;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
