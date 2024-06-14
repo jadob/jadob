@@ -8,11 +8,20 @@ use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
+ *
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class IdentityStorage
 {
+
+    public function __construct(
+        protected SessionInterface $session,
+        protected string $firewallName
+    )
+    {
+    }
+
     /**
      * @var string
      */
@@ -23,7 +32,7 @@ class IdentityStorage
      * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser(SessionInterface $session, ?string $provider = null): ?UserInterface
+    public function getUser(SessionInterface $session): ?UserInterface
     {
         /** @var string|null $userFromSession */
         $userFromSession = $session->get($this->buildSessionKey($provider));
@@ -47,9 +56,9 @@ class IdentityStorage
      * @param null|string $provider
      * @return IdentityStorage
      */
-    public function setUser(UserInterface $user, SessionInterface $session, ?string $provider = null): IdentityStorage
+    public function setUser(UserInterface $user): IdentityStorage
     {
-        $session->set(
+        $this->session->set(
             $this->buildSessionKey($provider),
             serialize($user)
         );

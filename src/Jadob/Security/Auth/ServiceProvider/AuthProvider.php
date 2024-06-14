@@ -11,6 +11,7 @@ use Jadob\Security\Auth\IdentityStorage;
 use Symfony\Component\Console\Application;
 
 /**
+ * @deprecated
  * @todo    rewrite to use supervisors and identityproviders/ identitystorage
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Security\Auth\User;
 
 /**
+ * @deprecated
  * Example User object, that can be used in your app.
  *
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

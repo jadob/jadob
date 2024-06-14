@@ -6,6 +6,9 @@ namespace Jadob\Security\Auth\Event;
 use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 
+/**
+ * @deprecated
+ */
 class UserEvent
 {
     /**

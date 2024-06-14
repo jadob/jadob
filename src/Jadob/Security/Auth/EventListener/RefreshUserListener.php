@@ -9,6 +9,9 @@ use Jadob\Security\Auth\User\UserInterface;
 use Jadob\Security\Supervisor\Supervisor;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+/**
+ * @deprecated
+ */
 class RefreshUserListener implements ListenerProviderInterface
 {
     protected Supervisor $supervisor;
