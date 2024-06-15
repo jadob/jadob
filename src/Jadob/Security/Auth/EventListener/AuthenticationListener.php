@@ -4,6 +4,8 @@ namespace Jadob\Security\Auth\EventListener;
 
 use Jadob\Core\Event\RequestEvent;
 use Jadob\Security\Auth\AuthenticatorService;
+use Jadob\Security\Auth\Exception\AuthenticationException;
+use Jadob\Security\Auth\Exception\UnauthenticatedException;
 use Jadob\Security\Auth\IdentityStorage;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
@@ -57,34 +59,32 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 $request->getSession(),
                 $authenticatorName
             );
+            try {
+                $storedIdentity = $identityStorage->getUser();
+                $anonymousAccessAllowed = $authenticator->isAnonymousAccessAllowed($request);
+                if ($storedIdentity === null && $anonymousAccessAllowed) {
+                    return;
+                }
 
-            $storedIdentity = $identityStorage->getUser();
-            $anonymousAccessAllowed = $authenticator->isAnonymousAccessAllowed($request);
-            if($storedIdentity === null && $anonymousAccessAllowed) {
-                return;
+                $containsCredentials = $authenticator->isAuthenticationRequest($request);
+
+                if (
+                    $storedIdentity === null
+                    && $anonymousAccessAllowed === false
+                    && $containsCredentials === false
+                ) {
+                    throw new UnauthenticatedException('auth.unauthenticated');
+                }
+            } catch (AuthenticationException $e) {
+                $response = $authenticator->onAuthenticationFailure(
+                    $request,
+                    $e
+                );
+
+                $event->setResponse($response);
             }
-
-            $containsCredentials = $authenticator->isAuthenticationRequest($request);
-
-            if(
-                $storedIdentity === null
-                && $anonymousAccessAllowed === false
-                && $containsCredentials
-            ) {
-
-            }
-
-
-
-
-
-
-
-
         }
-
     }
-
 
     protected function debugLog(string $message): void
     {
