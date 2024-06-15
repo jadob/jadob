@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Jadob\Core\Event\RequestEvent;
 use function call_user_func_array;
 use Closure;
 use Exception;
@@ -92,13 +93,13 @@ class Dispatcher
         $context->getRequest()->attributes->set('path_name', $route->getName());
         $context->getRequest()->attributes->set('current_route', $route);
 
-        $beforeControllerEvent = new BeforeControllerEvent($context);
-        $this->eventDispatcher->dispatch($beforeControllerEvent);
-        $beforeControllerEventResponse = $beforeControllerEvent->getResponse();
+        $requestEvent = new RequestEvent($context);
+        $this->eventDispatcher->dispatch($requestEvent);
+        $eventResponse = $requestEvent->getResponse();
 
-        if ($beforeControllerEventResponse !== null) {
+        if ($eventResponse !== null) {
             $this->logger->debug('Received response from BeforeControllerEvent, further execution is stopped.');
-            return $beforeControllerEventResponse;
+            return $eventResponse;
         }
 
 
