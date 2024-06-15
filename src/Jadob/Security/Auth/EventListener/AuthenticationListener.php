@@ -4,17 +4,20 @@ namespace Jadob\Security\Auth\EventListener;
 
 use Jadob\Core\Event\RequestEvent;
 use Jadob\Security\Auth\AuthenticatorService;
+use Jadob\Security\Auth\Event\AuthenticationFailedEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\UnauthenticatedException;
 use Jadob\Security\Auth\IdentityStorage;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 
 readonly class AuthenticationListener implements ListenerProviderInterface
 {
     public function __construct(
-        protected AuthenticatorService $authenticationService,
-        protected LoggerInterface $logger
+        protected AuthenticatorService     $authenticationService,
+        protected EventDispatcherInterface $eventDispatcher,
+        protected LoggerInterface          $logger
     )
     {
     }
@@ -80,6 +83,15 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                     $request,
                     $e
                 );
+
+                $this
+                    ->eventDispatcher
+                    ->dispatch(
+                        new AuthenticationFailedEvent(
+                            $request,
+                            $e
+                        )
+                    );
 
                 $event->setResponse($response);
             }

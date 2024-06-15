@@ -50,6 +50,7 @@ class AuthenticationProvider implements ServiceProviderInterface
             AuthenticationListener::class => function (ContainerInterface $container): AuthenticationListener {
                 return new AuthenticationListener(
                     $container->get(AuthenticatorService::class),
+                    $container->get(EventDispatcherInterface::class),
                     $container->get('jadob.auth.auth_logger')
                 );
             }
