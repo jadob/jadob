@@ -7,8 +7,10 @@ use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
+use Jadob\Security\Auth\UserProviderInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -30,9 +32,21 @@ class AuthenticationProvider implements ServiceProviderInterface
                     $container->get('logger.handler.default')
                 ]);
             },
-            AuthenticatorService::class => function (ContainerInterface $container): AuthenticatorService {
-                return new AuthenticatorService();
-            },
+            AuthenticatorService::class =>
+                function (ContainerInterface $container) use ($config): AuthenticatorService {
+                    /** @var array<string, AuthenticatorInterface> $authenticators */
+                    $authenticators = [];
+                    /** @var array<string, UserProviderInterface> $userProviders */
+                    $userProviders = [];
+
+                    foreach ($config['authenticators'] as $name => $authenticatorConfig) {
+                        $authenticators[$name] = $container->get($authenticatorConfig['service']);
+                        $userProviders[$name] = $container->get($authenticatorConfig['user_provider']);
+                    }
+
+                    return new AuthenticatorService($authenticators, $userProviders);
+                },
+
             AuthenticationListener::class => function (ContainerInterface $container): AuthenticationListener {
                 return new AuthenticationListener(
                     $container->get(AuthenticatorService::class),
