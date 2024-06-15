@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - [Docs] Merged framework related development docs into one file
+### Removed
+- PSR-7 Compliance 
 
 
 ## [0.4.15] - 2023-03-26
