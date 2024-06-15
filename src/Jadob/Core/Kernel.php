@@ -93,11 +93,6 @@ class Kernel
      */
     protected $fileStreamHandler;
 
-    /**
-     * @var bool
-     */
-    protected bool $psr7Compliant = false;
-
     protected RuntimeInterface $runtime;
 
     protected RequestContextStore $contextStore;
