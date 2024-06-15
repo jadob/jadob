@@ -21,7 +21,6 @@ use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\User\UserInterface;
 use function method_exists;
-use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\RequestInterface;
@@ -32,8 +31,6 @@ use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
 use RuntimeException;
-use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -54,8 +51,6 @@ class Dispatcher
 
     protected LoggerInterface $logger;
 
-    protected PsrHttpFactory $psrHttpFactory;
-
     public function __construct(
         array $config,
         Container $container,
@@ -69,16 +64,6 @@ class Dispatcher
 
         $this->verbose = $this->config['verbose'] ?? false;
 
-        /**
-         * There is no reason to use separate instance for any request interface
-         */
-        $psr17Factory = new Psr17Factory();
-        $this->psrHttpFactory = new PsrHttpFactory(
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory
-        );
     }
 
     /**
@@ -151,17 +136,11 @@ class Dispatcher
 
         $response = call_user_func_array([$autowiredController, $methodName], $methodArguments);
 
-        /**
-         * Convert response to HTTP Foundation before passing them to AfterController Event
-         */
-        if ($context->isPsr7Compliant() && ($response instanceof ResponseInterface)) {
-            $response = (new HttpFoundationFactory())->createResponse($response);
-        }
 
         if (!($response instanceof Response)) {
             //@TODO named constructor
             throw new KernelException(
-                'Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ' or PSR-7 ResponseInterface, ' . gettype($response) . ' returned'
+                'Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned'
             );
         }
 
@@ -334,24 +313,6 @@ class Dispatcher
     }
 
     /**
-     * @param Request $request
-     * @return RequestInterface
-     */
-    protected function convertRequestToPsr7Compliant(Request $request): RequestInterface
-    {
-        /**
-         * Allows to use user defined factory for PSR Requests
-         */
-        if (isset($this->config['psr7_converter'])) {
-            /** @var Closure $userDefinedConverter */
-            $userDefinedConverter = $this->config['psr7_converter'];
-            return $userDefinedConverter($request);
-        }
-
-        return $this->psrHttpFactory->createRequest($request);
-    }
-
-    /**
      * Allows to inject proper request object.
      *
      * @param string $className
@@ -377,22 +338,6 @@ class Dispatcher
             }
 
             return $user;
-        }
-
-        if ($context->isPsr7Compliant()) {
-            if (
-                in_array(RequestInterface::class, class_implements($className), true)
-                || $className === RequestInterface::class
-            ) {
-                return $this->convertRequestToPsr7Compliant($context->getRequest());
-            }
-
-            if (
-                in_array(ResponseInterface::class, class_implements($className), true)
-                || $className === ResponseInterface::class
-            ) {
-                return new \Nyholm\Psr7\Response();
-            }
         }
 
         if (
