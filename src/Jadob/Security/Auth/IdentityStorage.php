@@ -14,28 +14,26 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class IdentityStorage
 {
+    private const string USER_SESSION_KEY = '_jdb.user.';
 
     public function __construct(
         protected SessionInterface $session,
-        protected string $firewallName
+        protected string $authenticatorName
     )
     {
     }
 
-    /**
-     * @var string
-     */
-    private const USER_SESSION_KEY = '_jdb.user.';
+
 
     /**
      * @param SessionInterface $session
      * @param null|string $provider
      * @return UserInterface
      */
-    public function getUser(SessionInterface $session): ?UserInterface
+    public function getUser(): ?UserInterface
     {
         /** @var string|null $userFromSession */
-        $userFromSession = $session->get($this->buildSessionKey($provider));
+        $userFromSession = $this->session->get($this->buildSessionKey($this->authenticatorName));
         if ($userFromSession === null) {
             return null;
         }
@@ -59,7 +57,7 @@ class IdentityStorage
     public function setUser(UserInterface $user): IdentityStorage
     {
         $this->session->set(
-            $this->buildSessionKey($provider),
+            $this->buildSessionKey($this->authenticatorName),
             serialize($user)
         );
 
@@ -74,4 +72,5 @@ class IdentityStorage
     {
         return sprintf('%s/%s', self::USER_SESSION_KEY, $provider);
     }
+
 }

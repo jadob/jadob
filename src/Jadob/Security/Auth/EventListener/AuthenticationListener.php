@@ -24,7 +24,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface
 
     public function getListenersForEvent(object $event): iterable
     {
-        if($event instanceof RequestEvent) {
+        if ($event instanceof RequestEvent) {
             return [
                 [$this, 'onRequestEvent']
             ];
@@ -42,7 +42,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface
         $request = $event->getRequestContext()->getRequest();
 
         foreach ($authenticators as $authenticatorName => $authenticator) {
-            if($authenticator->supports($request) === false) {
+            if ($authenticator->supports($request) === false) {
                 $this->debugLog(
                     sprintf(
                         'Authenticator "%s" does not supports this request.',
@@ -62,14 +62,36 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 $request->getSession(),
                 $authenticatorName
             );
+
+            $storedIdentity = $identityStorage->getUser();
+            $event
+                ->getRequestContext()
+                ->setUser($storedIdentity);
+
             try {
-                $storedIdentity = $identityStorage->getUser();
+                $containsCredentials = $authenticator->isAuthenticationRequest($request);
+                if ($containsCredentials) {
+                    $authenticationResult = $authenticator->authenticate($request);
+                    if($authenticationResult === null) {
+                        //@TODO: replace it with more detailed exception class.
+                        throw new AuthenticationException('User not found.');
+                    }
+
+                    $identityStorage->setUser($authenticationResult);
+                    $successResponse = $authenticator->onAuthenticationSuccess(
+                        $request,
+                        $authenticationResult
+                    );
+                    $event->setResponse($successResponse);
+                    return;
+                }
+
+
                 $anonymousAccessAllowed = $authenticator->isAnonymousAccessAllowed($request);
                 if ($storedIdentity === null && $anonymousAccessAllowed) {
                     return;
                 }
 
-                $containsCredentials = $authenticator->isAuthenticationRequest($request);
 
                 if (
                     $storedIdentity === null
