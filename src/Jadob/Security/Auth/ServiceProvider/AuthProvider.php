@@ -28,11 +28,6 @@ class AuthProvider implements ServiceProviderInterface
         return;
     }
 
-    /**
-     * {@inheritdoc}
-     * @return Closure[]
-     * @psalm-return array{'auth.user.storage': pure-callable(\Jadob\Container\Container):\Jadob\Security\Auth\IdentityStorage}
-     */
     public function register($config)
     {
         return [
