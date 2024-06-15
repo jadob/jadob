@@ -23,8 +23,6 @@ use Jadob\Security\Auth\User\UserInterface;
 use function method_exists;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -317,7 +315,7 @@ class Dispatcher
      *
      * @param string $className
      * @param RequestContext $context
-     * @return Request|RequestInterface|null
+     * @return Request|null
      */
     protected function matchRequestObject(string $className, RequestContext $context): ?object
     {
