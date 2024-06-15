@@ -15,7 +15,7 @@ Jadob uses Twig for templating and Doctrine ORM/DBAL for SQL databases support.
 
 ## Requirements
 
-- PHP 8.2.0 or higher
+- PHP 8.3.0 or higher
 
 ## Things that need to be done before `1.0.0` release
 
