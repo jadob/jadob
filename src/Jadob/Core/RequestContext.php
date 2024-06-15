@@ -6,7 +6,6 @@ namespace Jadob\Core;
 use Jadob\Router\Context;
 use Jadob\Router\Route;
 use Jadob\Security\Auth\User\UserInterface;
-use Jadob\Security\Supervisor\RequestSupervisor\RequestSupervisorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -20,15 +19,12 @@ class RequestContext
     protected Request $request;
     protected ?Context $context = null;
     protected Route $route;
-    protected ?RequestSupervisorInterface $supervisor = null;
-    protected bool $psr7Compliant = false;
     protected ?UserInterface $user = null;
 
-    public function __construct(string $requestId, Request $request, bool $psr7Compliant)
+    public function __construct(string $requestId, Request $request)
     {
         $this->requestId = $requestId;
         $this->request = $request;
-        $this->psr7Compliant = $psr7Compliant;
     }
 
     /**
@@ -45,14 +41,6 @@ class RequestContext
     public function setRoute(Route $route): void
     {
         $this->route = $route;
-    }
-
-    /**
-     * @param RequestSupervisorInterface|null $supervisor
-     */
-    public function setSupervisor(?RequestSupervisorInterface $supervisor): void
-    {
-        $this->supervisor = $supervisor;
     }
 
     /**
@@ -85,22 +73,6 @@ class RequestContext
     public function getRoute(): Route
     {
         return $this->route;
-    }
-
-    /**
-     * @return RequestSupervisorInterface|null
-     */
-    public function getSupervisor(): ?RequestSupervisorInterface
-    {
-        return $this->supervisor;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPsr7Compliant(): bool
-    {
-        return $this->psr7Compliant;
     }
 
     /**
