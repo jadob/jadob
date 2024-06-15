@@ -10,14 +10,28 @@ class AuthenticatorService
         /**
          * @var array<string, AuthenticatorInterface>
          */
-        protected array $authenticators = []
+        protected array $authenticators = [],
+
+        /**
+         * @var array<string, UserProviderInterface>
+         */
+        protected array $userProviders = []
     )
     {
     }
 
+    /**
+     * @return array<string, AuthenticatorInterface>
+     */
     public function getAuthenticators(): array
     {
         return $this->authenticators;
     }
+
+    public function getUserProviderFor(string $authenticatorName): UserProviderInterface
+    {
+        return $this->userProviders[$authenticatorName];
+    }
+
 
 }
