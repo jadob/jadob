@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - [Docs] Merged framework related development docs into one file
+- Removed `BeforeControllerEvent` in favor of `RequestEvent`
 ### Removed
 - PSR-7 Compliance 
 
