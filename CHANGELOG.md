@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed `BeforeControllerEvent` in favor of `RequestEvent`
 ### Removed
 - PSR-7 Compliance 
+- Removed `Supervisor` component in favor of `Authenticator`
 
 
 ## [0.4.15] - 2023-03-26
