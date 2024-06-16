@@ -96,7 +96,6 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 if (
                     $storedIdentity === null
                     && $anonymousAccessAllowed === false
-                    && $containsCredentials === false
                 ) {
                     throw new UnauthenticatedException('auth.unauthenticated');
                 }
