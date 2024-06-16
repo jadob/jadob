@@ -114,6 +114,10 @@ class Url
             $url = $this->scheme . ':' . $this->host;
         }
 
+        if($this->port) {
+            $url .= ':'.$this->port;
+        }
+
         if ($this->path !== null) {
             if ($isHttpUrl) {
                 $url .= '/' . ltrim($this->path, '/');
@@ -122,6 +126,10 @@ class Url
             }
         }
 
+        if($this->query) {
+            $url .= '?'.http_build_query($this->query);
+        }
+        
         if ($this->fragment !== null) {
             $url .= '#' . $this->fragment;
         }
