@@ -14,6 +14,7 @@ use Dynamite\Mapping\CachedItemMappingReader;
 use Dynamite\Mapping\ItemMappingReader;
 use Dynamite\PrimaryKey\Filter\LowercaseFilter;
 use Dynamite\PrimaryKey\Filter\Md5Filter;
+use Dynamite\PrimaryKey\Filter\NoDashFilter;
 use Dynamite\PrimaryKey\Filter\UppercaseFilter;
 use Dynamite\PrimaryKey\Filter\UppercaseFirstFilter;
 use Dynamite\PrimaryKey\KeyFormatResolver;
@@ -115,6 +116,7 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
             $kfr->addFilter('lower', new LowercaseFilter());
             $kfr->addFilter('ucfirst', new UppercaseFirstFilter());
             $kfr->addFilter('md5', new Md5Filter());
+            $kfr->addFilter('nodash', new NoDashFilter());
             return $kfr;
         };
 
