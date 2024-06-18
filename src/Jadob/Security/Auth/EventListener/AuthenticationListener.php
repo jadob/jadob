@@ -89,6 +89,10 @@ readonly class AuthenticationListener implements ListenerProviderInterface
 
                 $anonymousAccessAllowed = $authenticator->isAnonymousAccessAllowed($request);
                 if ($storedIdentity === null && $anonymousAccessAllowed) {
+                    $this->debugLog(sprintf(
+                        'Leaving authentication - authenticator "%s" allows for anonymous access, and no identity is present.',
+                        $authenticatorName
+                    ));
                     return;
                 }
 
@@ -97,6 +101,10 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                     $storedIdentity === null
                     && $anonymousAccessAllowed === false
                 ) {
+                    $this->debugLog(sprintf(
+                        'Triggering onAuthenticationFailure - authenticator "%s" does not allows for anonymous access, and no identity is present.',
+                        $authenticatorName
+                    ));
                     throw new UnauthenticatedException('auth.unauthenticated');
                 }
             } catch (AuthenticationException $e) {
