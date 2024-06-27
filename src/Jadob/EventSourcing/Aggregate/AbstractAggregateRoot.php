@@ -116,34 +116,26 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
      */
     final protected function recordThat(object $event): void
     {
-        $this->aggregateVersion++;
-        $this->recordedEvents[(string) $this->aggregateVersion] = $event;
-        $this->events[(string) $this->aggregateVersion] = $event;
+        $this->bumpAggregateVersion();
+        $aggrVersion = $this->getAggregateVersion();
+        $this->recordedEvents[(string) $aggrVersion] = $event;
 
-        if ($event instanceof AbstractDomainEvent) {
-            $event->setAggregateId($this->getAggregateId());
-            $event->setAggregateVersion($this->aggregateVersion);
+        if ($event instanceof DomainEventInterface) {
+            $event->assignAggregateId($this->getAggregateId());
+            $event->assignEventNumber($aggrVersion);
+
         }
 
         $this->apply($event); //send to apply() so user can handle the state change
     }
 
-    /**
-     * @return DateTimeInterface
-     */
-    public function getCreatedAt(): DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    /**
-     * Allow to override aggregate ID generated in this class or set your own.
-     * @param string $aggregateId
-     * @return AbstractAggregateRoot
-     */
-    protected function setAggregateId(string $aggregateId): AbstractAggregateRoot
-    {
-        $this->aggregateId = $aggregateId;
-        return $this;
-    }
+
+    abstract protected function bumpAggregateVersion(): void;
+
+    abstract protected function getAggregateVersion(): int;
 }
