@@ -42,17 +42,12 @@ class DynamoDbEventStore implements EventStoreInterface
     private LoggerInterface $logger;
     private ServiceBus $commandBus;
     private Marshaler $marshaler;
-    /**
-     * @var PayloadSerializer
-     */
+
     protected PayloadSerializer $payloadSerializer;
 
     /**
      * DynamoDbEventStore constructor.
-     * @param DynamoDbClient $dynamoDbClient
-     * @param EventStoreTableConfiguration $table
-     * @param LoggerInterface $logger
-     * @param ServiceBus $commandBus
+     *
      * @param EventStoreExtensionInterface[] $extensions
      */
     public function __construct(
@@ -72,7 +67,8 @@ class DynamoDbEventStore implements EventStoreInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws EventStoreException|JsonException
      */
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
@@ -81,7 +77,7 @@ class DynamoDbEventStore implements EventStoreInterface
         $events = $aggregateRoot->popUncomittedEvents();
         $aggregateType = get_class($aggregateRoot);
 
-        /**
+        /*
          * While dealing with DDB transactions, you should be aware of few limits.
          * One of them is 25 items per WRITE transaction:
          * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/transaction-apis.html
@@ -105,7 +101,7 @@ class DynamoDbEventStore implements EventStoreInterface
         $this->logger->info(sprintf('Begin storing events for aggregate %s.', $aggregateId));
 
         $items = [];
-        /**
+        /*
          * @see https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_TransactWriteItems.html#DDB-TransactWriteItems-request-TransactItems
          * @see https://aws.amazon.com/blogs/aws/new-amazon-dynamodb-transactions/
          */
@@ -122,7 +118,7 @@ class DynamoDbEventStore implements EventStoreInterface
              * ety - event type
              * agv - aggregate version
              * pld - payload
-             * tme - timestamp
+             * tme - timestamp.
              */
             $item = [
                 $this->table->getPartitionKeyName() => sprintf('AGGREGATE#%s', $aggregateId),
@@ -132,31 +128,30 @@ class DynamoDbEventStore implements EventStoreInterface
                 'ety' => $eventType,
                 'agv' => $eventVersion,
                 'pld' => $payload,
-                /**
+                /*
                  * May be useful e.g in GSIs
                  */
                 AttributeName::OBJECT_TYPE => 'EVENT',
-                /**
+                /*
                  * To avoid collisions in future, each event has it's own timestamp in milliseconds
                  */
                 AttributeName::CREATED_AT => $this->dateTimeToTimestamp($event->recordedAt()),
-                'atr' => $event->getAttributes()
+                'atr' => $event->getAttributes(),
             ];
 
             $writeItem = [
                 'Put' => [
                     'TableName' => $this->table->getTableName(),
-                    'Item' => $this->marshaler->marshalItem($item)
-                ]
+                    'Item' => $this->marshaler->marshalItem($item),
+                ],
             ];
 
             $items[] = $writeItem;
         }
 
         $this->dynamoDbClient->transactWriteItems([
-            'TransactItems' => $items
+            'TransactItems' => $items,
         ]);
-
 
         $this->logger->info(sprintf('Done storing events for aggregate %s. Begin to emitting events.', $aggregateId));
 
@@ -169,7 +164,7 @@ class DynamoDbEventStore implements EventStoreInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getEventsByAggregateId(string $aggregateId): array
     {
@@ -178,12 +173,12 @@ class DynamoDbEventStore implements EventStoreInterface
             'KeyConditionExpression' => '#pk = :pk AND begins_with(#sk, :sk)',
             'ExpressionAttributeNames' => [
                 '#pk' => $this->table->getPartitionKeyName(),
-                '#sk' => $this->table->getSortKeyName()
+                '#sk' => $this->table->getSortKeyName(),
             ],
             'ExpressionAttributeValues' => [
                 ':pk' => $this->marshaler->marshalValue(sprintf('AGGREGATE#%s', $aggregateId)),
-                ':sk' => $this->marshaler->marshalValue('EVENT#')
-            ]
+                ':sk' => $this->marshaler->marshalValue('EVENT#'),
+            ],
         ];
 
         $output = [];
@@ -195,29 +190,24 @@ class DynamoDbEventStore implements EventStoreInterface
         return $output;
     }
 
-
     /**
-     * @param string $aggregateId
-     * @return AggregateMetadata
      * @throws AggregateMetadataNotFoundException
      */
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata
     {
-
         //@TODO może to do jakiejś osobnej klasy wydzielić?
         $pk = sprintf('AGGREGATE#%s', $aggregateId);
         $sk = 'METADATA';
 
         $key = [
             $this->table->getPartitionKeyName() => $pk,
-            $this->table->getSortKeyName() => $sk
+            $this->table->getSortKeyName() => $sk,
         ];
 
         $params = [
             'TableName' => $this->table->getTableName(),
-            'Key' => $this->marshaler->marshalItem($key)
+            'Key' => $this->marshaler->marshalItem($key),
         ];
-
 
         $result = $this->dynamoDbClient->getItem($params);
         $resultArray = $result->toArray();
@@ -251,24 +241,22 @@ class DynamoDbEventStore implements EventStoreInterface
             AttributeName::AGGREGATE_ID => $metadata->getAggregateId(),
             AttributeName::AGGREGATE_TYPE => $metadata->getAggregateType(),
             AttributeName::CREATED_AT => $this->dateTimeToTimestamp($metadata->getCreatedAt()),
-            AttributeName::OBJECT_TYPE => 'METADATA'
+            AttributeName::OBJECT_TYPE => 'METADATA',
         ];
 
         $params = [
             'TableName' => $this->table->getTableName(),
-            'Item' => $this->marshaler->marshalItem($item)
+            'Item' => $this->marshaler->marshalItem($item),
         ];
 
         $this->dynamoDbClient->putItem($params);
     }
 
     /**
-     * Watch out: timestamp is in MILLISECONDS
-     * @param DateTimeInterface $dateTime
-     * @return int
+     * Watch out: timestamp is in MILLISECONDS.
      */
     protected function dateTimeToTimestamp(DateTimeInterface $dateTime): int
     {
-        return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
+        return (int) ($dateTime->getTimestamp().$dateTime->format('v'));
     }
 }
