@@ -13,16 +13,15 @@ class EventHashExtension implements EventStoreExtensionInterface
     public const ATTRIBUTE = 'hash';
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function onAggregateCreate(AggregateRootInterface $aggregate, AggregateMetadata $metadata): void
     {
         // TODO: Implement onAggregateCreate() method.
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function onEventAppend(DomainEventInterface $event, string $payload, AggregateRootInterface $aggregate): void
     {
