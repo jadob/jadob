@@ -8,7 +8,7 @@ interface AggregateRootInterface
     /**
      * @return DomainEventInterface[]
      */
-    public function popUncomittedEvents(): array;
+    public function popUncommittedEvents(): array;
     public static function recreate(string $aggregateId, int $version, array $events): self;
     public function getAggregateId(): string;
 }

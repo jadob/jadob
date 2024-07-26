@@ -106,7 +106,7 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
      * @return AbstractDomainEvent[]
      */
     #[\Override]
-    public function popUncomittedEvents(): array
+    public function popUncommittedEvents(): array
     {
         $events = $this->recordedEvents;
         $this->recordedEvents = [];
