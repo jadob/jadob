@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\Aggregate;
+namespace Jadob\Aggregate;
 
 interface AggregateRootInterface
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\Aggregate;
+namespace Jadob\Aggregate;
 
 use Jadob\EventSourcing\EventStore\DateTimeFactory;
 use Jadob\EventSourcing\EventStore\EventStoreInterface;
@@ -17,30 +17,14 @@ use ReflectionException;
 class AggregateRepository
 {
     /**
-     * @var EventStoreInterface
-     */
-    protected EventStoreInterface $eventStore;
-
-    protected PayloadSerializer $serializer;
-
-    /**
-     * @var string
-     */
-    protected string $aggregateType;
-
-
-    /**
      * AggregateRepository constructor.
      *
      * @param EventStoreInterface $eventStore
      * @param PayloadSerializer $serializer
      * @param string $aggregateType
      */
-    public function __construct(EventStoreInterface $eventStore, PayloadSerializer $serializer, string $aggregateType)
+    public function __construct(protected EventStoreInterface $eventStore, protected PayloadSerializer $serializer, protected string $aggregateType)
     {
-        $this->eventStore = $eventStore;
-        $this->serializer = $serializer;
-        $this->aggregateType = $aggregateType;
     }
 
     /**
@@ -104,7 +88,7 @@ class AggregateRepository
 
     public function store(AggregateRootInterface $aggregateRoot): void
     {
-        if (get_class($aggregateRoot) !== $this->aggregateType) {
+        if ($aggregateRoot::class !== $this->aggregateType) {
             throw new AggregateException('Given Aggregate is not managed by this AggregateRepository.');
         }
 

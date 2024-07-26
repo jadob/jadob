@@ -2,9 +2,7 @@
 declare(strict_types=1);
 
 
-namespace Jadob\EventSourcing\Aggregate;
-
-use DateTimeInterface;
+namespace Jadob\Aggregate;
 
 interface DomainEventInterface
 {
