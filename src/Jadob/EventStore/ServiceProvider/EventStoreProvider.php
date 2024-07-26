@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore\ServiceProvider;
+namespace Jadob\EventStore\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\EventSourcing\EventStore\DBALEventStore;
-use Jadob\EventSourcing\EventStore\EventDispatcher;
-use Jadob\EventSourcing\EventStore\EventStoreInterface;
-use Jadob\EventSourcing\EventStore\ProjectionManager;
+use Jadob\EventStore\DBALEventStore;
+use Jadob\EventStore\EventDispatcher;
+use Jadob\EventStore\EventStoreInterface;
+use Jadob\EventStore\ProjectionManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -27,6 +27,7 @@ class EventStoreProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function getConfigNode()
     {
         return 'event_store';
@@ -39,6 +40,7 @@ class EventStoreProvider implements ServiceProviderInterface
      *
      * @psalm-return array{Jadob\EventSourcing\EventStore\ProjectionManager: \Closure(ContainerInterface):ProjectionManager, Jadob\EventSourcing\EventStore\EventDispatcher: \Closure(ContainerInterface):EventDispatcher, Jadob\EventSourcing\EventStore\EventStoreInterface: \Closure(ContainerInterface):DBALEventStore}
      */
+    #[\Override]
     public function register($config)
     {
         if (!isset($config['connection_name'])) {
@@ -54,9 +56,7 @@ class EventStoreProvider implements ServiceProviderInterface
 
                 return $projectionManager;
             },
-            EventDispatcher::class => function (ContainerInterface $container) {
-                return new EventDispatcher();
-            },
+            EventDispatcher::class => fn(ContainerInterface $container) => new EventDispatcher(),
             EventStoreInterface::class => function (ContainerInterface $container) use ($config) {
                 $separateLogger = true;
                 if (isset($config['separate_logger'])) {
@@ -88,6 +88,7 @@ class EventStoreProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function onContainerBuild(Container $container, $config)
     {
         // TODO: Implement onContainerBuild() method.

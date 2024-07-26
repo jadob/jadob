@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore;
+namespace Jadob\EventStore;
 
 use DateTimeInterface;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Connection;
-use Jadob\EventSourcing\AbstractDomainEvent;
-use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
-use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
+use Jadob\Aggregate\AbstractDomainEvent;
+use Jadob\Aggregate\AggregateRootInterface;
+use Jadob\EventStore\Exception\EventStoreException;
 use JsonException;
 use PDO;
 use Prooph\ServiceBus\CommandBus;
@@ -50,16 +50,6 @@ class DbalEventStore implements EventStoreInterface
     public const DEFAULT_METADATA_TABLE_NAME = 'aggregates_metadata';
 
     /**
-     * @var Connection
-     */
-    protected Connection $connection;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
      * @var PayloadSerializer
      */
     protected PayloadSerializer $payloadSerializer;
@@ -79,15 +69,13 @@ class DbalEventStore implements EventStoreInterface
      * @param CommandBus $commandBus
      */
     public function __construct(
-        Connection $connection,
-        LoggerInterface $logger,
+        protected Connection $connection,
+        protected LoggerInterface $logger,
         CommandBus $commandBus
     ) {
-        $this->connection = $connection;
-        $this->logger = $logger;
         $this->payloadSerializer = new PayloadSerializer();
         $this->commandBus = $commandBus;
-        $this->utility = new DbalConnectionUtility($connection);
+        $this->utility = new DbalConnectionUtility($this->connection);
     }
 
     /**
@@ -95,11 +83,12 @@ class DbalEventStore implements EventStoreInterface
      * @throws DBALException
      * @throws JsonException
      */
+    #[\Override]
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
-        $aggregateType = get_class($aggregateRoot);
+        $aggregateType = $aggregateRoot::class;
 
         $this->ensureAggregatesMetadataTableExists();
         $this->ensureThereIsATableForAggregate($aggregateId);
@@ -119,7 +108,7 @@ class DbalEventStore implements EventStoreInterface
         }
 
         foreach ($events as $event) {
-            $eventType = get_class($event);
+            $eventType = $event::class;
             $eventVersion = $event->getAggregateVersion();
             $payload = $this->payloadSerializer->serialize($event->toArray());
 
@@ -235,16 +224,19 @@ class DbalEventStore implements EventStoreInterface
         return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
     }
 
+    #[\Override]
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata
     {
         // TODO: Implement getAggregateMetadata() method.
     }
 
+    #[\Override]
     public function saveAggregateMetadata(AggregateMetadata $metadata): void
     {
         // TODO: Implement saveAggregateMetadata() method.
     }
 
+    #[\Override]
     public function getEventsByAggregateId(string $aggregateId): array
     {
         // TODO: Implement getEventsByAggregateId() method.

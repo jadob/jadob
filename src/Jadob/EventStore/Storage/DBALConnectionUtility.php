@@ -1,30 +1,34 @@
 <?php
+
 declare(strict_types=1);
 
+namespace Jadob\EventStore\Storage;
 
-namespace Jadob\EventSourcing\EventStore;
-
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Types;
+use Jadob\EventStore\DBALEventStore;
 
 /**
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * Provides support for schema-related operations like table exists etc.
+ * Warning: Implementation tested only with MySQL Percona, other RDBMS and "clear" MySQL needs to be checked
+ *
  * @internal
- * @license proprietary
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
  */
-class DbalConnectionUtility
+class DBALConnectionUtility
 {
     /**
      * @var Connection
      */
-    protected Connection $connection;
+    protected $connection;
 
     /**
      * @var bool
      */
-    protected bool $metadataTableExists = false;
+    protected $metadataTableExists;
 
     /**
      * DBALConnectionUtility constructor.
@@ -42,10 +46,10 @@ class DbalConnectionUtility
     public function metadataTableExists(?string $tableName = null): bool
     {
         if ($tableName === null) {
-            $tableName = DbalEventStore::DEFAULT_METADATA_TABLE_NAME;
+            $tableName = DBALEventStore::DEFAULT_METADATA_TABLE_NAME;
         }
 
-        if ($this->metadataTableExists === false) {
+        if ($this->metadataTableExists === null) {
             $this->metadataTableExists = $this->connection->getSchemaManager()->tablesExist($tableName);
         }
 
@@ -59,14 +63,14 @@ class DbalConnectionUtility
     public function createMetadataTable(?string $tableName = null): void
     {
         if ($tableName === null) {
-            $tableName = DbalEventStore::DEFAULT_METADATA_TABLE_NAME;
+            $tableName = DBALEventStore::DEFAULT_METADATA_TABLE_NAME;
         }
 
         $table = new Table($tableName);
-        $table->addColumn('id', Types::BIGINT, ['autoincrement' => true, 'unsigned' => true]);
+        $table->addColumn('id', Types::INTEGER, ['autoincrement' => true]);
         $table->addColumn('aggregate_id', Types::STRING, ['length' => 36]);
         $table->addColumn('aggregate_type', Types::STRING);
-        $table->addColumn('timestamp', Types::BIGINT, ['unsigned' => true]);
+        $table->addColumn('timestamp', Types::DATETIME_IMMUTABLE);
         $table->setComment('Event Store Metadata Table, created automatically by jadob/event-sourcing');
         $table->setPrimaryKey(['id']);
 
@@ -91,11 +95,11 @@ class DbalConnectionUtility
     public function createAggregateTable(string $tableName): void
     {
         $table = new Table($tableName);
-        $table->addColumn('id', Types::BIGINT, ['autoincrement' => true, 'unsigned' => true]);
+        $table->addColumn('id', Types::INTEGER, ['autoincrement' => true]);
         $table->addColumn('event_type', Types::STRING);
         $table->addColumn('aggregate_version', Types::INTEGER, ['unsigned' => true]);
         $table->addColumn('payload', Types::TEXT);
-        $table->addColumn('timestamp', Types::BIGINT, ['unsigned' => true]);
+        $table->addColumn('timestamp', Types::DATETIME_IMMUTABLE);
         $table->setPrimaryKey(['id']);
 
         $this->connection->getSchemaManager()->createTable($table);

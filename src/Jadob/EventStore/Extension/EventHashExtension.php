@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore\Extension;
+namespace Jadob\EventStore\Extension;
 
-use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
-use Jadob\EventSourcing\Aggregate\DomainEventInterface;
-use Jadob\EventSourcing\EventStore\AggregateMetadata;
-use Jadob\EventSourcing\EventStore\EventStoreExtensionInterface;
+use Jadob\Aggregate\AggregateRootInterface;
+use Jadob\Aggregate\DomainEventInterface;
+use Jadob\EventStore\AggregateMetadata;
+use Jadob\EventStore\EventStoreExtensionInterface;
 
 class EventHashExtension implements EventStoreExtensionInterface
 {
@@ -15,6 +15,7 @@ class EventHashExtension implements EventStoreExtensionInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function onAggregateCreate(AggregateRootInterface $aggregate, AggregateMetadata $metadata): void
     {
         // TODO: Implement onAggregateCreate() method.
@@ -23,6 +24,7 @@ class EventHashExtension implements EventStoreExtensionInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function onEventAppend(DomainEventInterface $event, string $payload, AggregateRootInterface $aggregate): void
     {
         $event->addAttribute(

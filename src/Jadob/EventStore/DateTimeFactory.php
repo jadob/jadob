@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace Jadob\EventSourcing\EventStore;
+namespace Jadob\EventStore;
 
 use DateTimeImmutable;
 use DateTimeInterface;

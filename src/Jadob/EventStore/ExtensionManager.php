@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 
-namespace Jadob\EventSourcing\EventStore;
+namespace Jadob\EventStore;
 
-use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
-use Jadob\EventSourcing\Aggregate\DomainEventInterface;
+use Jadob\Aggregate\AggregateRootInterface;
+use Jadob\Aggregate\DomainEventInterface;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -16,16 +16,10 @@ class ExtensionManager
 {
 
     /**
-     * @var EventStoreExtensionInterface[]
-     */
-    private array $extensions;
-
-    /**
      * @param EventStoreExtensionInterface[] $extensions
      */
-    public function __construct(array $extensions)
+    public function __construct(private readonly array $extensions)
     {
-        $this->extensions = $extensions;
     }
 
     public function dispatchOnAggregateCreate(AggregateRootInterface $aggregate, AggregateMetadata $metadata)

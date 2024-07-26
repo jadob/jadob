@@ -2,25 +2,18 @@
 declare(strict_types=1);
 
 
-namespace Jadob\EventSourcing\EventStore\DynamoDb;
+namespace Jadob\EventStore\DynamoDb;
 
 class EventStoreTableConfiguration
 {
-    private string $tableName;
-    private string $partitionKeyName;
-    private string $sortKeyName;
-
     /**
      * EventStoreTableConfiguration constructor.
      * @param string $tableName
      * @param string $partitionKeyName
      * @param string $sortKeyName
      */
-    public function __construct(string $tableName, string $partitionKeyName = 'pk', string $sortKeyName = 'sk')
+    public function __construct(private readonly string $tableName, private readonly string $partitionKeyName = 'pk', private readonly string $sortKeyName = 'sk')
     {
-        $this->tableName = $tableName;
-        $this->partitionKeyName = $partitionKeyName;
-        $this->sortKeyName = $sortKeyName;
     }
 
     /**

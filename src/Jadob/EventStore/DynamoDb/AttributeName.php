@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore\DynamoDb;
+namespace Jadob\EventStore\DynamoDb;
 
 class AttributeName
 {

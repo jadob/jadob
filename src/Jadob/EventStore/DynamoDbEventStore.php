@@ -2,20 +2,20 @@
 declare(strict_types=1);
 
 
-namespace Jadob\EventSourcing\EventStore;
+namespace Jadob\EventStore;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use function count;
 use DateTimeInterface;
-use Jadob\EventSourcing\Aggregate\AggregateRootInterface;
-use Jadob\EventSourcing\EventStore\DynamoDb\AttributeName;
-use Jadob\EventSourcing\EventStore\DynamoDb\EventStoreTableConfiguration;
-use Jadob\EventSourcing\EventStore\Exception\AggregateMetadataNotFoundException;
-use Jadob\EventSourcing\EventStore\Exception\EventStoreException;
+use Jadob\Aggregate\AggregateRootInterface;
+use Jadob\EventStore\DynamoDb\AttributeName;
+use Jadob\EventStore\DynamoDb\EventStoreTableConfiguration;
+use Jadob\EventStore\Exception\AggregateMetadataNotFoundException;
+use Jadob\EventStore\Exception\EventStoreException;
 use Jadob\MessageBus\ServiceBus;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use function count;
 
 /**
  * Access Patterns:
@@ -34,14 +34,10 @@ use Psr\Log\LoggerInterface;
  */
 class DynamoDbEventStore implements EventStoreInterface
 {
-    private const MAX_TRANSACTION_ITEMS = 25;
-
-    private DynamoDbClient $dynamoDbClient;
-    private EventStoreTableConfiguration $table;
-    private ExtensionManager $extensionManager;
-    private LoggerInterface $logger;
-    private ServiceBus $commandBus;
-    private Marshaler $marshaler;
+    private const int MAX_TRANSACTION_ITEMS = 25;
+    private readonly ExtensionManager $extensionManager;
+    private readonly ServiceBus $commandBus;
+    private readonly Marshaler $marshaler;
 
     protected PayloadSerializer $payloadSerializer;
 
@@ -51,15 +47,12 @@ class DynamoDbEventStore implements EventStoreInterface
      * @param EventStoreExtensionInterface[] $extensions
      */
     public function __construct(
-        DynamoDbClient $dynamoDbClient,
-        EventStoreTableConfiguration $table,
-        LoggerInterface $logger,
+        private readonly DynamoDbClient $dynamoDbClient,
+        private readonly EventStoreTableConfiguration $table,
+        private readonly LoggerInterface $logger,
         ServiceBus $commandBus,
         array $extensions = []
     ) {
-        $this->dynamoDbClient = $dynamoDbClient;
-        $this->table = $table;
-        $this->logger = $logger;
         $this->commandBus = $commandBus;
         $this->extensionManager = new ExtensionManager($extensions);
         $this->marshaler = new Marshaler();
@@ -71,11 +64,12 @@ class DynamoDbEventStore implements EventStoreInterface
      *
      * @throws EventStoreException|JsonException
      */
+    #[\Override]
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
         $events = $aggregateRoot->popUncomittedEvents();
-        $aggregateType = get_class($aggregateRoot);
+        $aggregateType = $aggregateRoot::class;
 
         /*
          * While dealing with DDB transactions, you should be aware of few limits.
@@ -91,7 +85,7 @@ class DynamoDbEventStore implements EventStoreInterface
             $metadata = $this->getAggregateMetadata($aggregateId);
             $this->logger->info(sprintf('Found Metadata for aggregate %s.', $aggregateId));
             //@TODO any event after aggregate found?
-        } catch (AggregateMetadataNotFoundException $e) {
+        } catch (AggregateMetadataNotFoundException) {
             $metadata = new AggregateMetadata($aggregateId, $aggregateType, $aggregateRoot->getCreatedAt());
             $this->logger->info(sprintf('Metadata for aggregate %s was not found, creating them.', $aggregateId));
             $this->extensionManager->dispatchOnAggregateCreate($aggregateRoot, $metadata);
@@ -106,7 +100,7 @@ class DynamoDbEventStore implements EventStoreInterface
          * @see https://aws.amazon.com/blogs/aws/new-amazon-dynamodb-transactions/
          */
         foreach ($events as $event) {
-            $eventType = get_class($event);
+            $eventType = $event::class;
             $eventVersion = $event->getAggregateVersion();
             $payload = $this->payloadSerializer->serialize($event->toArray());
 
@@ -156,7 +150,7 @@ class DynamoDbEventStore implements EventStoreInterface
         $this->logger->info(sprintf('Done storing events for aggregate %s. Begin to emitting events.', $aggregateId));
 
         foreach ($events as $event) {
-            $this->logger->debug(sprintf('Emitting event %s.', get_class($event)));
+            $this->logger->debug(sprintf('Emitting event %s.', $event::class));
             $this->commandBus->dispatch($event);
         }
 
@@ -166,6 +160,7 @@ class DynamoDbEventStore implements EventStoreInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function getEventsByAggregateId(string $aggregateId): array
     {
         $params = [
@@ -193,6 +188,7 @@ class DynamoDbEventStore implements EventStoreInterface
     /**
      * @throws AggregateMetadataNotFoundException
      */
+    #[\Override]
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata
     {
         //@TODO może to do jakiejś osobnej klasy wydzielić?
@@ -229,6 +225,7 @@ class DynamoDbEventStore implements EventStoreInterface
         );
     }
 
+    #[\Override]
     public function saveAggregateMetadata(AggregateMetadata $metadata): void
     {
         //@TODO może to do jakiejś osobnej klasy wydzielić?

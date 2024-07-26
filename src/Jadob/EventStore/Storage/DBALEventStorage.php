@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore\Storage;
+namespace Jadob\EventStore\Storage;
 
 use Doctrine\DBAL\Connection;
 
@@ -19,8 +19,6 @@ class DBALEventStorage implements EventStorageInterface
     public const STRATEGY_TABLE_PER_TYPE = 2;
     public const STRATEGY_ONE_TABLE_FOR_ALL = 3;
 
-    protected Connection $dbal;
-
     /**
      * @var array{aggregate_table_name?: string, aggregate_table_prefix?: string, bulk_inserts?: false, events_table_name?: string, strategy?: int}
      */
@@ -32,9 +30,8 @@ class DBALEventStorage implements EventStorageInterface
      * @param Connection                 $dbal
      * @param array<string, string|bool> $config
      */
-    public function __construct(Connection $dbal, array $config = [])
+    public function __construct(protected Connection $dbal, array $config = [])
     {
-        $this->dbal = $dbal;
         $this->config = [
             /**
              * How events should be stored in database?

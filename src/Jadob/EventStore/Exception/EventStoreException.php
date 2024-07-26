@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore\Exception;
+namespace Jadob\EventStore\Exception;
 
 use Exception;
 

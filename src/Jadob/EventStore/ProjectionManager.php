@@ -2,33 +2,38 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing\EventStore;
+namespace Jadob\EventStore;
 
-use function get_class;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
 
 /**
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
+ * @deprecated to be replaced with Event Dispatcher
+ * @author     pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
- * @deprecated
  */
-class EventDispatcher
+class ProjectionManager
 {
-    protected $listeners = [];
+    protected $projections = [];
+    protected $logger;
 
-    /**
-     * @param object $event
-     *
-     * @throws ReflectionException
-     *
-     * @return void
-     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function addProjection(object $projector): self
+    {
+        $this->projections[$projector::class] = $projector;
+        return $this;
+    }
+
     public function emit(object $event): void
     {
-        $eventType = get_class($event);
-        foreach ($this->listeners as $listener) {
+        $projectionsNotified = 0;
+        $eventType = $event::class;
+        foreach ($this->projections as $listener) {
             $listenerReflection = new ReflectionClass($listener);
             foreach ($listenerReflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
                 $paramsCount = $method->getNumberOfParameters();
@@ -45,13 +50,13 @@ class EventDispatcher
                     && $firstParam->getClass()->name === $eventType
                 ) {
                     $listener->$methodName($event);
+                    $projectionsNotified++;
                 }
             }
         }
-    }
 
-    public function addListener(object $listener): void
-    {
-        $this->listeners[] = $listener;
+        if ($projectionsNotified === 0) {
+            $this->logger->notice('There is no projections for '.$eventType.' Class.');
+        }
     }
 }
