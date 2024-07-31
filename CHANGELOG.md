@@ -4,14 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.16] - 2024-07-31
 
 ### Changed
 - [Docs] Merged framework related development docs into one file
 - Removed `BeforeControllerEvent` in favor of `RequestEvent`
+- `jadob/aggregate` and `jadob/event-store` was extracted from `jadob/event-sourcing`
+- `jadob/container` went through first refactor
+- Deprecated `jadob/dashboard`
 ### Removed
 - PSR-7 Compliance 
 - Removed `Supervisor` component in favor of `Authenticator`
+
 
 
 ## [0.4.15] - 2023-03-26
