@@ -1,4 +1,9 @@
 {
   "name": "jadob/aggregate",
-  "license": "MIT"
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Jadob\\Aggregate\\": ""
+    }
+  }
 }
