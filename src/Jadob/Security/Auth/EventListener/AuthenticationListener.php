@@ -7,7 +7,6 @@ use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\Event\AuthenticationFailedEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Jadob\Security\Auth\Exception\UnauthenticatedException;
-use Jadob\Security\Auth\IdentityStorage;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
@@ -57,13 +56,13 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 $authenticatorName
             ));
 
-            # TODO: maybe some factory for this?
-            $identityStorage = new IdentityStorage(
-                $request->getSession(),
-                $authenticatorName
-            );
+            $storedIdentity = $this
+                ->authenticationService
+                ->getStoredIdentity(
+                    $request->getSession(),
+                    $authenticatorName
+                );
 
-            $storedIdentity = $identityStorage->getUser();
             $event
                 ->getRequestContext()
                 ->setUser($storedIdentity);
@@ -77,7 +76,18 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                         throw new AuthenticationException('User not found.');
                     }
 
-                    $identityStorage->setUser($authenticationResult);
+                    $this
+                        ->authenticationService
+                        ->storeIdentity(
+                            $authenticationResult,
+                            $request->getSession(),
+                            $authenticatorName
+                        );
+
+                    $event
+                        ->getRequestContext()
+                        ->setUser($authenticationResult);
+
                     $successResponse = $authenticator->onAuthenticationSuccess(
                         $request,
                         $authenticationResult
