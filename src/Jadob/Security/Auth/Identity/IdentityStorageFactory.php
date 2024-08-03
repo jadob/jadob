@@ -1,0 +1,28 @@
+<?php
+
+namespace Jadob\Security\Auth\Identity;
+
+use Jadob\Security\Auth\AuthenticatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
+/**
+ * @internal
+ * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @license MIT
+ */
+readonly class IdentityStorageFactory
+{
+    public function createFor(
+        AuthenticatorInterface $authenticator,
+        SessionInterface $session
+    ): IdentityStorageInterface
+    {
+        if($authenticator->isStateless()) {
+            return new StatelessIdentityStorage();
+        }
+
+        return new SessionAwareIdentityStorage(
+            $session
+        );
+    }
+}
