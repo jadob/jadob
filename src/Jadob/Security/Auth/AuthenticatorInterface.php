@@ -25,4 +25,6 @@ interface AuthenticatorInterface
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response;
 
     public function onAuthenticationSuccess(Request $request, UserInterface $user): ?Response;
+
+    public function isStateless(): bool;
 }
