@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventSourcing;
+namespace Jadob\Aggregate;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Jadob\EventSourcing\Aggregate\DomainEventInterface;
 use Ulid\Ulid;
 
 /**
@@ -78,16 +77,19 @@ abstract class AbstractDomainEvent implements DomainEventInterface
         return $this->recordedAt;
     }
 
+    #[\Override]
     public function getEventId(): string
     {
         return $this->eventId;
     }
 
+    #[\Override]
     public function addAttribute(string $name, string $value): void
     {
         $this->attributes[$name] = $value;
     }
 
+    #[\Override]
     public function getAttributes(): array
     {
         return $this->attributes;
