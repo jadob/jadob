@@ -26,7 +26,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface
     {
         if ($event instanceof RequestEvent) {
             return [
-                [$this, 'onRequestEvent']
+                $this->onRequestEvent(...)
             ];
         }
 
