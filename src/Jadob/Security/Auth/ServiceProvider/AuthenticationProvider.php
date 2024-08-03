@@ -10,6 +10,7 @@ use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
+use Jadob\Security\Auth\Identity\IdentityStorageFactory;
 use Jadob\Security\Auth\UserProviderInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -18,20 +19,21 @@ use Psr\Log\LoggerInterface;
 
 class AuthenticationProvider implements ServiceProviderInterface
 {
-
-    public function getConfigNode()
+    public function getConfigNode(): string
     {
         return 'authenticator';
     }
 
-    public function register($config)
+    public function register($config): array
     {
         return [
-            'jadob.auth.auth_logger' => function (ContainerInterface $container): LoggerInterface {
-                return new Logger('authenticator', [
+            'jadob.auth.auth_logger' =>
+                fn(ContainerInterface $container): LoggerInterface => new Logger('authenticator', [
                     $container->get('logger.handler.default')
-                ]);
-            },
+                ]),
+            IdentityStorageFactory::class =>
+                fn(ContainerInterface $container): IdentityStorageFactory => new IdentityStorageFactory(),
+
             AuthenticatorService::class =>
                 function (ContainerInterface $container) use ($config): AuthenticatorService {
                     /** @var array<string, AuthenticatorInterface> $authenticators */
@@ -44,16 +46,18 @@ class AuthenticationProvider implements ServiceProviderInterface
                         $userProviders[$name] = $container->get($authenticatorConfig['user_provider']);
                     }
 
-                    return new AuthenticatorService($authenticators, $userProviders);
+                    return new AuthenticatorService(
+                        $container->get(IdentityStorageFactory::class),
+                        $authenticators,
+                        $userProviders,
+                    );
                 },
 
-            AuthenticationListener::class => function (ContainerInterface $container): AuthenticationListener {
-                return new AuthenticationListener(
-                    $container->get(AuthenticatorService::class),
-                    $container->get(EventDispatcherInterface::class),
-                    $container->get('jadob.auth.auth_logger')
-                );
-            }
+            AuthenticationListener::class => fn(ContainerInterface $container): AuthenticationListener => new AuthenticationListener(
+                $container->get(AuthenticatorService::class),
+                $container->get(EventDispatcherInterface::class),
+                $container->get('jadob.auth.auth_logger')
+            )
         ];
     }
 
@@ -61,6 +65,7 @@ class AuthenticationProvider implements ServiceProviderInterface
      * @throws ServiceNotFoundException
      * @throws ContainerException
      */
+    #[\Override]
     public function onContainerBuild(Container $container, $config): void
     {
         /** @var EventDispatcher $eventDispatcher */
