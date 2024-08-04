@@ -14,6 +14,7 @@ use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\Persistence\ManagerRegistry;
@@ -128,9 +129,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
                 $configuration->setHydrationCacheImpl($hydrationCache);
                 $configuration->setQueryCacheImpl($queryCache);
                 $configuration->setMetadataDriverImpl(
-                    new AnnotationDriver(
-                        new CachedReader(new AnnotationReader(), $annotationCache, !$isProd),
-                        $entityPaths,
+                    new AttributeDriver(
+                        $entityPaths
                     )
                 );
 
