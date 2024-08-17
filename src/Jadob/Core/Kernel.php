@@ -163,7 +163,7 @@ class Kernel
          */
         $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
 
-        $context = new RequestContext($requestId, $request, $this->psr7Compliant);
+        $context = new RequestContext($requestId, $request);
 
         $this->logger->info(
             'New request received', [
