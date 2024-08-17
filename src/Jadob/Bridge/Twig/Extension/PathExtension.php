@@ -18,18 +18,12 @@ class PathExtension extends AbstractExtension
 {
 
     /**
-     * @var Router
-     */
-    private Router $router;
-
-    /**
      * PathExtension constructor.
      *
      * @param Router $router
      */
-    public function __construct(Router $router)
+    public function __construct(private readonly Router $router)
     {
-        $this->router = $router;
     }
 
     /**
@@ -38,9 +32,9 @@ class PathExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('path', [$this, 'path'], ['is_safe' => ['html']]),
-            new TwigFunction('url', [$this, 'url'], ['is_safe' => ['html']]),
-            new TwigFunction('asset_url', [$this, 'assetUrl'], ['is_safe' => ['html']])
+            new TwigFunction('path', $this->path(...), ['is_safe' => ['html']]),
+            new TwigFunction('url', $this->url(...), ['is_safe' => ['html']]),
+            new TwigFunction('asset_url', $this->assetUrl(...), ['is_safe' => ['html']])
         ];
     }
 

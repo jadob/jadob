@@ -11,11 +11,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface as SymfonyUrlGener
  */
 class UrlGenerator implements DashboardUrlGeneratorInterface
 {
-    protected SymfonyUrlGeneratorInterface $urlGenerator;
-
-    public function __construct(SymfonyUrlGeneratorInterface $urlGenerator)
+    public function __construct(protected SymfonyUrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function generateRoute(string $name, array $params = []): string

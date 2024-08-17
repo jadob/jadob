@@ -7,7 +7,6 @@ namespace Jadob\Aggregate;
 use DateTime;
 use DateTimeInterface;
 use Exception;
-use Jadob\EventSourcing\AbstractDomainEvent;
 use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionException;

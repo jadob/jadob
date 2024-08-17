@@ -16,6 +16,7 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\Validation;
@@ -42,7 +43,6 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
      *
      * @return (\Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
      *
-     * @psalm-return array{symfony.validator: \Symfony\Component\Validator\Validator\ValidatorInterface, symfony.form.factory: \Closure(Container):\Symfony\Component\Form\FormFactoryInterface}
      * @throws ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
      *
@@ -50,13 +50,12 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
      */
     public function register($config)
     {
-
         //TODO move to parent provider
         $validator = Validation::createValidatorBuilder();
 
         return [
             'symfony.validator' => $validator->getValidator(),
-            'symfony.form.factory' => static function (Container $container): FormFactoryBuilderInterface {
+            FormFactoryInterface::class => static function (Container $container): FormFactoryInterface {
                 $formFactoryBuilder = Forms::createFormFactoryBuilder()
                     ->addExtension(new HttpFoundationExtension())
                     ->addExtension(new ValidatorExtension($container->get('symfony.validator')));
@@ -90,9 +89,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
         $twig->addRuntimeLoader(
             new FactoryRuntimeLoader(
                 [
-                    FormRenderer::class => function () use ($formEngine) {
-                        return new FormRenderer($formEngine);
-                    },
+                    FormRenderer::class => fn() => new FormRenderer($formEngine),
                 ]
             )
         );

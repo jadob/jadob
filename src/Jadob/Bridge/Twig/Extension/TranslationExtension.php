@@ -16,18 +16,12 @@ class TranslationExtension extends AbstractExtension
 {
 
     /**
-     * @var TranslatorInterface
-     */
-    protected TranslatorInterface $translator;
-
-    /**
      * TranslationExtension constructor.
      *
      * @param TranslatorInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(protected TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**
@@ -36,7 +30,7 @@ class TranslationExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('trans', [$this, 'translate'], ['is_safe' => ['html']])
+            new TwigFilter('trans', $this->translate(...), ['is_safe' => ['html']])
         ];
     }
 

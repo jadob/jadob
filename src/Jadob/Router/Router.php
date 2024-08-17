@@ -43,8 +43,6 @@ class Router
      */
     protected $context;
 
-    protected ?ParameterStoreInterface $paramStore;
-
     /**
      * @param RouteCollection $routeCollection
      * @param Context|null $context
@@ -55,7 +53,7 @@ class Router
         RouteCollection $routeCollection,
         ?Context $context = null,
         array $config = [],
-        ?ParameterStoreInterface $paramStore = null
+        protected ?ParameterStoreInterface $paramStore = null
     ) {
         $this->routeCollection = $routeCollection;
 
@@ -65,13 +63,11 @@ class Router
 
         $this->config = array_merge($defaultConfig, $config);
 
-        if ($context !== null) {
+        if ($context instanceof \Jadob\Router\Context) {
             $this->context = $context;
         } else {
             $this->context = Context::fromGlobals();
         }
-
-        $this->paramStore = $paramStore;
     }
 
     /**
@@ -167,7 +163,7 @@ class Router
      */
     protected function getRegex(?string $pattern): string
     {
-        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', $pattern)) {
+        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', (string) $pattern)) {
             throw new RouterException(
                 sprintf('Unable to match route as phrase "%s" contains illegal characters.',$pattern)
             );
@@ -214,7 +210,7 @@ class Router
                         continue;
                     }
 
-                    if ($this->paramStore !== null && $this->paramStore->has($convertedPathParam)) {
+                    if ($this->paramStore instanceof \Jadob\Router\ParameterStoreInterface && $this->paramStore->has($convertedPathParam)) {
                         $params[$convertedPathParam] = $this->paramStore->get($convertedPathParam);
                         continue;
                     }

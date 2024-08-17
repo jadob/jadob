@@ -23,11 +23,6 @@ class SymfonyActionFieldTransformer implements ActionFieldTransformerInterface
     protected UrlGeneratorInterface $urlGenerator;
 
     /**
-     * @var TranslatorInterface
-     */
-    protected TranslatorInterface $translator;
-
-    /**
      * @var PropertyAccessor
      */
     protected PropertyAccessor $propertyAccessor;
@@ -39,10 +34,9 @@ class SymfonyActionFieldTransformer implements ActionFieldTransformerInterface
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator
+        protected TranslatorInterface $translator
     ) {
         $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 

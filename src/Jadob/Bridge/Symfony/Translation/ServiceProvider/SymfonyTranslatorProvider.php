@@ -47,9 +47,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
     {
         return [
             //expose this as a separate service to make it possible to override
-            MessageFormatterInterface::class => static function (): MessageFormatterInterface{
-                return new MessageFormatter();
-            },
+            MessageFormatterInterface::class => static fn(): MessageFormatterInterface => new MessageFormatter(),
 
             TranslatorInterface::class => static function (ContainerInterface $container) use ($config): TranslatorInterface{
                 /** @var BootstrapInterface $bootstrap */

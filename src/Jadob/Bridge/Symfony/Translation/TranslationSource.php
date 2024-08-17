@@ -14,31 +14,16 @@ namespace Jadob\Bridge\Symfony\Translation;
 class TranslationSource
 {
     /**
-     * @var string
-     */
-    private string $path;
-
-    /**
-     * @var string
-     */
-    private string $locale;
-
-    /**
-     * @var string
-     */
-    private string $domain;
-
-    /**
      * TranslationSource constructor.
      * @param $path
      * @param $locale
      * @param $domain
+     * @param string $path
+     * @param string $locale
+     * @param string $domain
      */
-    public function __construct($path, $locale, $domain)
+    public function __construct(private readonly string $path, private readonly string $locale, private readonly string $domain)
     {
-        $this->path = $path;
-        $this->locale = $locale;
-        $this->domain = $domain;
     }
 
     /**

@@ -17,14 +17,8 @@ use Twig\TwigFunction;
 class ObjectableExtension extends AbstractExtension
 {
 
-    /**
-     * @var Objectable
-     */
-    protected Objectable $objectable;
-
-    public function __construct(Objectable $objectable)
+    public function __construct(protected Objectable $objectable)
     {
-        $this->objectable = $objectable;
     }
 
     /**
@@ -33,7 +27,7 @@ class ObjectableExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('objectable', [$this, 'renderTable'], ['is_safe' => ['html']]),
+            new TwigFunction('objectable', $this->renderTable(...), ['is_safe' => ['html']]),
         ];
     }
 

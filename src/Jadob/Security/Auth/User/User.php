@@ -14,32 +14,14 @@ class User implements UserInterface
 {
 
     /**
-     * @var string[]
-     */
-    protected array $roles;
-
-    /**
-     * @var string
-     */
-    protected string $username;
-
-    /**
-     * @var string
-     */
-    protected string $password;
-
-    /**
      * User constructor.
      *
      * @param string $username
      * @param string $password
      * @param string[] $roles
      */
-    public function __construct($username, $password, $roles = [])
+    public function __construct(protected string $username, protected string $password, protected array $roles = [])
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->roles = $roles;
     }
 
     /**

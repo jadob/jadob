@@ -26,9 +26,7 @@ class AServiceProvider implements ServiceProviderInterface
     {
         return [
             'a.1' => new ExampleService(),
-            'a.2' => static function () {
-                return new YetAnotherExampleService();
-            }
+            'a.2' => static fn() => new YetAnotherExampleService()
         ];
     }
 

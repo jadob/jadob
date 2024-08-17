@@ -12,7 +12,7 @@ use RuntimeException;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Url
+class Url implements \Stringable
 {
     protected ?string $url = null;
 

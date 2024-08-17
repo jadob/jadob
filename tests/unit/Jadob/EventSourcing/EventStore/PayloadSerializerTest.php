@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\EventSourcing\EventStore;
 
+use Jadob\EventStore\PayloadSerializer;
 use Monolog\Test\TestCase;
 
 /**

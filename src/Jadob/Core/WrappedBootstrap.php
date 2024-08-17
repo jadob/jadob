@@ -9,13 +9,8 @@ namespace Jadob\Core;
  */
 class WrappedBootstrap implements BootstrapInterface
 {
-    protected BootstrapInterface $parent;
-    protected ?string $cacheDir;
-
-    public function __construct(BootstrapInterface $parent, ?string $cacheDir = null)
+    public function __construct(protected BootstrapInterface $parent, protected ?string $cacheDir = null)
     {
-        $this->parent = $parent;
-        $this->cacheDir = $cacheDir;
     }
 
 

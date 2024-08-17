@@ -140,7 +140,7 @@ class TwigProvider implements ServiceProviderInterface
             $rootDir = $container->get(BootstrapInterface::class)->getRootDir();
 
             //TODO Add tests when user will add / at the beginning
-            $manifestJsonLocation = $rootDir . '/' . ltrim($webpackManifestConfig['manifest_json_location'], '/');
+            $manifestJsonLocation = $rootDir . '/' . ltrim((string) $webpackManifestConfig['manifest_json_location'], '/');
 
             $manifest = json_decode(
                 file_get_contents($manifestJsonLocation),

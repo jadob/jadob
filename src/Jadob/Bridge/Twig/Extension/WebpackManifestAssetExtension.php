@@ -35,7 +35,7 @@ class WebpackManifestAssetExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('asset_from_manifest', [$this, 'getAssetFromManifest'])
+            new TwigFunction('asset_from_manifest', $this->getAssetFromManifest(...))
         ];
     }
 

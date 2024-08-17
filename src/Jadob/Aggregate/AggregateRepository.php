@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Aggregate;
 
-use Jadob\EventSourcing\EventStore\DateTimeFactory;
-use Jadob\EventSourcing\EventStore\EventStoreInterface;
-use Jadob\EventSourcing\EventStore\PayloadSerializer;
+use Jadob\EventStore\DateTimeFactory;
+use Jadob\EventStore\EventStoreInterface;
+use Jadob\EventStore\PayloadSerializer;
 use JsonException;
 use ReflectionException;
 

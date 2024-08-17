@@ -21,18 +21,13 @@ class UserEvent
      * Refresh or something may be required.
      */
     public const CONTEXT_TAKEN_FROM_SESSION = 2;
-
-    protected UserInterface $user;
-    protected int $context;
     protected RequestSupervisorInterface $requestSupervisor;
 
     public function __construct(
-        UserInterface $user,
-        int $context,
+        protected UserInterface $user,
+        protected int $context,
         RequestSupervisorInterface $requestSupervisor
     ) {
-        $this->user = $user;
-        $this->context = $context;
         $this->requestSupervisor = $requestSupervisor;
     }
 

@@ -188,9 +188,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
             'dashboard_test',
             null,
             'feed',
-            function () use ($food) {
-                return [$food];
-            },
+            fn() => [$food],
             true
         );
 
@@ -215,9 +213,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
             'dashboard_test',
             null,
             'feed',
-            function () {
-                return 'cardboard';
-            },
+            fn() => 'cardboard',
             true
         );
 

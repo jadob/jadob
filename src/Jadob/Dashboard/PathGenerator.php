@@ -8,11 +8,8 @@ use Jadob\Dashboard\Configuration\PredefinedCriteria;
 
 class PathGenerator
 {
-    protected UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(protected UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function getPathForObjectList(string $objectFqcn, int $page = 1, ?PredefinedCriteria $criteria = null, array $orderBy = []): string
@@ -25,7 +22,7 @@ class PathGenerator
             QueryStringParamName::ORDER_BY => $orderBy
         ];
 
-        if ($criteria !== null) {
+        if ($criteria instanceof \Jadob\Dashboard\Configuration\PredefinedCriteria) {
             $params[QueryStringParamName::LIST_CRITERIA] = $criteria->getName();
         }
 

@@ -13,18 +13,8 @@ use Throwable;
 
 class OperationHandler
 {
-    protected ContainerInterface $container;
-    protected LoggerInterface $logger;
-    protected DoctrineOrmObjectManager $doctrineOrmObjectManager;
-
-    public function __construct(
-        ContainerInterface $container,
-        LoggerInterface $logger,
-        DoctrineOrmObjectManager $doctrineOrmObjectManager
-    ) {
-        $this->container = $container;
-        $this->logger = $logger;
-        $this->doctrineOrmObjectManager = $doctrineOrmObjectManager;
+    public function __construct(protected ContainerInterface $container, protected LoggerInterface $logger, protected DoctrineOrmObjectManager $doctrineOrmObjectManager)
+    {
     }
 
 
@@ -34,7 +24,7 @@ class OperationHandler
             $argumentTransformer = $operation->getArgumentTransformer();
             $arguments = [$object];
 
-            if ($argumentTransformer !== null) {
+            if ($argumentTransformer instanceof \Closure) {
                 $this->logger->debug('There is an argument transformer attached.');
                 $arguments = $argumentTransformer($object, $context);
                 if (!is_array($arguments)) {

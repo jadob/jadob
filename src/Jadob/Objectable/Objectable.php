@@ -109,7 +109,7 @@ class Objectable
         $this->headerTransformer = $headerTransformer;
 
         $this->annotationReader = $annotationReader;
-        if ($annotationReader === null) {
+        if (!$annotationReader instanceof \Doctrine\Common\Annotations\Reader) {
             $this->annotationReader = new AnnotationReader();
         }
     }
@@ -155,7 +155,7 @@ class Objectable
 
             if (!$firstElementFetched) {
                 $firstElementFetched = true;
-                $class = get_class($element);
+                $class = $element::class;
                 $rowMetadata = $this->extractRowMetadata($element);
                 $headers = $rowMetadata->getHeaders();
                 $actionFields = $rowMetadata->getActionFields();
@@ -279,13 +279,12 @@ class Objectable
     }
 
     /**
-     * @param mixed $value
      * @param string $className
      * @param string $propertyName
      * @return string
      * @throws ObjectableException
      */
-    protected function transformValue($value, string $className, string $propertyName): ?string
+    protected function transformValue(mixed $value, string $className, string $propertyName): ?string
     {
         if (count($this->valueTransformers) === 0 && is_array($value)) {
             throw new ObjectableException('Could not transform array value as there are no transformers defined.');
@@ -326,7 +325,7 @@ class Objectable
 
     protected function extractRowMetadata($object): ItemMetadata
     {
-        $class = get_class($object);
+        $class = $object::class;
         $reflectionClass = new ReflectionClass($class);
 
         //@TODO remove this

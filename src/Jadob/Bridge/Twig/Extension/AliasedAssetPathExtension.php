@@ -9,21 +9,19 @@ use Twig\TwigFunction;
 
 class AliasedAssetPathExtension extends AbstractExtension
 {
-    protected array $assets;
-
     /**
      * @param array<string,string> $assets
      */
-    public function __construct(array $assets)
+    public function __construct(protected array $assets)
     {
-        $this->assets = $assets;
     }
 
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('asset_aliased', [$this,'aliasedAssetPath'])
+            new TwigFunction('asset_aliased', $this->aliasedAssetPath(...))
         ];
     }
 
