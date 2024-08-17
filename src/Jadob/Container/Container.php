@@ -340,7 +340,7 @@ class Container implements ContainerInterface
      */
     public function has($id): bool
     {
-        return isset($this->services[$id]) || isset($this->factories[$id]);
+        return array_key_exists($id, $this->services) || array_key_exists($id, $this->definitions);
     }
 
     /**
