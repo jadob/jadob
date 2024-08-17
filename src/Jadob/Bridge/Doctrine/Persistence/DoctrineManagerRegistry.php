@@ -11,7 +11,6 @@ use Exception;
 
 class DoctrineManagerRegistry implements ManagerRegistry
 {
-
     /**
      * @var Connection[]
      */

@@ -10,6 +10,7 @@ use Jadob\Aggregate\AbstractDomainEvent;
 use Jadob\Aggregate\AggregateRootInterface;
 use Jadob\EventStore\Exception\EventStoreException;
 use JsonException;
+use Override;
 use PDO;
 use Prooph\ServiceBus\CommandBus;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,6 @@ use Throwable;
 
 class DbalEventStore implements EventStoreInterface
 {
-
     /**
      * unsupported Yet
      * All events are stored in single table.
@@ -83,7 +83,7 @@ class DbalEventStore implements EventStoreInterface
      * @throws DBALException
      * @throws JsonException
      */
-    #[\Override]
+    #[Override]
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
@@ -224,19 +224,19 @@ class DbalEventStore implements EventStoreInterface
         return (int) ($dateTime->getTimestamp() . $dateTime->format('v'));
     }
 
-    #[\Override]
+    #[Override]
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata
     {
         // TODO: Implement getAggregateMetadata() method.
     }
 
-    #[\Override]
+    #[Override]
     public function saveAggregateMetadata(AggregateMetadata $metadata): void
     {
         // TODO: Implement saveAggregateMetadata() method.
     }
 
-    #[\Override]
+    #[Override]
     public function getEventsByAggregateId(string $aggregateId): array
     {
         // TODO: Implement getEventsByAggregateId() method.

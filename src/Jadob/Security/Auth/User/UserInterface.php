@@ -9,7 +9,6 @@ namespace Jadob\Security\Auth\User;
  */
 interface UserInterface
 {
-
     /**
      * @return string[]
      */

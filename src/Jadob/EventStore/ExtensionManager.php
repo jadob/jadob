@@ -14,7 +14,6 @@ use Jadob\Aggregate\DomainEventInterface;
  */
 class ExtensionManager
 {
-
     /**
      * @param EventStoreExtensionInterface[] $extensions
      */

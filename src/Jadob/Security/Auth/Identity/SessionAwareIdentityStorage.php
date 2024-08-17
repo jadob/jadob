@@ -18,8 +18,7 @@ class SessionAwareIdentityStorage implements IdentityStorageInterface
 
     public function __construct(
         protected SessionInterface $session
-    )
-    {
+    ) {
     }
 
     /**
@@ -28,8 +27,7 @@ class SessionAwareIdentityStorage implements IdentityStorageInterface
      */
     public function getUser(
         string $authenticatorName
-    ): ?UserInterface
-    {
+    ): ?UserInterface {
         /** @var string|null $userFromSession */
         $userFromSession = $this->session->get($this->buildSessionKey($authenticatorName));
         if ($userFromSession === null) {
@@ -53,8 +51,7 @@ class SessionAwareIdentityStorage implements IdentityStorageInterface
     public function setUser(
         UserInterface $user,
         string $authenticatorName
-    ): void
-    {
+    ): void {
         $this->session->set(
             $this->buildSessionKey($authenticatorName),
             serialize($user)
@@ -65,5 +62,4 @@ class SessionAwareIdentityStorage implements IdentityStorageInterface
     {
         return sprintf('%s/%s', self::USER_SESSION_KEY, $authenticatorName);
     }
-
 }

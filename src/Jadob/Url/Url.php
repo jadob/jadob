@@ -7,12 +7,13 @@ namespace Jadob\Url;
 use Exception;
 use InvalidArgumentException;
 use RuntimeException;
+use Stringable;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Url implements \Stringable
+class Url implements Stringable
 {
     protected ?string $url = null;
 
@@ -114,7 +115,7 @@ class Url implements \Stringable
             $url = $this->scheme . ':' . $this->host;
         }
 
-        if($this->port) {
+        if ($this->port) {
             $url .= ':'.$this->port;
         }
 
@@ -126,7 +127,7 @@ class Url implements \Stringable
             }
         }
 
-        if($this->query) {
+        if ($this->query) {
             $url .= '?'.http_build_query($this->query);
         }
         

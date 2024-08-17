@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
+use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -16,7 +17,6 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
  */
 class CsrfProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      *
@@ -30,7 +30,7 @@ class CsrfProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return (\Closure|\Closure)[]
+     * @return (Closure|Closure)[]
      *
      * @psalm-return array{symfony.csrf.token.manager: \Closure(Container):CsrfTokenManager, symfony.forms.csrf.extension: \Closure(Container):CsrfExtension}
      */

@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TelegramEventExtractor implements EventExtractorInterface
 {
-
     public function canProcess(Request $request): bool
     {
         try {
@@ -21,7 +20,7 @@ class TelegramEventExtractor implements EventExtractorInterface
             return false;
         }
 
-        if(!isset($payload['payload'])) {
+        if (!isset($payload['payload'])) {
             return false;
         }
 
@@ -35,7 +34,7 @@ class TelegramEventExtractor implements EventExtractorInterface
 
     public function wrapEvent(object $object): object
     {
-        if(!($object instanceof Update)) {
+        if (!($object instanceof Update)) {
             throw new LogicException('TelegramEventProcessor#wrapEvent allows only Update event.');
         }
 

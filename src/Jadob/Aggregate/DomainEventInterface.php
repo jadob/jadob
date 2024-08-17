@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Jadob\Aggregate;
 
+use DateTimeInterface;
+
 interface DomainEventInterface
 {
-
     /**
      * Used for reconstruct event from EventStore.
      *
      * @param array $payload unserialized array which has been received earlier from toArray() method
      */
-    public static function recreate(array $payload, string $eventId, string $aggregateId, int $version, \DateTimeInterface $recordedAt): self;
+    public static function recreate(array $payload, string $eventId, string $aggregateId, int $version, DateTimeInterface $recordedAt): self;
 
     /**
      * Used for event serialization

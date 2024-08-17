@@ -67,7 +67,7 @@ class ContainerBuilder
     {
         $this->emit(new ServiceAddedEvent($serviceName));
 
-        if($definition instanceof Definition) {
+        if ($definition instanceof Definition) {
             $this->definitions[$serviceName] = $definition;
             return $this;
         }
@@ -87,7 +87,6 @@ class ContainerBuilder
     {
         $this->emit(new ContainerBuildStartedEvent());
         foreach ($this->serviceProviders as $serviceProvider) {
-
             //prevent registration duplication
             if (isset($this->instantiatedProviders[$serviceProvider])) {
                 continue;
@@ -102,7 +101,6 @@ class ContainerBuilder
              */
             if ($provider instanceof ParentProviderInterface) {
                 foreach ($provider->getParentProviders() as $parentProviderFqcn) {
-
                     //Use existing provider if exists
                     if (isset($this->instantiatedProviders[$parentProviderFqcn])) {
                         $parentProvider = $this->instantiatedProviders[$parentProviderFqcn];

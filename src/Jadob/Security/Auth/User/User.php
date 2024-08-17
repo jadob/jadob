@@ -12,7 +12,6 @@ namespace Jadob\Security\Auth\User;
  */
 class User implements UserInterface
 {
-
     /**
      * User constructor.
      *

@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Router
 {
-
     /**
      * @var array
      */
@@ -63,7 +62,7 @@ class Router
 
         $this->config = array_merge($defaultConfig, $config);
 
-        if ($context instanceof \Jadob\Router\Context) {
+        if ($context instanceof Context) {
             $this->context = $context;
         } else {
             $this->context = Context::fromGlobals();
@@ -210,7 +209,7 @@ class Router
                         continue;
                     }
 
-                    if ($this->paramStore instanceof \Jadob\Router\ParameterStoreInterface && $this->paramStore->has($convertedPathParam)) {
+                    if ($this->paramStore instanceof ParameterStoreInterface && $this->paramStore->has($convertedPathParam)) {
                         $params[$convertedPathParam] = $this->paramStore->get($convertedPathParam);
                         continue;
                     }

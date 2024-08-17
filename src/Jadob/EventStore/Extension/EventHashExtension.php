@@ -15,7 +15,6 @@ class EventHashExtension implements EventStoreExtensionInterface
     /**
      * {@inheritDoc}
      */
-    #[\Override]
     public function onAggregateCreate(AggregateRootInterface $aggregate, AggregateMetadata $metadata): void
     {
         // TODO: Implement onAggregateCreate() method.
@@ -24,7 +23,6 @@ class EventHashExtension implements EventStoreExtensionInterface
     /**
      * {@inheritDoc}
      */
-    #[\Override]
     public function onEventAppend(DomainEventInterface $event, string $payload, AggregateRootInterface $aggregate): void
     {
         $event->addAttribute(

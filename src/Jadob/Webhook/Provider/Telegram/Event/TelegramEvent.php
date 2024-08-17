@@ -7,11 +7,9 @@ use Jadob\Typed\Telegram\Update;
 
 class TelegramEvent
 {
-
     public function __construct(
         protected Update $update
-    )
-    {
+    ) {
     }
 
     /**
@@ -21,7 +19,4 @@ class TelegramEvent
     {
         return $this->update;
     }
-
-
-
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Jadob\Objectable;
 
+use DateTimeInterface;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
 use Jadob\Objectable\Annotation\Field;
 use Jadob\Objectable\Annotation\Translate;
 use LogicException;
+use ReflectionClass;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -36,7 +38,7 @@ class ItemProcessor
     public function extractItemValues(object $item, array $context = ['default']): array
     {
         $output = [];
-        $ref = new \ReflectionClass($item);
+        $ref = new ReflectionClass($item);
         $props = $ref->getProperties();
 
         foreach ($props as $reflectionProperty) {
@@ -63,7 +65,7 @@ class ItemProcessor
                             }
                         }
 
-                        if ($val instanceof \DateTimeInterface) {
+                        if ($val instanceof DateTimeInterface) {
                             $dateFormat = $instance->getDateFormat();
                             if ($dateFormat === null) {
                                 throw new LogicException('Could not process DateTime object as there is no dateFormat passed in Field.');
@@ -76,7 +78,7 @@ class ItemProcessor
                         /**
                          * Enables support for doctrine/orm entities, or any other lib that utilises doctrine/collections.
                          */
-                        if($val instanceof Collection) {
+                        if ($val instanceof Collection) {
                             $collectionItems = $val->toArray();
                             $processedCollectionItems = [];
                             foreach ($collectionItems as $collectionItem) {
@@ -117,7 +119,7 @@ class ItemProcessor
                             }
                         }
 
-                        if(is_object($val)) {
+                        if (is_object($val)) {
                             $output[$instance->getName()] = $this->extractItemValues($val, $context);
                         }
                     }

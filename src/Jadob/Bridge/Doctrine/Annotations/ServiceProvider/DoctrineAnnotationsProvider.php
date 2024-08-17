@@ -8,11 +8,9 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Reader;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
-use RuntimeException;
 
 class DoctrineAnnotationsProvider implements ServiceProviderInterface
 {
-
     /**
      * @inheritDoc
      */

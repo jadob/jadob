@@ -18,7 +18,6 @@ use Symfony\Component\Console\Application;
  */
 class ConsoleProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */

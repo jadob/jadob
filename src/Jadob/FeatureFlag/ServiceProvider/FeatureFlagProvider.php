@@ -15,7 +15,6 @@ use Jadob\FeatureFlag\FeatureFlag;
  */
 class FeatureFlagProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */

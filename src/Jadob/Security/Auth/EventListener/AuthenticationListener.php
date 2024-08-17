@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\EventListener;
 
@@ -17,8 +18,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface
         protected AuthenticatorService     $authenticationService,
         protected EventDispatcherInterface $eventDispatcher,
         protected LoggerInterface          $logger
-    )
-    {
+    ) {
     }
 
     public function getListenersForEvent(object $event): iterable
@@ -71,7 +71,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 $containsCredentials = $authenticator->isAuthenticationRequest($request);
                 if ($containsCredentials) {
                     $authenticationResult = $authenticator->authenticate($request);
-                    if($authenticationResult === null) {
+                    if ($authenticationResult === null) {
                         //@TODO: replace it with more detailed exception class.
                         throw new AuthenticationException('User not found.');
                     }

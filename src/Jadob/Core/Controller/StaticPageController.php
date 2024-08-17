@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class StaticPageController extends AbstractController
 {
-
     /**
      * @param Route $route
      * @return Response

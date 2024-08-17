@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\ServiceProvider;
 
@@ -13,6 +14,7 @@ use Jadob\Security\Auth\EventListener\AuthenticationListener;
 use Jadob\Security\Auth\Identity\IdentityStorageFactory;
 use Jadob\Security\Auth\UserProviderInterface;
 use Monolog\Logger;
+use Override;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -65,7 +67,7 @@ class AuthenticationProvider implements ServiceProviderInterface
      * @throws ServiceNotFoundException
      * @throws ContainerException
      */
-    #[\Override]
+    #[Override]
     public function onContainerBuild(Container $container, $config): void
     {
         /** @var EventDispatcher $eventDispatcher */

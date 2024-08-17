@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\Identity;
 
@@ -19,5 +20,4 @@ interface IdentityStorageInterface
         UserInterface $user,
         string $authenticatorName
     ): void;
-
 }

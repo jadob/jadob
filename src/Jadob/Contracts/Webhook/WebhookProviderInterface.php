@@ -8,5 +8,4 @@ interface WebhookProviderInterface
     public function getWebhookProviderName(): string;
     public function getEventExtractor(): EventExtractorInterface;
     public function getRequestValidator(): ?RequestValidatorInterface;
-
 }

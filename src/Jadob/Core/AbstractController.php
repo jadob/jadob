@@ -23,7 +23,6 @@ use Twig\Environment;
  */
 abstract class AbstractController
 {
-
     /**
      * @var Container
      */

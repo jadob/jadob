@@ -14,7 +14,6 @@ namespace Jadob\Container\ServiceProvider;
  */
 interface ParentProviderInterface
 {
-
     /**
      * @return class-string[] Parent Class names
      */

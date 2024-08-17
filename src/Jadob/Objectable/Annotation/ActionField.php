@@ -13,7 +13,6 @@ namespace Jadob\Objectable\Annotation;
  */
 class ActionField
 {
-
     /**
      * Allows to define action name (e.g. edit, delete etc.)
      * This one will be also rendered as a class (prefixed with "objectable-action-" and passed in action button in "data-objectable-action" attribute

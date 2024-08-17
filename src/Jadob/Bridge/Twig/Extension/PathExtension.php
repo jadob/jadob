@@ -16,7 +16,6 @@ use Twig\TwigFunction;
  */
 class PathExtension extends AbstractExtension
 {
-
     /**
      * PathExtension constructor.
      *

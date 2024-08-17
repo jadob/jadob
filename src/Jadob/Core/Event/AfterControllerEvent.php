@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AfterControllerEvent
 {
-
     /**
      * @var Response
      */

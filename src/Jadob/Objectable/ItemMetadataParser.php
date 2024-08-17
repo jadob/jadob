@@ -8,7 +8,6 @@ namespace Jadob\Objectable;
  */
 class ItemMetadataParser
 {
-
     /**
      * @psalm-var array<class-string,ItemMetadata>
      */
@@ -22,7 +21,5 @@ class ItemMetadataParser
      */
     public function parse(string $object): ItemMetadata
     {
-        
     }
-
 }

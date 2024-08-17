@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
 use Closure;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
@@ -27,9 +23,8 @@ use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
+use LogicException;
 use Psr\Container\ContainerInterface;
-use ReflectionClass;
-use ReflectionException;
 use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -41,7 +36,6 @@ use Symfony\Component\Console\Helper\HelperSet;
  */
 class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -71,8 +65,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
         $defaultManagerName = null;
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
-            if(!is_string($managerName)) {
-                throw new \LogicException('All Doctrine ORM Manager names must be an string.');
+            if (!is_string($managerName)) {
+                throw new LogicException('All Doctrine ORM Manager names must be an string.');
             }
 
             if (isset($configuration['default']) && (bool) $configuration['default']) {
@@ -83,8 +77,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
                 $defaultManagerName = $managerName;
             }
 
-            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container)
-            use (
+            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container) use (
                 $managerName,
                 $managerConfig,
                 &$annotationsRegistered

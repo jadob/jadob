@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
+use Closure;
 use function file_get_contents;
 use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
 use Jadob\Bridge\Twig\Extension\DebugExtension;
@@ -27,7 +28,6 @@ use Twig\Loader\LoaderInterface;
  */
 class TwigProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -39,7 +39,7 @@ class TwigProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return (\Closure|\Closure)[]
+     * @return (Closure|Closure)[]
      *
      * @psalm-return array{Twig\Loader\LoaderInterface: \Closure(ContainerInterface):FilesystemLoader, Twig\Environment: \Closure(ContainerInterface):Environment}
      * @throws \Twig\Error\LoaderError

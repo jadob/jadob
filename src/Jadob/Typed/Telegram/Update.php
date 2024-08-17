@@ -14,7 +14,7 @@ class Update
         $self = new self();
         $self->id = $data['update_id'] ?? null;
 
-        if(isset($data['message'])) {
+        if (isset($data['message'])) {
             $self->message = Message::fromArray($data['message']);
         }
 

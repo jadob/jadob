@@ -14,7 +14,6 @@ namespace Jadob\EventDispatcher;
  */
 interface ListenerProviderPriorityInterface
 {
-
     /**
      * @param object $event
      * @return int

@@ -183,7 +183,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
      */
     public function getPrefix(): ?string
     {
-        if ($this->parentCollection instanceof \Jadob\Router\RouteCollection) {
+        if ($this->parentCollection instanceof RouteCollection) {
             return $this->parentCollection->getPrefix() . $this->prefix;
         }
 
@@ -222,7 +222,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * @param array[] $data
      * @return RouteCollection
-     * @throws Exception\RouterException
+     * @throws RouterException
      */
     public static function fromArray(array $data)
     {

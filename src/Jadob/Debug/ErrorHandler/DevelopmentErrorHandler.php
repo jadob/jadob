@@ -32,7 +32,6 @@ use Throwable;
  */
 class DevelopmentErrorHandler implements ErrorHandlerInterface
 {
-
     /**
      * @var LoggerInterface
      */

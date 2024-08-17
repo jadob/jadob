@@ -13,7 +13,6 @@ use Jadob\Container\Container;
  */
 abstract class AbstractServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritdoc}
      *

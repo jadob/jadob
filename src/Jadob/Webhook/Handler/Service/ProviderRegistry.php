@@ -7,16 +7,13 @@ use Jadob\Contracts\Webhook\WebhookProviderInterface;
 
 class ProviderRegistry
 {
-
     /**
      * ProviderRegistry constructor.
      * @param array<string, WebhookProviderInterface> $providers
      */
     public function __construct(
         protected array $providers = []
-    )
-    {
-        
+    ) {
     }
 
     public function addProvider(WebhookProviderInterface $provider)
@@ -27,7 +24,7 @@ class ProviderRegistry
     public function getProvider(string $name): WebhookProviderInterface
     {
         foreach ($this->providers as $provider) {
-            if($provider->getWebhookProviderName() === $name) {
+            if ($provider->getWebhookProviderName() === $name) {
                 return $provider;
             }
         }

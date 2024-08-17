@@ -9,7 +9,6 @@ namespace Jadob\Objectable\Transformer;
  */
 interface HeaderTransformerInterface
 {
-
     /**
      * @param string $title
      * @param string $className

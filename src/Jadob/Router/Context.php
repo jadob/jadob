@@ -15,7 +15,6 @@ use function substr;
  */
 class Context
 {
-
     /**
      * @var string
      */
@@ -97,13 +96,13 @@ class Context
         /** @var string|null $host */
         $host = $_SERVER['HTTP_HOST'] ?? null;
 
-        if (!str_contains((string)$host, ':')  ) {
+        if (!str_contains((string) $host, ':')  ) {
             $context->setHost($host);
 
             $port = null;
             // @TODO: is that is_string check required?
-            if(isset($_SERVER['SERVER_PORT']) && is_string($_SERVER['SERVER_PORT'])) {
-                $port = (int)$_SERVER['SERVER_PORT'];
+            if (isset($_SERVER['SERVER_PORT']) && is_string($_SERVER['SERVER_PORT'])) {
+                $port = (int) $_SERVER['SERVER_PORT'];
             }
 
             $context->setPort($port);
@@ -111,7 +110,7 @@ class Context
             return $context;
         }
 
-        $explodedHost = explode(':', (string)$host);
+        $explodedHost = explode(':', (string) $host);
 
         $context->setHost($explodedHost[0]);
         $context->setPort((int) $explodedHost[1]);

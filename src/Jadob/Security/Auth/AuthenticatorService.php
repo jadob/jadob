@@ -21,8 +21,7 @@ class AuthenticatorService
          * @var array<non-empty-string, UserProviderInterface>
          */
         protected array                  $userProviders = [],
-    )
-    {
+    ) {
     }
 
     /**
@@ -42,23 +41,20 @@ class AuthenticatorService
     public function getStoredIdentity(
         SessionInterface $session,
         string           $authenticatorName
-    ): ?UserInterface
-    {
+    ): ?UserInterface {
         return $this->identityStorageFactory
             ->createFor(
                 $this->authenticators[$authenticatorName],
                 $session
             )
             ->getUser($authenticatorName);
-
     }
 
     public function storeIdentity(
         UserInterface    $user,
         SessionInterface $session,
         string           $authenticatorName,
-    ): void
-    {
+    ): void {
         $this
             ->identityStorageFactory
             ->createFor(
@@ -70,6 +66,4 @@ class AuthenticatorService
                 $authenticatorName
             );
     }
-
-
 }

@@ -60,7 +60,7 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
             /** @var Application $console */
             $console = $container->get('console');
 
-            if(!isset($config['orm'])) {
+            if (!isset($config['orm'])) {
                 throw new LogicException('You need to configure ORM to use migrations.');
             }
 

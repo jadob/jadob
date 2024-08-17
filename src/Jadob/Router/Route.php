@@ -14,7 +14,6 @@ use LogicException;
  */
 class Route
 {
-
     /**
      * @var string
      */

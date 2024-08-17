@@ -9,5 +9,4 @@ namespace Jadob\Security\Auth\Exception;
  */
 class UnauthenticatedException extends AuthenticationException
 {
-
 }

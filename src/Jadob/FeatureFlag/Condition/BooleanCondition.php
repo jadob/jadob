@@ -13,7 +13,6 @@ namespace Jadob\FeatureFlag\Condition;
  */
 class BooleanCondition implements ConditionInterface
 {
-
     /**
      * @var string
      */

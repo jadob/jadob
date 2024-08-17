@@ -31,7 +31,6 @@ use Jadob\FeatureFlag\Exception\MissingFeatureRulesException;
  */
 class FeatureFlag
 {
-
     /**
      * @var ConditionInterface[]
      */

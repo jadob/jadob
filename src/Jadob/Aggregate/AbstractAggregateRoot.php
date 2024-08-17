@@ -7,6 +7,7 @@ namespace Jadob\Aggregate;
 use DateTime;
 use DateTimeInterface;
 use Exception;
+use Override;
 use Ramsey\Uuid\Uuid;
 use ReflectionClass;
 use ReflectionException;
@@ -70,7 +71,7 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
      * @return AbstractAggregateRoot
      * @throws ReflectionException
      */
-    #[\Override]
+    #[Override]
     public static function recreate(string $aggregateId, int $version, array $events): AbstractAggregateRoot
     {
         $reflection = new ReflectionClass(static::class);
@@ -95,7 +96,7 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
     /**
      * @return string
      */
-    #[\Override]
+    #[Override]
     public function getAggregateId(): string
     {
         return $this->aggregateId;
@@ -104,7 +105,7 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
     /**
      * @return AbstractDomainEvent[]
      */
-    #[\Override]
+    #[Override]
     public function popUncommittedEvents(): array
     {
         $events = $this->recordedEvents;
@@ -124,13 +125,12 @@ abstract class AbstractAggregateRoot implements AggregateRootInterface
         if ($event instanceof DomainEventInterface) {
             $event->assignAggregateId($this->getAggregateId());
             $event->assignEventNumber($aggrVersion);
-
         }
 
         $this->apply($event); //send to apply() so user can handle the state change
     }
 
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
     }

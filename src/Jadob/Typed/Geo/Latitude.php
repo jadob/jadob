@@ -7,8 +7,7 @@ class Latitude
 {
     public function __construct(
         protected string|float $value
-    )
-    {
+    ) {
     }
 
     public function getValue(): float

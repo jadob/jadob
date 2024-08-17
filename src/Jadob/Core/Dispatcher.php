@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use Jadob\Core\Event\RequestEvent;
 use function call_user_func_array;
-use Closure;
 use Exception;
 use function get_class;
 use function gettype;
@@ -14,7 +12,7 @@ use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Event\AfterControllerEvent;
-use Jadob\Core\Event\BeforeControllerEvent;
+use Jadob\Core\Event\RequestEvent;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
@@ -62,7 +60,6 @@ class Dispatcher
         $this->eventDispatcher = $eventDispatcher;
 
         $this->verbose = $this->config['verbose'] ?? false;
-
     }
 
     /**

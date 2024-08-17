@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
+use Closure;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
@@ -15,7 +16,6 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Form\FormFactoryBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
@@ -29,7 +29,6 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
  */
 class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -41,7 +40,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
     /**
      * {@inheritdoc}
      *
-     * @return (\Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
+     * @return (Closure|\Symfony\Component\Validator\Validator\ValidatorInterface)[]
      *
      * @throws ReflectionException
      * @throws \Jadob\Container\Exception\ServiceNotFoundException
@@ -100,7 +99,6 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
                 $container->get(TranslatorInterface::class)
             )
         );
-
     }
 
     public function getParentProviders(): array

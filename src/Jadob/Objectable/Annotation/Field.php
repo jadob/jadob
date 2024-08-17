@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Jadob\Objectable\Annotation;
 
-#[\Attribute(\Attribute::IS_REPEATABLE | \Attribute::TARGET_PROPERTY)]
+use Attribute;
+
+#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_PROPERTY)]
 class Field
 {
-
     public function __construct(
         protected string $name,
         /**
@@ -20,8 +21,8 @@ class Field
         protected bool $flat = false,
         protected ?string $flatProperty = null,
         protected ?string $dateFormat = null
-    )
-    {}
+    ) {
+    }
 
     /**
      * @return array

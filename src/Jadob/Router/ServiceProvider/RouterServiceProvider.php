@@ -19,7 +19,6 @@ use Psr\Container\ContainerInterface;
  */
 class RouterServiceProvider implements ServiceProviderInterface
 {
-
     /**
      * @return string
      */

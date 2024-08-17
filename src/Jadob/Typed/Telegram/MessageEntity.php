@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Telegram;
 
-
 class MessageEntity
 {
-
     protected ?string $type = null;
     protected ?int $offset = null;
     protected ?int $length = null;

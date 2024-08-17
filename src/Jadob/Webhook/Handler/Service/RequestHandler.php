@@ -33,16 +33,15 @@ class RequestHandler
             $requestValidator  = $provider->getRequestValidator();
             $extractor = $provider->getEventExtractor();
             
-            if($requestValidator !== null) {
+            if ($requestValidator !== null) {
                 $requestValidator->validate($request);
             }
 
-            if(!$extractor->canProcess($request)) {
+            if (!$extractor->canProcess($request)) {
                 #TODO: continue to another provider
             }
 
             $event = $extractor->extractEvent($request);
-
         }
     }
 }

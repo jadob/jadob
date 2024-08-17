@@ -25,7 +25,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class SymfonyTranslatorProvider implements ServiceProviderInterface
 {
-
     /**
      * returns Config node name that will be passed as $config in register() method.
      * return null if no config needed.
@@ -49,7 +48,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
             //expose this as a separate service to make it possible to override
             MessageFormatterInterface::class => static fn(): MessageFormatterInterface => new MessageFormatter(),
 
-            TranslatorInterface::class => static function (ContainerInterface $container) use ($config): TranslatorInterface{
+            TranslatorInterface::class => static function (ContainerInterface $container) use ($config): TranslatorInterface {
                 /** @var BootstrapInterface $bootstrap */
                 $bootstrap = $container->get(BootstrapInterface::class);
                 /** @var TranslationSource[] $sources */

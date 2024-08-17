@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\EventStore;
 
-use JsonException;
 use function json_decode;
 use function json_encode;
+use JsonException;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
@@ -30,6 +30,6 @@ class PayloadSerializer
      */
     public function deserialize(string $serialized): array
     {
-        return (array)json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
+        return (array) json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
     }
 }

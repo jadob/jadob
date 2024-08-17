@@ -6,6 +6,7 @@ namespace Jadob\Aggregate;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Override;
 use Ulid\Ulid;
 
 /**
@@ -77,19 +78,19 @@ abstract class AbstractDomainEvent implements DomainEventInterface
         return $this->recordedAt;
     }
 
-    #[\Override]
+    #[Override]
     public function getEventId(): string
     {
         return $this->eventId;
     }
 
-    #[\Override]
+    #[Override]
     public function addAttribute(string $name, string $value): void
     {
         $this->attributes[$name] = $value;
     }
 
-    #[\Override]
+    #[Override]
     public function getAttributes(): array
     {
         return $this->attributes;

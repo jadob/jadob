@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Extension;
 
+use Override;
 use RuntimeException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -17,7 +18,7 @@ class AliasedAssetPathExtension extends AbstractExtension
     }
 
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [

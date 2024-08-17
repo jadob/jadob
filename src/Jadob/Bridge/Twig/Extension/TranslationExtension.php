@@ -14,7 +14,6 @@ use Twig\TwigFilter;
  */
 class TranslationExtension extends AbstractExtension
 {
-
     /**
      * TranslationExtension constructor.
      *

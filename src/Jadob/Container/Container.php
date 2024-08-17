@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
-use Jadob\Container\Exception\ContainerLockedException;
-use function array_keys;
 use function call_user_func_array;
 use function class_exists;
 use Closure;
 use function in_array;
+use function is_object;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerException;
+use Jadob\Container\Exception\ContainerLockedException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
-use function is_object;
 use function sprintf;
 
 /**
@@ -29,7 +29,6 @@ use function sprintf;
  */
 class Container implements ContainerInterface
 {
-
     private const MAX_DEFINITION_WRAPS = 10;
 
     /**
@@ -67,9 +66,9 @@ class Container implements ContainerInterface
              * Each factory must have an return type, otherwise there may be false-positive service not found exceptionw
              */
             $service = $definition->getService();
-            if($service instanceof Closure) {
-                $closureReflection = new \ReflectionFunction($service);
-                if($closureReflection->getReturnType() === null) {
+            if ($service instanceof Closure) {
+                $closureReflection = new ReflectionFunction($service);
+                if ($closureReflection->getReturnType() === null) {
                     throw new ContainerException(
                         sprintf(
                             'Factory for service "%s" is missing a return type.',
@@ -125,7 +124,6 @@ class Container implements ContainerInterface
      */
     private function unwrapDefinition(Definition $definition, int $wrapsCount = 0): string|object
     {
-
         if ($wrapsCount >= self::MAX_DEFINITION_WRAPS) {
             throw new ContainerException('Could not unwrap a definition as is it wrapped too much.');
         }
@@ -181,7 +179,6 @@ class Container implements ContainerInterface
         $this->services[$serviceId] = $service;
 
         return $service;
-
     }
 
 
@@ -250,7 +247,6 @@ class Container implements ContainerInterface
         }
 
         foreach ($this->definitions as $definition) {
-
             $unwrappedDefinition = $this->unwrapDefinition($definition);
 
             if ($unwrappedDefinition instanceof Closure) {
@@ -327,7 +323,7 @@ class Container implements ContainerInterface
                 if ($service instanceof $className) {
                     return $service;
                 }
-            } elseif(get_class($service) === $className) {
+            } elseif (get_class($service) === $className) {
                 return $service;
             }
         }

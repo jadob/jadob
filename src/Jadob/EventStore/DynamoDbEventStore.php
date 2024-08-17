@@ -6,6 +6,7 @@ namespace Jadob\EventStore;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
+use function count;
 use DateTimeInterface;
 use Jadob\Aggregate\AggregateRootInterface;
 use Jadob\EventStore\DynamoDb\AttributeName;
@@ -14,8 +15,8 @@ use Jadob\EventStore\Exception\AggregateMetadataNotFoundException;
 use Jadob\EventStore\Exception\EventStoreException;
 use Jadob\MessageBus\ServiceBus;
 use JsonException;
+use Override;
 use Psr\Log\LoggerInterface;
-use function count;
 
 /**
  * Access Patterns:
@@ -64,7 +65,7 @@ class DynamoDbEventStore implements EventStoreInterface
      *
      * @throws EventStoreException|JsonException
      */
-    #[\Override]
+    #[Override]
     public function saveAggregate(AggregateRootInterface $aggregateRoot)
     {
         $aggregateId = $aggregateRoot->getAggregateId();
@@ -160,7 +161,7 @@ class DynamoDbEventStore implements EventStoreInterface
     /**
      * {@inheritDoc}
      */
-    #[\Override]
+    #[Override]
     public function getEventsByAggregateId(string $aggregateId): array
     {
         $params = [
@@ -188,7 +189,7 @@ class DynamoDbEventStore implements EventStoreInterface
     /**
      * @throws AggregateMetadataNotFoundException
      */
-    #[\Override]
+    #[Override]
     public function getAggregateMetadata(string $aggregateId): AggregateMetadata
     {
         //@TODO może to do jakiejś osobnej klasy wydzielić?
@@ -225,7 +226,7 @@ class DynamoDbEventStore implements EventStoreInterface
         );
     }
 
-    #[\Override]
+    #[Override]
     public function saveAggregateMetadata(AggregateMetadata $metadata): void
     {
         //@TODO może to do jakiejś osobnej klasy wydzielić?

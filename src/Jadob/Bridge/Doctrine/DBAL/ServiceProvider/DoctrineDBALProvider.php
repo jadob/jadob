@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
 
+use Closure;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
@@ -23,7 +24,6 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Class DoctrineDBALProvider
@@ -46,7 +46,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @return (EventManager|\Closure|\Closure|\Closure|\Closure)[]
+     * @return (EventManager|Closure|Closure|Closure|Closure)[]
      *
      * @psalm-return array<string, EventManager|\Closure(ContainerInterface):Configuration|\Closure(ContainerInterface):Logger|\Closure(ContainerInterface):Psr3QueryLogger|\Closure(ContainerInterface):\Doctrine\DBAL\Connection>
      * @throws RuntimeException
@@ -62,7 +62,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
         if (isset($config['types'])) {
             foreach ($config['types'] as $name => $class) {
-                if(!is_string($class) || !is_string($name)) {
+                if (!is_string($class) || !is_string($name)) {
                     throw new LogicException(
                         'Cannot register DBAL types as its name or value is not a string'
                     );
@@ -155,7 +155,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         }
 
         if ($container->has(ManagerRegistry::class)) {
-
             /** @var DoctrineManagerRegistry $managerRegistry */
             $managerRegistry = $container->get(ManagerRegistry::class);
             foreach ($config['connections'] as $connectionName => $configuration) {

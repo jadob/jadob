@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard;
 
+use Closure;
 use Jadob\Contracts\Dashboard\DashboardContextInterface;
 use Jadob\Dashboard\Configuration\EntityOperation;
 use Jadob\Dashboard\Exception\DashboardException;
@@ -24,7 +25,7 @@ class OperationHandler
             $argumentTransformer = $operation->getArgumentTransformer();
             $arguments = [$object];
 
-            if ($argumentTransformer instanceof \Closure) {
+            if ($argumentTransformer instanceof Closure) {
                 $this->logger->debug('There is an argument transformer attached.');
                 $arguments = $argumentTransformer($object, $context);
                 if (!is_array($arguments)) {

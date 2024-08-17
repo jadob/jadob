@@ -16,7 +16,6 @@ use Twig\TwigFunction;
  */
 class ObjectableExtension extends AbstractExtension
 {
-
     public function __construct(protected Objectable $objectable)
     {
     }

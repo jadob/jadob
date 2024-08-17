@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
  */
 class Psr11QueryLogger implements SQLLogger
 {
-
     protected LoggerInterface $logger;
 
     protected array $recentQuery = [];

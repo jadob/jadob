@@ -69,12 +69,12 @@ class NewObjectConfiguration
 
     public function hasBeforeInsertHook(): bool
     {
-        return $this->beforeInsert instanceof \Closure;
+        return $this->beforeInsert instanceof Closure;
     }
 
     public function hasFormTransformHook(): bool
     {
-        return $this->formTransformHook instanceof \Closure;
+        return $this->formTransformHook instanceof Closure;
     }
 
     /**

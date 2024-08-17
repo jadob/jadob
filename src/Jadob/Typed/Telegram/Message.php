@@ -24,7 +24,7 @@ class Message
             $self->from = User::fromArray($data['from']);
         }
 
-        if(isset($data['chat'])) {
+        if (isset($data['chat'])) {
             $self->chat = Chat::fromArray($data['chat']);
         }
 
@@ -35,7 +35,7 @@ class Message
             }
         }
 
-        if(isset($data['entities'])) {
+        if (isset($data['entities'])) {
             foreach ($data['entities'] as $entity) {
                 $self->entities[] = MessageEntity::fromArray($entity);
             }

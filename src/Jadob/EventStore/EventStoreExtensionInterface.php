@@ -14,7 +14,6 @@ use Jadob\Aggregate\DomainEventInterface;
  */
 interface EventStoreExtensionInterface
 {
-
     /**
      * @param AggregateRootInterface $aggregate
      * @param AggregateMetadata $metadata

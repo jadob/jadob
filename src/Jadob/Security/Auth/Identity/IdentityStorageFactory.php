@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\Identity;
 
@@ -15,9 +16,8 @@ readonly class IdentityStorageFactory
     public function createFor(
         AuthenticatorInterface $authenticator,
         SessionInterface $session
-    ): IdentityStorageInterface
-    {
-        if($authenticator->isStateless()) {
+    ): IdentityStorageInterface {
+        if ($authenticator->isStateless()) {
             return new StatelessIdentityStorage();
         }
 

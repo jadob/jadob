@@ -17,6 +17,7 @@ use Jadob\Dashboard\ObjectOperation\ShowOperation;
 use Jadob\Dashboard\OperationHandler;
 use Jadob\Dashboard\PathGenerator;
 use Jadob\Dashboard\QueryStringParamName;
+use LogicException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
@@ -39,7 +40,6 @@ use Twig\Error\SyntaxError;
 
 class DashboardAction
 {
-
     public function __construct(
         protected Environment $twig,
         protected ContainerInterface $container,
@@ -50,7 +50,8 @@ class DashboardAction
         protected OperationHandler $operationHandler,
         protected LoggerInterface $logger,
         protected ShowOperation $showOperation
-    ) {}
+    ) {
+    }
 
     /**
      * @param Request $request
@@ -147,7 +148,7 @@ class DashboardAction
             $criteria = null;
             /** @var string|null $criteriaName */
             $criteriaName = $request->query->get(QueryStringParamName::LIST_CRITERIA);
-            $orderBy = (array)$request->query->get(QueryStringParamName::ORDER_BY, []);
+            $orderBy = (array) $request->query->get(QueryStringParamName::ORDER_BY, []);
 
             if ($criteriaName === null) {
                 $pagesCount = $this->doctrineOrmObjectManager->getPagesCount($objectFqcn, $resultsPerPage);
@@ -268,12 +269,12 @@ class DashboardAction
                 /** @var object $createdObject */
                 $createdObject = $form->getData();
 
-                if($newConfiguration->hasFormTransformHook()) {
+                if ($newConfiguration->hasFormTransformHook()) {
                     $formTransformHook = $newConfiguration->getFormTransformHook();
                     $createdObject = $formTransformHook($createdObject);
 
-                    if(is_object($createdObject) === false) {
-                        throw new \LogicException(
+                    if (is_object($createdObject) === false) {
+                        throw new LogicException(
                             sprintf(
                                 '"form_transport_hook" for object %s must return an object.',
                                 $objectFqcn
@@ -301,7 +302,7 @@ class DashboardAction
             );
         }
 
-        if($operation === CrudOperationType::SHOW) {
+        if ($operation === CrudOperationType::SHOW) {
             /** @var string $objectId */
             $objectId = $request->query->get(QueryStringParamName::OBJECT_ID);
             /** @var null|object $object */
@@ -549,10 +550,11 @@ class DashboardAction
         return new RedirectResponse($this->pathGenerator->getPathForObjectList($objectFqcn));
     }
 
-    protected function getObjectManagerForObject(string $objectFqcn): DoctrineOrmObjectManager {
+    protected function getObjectManagerForObject(string $objectFqcn): DoctrineOrmObjectManager
+    {
         $customObjectManager = $this->configuration->getManagedObjectConfiguration($objectFqcn);
 
-        if($customObjectManager->getObjectManager() !== null) {
+        if ($customObjectManager->getObjectManager() !== null) {
             return $this->container->get($customObjectManager->getObjectManager());
         }
 

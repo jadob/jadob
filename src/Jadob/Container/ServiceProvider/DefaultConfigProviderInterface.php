@@ -12,7 +12,6 @@ namespace Jadob\Container\ServiceProvider;
  */
 interface DefaultConfigProviderInterface
 {
-
     /**
      * Warning: returned array should be compliant with XSD schema used with current provider.
      *

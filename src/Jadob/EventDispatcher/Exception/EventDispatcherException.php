@@ -11,7 +11,6 @@ use Exception;
  */
 class EventDispatcherException extends Exception
 {
-
     /**
      * @param object $listener
      * @param object $event

@@ -8,7 +8,6 @@ use Countable;
 use DateTime;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\Reader;
-use function get_class;
 use function htmlentities;
 use function is_array;
 use Jadob\Objectable\Annotation\ActionField;
@@ -109,7 +108,7 @@ class Objectable
         $this->headerTransformer = $headerTransformer;
 
         $this->annotationReader = $annotationReader;
-        if (!$annotationReader instanceof \Doctrine\Common\Annotations\Reader) {
+        if (!$annotationReader instanceof Reader) {
             $this->annotationReader = new AnnotationReader();
         }
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\EventStore\ServiceProvider;
 
+use Closure;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
@@ -23,11 +24,9 @@ use RuntimeException;
  */
 class EventStoreProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritDoc}
      */
-    #[\Override]
     public function getConfigNode()
     {
         return 'event_store';
@@ -36,11 +35,10 @@ class EventStoreProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      *
-     * @return (\Closure|\Closure|\Closure)[]
+     * @return (Closure|Closure|Closure)[]
      *
      * @psalm-return array{Jadob\EventSourcing\EventStore\ProjectionManager: \Closure(ContainerInterface):ProjectionManager, Jadob\EventSourcing\EventStore\EventDispatcher: \Closure(ContainerInterface):EventDispatcher, Jadob\EventSourcing\EventStore\EventStoreInterface: \Closure(ContainerInterface):DBALEventStore}
      */
-    #[\Override]
     public function register($config)
     {
         if (!isset($config['connection_name'])) {
@@ -88,7 +86,6 @@ class EventStoreProvider implements ServiceProviderInterface
     /**
      * {@inheritDoc}
      */
-    #[\Override]
     public function onContainerBuild(Container $container, $config)
     {
         // TODO: Implement onContainerBuild() method.

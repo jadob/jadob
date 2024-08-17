@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Dynamite\ServiceProvider;
 
-
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use Dynamite\Dynamite;
 use Dynamite\ItemManager;
 use Dynamite\ItemManagerRegistry;
 use Dynamite\ItemSerializer;
@@ -18,7 +16,6 @@ use Dynamite\PrimaryKey\Filter\NoDashFilter;
 use Dynamite\PrimaryKey\Filter\UppercaseFilter;
 use Dynamite\PrimaryKey\Filter\UppercaseFirstFilter;
 use Dynamite\PrimaryKey\KeyFormatResolver;
-use Dynamite\TableConfiguration;
 use Dynamite\TableSchema;
 use Jadob\Bridge\Doctrine\Annotations\ServiceProvider\DoctrineAnnotationsProvider;
 use Jadob\Container\Container;
@@ -31,7 +28,6 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterface
 {
-
     /**
      * @inheritDoc
      */
@@ -121,7 +117,6 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
         };
 
         $output[ItemManagerRegistry::class] = static function (ContainerInterface $container) use ($instanceServiceIds): ItemManagerRegistry {
-
             $registry = new ItemManagerRegistry();
 
             foreach ($instanceServiceIds as $instanceName => $instanceServiceId) {

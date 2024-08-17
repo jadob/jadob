@@ -11,7 +11,6 @@ use Closure;
  */
 class Definition
 {
-
     /**
      * @psalm-var class-string|object|Closure
      */

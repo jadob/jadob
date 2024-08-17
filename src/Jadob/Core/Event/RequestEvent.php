@@ -17,8 +17,7 @@ class RequestEvent implements StoppableEventInterface
 
     public function __construct(
         protected RequestContext $requestContext
-    )
-    {
+    ) {
     }
 
     public function getRequestContext(): RequestContext

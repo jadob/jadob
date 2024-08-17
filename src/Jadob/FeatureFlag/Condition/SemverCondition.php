@@ -37,7 +37,6 @@ namespace Jadob\FeatureFlag\Condition;
  */
 class SemverCondition implements ConditionInterface
 {
-
     /**
      * @var string
      */

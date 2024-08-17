@@ -5,7 +5,6 @@ namespace Jadob\Dashboard\Configuration;
 
 class Grid
 {
-
     /**
      * @var Component[]
      */

@@ -21,7 +21,6 @@ use RuntimeException;
  */
 class CommandBusProvider implements ServiceProviderInterface
 {
-
     /**
      * {@inheritDoc}
      */

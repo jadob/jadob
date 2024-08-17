@@ -11,7 +11,6 @@ use Jadob\Config\Exception\ConfigNodeNotFoundException;
  */
 class Config
 {
-
     /**
      * @var array
      */

@@ -107,8 +107,7 @@ class Kernel
         protected string $env,
         BootstrapInterface $bootstrap,
         protected bool $deferLogs = false
-    )
-    {
+    ) {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
@@ -286,7 +285,7 @@ class Kernel
                 if (!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
                     throw new RuntimeException(
                         
-                            'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
+                        'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
                         
                     );
                 }

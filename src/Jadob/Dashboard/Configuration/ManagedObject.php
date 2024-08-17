@@ -61,7 +61,7 @@ class ManagedObject
             $self->editConfiguration = EditConfiguration::fromArray($configuration['edit']);
         }
 
-        if(isset($configuration['object_manager'])) {
+        if (isset($configuration['object_manager'])) {
             $self->objectManager = $configuration['object_manager'];
         }
 

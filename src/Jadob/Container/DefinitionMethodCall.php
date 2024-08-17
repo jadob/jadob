@@ -11,8 +11,7 @@ class DefinitionMethodCall
     public function __construct(
         protected string $methodName,
         protected array  $arguments
-    )
-    {
+    ) {
     }
 
     /**
