@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
 use Closure;
-use function file_get_contents;
 use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
 use Jadob\Bridge\Twig\Extension\DebugExtension;
 use Jadob\Bridge\Twig\Extension\PathExtension;
@@ -13,7 +12,6 @@ use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
-use function json_decode;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -21,6 +19,8 @@ use Twig\Environment;
 use Twig\Extension\ExtensionInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
+use function file_get_contents;
+use function json_decode;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

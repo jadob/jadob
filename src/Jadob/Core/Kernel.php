@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use function array_merge;
 use Exception;
-use function fastcgi_finish_request;
-use function file_exists;
-use function function_exists;
-use function in_array;
-use function is_array;
 use Jadob\Bridge\Monolog\LoggerFactory;
 use Jadob\Config\Config;
 use Jadob\Container\Container;
@@ -43,6 +37,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use function array_merge;
+use function fastcgi_finish_request;
+use function file_exists;
+use function function_exists;
+use function in_array;
+use function is_array;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

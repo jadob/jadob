@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
-use function call_user_func_array;
-use function class_exists;
 use Closure;
-use function in_array;
-use function is_object;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ContainerLockedException;
@@ -21,6 +17,10 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use RuntimeException;
+use function call_user_func_array;
+use function class_exists;
+use function in_array;
+use function is_object;
 use function sprintf;
 
 /**

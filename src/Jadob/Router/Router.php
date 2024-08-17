@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
+use Jadob\Router\Exception\MethodNotAllowedException;
+use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Exception\RouterException;
+use Symfony\Component\HttpFoundation\Request;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
@@ -13,13 +17,9 @@ use function count;
 use function http_build_query;
 use function in_array;
 use function is_array;
-use Jadob\Router\Exception\MethodNotAllowedException;
-use Jadob\Router\Exception\RouteNotFoundException;
-use Jadob\Router\Exception\RouterException;
 use function preg_match;
 use function str_replace;
 use function strtoupper;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

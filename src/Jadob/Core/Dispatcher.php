@@ -3,11 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use function call_user_func_array;
 use Exception;
-use function get_class;
-use function gettype;
-use function in_array;
 use Jadob\Container\Container;
 use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ServiceNotFoundException;
@@ -19,7 +15,6 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\User\UserInterface;
-use function method_exists;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -30,6 +25,11 @@ use ReflectionNamedType;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function call_user_func_array;
+use function get_class;
+use function gettype;
+use function in_array;
+use function method_exists;
 
 /**
  * @internal

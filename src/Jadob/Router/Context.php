@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Router;
 
-use function explode;
 use Jadob\Router\Exception\RouterException;
+use function explode;
 use function strlen;
 use function substr;
 

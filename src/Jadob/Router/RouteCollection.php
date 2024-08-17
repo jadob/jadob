@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Jadob\Router;
 
 use ArrayAccess;
-use function count;
 use Countable;
-use function is_string;
 use Iterator;
 use Jadob\Router\Exception\RouterException;
+use function count;
+use function is_string;
 use function key;
 use function next;
 use function reset;

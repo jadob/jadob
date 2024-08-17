@@ -5,9 +5,9 @@ namespace Jadob\Bridge\Twig\Extension;
 
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Router;
-use function ltrim;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use function ltrim;
 
 /**
  *

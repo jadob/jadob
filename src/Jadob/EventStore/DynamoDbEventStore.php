@@ -6,7 +6,6 @@ namespace Jadob\EventStore;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
-use function count;
 use DateTimeInterface;
 use Jadob\Aggregate\AggregateRootInterface;
 use Jadob\EventStore\DynamoDb\AttributeName;
@@ -17,6 +16,7 @@ use Jadob\MessageBus\ServiceBus;
 use JsonException;
 use Override;
 use Psr\Log\LoggerInterface;
+use function count;
 
 /**
  * Access Patterns:

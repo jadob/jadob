@@ -3,21 +3,21 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Translation\ServiceProvider;
 
-use function glob;
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Monolog\Logger;
-use function preg_match;
 use Psr\Container\ContainerInterface;
-use function sprintf;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\LoggingTranslator;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function glob;
+use function preg_match;
+use function sprintf;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
-use function get_class;
 use Jadob\EventDispatcher\Exception\EventDispatcherException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
+use function get_class;
 
 /**
  * @see     https://www.php-fig.org/psr/psr-14/

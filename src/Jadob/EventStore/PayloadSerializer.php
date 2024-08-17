@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\EventStore;
 
+use JsonException;
 use function json_decode;
 use function json_encode;
-use JsonException;
 
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
