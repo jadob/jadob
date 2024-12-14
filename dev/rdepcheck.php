@@ -10,11 +10,11 @@ $thirdPartyPackagesVersions = [
     'doctrine/dbal' => '>= 2.13',
     'doctrine/orm' => '>= 2.8',
     'php' => '^8',
-    'symfony/form' => '>= 5.4.4 || >= 6.0.5',
-    'symfony/mime' => '>= 5.4.4 || >= 6.0.5',
-    'symfony/property-access' => '>= 5.4.4 || >= 6.0.5',
-    'symfony/twig-bridge' => '>= 5.4.4 || >= 6.0.5',
-    'symfony/validator' => '>= 5.4.4 || >= 6.0.5',
+    'symfony/form' => '^7.2',
+    'symfony/mime' => '^7.2',
+    'symfony/property-access' => '^7.2',
+    'symfony/twig-bridge' => '^7.2',
+    'symfony/validator' => '^7.2',
     'twig/twig' => '>= 3.3.8'
 ];
 

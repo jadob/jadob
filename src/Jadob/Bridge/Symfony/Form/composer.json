@@ -8,6 +8,6 @@
     }
   },
   "require": {
-    "symfony/validator": ">= 5.4.4 || >= 6.0.5"
+    "symfony/validator": "^7.2"
   }
 }

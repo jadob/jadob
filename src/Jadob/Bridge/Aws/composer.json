@@ -11,6 +11,6 @@
     "jadob/bridge-aws-ses": "self.version"
   },
   "require": {
-    "symfony/mime": ">= 5.4.4 || >= 6.0.5"
+    "symfony/mime": "^7.2"
   }
 }

@@ -6,7 +6,7 @@
   "require": {
     "php": "^8",
     "doctrine/annotations": "^1.13",
-    "symfony/property-access": ">= 5.4.4 || >= 6.0.5"
+    "symfony/property-access": "^7.2"
   },
   "autoload": {
     "psr-4": {
