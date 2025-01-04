@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Security\Auth;
 
+use Jadob\Security\Auth\Identity\IdentityProviderInterface;
 use Jadob\Security\Auth\Identity\IdentityStorageFactory;
+use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
 use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -18,10 +20,18 @@ class AuthenticatorService
         protected array                  $authenticators = [],
 
         /**
-         * @var array<non-empty-string, UserProviderInterface>
+         * @var array<non-empty-string, IdentityProviderInterface>
          */
-        protected array                  $userProviders = [],
-    ) {
+        protected array                  $identityProviders = [],
+        
+        /**
+         * @var array<non-empty-string, RefreshableIdentityProviderInterface>
+         */
+        protected array                  $refreshableIdentityProviders = [],
+        
+        
+    )
+    {
     }
 
     /**
@@ -41,20 +51,25 @@ class AuthenticatorService
     public function getStoredIdentity(
         SessionInterface $session,
         string           $authenticatorName
-    ): ?UserInterface {
-        return $this->identityStorageFactory
+    ): ?UserInterface
+    {
+
+        $user = $this->identityStorageFactory
             ->createFor(
                 $this->authenticators[$authenticatorName],
                 $session
             )
             ->getUser($authenticatorName);
+        
+        return $user;
     }
 
     public function storeIdentity(
         UserInterface    $user,
         SessionInterface $session,
         string           $authenticatorName,
-    ): void {
+    ): void
+    {
         $this
             ->identityStorageFactory
             ->createFor(
@@ -65,5 +80,19 @@ class AuthenticatorService
                 $user,
                 $authenticatorName
             );
+    }
+
+    public function refreshIdentity(
+        UserInterface $identity,
+        string $authenticatorName
+    ): UserInterface
+    {
+        if(!array_key_exists($authenticatorName, $this->refreshableIdentityProviders)) {
+            return $identity;
+        }
+
+        return $this
+            ->refreshableIdentityProviders[$authenticatorName]
+            ->refreshIdentity($identity);
     }
 }
