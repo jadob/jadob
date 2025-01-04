@@ -55,6 +55,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      */
     public function register($config)
     {
+        $mappingTypes = [];
         if (!isset($config['connections']) || \count($config['connections']) === 0) {
             throw new RuntimeException('You should provide at least one connection in "doctrine_dbal" config node.');
         }
@@ -70,6 +71,20 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
                 /** @var class-string<Type> $class */
                 Type::addType($name, $class);
+            }
+        }
+
+        if (isset($config['mapping_types'])) {
+            foreach ($config['mapping_types'] as $key => $value) {
+                if (!is_string($key) || !is_string($value)) {
+                    throw new LogicException(
+                        'Cannot register DBAL mapping types as its name or value is not a string'
+                    );
+                }
+
+                $mappingTypes[$key] = $value;
+
+
             }
         }
 
@@ -112,12 +127,21 @@ class DoctrineDBALProvider implements ServiceProviderInterface
                 $defaultConnectionName = $connectionName;
             }
 
-            $services[$serviceName] = function (ContainerInterface $container) use ($configuration, $eventManager): \Doctrine\DBAL\Connection {
-                return DriverManager::getConnection(
+            $services[$serviceName] = function (ContainerInterface $container) use ($configuration, $eventManager, $mappingTypes): \Doctrine\DBAL\Connection {
+                $connection =  DriverManager::getConnection(
                     $configuration,
                     $container->get(Configuration::class),
                     $eventManager
                 );
+
+                foreach ($mappingTypes as $sqlType => $doctrineType) {
+                    $connection
+                        ->getDatabasePlatform()
+                        ->registerDoctrineTypeMapping($sqlType, $doctrineType);
+                }
+
+
+                return $connection;
             };
         }
 
