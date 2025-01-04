@@ -17,17 +17,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class ItemProcessor
 {
     public function __construct(
-        protected Reader $annotReader,
-        protected ?PropertyAccessor $propertyAccessor = null,
-        protected ?ItemMetadataParser $metadataParser = null
-    ) {
-        if ($this->propertyAccessor === null) {
-            $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
-        }
 
-        if ($this->metadataParser === null) {
-            $this->metadataParser = new ItemMetadataParser();
-        }
+    ) {
     }
 
     /**
