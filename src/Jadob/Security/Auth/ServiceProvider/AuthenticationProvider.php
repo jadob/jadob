@@ -11,7 +11,9 @@ use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
+use Jadob\Security\Auth\Identity\IdentityProviderInterface;
 use Jadob\Security\Auth\Identity\IdentityStorageFactory;
+use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
 use Jadob\Security\Auth\UserProviderInterface;
 use Monolog\Logger;
 use Override;
@@ -40,18 +42,25 @@ class AuthenticationProvider implements ServiceProviderInterface
                 function (ContainerInterface $container) use ($config): AuthenticatorService {
                     /** @var array<string, AuthenticatorInterface> $authenticators */
                     $authenticators = [];
-                    /** @var array<string, UserProviderInterface> $userProviders */
+                    /** @var array<string, IdentityProviderInterface> $userProviders */
                     $userProviders = [];
+                    /** @var array<string, RefreshableIdentityProviderInterface> $refreshers */
+                    $refreshers = [];
 
                     foreach ($config['authenticators'] as $name => $authenticatorConfig) {
                         $authenticators[$name] = $container->get($authenticatorConfig['service']);
                         $userProviders[$name] = $container->get($authenticatorConfig['user_provider']);
+
+                        if(array_key_exists('refresher', $authenticatorConfig)) {
+                            $refreshers[$name] = $container->get($authenticatorConfig['refresher']);
+                        }
                     }
 
                     return new AuthenticatorService(
                         $container->get(IdentityStorageFactory::class),
                         $authenticators,
                         $userProviders,
+                        $refreshers
                     );
                 },
 
