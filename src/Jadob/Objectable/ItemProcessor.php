@@ -5,22 +5,14 @@ declare(strict_types=1);
 namespace Jadob\Objectable;
 
 use DateTimeInterface;
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Collections\Collection;
 use Jadob\Objectable\Annotation\Field;
 use Jadob\Objectable\Annotation\Translate;
 use LogicException;
 use ReflectionClass;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ItemProcessor
 {
-    public function __construct(
-
-    ) {
-    }
-
     /**
      * Returns array of values from fields annotated with Field class and matching context.
      *
@@ -41,8 +33,12 @@ class ItemProcessor
 
                 foreach ($context as $singleContext) {
                     if ($instance->hasContext($singleContext)) {
-                        $reflectionProperty->setAccessible(true);
                         $val = $reflectionProperty->getValue($item);
+
+                        if($instance->getMethod() !== null) {
+                            $methodName = $instance->getMethod();
+                            $val = $item->$methodName();
+                        }
 
                         $output[$instance->getName()] = $val;
 

@@ -10,17 +10,12 @@ class Field
 {
     public function __construct(
         protected string $name,
-        /**
-         * @deprecated - this seems kinda useless, so maybe make it optional?
-         * No one cares about field order in JSON.
-         * @var int
-         */
-        protected int $order,
         protected array $context = ['default'],
         protected bool $stringable = false,
         protected bool $flat = false,
         protected ?string $flatProperty = null,
-        protected ?string $dateFormat = null
+        protected ?string $dateFormat = null,
+        protected ?string $method = null
     ) {
     }
 
@@ -76,4 +71,10 @@ class Field
     {
         return $this->dateFormat;
     }
+
+    public function getMethod(): ?string
+    {
+        return $this->method;
+    }
+
 }
