@@ -39,8 +39,12 @@ jobs:
 
     - name: Install dependencies
       run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
+
+    - name: Install Psalm
+      run: make psalm-install
+
     - name: Run Psalm
-      run: vendor/bin/psalm 
+      run: make psalm
             
   phpunit:
     name: PHPUnit Tests (PHP ${{ matrix.php-versions }}, Composer ${{ matrix.composer-versions }} --prefer-${{ matrix.composer-deps }})
