@@ -73,8 +73,11 @@ jobs:
     - name: Install dependencies
       run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
       
-    - name: Run Unit Tests
-      run: vendor/bin/phpunit
+    - name: Install phpunit
+      run: make phpunit-install
+
+    - name: Run unit tests
+      run: make phpunit
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
