@@ -8,18 +8,32 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Jadob\Objectable\Annotation\Field;
 use Jadob\Objectable\Annotation\Translate;
+use Jadob\Objectable\Transformer\ItemTransformerInterface;
 use LogicException;
 use ReflectionClass;
 
 class ItemProcessor
 {
+    public function __construct(
+        /**
+         * @var ItemTransformerInterface[]
+         */
+        private array $itemTransformers = []
+    )
+    {
+    }
+
     /**
      * Returns array of values from fields annotated with Field class and matching context.
-     *
-     * @param string[] $context
      */
     public function extractItemValues(object $item, string $context = 'default'): array
     {
+        foreach ($this->itemTransformers as $itemTransformer) {
+            if ($itemTransformer->supports(get_class($item), $context)) {
+                return $itemTransformer->process($item);
+            }
+        }
+
         $output = [];
         $ref = new ReflectionClass($item);
         $props = $ref->getProperties();
@@ -45,11 +59,11 @@ class ItemProcessor
                         /** @var Translate $translationAttr */
                         $translationAttr = $translationReflection->newInstance();
 
-                            if ($val === $translationAttr->getWhen()) {
-                                $output[$instance->getName()] = $translationAttr->getThen();
-                                continue 2;
-                            }
+                        if ($val === $translationAttr->getWhen()) {
+                            $output[$instance->getName()] = $translationAttr->getThen();
+                            continue 2;
                         }
+                    }
 
                     if ($val instanceof DateTimeInterface) {
                         $dateFormat = $instance->getDateFormat();

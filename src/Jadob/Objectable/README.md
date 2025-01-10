@@ -37,3 +37,48 @@ $publicResponse = $itemProcessor->extractItemValues($user, 'PUBLIC_API');
 $managementResponse = $itemProcessor->extractItemValues($user, 'PRIVATE_API');
 
 ```
+
+
+When you need to handle specific use case, you can create a class implementing
+`Jadob\Objectable\Transformer\ItemTransformerInterface` and pass them to `ItemProcessor`:
+
+
+```php
+class MyClass {
+    public function __construct(
+        public string $key
+    ) {}
+}
+
+class TopSecretTransformer implements \Jadob\Objectable\Transformer\ItemTransformerInterface {
+
+    public function supports(string $className,string $context) : bool {
+    
+        return $className === MyClass::class && $context === 'TOP_SECRET';
+    }   
+    
+    /**
+     * @param MyClass $object
+     * @return array
+     */
+    public function process(object $object) : array{
+        return [
+            'key' => str_rot13($object->key)
+        ];   
+    }
+}
+
+
+$itemProcessor = new \Jadob\Objectable\ItemProcessor(
+    itemTransformers: [
+        new TopSecretTransformer()
+    ]
+);
+
+/**
+ * ['key' => 'uryyb']
+ */
+$result = $itemProcessor->extractItemValues(new MyClass('hello'), 'TOP_SECRET');
+```
+
+When any transformer would be matched, `extractItemValues` will return the values from transformers, no further processing will be done.
