@@ -135,6 +135,10 @@ readonly class AuthenticationListener implements ListenerProviderInterface
                 $event->setResponse($response);
             }
 
+            if($storedIdentity === null) {
+                return;
+            }
+
             $refreshedUser = $this
                 ->authenticationService
                 ->refreshIdentity(
