@@ -5,6 +5,7 @@ namespace Jadob\Router;
 
 use Jadob\Router\Exception\MethodNotAllowedException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -53,10 +54,13 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff', null, null, null, ['POST']));
         $router = new Router($routeCollection);
 
-        $router->matchRoute('/user/1/stuff', 'GET');
+        $router->matchRequest(Request::create('/user/1/stuff', 'GET'));
 
     }
 
+    /**
+     * @TODO: this seems useless - there is a host in collection, but not in the request parameters! Please remove it or fix it.
+     */
     public function testRouterWillMatchHostNames(): void
     {
         $routeCollection = new RouteCollection(
@@ -78,7 +82,7 @@ class RouterTest extends TestCase
             )
         );
         $router = new Router($routeCollection);
-        $result = $router->matchRoute('/user/1/stuff', 'GET');
+        $result = $router->matchRequest(Request::create('/user/1/stuff', 'GET'));
 
         $this->assertEquals('get_user_stuff', $result->getName());
     }
@@ -94,6 +98,7 @@ class RouterTest extends TestCase
         $this->assertEquals('/user/2/stuff', $router->generateRoute('get_user_stuff', ['id' => 2]));
 
     }
+
     public function testFullRouteWithHttpAndDefaultPortGenerating(): void
     {
         $_SERVER['HTTP_HOST'] = 'my.domain.com';
@@ -165,7 +170,7 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('pet_list', '/pets', null, null, null, ['GET']));
         $router = new Router($routeCollection);
 
-        $route = $router->matchRoute('/pets', 'POST');
+        $route = $router->matchRequest(Request::create('/pets', 'POST'));
 
         self::assertEquals('pet_add', $route->getName());
     }
@@ -180,6 +185,25 @@ class RouterTest extends TestCase
         $routeCollection->addRoute(new Route('pet_list', '/pets', null, null, null, ['GET']));
         $router = new Router($routeCollection);
 
-        $router->matchRoute('/pets', 'PATCH');
+        $router->matchRequest(Request::create('/pets', 'PATCH'));
     }
+
+
+    public function testRouteMatcher(): void
+    {
+        $routeCollection = new RouteCollection();
+
+        $routeCollection->addRoute(new Route(name: 'yay', path: '/', methods: ['POST'], params: ['yay']));
+        $routeCollection->addRoute(new Route(name: 'nay', path: '/', methods: ['POST'], params: ['meh', 'nay']));
+        $router = new Router(
+            $routeCollection,
+            matchers: [new RouterParamMatcher()]
+        );
+
+
+        $route = $router->matchRequest(Request::create('/', 'POST'));
+        self::assertEquals('yay', $route->getName());
+    }
+
+
 }

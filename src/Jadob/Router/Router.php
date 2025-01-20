@@ -27,20 +27,6 @@ use function strtoupper;
  */
 class Router
 {
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * @var RouteCollection
-     */
-    protected $routeCollection;
-
-    /**
-     * @var Context
-     */
-    protected $context;
 
     /**
      * @param RouteCollection $routeCollection
@@ -49,12 +35,15 @@ class Router
      * @param ParameterStoreInterface|null $paramStore
      */
     public function __construct(
-        RouteCollection $routeCollection,
-        ?Context $context = null,
-        array $config = [],
+        private RouteCollection $routeCollection,
+        private ?Context $context = null,
+        private array $config = [],
+        /**
+         * @var array<RouteMatcherInterface>
+         */
+        private array $matchers = [],
         protected ?ParameterStoreInterface $paramStore = null
     ) {
-        $this->routeCollection = $routeCollection;
 
         $defaultConfig = [
             'case_sensitive' => false
@@ -62,9 +51,7 @@ class Router
 
         $this->config = array_merge($defaultConfig, $config);
 
-        if ($context instanceof Context) {
-            $this->context = $context;
-        } else {
+        if ($context == null) {
             $this->context = Context::fromGlobals();
         }
     }
@@ -94,15 +81,15 @@ class Router
 
 
     /**
-     * @param string $path
-     * @param string $method
+     * @param Request $request
      * @return Route
-     * @throws MethodNotAllowedException
      * @throws RouteNotFoundException
+     * @throws MethodNotAllowedException
      */
-    public function matchRoute(string $path, string $method): Route
+    public function matchRequest(Request $request): Route
     {
-        $method = strtoupper($method);
+        $path = $request->getPathInfo();
+        $method = strtoupper($request->getMethod());
         $availableMethodsFound = [];
 
         foreach ($this->routeCollection as $routeKey => $route) {
@@ -126,6 +113,13 @@ class Router
 
                 $parameters = array_merge($parameters, $this->transformMatchesToParameters($matches));
                 $route->setParams($parameters);
+
+                foreach ($this->matchers as $matcher) {
+                    if(!$matcher->matches($route, $request)) {
+                        continue 2;
+                    }
+                }
+                $request->attributes->add($route->getParams());
                 return $route;
             }
         }
@@ -136,23 +130,6 @@ class Router
         }
 
         throw new RouteNotFoundException('No route matched for URI ' . $path);
-    }
-
-    /**
-     * @param Request $request
-     * @return Route
-     * @throws RouteNotFoundException
-     * @throws MethodNotAllowedException
-     */
-    public function matchRequest(Request $request): Route
-    {
-        $matchedRoute = $this->matchRoute(
-            $request->getPathInfo(),
-            $request->getMethod()
-        );
-
-        $request->attributes->add($matchedRoute->getParams());
-        return $matchedRoute;
     }
 
     /**
