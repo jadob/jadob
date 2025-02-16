@@ -49,7 +49,6 @@
     "jadob/router": "self.version",
     "jadob/bridge-doctrine-migrations": "self.version",
     "jadob/bridge-doctrine-dbal": "self.version",
-    "jadob/bridge-doctrine-annotations": "self.version",
     "jadob/bridge-doctrine-persistence": "self.version",
     "jadob/bridge-doctrine-orm": "self.version",
     "jadob/bridge-aws-ses": "self.version",

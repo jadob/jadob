@@ -11,7 +11,6 @@
     "jadob/bridge-doctrine-dbal": "^0.4.1",
     "jadob/bridge-doctrine-persistence": "^0.4.1",
     "doctrine/orm": ">= 2.8",
-    "doctrine/cache": "^1.11",
-    "jadob/bridge-doctrine-annotations": "^0.4.1"
+    "doctrine/cache": "^1.11"
   }
 }
