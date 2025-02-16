@@ -310,5 +310,10 @@ class Router
         $this->routeCollection->addRoute($route);
         return $this;
     }
+
+    public function addRouteMatcher(RouteMatcherInterface $matcher)
+    {
+        $this->matchers[] = $matcher;
+    }
 }
 
