@@ -83,6 +83,15 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
          * @var \Twig\Environment $twig
          */
         $twig = $container->get('twig');
+
+        if(!array_key_exists('forms', $config)) {
+            throw new \Exception('There is no `forms` key in `translator` node.');
+        }
+
+        if(count($config['forms']) === 0) {
+            throw new \Exception('There is no form layouts defined in `translator` node.');
+        }
+
         $formEngine = new TwigRendererEngine($config['forms'], $twig);
 
         $twig->addRuntimeLoader(

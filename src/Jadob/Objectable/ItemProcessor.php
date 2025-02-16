@@ -14,13 +14,17 @@ use ReflectionClass;
 
 class ItemProcessor
 {
+
+    /**
+     * @var ItemTransformerInterface[]
+     */
+    private array $itemTransformers = [];
+
     public function __construct(
-        /**
-         * @var ItemTransformerInterface[]
-         */
-        private array $itemTransformers = []
+        iterable $itemTransformers = []
     )
     {
+        $this->itemTransformers = iterator_to_array($itemTransformers);
     }
 
     /**
