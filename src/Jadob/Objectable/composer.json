@@ -4,9 +4,7 @@
   "description": "Convert your php objects into html table",
   "license": "MIT",
   "require": {
-    "php": "^8",
-    "doctrine/annotations": "^1.13",
-    "symfony/property-access": "^7.2"
+    "php": "^8"
   },
   "autoload": {
     "psr-4": {
