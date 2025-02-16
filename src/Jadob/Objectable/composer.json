@@ -1,7 +1,7 @@
 {
   "name": "jadob/objectable",
   "type": "library",
-  "description": "Convert your php objects into html table",
+  "description": "",
   "license": "MIT",
   "require": {
     "php": "^8"
