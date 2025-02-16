@@ -16,7 +16,5 @@
     "jadob/container": "^0.4.1",
     "jadob/router": "^0.4.1",
     "symfony/http-foundation": "^6.0",
-    "nyholm/psr7": "^1.5",
-    "symfony/psr-http-message-bridge": "^2.1"
   }
 }
