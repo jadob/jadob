@@ -58,6 +58,7 @@ class RouterServiceProvider implements ServiceProviderInterface
                     $collection,
                     $context,
                     $config,
+                    [],
                     new StickyParameterStore(
                         $container->get(RequestContextStore::class)
                     )
