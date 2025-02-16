@@ -23,8 +23,7 @@
     "ext-json": "*",
     "doctrine/cache": "^1.12",
     "doctrine/dbal": ">=2.13",
-    "symfony/mime": "*",
-    "doctrine/annotations": "^1.13"
+    "symfony/mime": "*"
   },
   "require-dev": {
     "digitalnature/php-ref": "^1.3",

@@ -5,7 +5,6 @@
  */
 
 $thirdPartyPackagesVersions = [
-    'doctrine/annotations' => '^1.13',
     'doctrine/cache' => '^1.11',
     'doctrine/dbal' => '>= 2.13',
     'doctrine/orm' => '>= 2.8',

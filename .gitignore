@@ -21,7 +21,5 @@
 /src/Jadob/Bridge/Twig/composer.lock
 /src/Jadob/EventDispatcher/vendor
 /src/Jadob/EventDispatcher/composer.lock
-/src/Jadob/Bridge/Doctrine/Annotations/vendor
-/src/Jadob/Bridge/Doctrine/Annotations/composer.lock
 /src/Jadob/Bridge/Doctrine/ORM/vendor
 /src/Jadob/Bridge/Doctrine/ORM/composer.lock
