@@ -8,6 +8,6 @@
     }
   },
   "require": {
-    "doctrine/persistence": "^2.4"
+    "doctrine/persistence": "^4"
   }
 }
