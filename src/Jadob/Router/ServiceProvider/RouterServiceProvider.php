@@ -31,7 +31,7 @@ class RouterServiceProvider implements ServiceProviderInterface
      * @param  $config
      * @return Closure[]
      */
-    public function register($config)
+    public function register(ContainerInterface $container, $config): array
     {
         return [
             'router' => static function (ContainerInterface $container) use ($config): Router {

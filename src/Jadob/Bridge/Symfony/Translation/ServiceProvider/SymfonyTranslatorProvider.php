@@ -42,7 +42,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
      *
      * @return array<string, callable|object>
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         return [
             //expose this as a separate service to make it possible to override

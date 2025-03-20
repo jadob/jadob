@@ -45,7 +45,7 @@ class TwigProvider implements ServiceProviderInterface
      * @throws \Twig\Error\LoaderError
      *
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         $loaderClosure = static function (ContainerInterface $container) use ($config): \Twig\Loader\FilesystemLoader {
             $loader = new FilesystemLoader();

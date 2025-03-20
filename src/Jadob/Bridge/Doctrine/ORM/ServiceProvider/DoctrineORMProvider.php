@@ -52,7 +52,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
      *
      * @psalm-return array<string, \Closure(ContainerInterface):EntityManager>
      */
-    public function register($config)
+    public function register(ContainerInterface $container, $config): array
     {
         /**
          * Entity paths must be defined, otherwise there is no sense to load rest of ORM

@@ -53,7 +53,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         $mappingTypes = [];
         if (!isset($config['connections']) || \count($config['connections']) === 0) {

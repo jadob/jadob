@@ -7,6 +7,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 
 class PersistenceProvider implements ServiceProviderInterface
 {
@@ -15,7 +16,7 @@ class PersistenceProvider implements ServiceProviderInterface
         return null;
     }
 
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         return [
             ManagerRegistry::class => static function (): ManagerRegistry {

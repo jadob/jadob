@@ -9,6 +9,7 @@ use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ParentProviderInterface;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 use ReflectionException;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -47,7 +48,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         //TODO move to parent provider
         $validator = Validation::createValidatorBuilder();

@@ -28,7 +28,7 @@ class AuthenticationProvider implements ServiceProviderInterface
         return 'authenticator';
     }
 
-    public function register($config): array
+    public function register(ContainerInterface $container, ?array $config): array
     {
         return [
             'jadob.auth.auth_logger' =>
