@@ -5,6 +5,7 @@ namespace Jadob\Container\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Psr\Container\ContainerInterface;
 
 /**
  * @TODO:   Maybe we should add here 'getDefaultConfiguration' method, which will be merged with user-defined config?
@@ -24,10 +25,14 @@ interface ServiceProviderInterface
 
     /**
      * Here you can define things that will be registered in Container.
-     *
+     * @param ContainerInterface $container - TODO: make it read-only (no side-loading, if something has to be registered, it has be returned here!)
      * @param array[]|null $config
+     * @return array<string, object>
      */
-    public function register($config);
+    public function register(
+        ContainerInterface $container,
+        ?array $config
+    ): array;
 
     /**
      * Stuff that's needed to be done after container is built.
