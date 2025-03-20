@@ -7,6 +7,7 @@ namespace Jadob\Bridge\Symfony\Console\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Container\ServiceProvider\ServiceProviderInterface;
 use Jadob\Core\Kernel;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
 /**
@@ -33,7 +34,7 @@ class ConsoleProvider implements ServiceProviderInterface
      *
      * @psalm-return array{console: Application}|null
      */
-    public function register($config): ?array
+    public function register(ContainerInterface $container, ?array $config): array
     {
         /**
          * We should not rely on PHP_SAPI here
@@ -42,7 +43,7 @@ class ConsoleProvider implements ServiceProviderInterface
             return ['console' => new Application('Jadob', Kernel::VERSION)];
         }
 
-        return null;
+        return [];
     }
 
     /**
