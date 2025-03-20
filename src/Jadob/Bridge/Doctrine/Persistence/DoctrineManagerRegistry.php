@@ -22,12 +22,12 @@ class DoctrineManagerRegistry implements ManagerRegistry
     protected array $managers = [];
     protected string $defaultManager = 'default';
 
-    public function getDefaultConnectionName()
+    public function getDefaultConnectionName(): string
     {
         return $this->defaultConnection;
     }
 
-    public function getConnection($name = null)
+    public function getConnection($name = null): object
     {
         if ($name === null) {
             return $this->connections[$this->defaultConnection];
@@ -36,22 +36,22 @@ class DoctrineManagerRegistry implements ManagerRegistry
         return $this->connections[$name];
     }
 
-    public function getConnections()
+    public function getConnections(): array
     {
         return $this->connections;
     }
 
-    public function getConnectionNames()
+    public function getConnectionNames(): array
     {
         return array_keys($this->connections);
     }
 
-    public function getDefaultManagerName()
+    public function getDefaultManagerName(): string
     {
         return $this->defaultManager;
     }
 
-    public function getManager($name = null)
+    public function getManager($name = null): ObjectManager
     {
         if ($name === null) {
             return $this->managers[$this->defaultManager];
@@ -60,32 +60,32 @@ class DoctrineManagerRegistry implements ManagerRegistry
         return $this->managers[$name];
     }
 
-    public function getManagers()
+    public function getManagers(): array
     {
         return $this->managers;
     }
 
-    public function resetManager($name = null)
+    public function resetManager($name = null): ObjectManager
     {
         throw new Exception('resetManager NIY');
     }
 
-    public function getAliasNamespace($alias)
-    {
-        throw new Exception('resetManager NIY');
-    }
-
-    public function getManagerNames()
+    public function getManagerNames(): array
     {
         return array_keys($this->managers);
     }
 
-    public function getRepository($persistentObject, $persistentManagerName = null)
+    public function getRepository($persistentObject, $persistentManagerName = null): \Doctrine\Persistence\ObjectRepository
     {
-        throw new Exception('resetManager NIY');
+        throw new Exception('getRepository NIY');
     }
 
-    public function getManagerForClass($class)
+    /**
+     * @TODO: rewrite it in a more more maintainable fashion - catch does not catch anything
+     * @param $class
+     * @return ObjectManager|null
+     */
+    public function getManagerForClass($class): ?ObjectManager
     {
         foreach ($this->managers as $manager) {
             try {
@@ -95,7 +95,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
             }
         }
 
-        return false;
+        return null;
     }
 
     public function addConnection(string $name, Connection $connection): void
