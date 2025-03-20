@@ -32,7 +32,7 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
         return 'doctrine_migrations';
     }
 
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         $output = [];
         $ormMigrations = $config['orm'];
