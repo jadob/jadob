@@ -86,6 +86,8 @@ class ContainerBuilder
     public function build(array $config = []): Container
     {
         $this->emit(new ContainerBuildStartedEvent());
+        $container = new Container($this->definitions);
+
         foreach ($this->serviceProviders as $serviceProvider) {
             //prevent registration duplication
             if (isset($this->instantiatedProviders[$serviceProvider])) {
@@ -108,15 +110,13 @@ class ContainerBuilder
                         $parentProvider = $this->instantiateProvider($parentProviderFqcn);
                     }
 
-                    $this->registerProvider($parentProvider, $config);
+                    $this->registerProvider($container, $parentProvider, $config);
                 }
             }
 
-            $this->registerProvider($provider, $config);
-            $this->emit(new ProviderRegisteredEvent($serviceProvider));
+            $this->registerProvider($container,$provider, $config);
         }
 
-        $container = new Container($this->definitions);
 
         foreach ($this->instantiatedProviders as $provider) {
             $configNodeKey = $provider->getConfigNode();
@@ -184,16 +184,20 @@ class ContainerBuilder
         return $provider;
     }
 
-    private function registerProvider(ServiceProviderInterface $provider, array $config = []): void
+    private function registerProvider(
+        Container $container,
+        ServiceProviderInterface $provider,
+        array $config = []
+    ): void
     {
         $configNodeKey = $provider->getConfigNode();
         $configNode = $this->getConfigNode($config, $configNodeKey);
 
-        $results = $provider->register($configNode);
+        $results = $provider->register($container, $configNode);
 
         if (is_array($results)) {
             foreach ($results as $serviceKey => $service) {
-                $this->add($serviceKey, $service);
+                $container->add($serviceKey, $service);
             }
         }
     }
