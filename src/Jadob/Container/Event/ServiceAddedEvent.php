@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Event;
 
+/**
+ * @deprecated
+ */
 class ServiceAddedEvent implements BuilderRelatedEventInterface
 {
     protected $serviceName;
