@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Container\ServiceProvider;
 
 use Jadob\Container\Container;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class AbstractServiceProvider
@@ -18,7 +19,7 @@ abstract class AbstractServiceProvider implements ServiceProviderInterface
      *
      * @return void
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
     }
 
