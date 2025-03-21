@@ -56,7 +56,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.4.23';
+    public const VERSION = '0.5.0';
 
     /**
      * @var Config
