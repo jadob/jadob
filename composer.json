@@ -23,7 +23,8 @@
     "ext-json": "*",
     "doctrine/cache": "^1.12",
     "doctrine/dbal": ">=2.13",
-    "symfony/mime": "*"
+    "symfony/mime": "*",
+    "symfony/cache": "^7.2"
   },
   "require-dev": {
     "infection/infection": "^0.26"
