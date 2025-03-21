@@ -26,7 +26,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
-class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterface
+class DynamiteProvider implements ServiceProviderInterface
 {
     /**
      * @inheritDoc
@@ -39,13 +39,9 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
     /**
      * @inheritDoc
      */
-    public function register($config)
+    public function register(ContainerInterface $container, ?array $config): array
     {
         $output = [];
-        $annotationReaderId = 'doctrine.annotations.reader';
-        if (isset($config['annotation_reader_id'])) {
-            $annotationReaderId = $config['annotation_reader_id'];
-        }
 
         $output['dynamite.logger'] = static function (ContainerInterface $container): LoggerInterface {
             /** @noinspection MissingService */
@@ -53,22 +49,20 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
         };
 
         $useCache = $config['cache'] ?? false;
-        $output['dynamite.item_mapping_reader'] = function (ContainerInterface $container) use ($useCache, $annotationReaderId): ItemMappingReader {
+        $output['dynamite.item_mapping_reader'] = function (ContainerInterface $container) use ($useCache): ItemMappingReader {
             if ($useCache) {
                 return new CachedItemMappingReader(
-                    $container->get($annotationReaderId),
                     $container->get(CacheInterface::class)
                 );
             }
 
             return new ItemMappingReader(
-                $container->get($annotationReaderId)
             );
         };
 
         $instanceServiceIds = [];
         foreach ($config['tables'] as $instanceName => $table) {
-            $instanceDef = static function (ContainerInterface $container) use ($table, $annotationReaderId, $useCache): ItemManager {
+            $instanceDef = static function (ContainerInterface $container) use ($table, $useCache): ItemManager {
                 $clientId = DynamoDbClient::class;
 
                 if (isset($table['connection'])) {
@@ -91,8 +85,7 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
                     $container->get(ItemSerializer::class),
                     $container->get(KeyFormatResolver::class),
                     $container->get('dynamite.logger'),
-                    new Marshaler(),
-                    $container->get($annotationReaderId),
+                    new Marshaler()
                 );
             };
 
@@ -134,15 +127,5 @@ class DynamiteProvider implements ServiceProviderInterface, ParentProviderInterf
     public function onContainerBuild(Container $container, $config)
     {
         // TODO: Implement onContainerBuild() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getParentProviders(): array
-    {
-        return [
-            DoctrineAnnotationsProvider::class
-        ];
     }
 }
