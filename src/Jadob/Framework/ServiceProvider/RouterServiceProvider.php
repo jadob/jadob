@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
-use Closure;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\RequestContextStore;
@@ -12,6 +11,7 @@ use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Jadob\Router\StickyParameterStore;
 use Psr\Container\ContainerInterface;
+use function is_array;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -19,24 +19,18 @@ use Psr\Container\ContainerInterface;
  */
 class RouterServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * @return string
-     */
-    public function getConfigNode()
+
+    public function getConfigNode(): ?string
     {
         return 'router';
     }
 
-    /**
-     * @param  $config
-     * @return Closure[]
-     */
-    public function register(ContainerInterface $container, $config): array
+    public function register(ContainerInterface $container, array|null|object $config = null): array
     {
         return [
             'router' => static function (ContainerInterface $container) use ($config): Router {
                 $collection = $config['routes'];
-                if (\is_array($config['routes'])) {
+                if (is_array($config['routes'])) {
                     $collection = RouteCollection::fromArray($config['routes']);
                 }
 

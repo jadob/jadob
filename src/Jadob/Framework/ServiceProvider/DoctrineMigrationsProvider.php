@@ -19,19 +19,20 @@ use Doctrine\Migrations\Tools\Console\Command\SyncMetadataCommand;
 use Doctrine\Migrations\Tools\Console\Command\VersionCommand;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use LogicException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 
-class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProviderInterface
+class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'doctrine_migrations';
     }
 
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         $output = [];
         $ormMigrations = $config['orm'];
@@ -83,7 +84,7 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentProv
         }
     }
 
-    public function getParentProviders(): array
+    public function getParentServiceProviders(): array
     {
         return [
             DoctrineORMProvider::class

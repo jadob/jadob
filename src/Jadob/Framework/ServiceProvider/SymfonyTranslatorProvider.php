@@ -31,7 +31,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
      *
      * @return string|null
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'translator';
     }
@@ -42,7 +42,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
      *
      * @return array<string, callable|object>
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         return [
             //expose this as a separate service to make it possible to override

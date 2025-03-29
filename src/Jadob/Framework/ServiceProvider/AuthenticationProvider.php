@@ -22,12 +22,12 @@ use Psr\Log\LoggerInterface;
 
 class AuthenticationProvider implements ServiceProviderInterface
 {
-    public function getConfigNode(): string
+    public function getConfigNode(): ?string
     {
         return 'authenticator';
     }
 
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         return [
             'jadob.auth.auth_logger' =>

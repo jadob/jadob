@@ -7,6 +7,7 @@ use Closure;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
@@ -27,12 +28,12 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInterface
+class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'forms';
     }
@@ -47,7 +48,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, object|null|array $config = null): array
     {
         //TODO move to parent provider
         $validator = Validation::createValidatorBuilder();
@@ -84,11 +85,11 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
          */
         $twig = $container->get('twig');
 
-        if(!array_key_exists('forms', $config)) {
+        if (!array_key_exists('forms', $config)) {
             throw new \Exception('There is no `forms` key in `translator` node.');
         }
 
-        if(count($config['forms']) === 0) {
+        if (count($config['forms']) === 0) {
             throw new \Exception('There is no form layouts defined in `translator` node.');
         }
 
@@ -110,7 +111,7 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentProviderInt
         );
     }
 
-    public function getParentProviders(): array
+    public function getParentServiceProviders(): array
     {
         return [
             TwigProvider::class

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
-use;
 use Closure;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManager;
@@ -19,6 +18,7 @@ use Jadob\Bridge\Doctrine\ORM\EntityManagerFactory;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
@@ -37,7 +37,7 @@ use Symfony\Component\Console\Helper\HelperSet;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInterface
+class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     /**
      * {@inheritdoc}
@@ -55,7 +55,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
      *
      * @psalm-return array<string, \Closure(ContainerInterface):EntityManager>
      */
-    public function register(ContainerInterface $container, $config): array
+    public function register(ContainerInterface $container, array|null|object $config = null): array
     {
         /**
          * Entity paths must be defined, otherwise there is no sense to load rest of ORM
@@ -270,7 +270,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
      * @return array
      * @psalm-return class-string[]
      */
-    public function getParentProviders(): array
+    public function getParentServiceProviders(): array
     {
         return [
             DoctrinePersistenceProvider::class,

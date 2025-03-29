@@ -22,19 +22,19 @@ class ConsoleProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return null;
     }
 
     /**
-     * @param null $config
+     * @param ContainerInterface $container
+     * @param object|array|null $config
      *
-     * @return Application[]|null
+     * @return array
      *
-     * @psalm-return array{console: Application}|null
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         /**
          * We should not rely on PHP_SAPI here
