@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionNamedType;
+use function is_array;
 
 class Container implements ContainerInterface, ServiceProviderHandlerInterface
 {
@@ -47,8 +48,9 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
     /**
      * @throws ContainerException
+     * @throws \ReflectionException
      */
-    public function add(string $id, ?object $service): void
+    public function add(string $id, null|object|array $service): void
     {
         $fqcnUsedAsId = true;
         if (!class_exists($id)) {
@@ -67,6 +69,10 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 ->setClassName($id);
 
             return;
+        }
+
+        if(is_array($service)) {
+            $service = self::createDefinition($id, $service);
         }
 
         if ($service instanceof Definition) {
@@ -203,8 +209,6 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      */
     private function doGet(string $id, bool $public = false): object
     {
-
-        //
         $this->resolvingChain[] = $id;
 
         /**
@@ -339,49 +343,73 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 );
             }
 
-            $definition = Definition::create();
-
-            if ($serviceConfig instanceof Closure) {
-                $definition->setFactory($serviceConfig);
-                $closureReflection = new ReflectionFunction($serviceConfig);
-                $returnType = $closureReflection->getReturnType();
-
-                if ($returnType instanceof ReflectionNamedType) {
-                    $definition->setClassName($returnType->getName());
-                }
-
-            } elseif (is_object($serviceConfig)) {
-                $definition->setClassName(get_class($serviceConfig));
-                $definition->setFactory(static function () use ($serviceConfig) {
-                    return $serviceConfig;
-                });
-            } elseif (is_array($serviceConfig)) {
-                $definition->setClassName($serviceConfig['class'] ?? $serviceId);
-
-                if (array_key_exists('factory', $serviceConfig)) {
-                    $definition->setFactory($serviceConfig['factory']);
-                }
-
-                $definition->setAutowired($serviceConfig['autowire'] ?? false);
-            } else {
-                throw new ContainerException(
-                    sprintf('Unable to build configuration for service id "%s" ', $serviceId)
-                );
-            }
-
-            if ($definition->getClassName() === null) {
-                throw new ContainerException(
-                    sprintf(
-                        'Service "%s" does neither have a class name or factory return hint.',
-                        $serviceId
-                    )
-                );
-            }
-            $container->add($serviceId, $definition);
+            $container->add(
+                $serviceId,
+                self::createDefinition(
+                    $serviceId,
+                    $serviceConfig
+                )
+            );
         }
 
         return $container;
     }
+
+
+    /**
+     * @throws \ReflectionException
+     * @throws ContainerException
+     */
+    private static function createDefinition(
+        string $serviceId,
+        array|object $serviceConfig,
+    ): Definition
+    {
+        $definition = Definition::create();
+
+        if ($serviceConfig instanceof Closure) {
+            $definition->setFactory($serviceConfig);
+            $closureReflection = new ReflectionFunction($serviceConfig);
+            $returnType = $closureReflection->getReturnType();
+
+            if ($returnType instanceof ReflectionNamedType) {
+                $definition->setClassName($returnType->getName());
+            }
+        } elseif (is_object($serviceConfig)) {
+            $definition->setClassName(get_class($serviceConfig));
+            $definition->setFactory(static function () use ($serviceConfig) {
+                return $serviceConfig;
+            });
+        } elseif (is_array($serviceConfig)) {
+            if(array_key_exists('class', $serviceConfig) && class_exists($serviceConfig['class'])) {
+                $definition->setClassName($serviceConfig['class']);
+            } elseif (class_exists($serviceId)) {
+                $definition->setClassName($serviceId);
+            }
+
+            if (array_key_exists('factory', $serviceConfig)) {
+                $definition->setFactory($serviceConfig['factory']);
+            }
+
+            $definition->setAutowired($serviceConfig['autowire'] ?? false);
+        } else {
+            throw new ContainerException(
+                sprintf('Unable to build configuration for service id "%s" ', $serviceId)
+            );
+        }
+
+        if ($definition->getClassName() === null) {
+            throw new ContainerException(
+                sprintf(
+                    'Service "%s" does neither have a class name or factory return hint.',
+                    $serviceId
+                )
+            );
+        }
+
+        return $definition;
+    }
+
 
     public function registerServiceProvider(object $serviceProvider): void
     {
