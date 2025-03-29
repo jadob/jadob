@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+/**
+ * @deprecated
+ */
 class ContainerEventListener
 {
     public static $events = [];
