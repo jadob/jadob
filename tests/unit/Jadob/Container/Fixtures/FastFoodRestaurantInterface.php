@@ -2,7 +2,7 @@
 
 namespace Jadob\Container\Fixtures;
 
-class ExampleService
+interface FastFoodRestaurantInterface
 {
 
 }
