@@ -38,7 +38,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'doctrine_dbal';
     }
@@ -53,7 +53,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         $mappingTypes = [];
         if (!isset($config['connections']) || \count($config['connections']) === 0) {
@@ -99,7 +99,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
             return $logger;
         };
-        
 
 
         $services[Configuration::class] = function (ContainerInterface $container): Configuration {
@@ -112,7 +111,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             $configuration->setMiddlewares([
                 new Middleware($container->get('doctrine.dbal.logger'))
             ]);
-            
+
 
             return $configuration;
         };
@@ -120,7 +119,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         $defaultConnectionName = null;
         foreach ($config['connections'] as $connectionName => $configuration) {
             $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
-            if (isset($configuration['default']) && (bool) $configuration['default']) {
+            if (isset($configuration['default']) && (bool)$configuration['default']) {
                 if ($defaultConnectionName !== null) {
                     throw new InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');
                 }
@@ -129,7 +128,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             }
 
             $services[$serviceName] = function (ContainerInterface $container) use ($configuration, $eventManager, $mappingTypes): \Doctrine\DBAL\Connection {
-                $connection =  DriverManager::getConnection(
+                $connection = DriverManager::getConnection(
                     $configuration,
                     $container->get(Configuration::class)
                 );
