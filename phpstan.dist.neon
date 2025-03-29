@@ -1,0 +1,8 @@
+parameters:
+    level: 10
+    paths:
+        - src
+        - tests
+includes:
+        - tests/Jadob/Container/phpstan.neon
+        - vendor/phpstan/phpstan-strict-rules/rules.neon
