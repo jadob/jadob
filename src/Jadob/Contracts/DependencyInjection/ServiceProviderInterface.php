@@ -13,7 +13,7 @@ interface ServiceProviderInterface
      * be passed further into register() method.
      * @return string|null
      */
-    public function getConfigurationNode(): ?string;
+    public function getConfigNode(): ?string;
 
 
     /**
