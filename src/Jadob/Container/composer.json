@@ -6,5 +6,8 @@
     "psr-4": {
       "Jadob\\Container\\": ""
     }
+  },
+  "require": {
+    "marcj/topsort": "^2.0"
   }
 }
