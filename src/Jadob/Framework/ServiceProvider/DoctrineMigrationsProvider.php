@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -17,10 +17,9 @@ use Doctrine\Migrations\Tools\Console\Command\RollupCommand;
 use Doctrine\Migrations\Tools\Console\Command\StatusCommand;
 use Doctrine\Migrations\Tools\Console\Command\SyncMetadataCommand;
 use Doctrine\Migrations\Tools\Console\Command\VersionCommand;
-use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineORMProvider;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ParentProviderInterface;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use LogicException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;

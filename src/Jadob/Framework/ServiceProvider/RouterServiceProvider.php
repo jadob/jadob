@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Router\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\RequestContextStore;
 use Jadob\Router\Context;
 use Jadob\Router\RouteCollection;

@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
+use;
 use Closure;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\EventManager;
-use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\ORMSetup;
@@ -16,14 +14,12 @@ use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
-use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
 use Jadob\Bridge\Doctrine\ORM\EntityManagerFactory;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
-use Jadob\Bridge\Doctrine\Persistence\ServiceProvider\PersistenceProvider;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ParentProviderInterface;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
 use LogicException;
@@ -277,7 +273,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentProviderInt
     public function getParentProviders(): array
     {
         return [
-            PersistenceProvider::class,
+            DoctrinePersistenceProvider::class,
             DoctrineDBALProvider::class
         ];
     }

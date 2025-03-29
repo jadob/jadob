@@ -1,22 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
 use Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
-use Jadob\Bridge\Doctrine\DBAL\Logger\Psr11QueryLogger;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use LogicException;
 use Monolog\Handler\StreamHandler;
@@ -99,19 +99,20 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
             return $logger;
         };
-
-        $services['doctrine.dbal.query.logger'] = function (ContainerInterface $container): Psr11QueryLogger {
-            $logger = new Psr11QueryLogger(
-                $container->get('doctrine.dbal.logger')
-            );
-
-            return $logger;
-        };
+        
 
 
         $services[Configuration::class] = function (ContainerInterface $container): Configuration {
             $configuration = new Configuration();
-            $configuration->setSQLLogger($container->get('doctrine.dbal.query.logger'));
+            /**
+             * @TODO: this is a good place to use container tags!
+             * doctrine/dbal does not seem to have method to add single middleware, there is no better thing to do than
+             * just tag middlewares and get a collection of them here.
+             */
+            $configuration->setMiddlewares([
+                new Middleware($container->get('doctrine.dbal.logger'))
+            ]);
+            
 
             return $configuration;
         };
@@ -130,8 +131,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
             $services[$serviceName] = function (ContainerInterface $container) use ($configuration, $eventManager, $mappingTypes): \Doctrine\DBAL\Connection {
                 $connection =  DriverManager::getConnection(
                     $configuration,
-                    $container->get(Configuration::class),
-                    $eventManager
+                    $container->get(Configuration::class)
                 );
 
                 foreach ($mappingTypes as $sqlType => $doctrineType) {
@@ -172,7 +172,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface
 
             $console->addCommands(
                 [
-                    new ReservedWordsCommand($connectionProvider),
                     new RunSqlCommand($connectionProvider)
                 ]
             );

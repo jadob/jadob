@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Security\Auth\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
@@ -14,7 +14,6 @@ use Jadob\Security\Auth\EventListener\AuthenticationListener;
 use Jadob\Security\Auth\Identity\IdentityProviderInterface;
 use Jadob\Security\Auth\Identity\IdentityStorageFactory;
 use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
-use Jadob\Security\Auth\UserProviderInterface;
 use Monolog\Logger;
 use Override;
 use Psr\Container\ContainerInterface;

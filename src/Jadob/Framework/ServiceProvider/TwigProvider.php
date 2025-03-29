@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Twig\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
@@ -9,7 +9,7 @@ use Jadob\Bridge\Twig\Extension\DebugExtension;
 use Jadob\Bridge\Twig\Extension\PathExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Kernel;
 use Psr\Container\ContainerInterface;
@@ -31,7 +31,7 @@ class TwigProvider implements ServiceProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'twig';
     }
@@ -45,7 +45,7 @@ class TwigProvider implements ServiceProviderInterface
      * @throws \Twig\Error\LoaderError
      *
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, array|null|object $config = null): array
     {
         $loaderClosure = static function (ContainerInterface $container) use ($config): \Twig\Loader\FilesystemLoader {
             $loader = new FilesystemLoader();

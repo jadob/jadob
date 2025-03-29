@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Dashboard\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Container;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Dashboard\Bridge\Jadob\JadobUrlGenerator;
 use Jadob\Dashboard\Component\BigNumberComponent;
 use Jadob\Dashboard\Component\ComponentProcessor;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Jadob\EventStore\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\EventStore\DBALEventStore;
 use Jadob\EventStore\EventDispatcher;
