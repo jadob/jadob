@@ -212,19 +212,16 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 )
             );
 
-            $services['doctrine.orm.' . $managerName] = function (ContainerInterface $container) use (
+            $services['doctrine.orm.' . $managerName] = function (ManagerRegistry $managerRegistry) use (
                 $managerName,
             ): EntityManager {
-                /** @var ManagerRegistry $registry */
-                $registry = $container->get(ManagerRegistry::class);
-
-                return $registry->getManager($managerName);
+                return $managerRegistry->getManager($managerName);
             };
         }
 
-        $services[MultipleEntityManagerProvider::class] = function (ContainerInterface $container): MultipleEntityManagerProvider {
+        $services[MultipleEntityManagerProvider::class] = function (ManagerRegistry $managerRegistry): MultipleEntityManagerProvider {
             return new MultipleEntityManagerProvider(
-                $container->get(ManagerRegistry::class),
+                $managerRegistry,
             );
         };
 
