@@ -71,17 +71,5 @@ class AuthenticationProvider implements ServiceProviderInterface
         ];
     }
 
-    /**
-     * @throws ServiceNotFoundException
-     * @throws ContainerException
-     */
-    #[Override]
-    public function onContainerBuild(Container $container, $config): void
-    {
-        /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $container->get(EventDispatcherInterface::class);
-        $eventDispatcher->addListener(
-            $container->get(AuthenticationListener::class)
-        );
-    }
+
 }
