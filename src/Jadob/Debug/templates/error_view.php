@@ -243,34 +243,7 @@ use Jadob\Core\Kernel;
             </table>
         </section>
     </section>
-    <section class="container-dump">
-        <h2 class="error-wrapper__content_stack-trace-header">Container Event dump:</h2>
-        <table class="table">
-            <thead>
-            <tr>
-                <td class="key">ID</td>
-                <td class="key">Timestamp</td>
-                <td class="key">Event</td>
-                <td>Payload</td>
-            </tr>
-            </thead>
-            <?php
-            $id = 1;
-            foreach (\Jadob\Container\ContainerEventListener::$events as $timestamp => $event) { ?>
-                <tr>
-                    <td class="key"><?php echo $id++ ?></td>
-                    <td class="key"><?php echo $timestamp ?></td>
-                    <td class="key"><?php echo get_class($event) ?></td>
-                    <td>
-                        <?php
-                        if (method_exists($event, 'getPayload')) { ?>
-                            <?php echo $event->getPayload() ?>
-                        <?php } ?>
-                    </td>
-                </tr>
-            <?php } ?>
-        </table>
-    </section>
+
     <footer class="error-wrapper__footer">
         <a target="_blank"
            class="error-wrapper__footer-link"
