@@ -12,6 +12,8 @@ use Jadob\Container\Fixtures\ShopDomain\DbProductRepository;
 use Jadob\Container\Fixtures\ShopDomain\ProductRepositoryInterface;
 use Jadob\Container\Fixtures\ShopDomain\ProductService;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Watch out:
@@ -113,6 +115,23 @@ class ContainerTest extends TestCase
         ]);
 
         self::assertInstanceOf(ProductService::class, $container->get(ProductService::class));
+    }
+
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerException
+     */
+    public function testFactoryAddedDirectlyViaAddWillNotBeWrappedAgain(): void
+    {
+        $container = new Container();
+        $container->add(KebabShop::class, static fn () => new KebabShop());
+
+        self::assertInstanceOf(
+            KebabShop::class,
+            $container->get(KebabShop::class)
+        );
     }
 
 }

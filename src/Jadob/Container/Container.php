@@ -80,9 +80,9 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         $this->updateInterfaceMap(get_class($service), $id);
 
         $definition = Definition::create()
-            ->setFactory(static function () use ($service) {
-                return $service;
-            });
+            ->setFactory(
+                $this->wrapServiceIntoFactory($service)
+            );
 
         if ($fqcnUsedAsId) {
             $definition->setClassName($id);
@@ -91,6 +91,17 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         $this->definitions[$id] = $definition;
     }
 
+
+    private function wrapServiceIntoFactory(object $service): Closure
+    {
+        if ($service instanceof Closure) {
+            return $service;
+        }
+
+        return function () use ($service) {
+            return $service;
+        };
+    }
 
     private function updateInterfaceMap(string $class, string $id): void
     {
