@@ -2,117 +2,117 @@
 
 namespace Jadob\Container;
 
-use Jadob\Container\Exception\ContainerLockedException;
+use Jadob\Container\Exception\ContainerException;
+use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
-use Jadob\Container\Fixtures\AService;
-use Jadob\Container\Fixtures\CService;
-use Jadob\Container\Fixtures\ExampleService;
+use Jadob\Container\Fixtures\FastFoodRestaurantInterface;
+use Jadob\Container\Fixtures\FoodTruck;
+use Jadob\Container\Fixtures\KebabShop;
+use Jadob\Container\Fixtures\ShopDomain\DbProductRepository;
+use Jadob\Container\Fixtures\ShopDomain\ProductRepositoryInterface;
+use Jadob\Container\Fixtures\ShopDomain\ProductService;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use stdClass;
 
 /**
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license proprietary
+ * Watch out:
+ * - sprintf() in expectExceptionMessage() is used to make test cases a little bit more readable.
  */
 class ContainerTest extends TestCase
 {
-
-    public function testServicesAliasing(): void
+    public function testResolvingServiceByAddingInstance(): void
     {
+        $container = new Container();
+        $instance = new KebabShop();
+        $container->add('kebab_shop', $instance);
 
-        $container = new Container(['dummy' => new stdClass()]);
-        $container->alias('dummy', 'dummy1');
-
-        $this->assertSame($container->get('dummy'), $container->get('dummy1'));
-
+        self::assertSame($instance, $container->get('kebab_shop'));
     }
 
-    public function testFactoriesAliasing(): void
+    public function testAccessingSharedServiceMultipleTimesWillAlwaysReturnTheSameInstance(): void
     {
-        $container = new Container(
-            ['dummy' => function () {
-                return new stdClass();
-            }]
+        $container = new Container();
+        $instance = new KebabShop();
+        $container->add('kebab_shop', $instance);
+
+        self::assertSame($instance, $container->get('kebab_shop'));
+        self::assertSame($instance, $container->get('kebab_shop'));
+        self::assertSame($instance, $container->get('kebab_shop'));
+    }
+
+    public function testAccessingServiceViaItsInterfaceWillReturnAnInstanceWhenOnlyOneImplementationIsAvailable(): void
+    {
+        $container = new Container();
+        $instance = new KebabShop();
+        $container->add('kebab_shop', $instance);
+
+        self::assertSame($container->get(FastFoodRestaurantInterface::class), $instance);
+    }
+
+    public function testAccessingServiceViaItsInterfaceWillReturnAnErrorWhenMultipleImplementationsAvailable(): void
+    {
+        $container = new Container();
+        $container->add('kebab_shop', new KebabShop());
+        $container->add('food_truck', new FoodTruck());
+
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage(
+            'Interface "Jadob\Container\Fixtures\FastFoodRestaurantInterface" have multiple implementations, cannot determine which one to use.'
         );
-
-        $container->alias('dummy', 'dummy1');
-
-        $this->assertSame($container->get('dummy'), $container->get('dummy1'));
+        $container->get(FastFoodRestaurantInterface::class);
     }
 
-
-    public function testServiceNotFoundException(): void
+    public function testAccessingServiceViaItsInterfaceWillReturnAnErrorWhenNoneImplementationsAvailable(): void
     {
+        $container = new Container();
+
         $this->expectException(ServiceNotFoundException::class);
-        $this->expectExceptionMessage('Service "missing" is not found in container.');
-        $container = new Container();
-
-        $container->get('missing');
-
-    }
-
-    public function testContainerLocking(): void
-    {
-        $this->expectException(ContainerLockedException::class);
-        $this->expectExceptionMessage('Could not add any services as container is locked.');
-        $container = new Container();
-        $container->lock();
-
-        $container->add('service', new ExampleService());
-    }
-
-    public function testContainerIsPsr11Compatible(): void
-    {
-        $container = new Container();
-
-        $this->assertInstanceOf(ContainerInterface::class, $container);
-    }
-
-
-    /**
-     * @group container
-     * @group container-find-by-fqcn
-     * @return void
-     * @throws ContainerLockedException
-     * @throws Exception\ContainerException
-     * @throws \ReflectionException
-     */
-    public function testGettingServicesByItsClassName(): void
-    {
-        $container = new Container(
-            ['dummy2' => function () {
-                return new DummyClass();
-            }]
+        $this->expectExceptionMessage(
+            'Interface "Jadob\Container\Fixtures\FastFoodRestaurantInterface" does not have any implementations provided in container'
         );
-
-        $container->add('dummy', new stdClass());
-
-        $this->assertInstanceOf(Container::class, $container->findObjectByClassName(ContainerInterface::class));
-        $this->assertInstanceOf(DummyClass::class, $container->findObjectByClassName(DummyClass::class));
-        $this->assertInstanceOf(AService::class, $container->findObjectByClassName(AService::class));
+        $container->get(FastFoodRestaurantInterface::class);
     }
 
-
-    public function testContainerCanAutowireClassWithKnownDependencies()
+    public function testAccessingNonExistentServiceViaPlainIdWillResultInAnError(): void
     {
         $container = new Container();
-        $container->add(AService::class, new AService());
-        $serviceC = $container->autowire(CService::class);
 
-        $this->assertSame($container->get(AService::class), $serviceC->getService());
+        $this->expectException(ServiceNotFoundException::class);
+        $this->expectExceptionMessage(
+            'Service "half-life3" not found in container.'
+        );
+        $container->get('half-life3');
     }
 
-    /**
-     * @throws ContainerLockedException
-     * @throws Exception\ContainerException
-     * @throws ServiceNotFoundException
-     */
-    public function testGetWillAutowireServiceIfPresentInDefinitions()
+
+    public function testAutowiringWillFailWhenThereAreMissingDependencies(): void
     {
-        $container = new Container();
-        $container->add(AService::class, AService::class);
-        $service = $container->get(AService::class);
-        self::assertIsObject($service);
+        $container = Container::fromArrayConfiguration([
+            'services' => [
+                ProductService::class => []
+            ]
+        ]);
+
+        $this->expectException(ContainerLogicException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Unable to autowire service "Jadob\Container\Fixtures\ShopDomain\ProductService" (Resolving chain: %s -> %s)',
+                ProductService::class,
+                ProductRepositoryInterface::class
+            )
+        );
+        $container->get(ProductService::class);
     }
+
+    public function testAutowiringWillSuccessWhenThereAreRequiredDependenciesRegistered(): void
+    {
+        $container = Container::fromArrayConfiguration([
+            'services' => [
+                ProductService::class => [],
+                DbProductRepository::class => new DbProductRepository()
+            ]
+        ]);
+
+        self::assertInstanceOf(ProductService::class, $container->get(ProductService::class));
+    }
+
 }
