@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Symfony\Console\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\Kernel;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Symfony\Translation\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;

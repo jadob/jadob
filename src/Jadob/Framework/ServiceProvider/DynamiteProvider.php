@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Dynamite\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
@@ -19,8 +19,7 @@ use Dynamite\PrimaryKey\KeyFormatResolver;
 use Dynamite\TableSchema;
 use Jadob\Bridge\Doctrine\Annotations\ServiceProvider\DoctrineAnnotationsProvider;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ParentProviderInterface;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;

@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
+namespace Jadob\Framework\ServiceProvider;
 
 use Closure;
 use Doctrine\Persistence\ManagerRegistry;
-use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Container;
-use Jadob\Container\ServiceProvider\ParentProviderInterface;
-use Jadob\Container\ServiceProvider\ServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionException;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
