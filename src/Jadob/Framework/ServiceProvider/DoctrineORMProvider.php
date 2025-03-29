@@ -21,7 +21,6 @@ use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\Core\Kernel;
 use LogicException;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
@@ -39,6 +38,13 @@ use Symfony\Component\Console\Helper\HelperSet;
  */
 class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
+
+    public function __construct(
+        private string $env,
+    )
+    {
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -72,7 +78,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
          */
         $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir();
         $proxyManagerConfig = new \ProxyManager\Configuration();
-        $proxyManagerCacheDir = sprintf('%s/%s/proxy-manager', $cacheDir, $container->get(Kernel::class)->getEnv());
+        $proxyManagerCacheDir = sprintf('%s/%s/proxy-manager', $cacheDir, $this->env);
         $proxyManagerFileLocator = new FileLocator(
             $proxyManagerCacheDir,
         );
@@ -124,13 +130,13 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         $managerName,
                         $cacheDir
                     ) {
-                        $isProd = $container->get(Kernel::class)->getEnv() === 'prod';
+                        $isProd = $this->env === 'prod';
 
 
                         $doctrineCacheDir =
                             $cacheDir
                             . '/'
-                            . $container->get(Kernel::class)->getEnv()
+                            . $this->env
                             . '/doctrine/' . $managerName;
 
                         /**
