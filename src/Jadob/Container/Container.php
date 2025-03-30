@@ -8,6 +8,7 @@ use Closure;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Contracts\DependencyInjection\ContainerAutowiringExtensionInterface;
 use Jadob\Contracts\DependencyInjection\Definition;
 use Jadob\Contracts\DependencyInjection\ServiceProviderHandlerInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -19,6 +20,15 @@ use function is_array;
 
 class Container implements ContainerInterface, ServiceProviderHandlerInterface
 {
+
+    /**
+     * @var array<ContainerAutowiringExtensionInterface>
+     */
+    private array $autowiringExtensions = [];
+
+    /**
+     * @var array<string|class-string>
+     */
     private array $resolvingChain = [];
 
     /**
@@ -71,7 +81,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             return;
         }
 
-        if(is_array($service)) {
+        if (is_array($service)) {
             $service = self::createDefinition($id, $service);
         }
 
@@ -176,26 +186,31 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             return $reflectionClass->newInstance();
         }
 
-        try {
-            $resolvedArguments = [];
-            $constructorParameters = $constructor->getParameters();
+        $resolvedArguments = [];
+        $constructorParameters = $constructor->getParameters();
 
-            foreach ($constructorParameters as $parameter) {
-                /** @var ReflectionNamedType $parameterClass */
-                $parameterClass = $parameter->getType();
+        foreach ($constructorParameters as $parameter) {
+            /** @var ReflectionNamedType $parameterClass */
+            $parameterClass = $parameter->getType();
+            try {
                 $resolvedArguments[] = $this->doGet($parameterClass->getName());
-            }
+            } catch (ServiceNotFoundException $e) {
+                if($parameterClass->allowsNull()) {
+                    $resolvedArguments[] = null;
+                    continue;
+                }
 
-            return $reflectionClass->newInstanceArgs($resolvedArguments);
-        } catch (ServiceNotFoundException $e) {
-            throw new ContainerLogicException(
-                sprintf(
-                    'Unable to autowire service "%s" (Resolving chain: %s)',
-                    $className,
-                    implode(' -> ', $e->getResolvingChain())
-                )
-            );
+                throw new ContainerLogicException(
+                    sprintf(
+                        'Unable to autowire service "%s" (Resolving chain: %s)',
+                        $className,
+                        implode(' -> ', $e->getResolvingChain())
+                    )
+                );
+            }
         }
+
+        return $reflectionClass->newInstanceArgs($resolvedArguments);
     }
 
 
@@ -361,7 +376,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      * @throws ContainerException
      */
     private static function createDefinition(
-        string $serviceId,
+        string       $serviceId,
         array|object $serviceConfig,
     ): Definition
     {
@@ -381,7 +396,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 return $serviceConfig;
             });
         } elseif (is_array($serviceConfig)) {
-            if(array_key_exists('class', $serviceConfig) && class_exists($serviceConfig['class'])) {
+            if (array_key_exists('class', $serviceConfig) && class_exists($serviceConfig['class'])) {
                 $definition->setClassName($serviceConfig['class']);
             } elseif (class_exists($serviceId)) {
                 $definition->setClassName($serviceId);
@@ -424,14 +439,31 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         $this->serviceProviders[$providerClassToOverride] = $serviceProvider;
     }
 
-    public function build(): void
+    /**
+     * @throws ContainerException
+     */
+    public function resolveServiceProviders(array $config): void
     {
         $resolver = new ServiceProviderResolver();
         $orderedServiceProviders = $resolver->resolveServiceProvidersOrder($this->serviceProviders);
+
+        foreach ($orderedServiceProviders as $serviceProviderFqcn) {
+            $serviceProvider = $this->serviceProviders[$serviceProviderFqcn];
+            $providerConfig = null;
+            $requestedConfigNode = $serviceProvider->getConfigNode();
+            if ($requestedConfigNode) {
+                $providerConfig = $config[$requestedConfigNode];
+            }
+
+            $servicesToAdd = $serviceProvider->register($this, $providerConfig);
+            foreach ($servicesToAdd as $serviceId => $serviceConfig) {
+                $this->add($serviceId, $serviceConfig);
+            }
+        }
     }
 
-    private function handleServiceProvider(object $serviceProvider): void
+    public function addAutowiringExtension(ContainerAutowiringExtensionInterface $extension): void
     {
-
+        $this->autowiringExtensions[] = $extension;
     }
 }
