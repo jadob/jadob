@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jadob\Core;
 
 use Exception;
-use Jadob\Bridge\Monolog\LoggerFactory;
 use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
@@ -17,7 +16,7 @@ use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\Session\SessionHandlerFactory;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
-use Jadob\EventDispatcher\EventDispatcher;
+use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\ServiceProvider\RouterServiceProvider;
@@ -83,10 +82,6 @@ class Kernel
      */
     protected $containerBuilder;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @var StreamHandler
@@ -194,13 +189,14 @@ class Kernel
 
         $context->setSession($session);
         $this->contextStore->push($context);
-        /** @var array $dispatcherConfig */
-        $dispatcherConfig = $configArray['framework']['dispatcher'];
-        $dispatcherLogger = new Logger('dispatcher', [$this->fileStreamHandler]);
+
+        /** @var LoggerFactory $loggerFactory */
+        $loggerFactory =  $this->container->get(LoggerFactory::class);
+
         $dispatcher = new Dispatcher(
             $dispatcherConfig,
             $this->container,
-            $dispatcherLogger,
+            $loggerFactory->getLoggerForChannel('dispatcher'),
             $this->eventDispatcher
         );
 
@@ -307,6 +303,7 @@ class Kernel
     }
 
     /**
+     * @deprecated
      * Creates and preconfigures a monolog instance.
      *
      * @return LoggerInterface
