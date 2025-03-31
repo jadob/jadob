@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
+use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\Exception\EventDispatcherException;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
