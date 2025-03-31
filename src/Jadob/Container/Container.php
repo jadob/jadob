@@ -14,6 +14,7 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderHandlerInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionFunction;
 use ReflectionNamedType;
 use function is_array;
@@ -58,7 +59,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
     /**
      * @throws ContainerException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function add(string $id, null|object|array $service): void
     {
@@ -136,7 +137,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     }
 
 
-    public function get(string $id)
+    public function get(string $id): object
     {
         return $this->doGet($id, true);
     }
@@ -145,6 +146,8 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      * Creates a service from factory, or makes from scratch.
      * @param Definition $definition
      * @return object
+     * @throws ContainerException
+     * @throws ReflectionException
      */
     private function resolveDefinition(Definition $definition): object
     {
@@ -160,7 +163,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     /**
      * @param string $className
      * @return object
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function make(string $className): object
     {
@@ -180,7 +183,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             try {
                 $resolvedArguments[] = $this->doGet($parameterClass->getName());
             } catch (ServiceNotFoundException $e) {
-                if($parameterClass->allowsNull()) {
+                if ($parameterClass->allowsNull()) {
                     $resolvedArguments[] = null;
                     continue;
                 }
@@ -329,7 +332,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws ContainerException
      */
     public static function fromArrayConfiguration(array $configuration): Container
@@ -357,7 +360,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws ContainerException
      */
     private static function createDefinition(
