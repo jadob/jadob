@@ -18,11 +18,10 @@ interface ModuleInterface
     public function getServiceProviders(string $env): array;
 
     /**
-     * @param ContainerInterface $container
      * @param string $env
      * @return list<ContainerExtensionProviderInterface>
      */
-    public function getContainerExtensionProviders(ContainerInterface $container, string $env): array;
+    public function getContainerExtensionProviders(string $env): array;
 
     /**
      * @param ContainerInterface $container
