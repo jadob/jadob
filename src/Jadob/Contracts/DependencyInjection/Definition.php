@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Contracts\DependencyInjection;
 
 use Closure;
 
-/**
- * @internal
- */
 class Definition
 {
     private function __construct(
@@ -84,4 +83,17 @@ class Definition
         return $this->className;
     }
 
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            className: $data['class'] ?? null,
+            tags: $data['tags'] ?? [],
+            lazy: $data['lazy'] ?? false,
+            autowired: $data['autowired'] ?? false,
+            shared: $data['shared'] ?? false,
+            private: $data['private'] ?? false,
+            factory: $data['factory'] ?? null
+        );
+    }
 }
