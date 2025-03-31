@@ -402,12 +402,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         }
 
         if ($definition->getClassName() === null) {
-            throw new ContainerException(
-                sprintf(
-                    'Service "%s" does neither have a class name or factory return hint.',
-                    $serviceId
-                )
-            );
+            throw ContainerLogicException::missingTypeHint($serviceId);
         }
 
         return $definition;
