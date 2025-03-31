@@ -6,6 +6,7 @@ namespace Jadob\Framework\Module;
 
 use Jadob\Framework\DependencyInjection\ExtensionProvider\FrameworkContainerExtensionProvider;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
+use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
 use Jadob\Framework\ServiceProvider\EventDispatcherProvider;
 use Jadob\Framework\ServiceProvider\FrameworkServiceProvider;
 use Jadob\Framework\ServiceProvider\LoggerServiceProvider;
@@ -25,6 +26,7 @@ class FrameworkModule implements ModuleInterface
             new SessionProvider(),
             new FrameworkServiceProvider(),
             new LoggerServiceProvider(),
+            new ErrorHandlerServiceProvider($env)
         ];
     }
 
