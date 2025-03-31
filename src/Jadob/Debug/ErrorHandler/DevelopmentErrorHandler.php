@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Debug\ErrorHandler;
 
 use ErrorException;
+use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function debug_backtrace;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Debug\ErrorHandler;
+namespace Jadob\Contracts\ErrorHandler;
 
 /**
  * Interface ErrorHandlerInterface
