@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use Exception;
 
 class DoctrineManagerRegistry implements ManagerRegistry
@@ -75,9 +76,12 @@ class DoctrineManagerRegistry implements ManagerRegistry
         return array_keys($this->managers);
     }
 
-    public function getRepository($persistentObject, $persistentManagerName = null): \Doctrine\Persistence\ObjectRepository
+    public function getRepository($persistentObject, $persistentManagerName = null): ObjectRepository
     {
-        throw new Exception('getRepository NIY');
+        if($persistentManagerName) {
+            return $this->getManager($persistentManagerName)->getRepository($persistentObject);
+        }
+        return $this->getManagerForClass($persistentObject)->getRepository($persistentObject);
     }
 
     /**
