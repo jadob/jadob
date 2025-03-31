@@ -19,7 +19,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
 
         $services = [];
 
-        $services['jadob.container.logger_extension'] = static function (ContainerInterface $container) {
+        $services['jadob.container.logger_extension'] = static function (ContainerInterface $container): InjectLoggerAutowireExtension {
             return new InjectLoggerAutowireExtension();
         };
 
