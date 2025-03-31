@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\Module;
 
-use Jadob\Framework\DependencyInjection\Extension\InjectLoggerAutowireExtension;
+use Jadob\Framework\DependencyInjection\ExtensionProvider\FrameworkContainerExtensionProvider;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
 use Jadob\Framework\ServiceProvider\EventDispatcherProvider;
+use Jadob\Framework\ServiceProvider\FrameworkServiceProvider;
+use Jadob\Framework\ServiceProvider\LoggerServiceProvider;
 use Jadob\Framework\ServiceProvider\RouterServiceProvider;
 use Jadob\Framework\ServiceProvider\SessionProvider;
 use Psr\Container\ContainerInterface;
@@ -21,13 +23,15 @@ class FrameworkModule implements ModuleInterface
             new RouterServiceProvider(),
             new ConsoleProvider(),
             new SessionProvider(),
+            new FrameworkServiceProvider(),
+            new LoggerServiceProvider(),
         ];
     }
 
-    public function getContainerExtensionProviders(ContainerInterface $container, string $env): array
+    public function getContainerExtensionProviders(string $env): array
     {
         return [
-            $container->get(InjectLoggerAutowireExtension::class)
+            new FrameworkContainerExtensionProvider()
         ];
     }
 
