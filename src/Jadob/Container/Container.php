@@ -70,43 +70,26 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         }
 
         if ($service === null) {
-            if (!$fqcnUsedAsId) {
-                throw new ContainerException(
-                    sprintf('Class "%s" does not exist.', $id)
-                );
-            }
-
-            $this->updateInterfaceMap($id, $id);
-            $this->definitions[$id] = Definition::create()
-                ->setClassName($id);
-
+            $this->addServiceFromClassName($id, $fqcnUsedAsId);
             return;
         }
 
         if (is_array($service)) {
-            $service = self::createDefinition($id, $service);
-        }
-
-        if ($service instanceof Definition) {
-            $this->updateInterfaceMap($service->getClassName(), $id);
-            $this->updateClassMap($service->getClassName(), $id);
-            $this->definitions[$id] = $service;
+            $this->addServiceFromArray($id, $service);
             return;
         }
 
-        $this->updateClassMap(get_class($service), $id);
-        $this->updateInterfaceMap(get_class($service), $id);
-
-        $definition = Definition::create()
-            ->setFactory(
-                $this->wrapServiceIntoFactory($service)
-            );
-
-        if ($fqcnUsedAsId) {
-            $definition->setClassName($id);
+        if ($service instanceof Definition) {
+           $this->addServiceFromDefinition($id, $service);
+           return;
         }
 
-        $this->definitions[$id] = $definition;
+        if($service instanceof Closure) {
+            $this->addServiceFromClosure($id, $service, $fqcnUsedAsId);
+            return;
+        }
+
+        $this->addServiceFromInstantiatedClass($id, $service, $fqcnUsedAsId);
     }
 
 
@@ -467,5 +450,116 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     public function addAutowiringExtension(ContainerAutowiringExtensionInterface $extension): void
     {
         $this->autowiringExtensions[] = $extension;
+    }
+
+
+    /**
+     * @throws ReflectionException
+     */
+    private function addDefinition(string $id, Definition $definition): void
+    {
+        $hasFactory = $definition->getFactory() !== null;
+        $hasClassName = $definition->getClassName() !== null;
+
+        if (
+            (
+                $hasFactory
+                && !(new ReflectionFunction($definition->getFactory()))->hasReturnType()
+            )
+            && !$hasClassName
+        ) {
+            throw ContainerLogicException::missingTypeHint($id);
+        }
+
+        $this->definitions[$id] = $definition;
+    }
+
+
+    /**
+     * @throws ReflectionException
+     */
+    private function addServiceFromClosure(string $id, Closure $closure, bool $fqcnUsedAsId): void
+    {
+        if($fqcnUsedAsId) {
+            $className = $id;
+        } else {
+            $reflection = new ReflectionFunction($closure);
+            if(!$reflection->hasReturnType()) {
+                throw ContainerLogicException::missingTypeHint($id);
+            }
+
+            $className = $reflection->getReturnType()->getName();
+        }
+
+        $this->updateClassMap($className, $id);
+        $this->updateInterfaceMap($className, $id);
+
+        $definition = Definition::create()
+            ->setFactory(
+                $closure
+            );
+
+        if ($fqcnUsedAsId) {
+            $definition->setClassName($id);
+        }
+
+        $this->addDefinition($id, $definition);
+    }
+
+    private function addServiceFromInstantiatedClass(string $id, object $service, bool $fqcnUsedAsId): void
+    {
+        $this->updateClassMap(get_class($service), $id);
+        $this->updateInterfaceMap(get_class($service), $id);
+
+        $definition = Definition::create()
+            ->setFactory(
+                $this->wrapServiceIntoFactory($service)
+            );
+
+        $definition->setClassName(match ($fqcnUsedAsId) {
+            true => $id,
+            false => get_class($service),
+        });
+
+        $this->addDefinition($id, $definition);
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws ContainerException
+     */
+    private function addServiceFromArray(string $id, array $config): void
+    {
+        $definition = self::createDefinition($id, $config);
+        $this->addServiceFromDefinition($id, $definition);
+    }
+
+    private function addServiceFromDefinition(string $id, Definition $definition): void
+    {
+        $this->updateInterfaceMap($definition->getClassName(), $id);
+        $this->updateClassMap($definition->getClassName(), $id);
+        $this->addDefinition($id, $definition);
+    }
+
+    /**
+     * @param string|class-string $id
+     * @param bool $fqcnUsedAsId
+     * @return void
+     * @throws ReflectionException
+     * @throws ContainerException
+     */
+    private function addServiceFromClassName(string $id, bool $fqcnUsedAsId): void
+    {
+        if (!$fqcnUsedAsId && !class_exists($id)) {
+            throw new ContainerException(
+                sprintf('Class "%s" does not exist.', $id)
+            );
+        }
+
+        $this->updateInterfaceMap($id, $id);
+        $this->addDefinition($id,
+            Definition::create()
+                ->setClassName($id)
+        );
     }
 }
