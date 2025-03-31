@@ -20,7 +20,7 @@ class AuthenticationModule implements ModuleInterface
         ];
     }
 
-    public function getContainerExtensionProviders(ContainerInterface $container, string $env): array
+    public function getContainerExtensionProviders(string $env): array
     {
         return [];
     }
