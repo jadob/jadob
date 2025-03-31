@@ -9,6 +9,7 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 /**
+ * @deprecated
  * Creates Logger instance.
  *
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
