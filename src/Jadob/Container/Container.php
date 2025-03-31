@@ -62,8 +62,10 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      */
     public function add(string $id, null|object|array $service): void
     {
-        $fqcnUsedAsId = true;
-        if (!class_exists($id)) {
+        try {
+            new ReflectionClass($id);
+            $fqcnUsedAsId = true;
+        } catch (ReflectionException) {
             $fqcnUsedAsId = false;
         }
 
