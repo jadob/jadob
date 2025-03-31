@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
+
 
 class EventDispatcherProvider implements ServiceProviderInterface
 {
