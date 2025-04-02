@@ -30,7 +30,7 @@ class DynamiteProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
         return 'dynamite';
     }
@@ -38,7 +38,7 @@ class DynamiteProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(ContainerInterface $container, ?array $config): array
+    public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         $output = [];
 
@@ -55,8 +55,7 @@ class DynamiteProvider implements ServiceProviderInterface
                 );
             }
 
-            return new ItemMappingReader(
-            );
+            return new ItemMappingReader();
         };
 
         $instanceServiceIds = [];
@@ -93,11 +92,11 @@ class DynamiteProvider implements ServiceProviderInterface
             $output[$instanceServiceId] = $instanceDef;
         }
 
-        $output[ItemSerializer::class] = static function(): ItemSerializer {
+        $output[ItemSerializer::class] = static function (): ItemSerializer {
             return new ItemSerializer();
         };
 
-        $output[KeyFormatResolver::class] = static function(): KeyFormatResolver {
+        $output[KeyFormatResolver::class] = static function (): KeyFormatResolver {
             $kfr = new KeyFormatResolver();
 
             $kfr->addFilter('upper', new UppercaseFilter());
