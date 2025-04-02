@@ -181,6 +181,23 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             /** @var ReflectionNamedType $parameterClass */
             $parameterClass = $parameter->getType();
             try {
+                foreach ($this->autowiringExtensions as $extension) {
+                    if ($extension->supportsConstructorInjectionFor(
+                        class: $className,
+                        argumentName: $parameter->getName(),
+                        argumentType: $parameterClass->getName(),
+                        argumentAttributes: $parameter->getAttributes()
+                    )) {
+                        $resolvedArguments[] = $extension->injectConstructorArgument(
+                            class: $className,
+                            argumentName: $parameter->getName(),
+                            argumentType: $parameterClass->getName(),
+                            argumentAttributes: $parameter->getAttributes()
+                        );
+                    }
+                }
+
+
                 $resolvedArguments[] = $this->doGet($parameterClass->getName());
             } catch (ServiceNotFoundException $e) {
                 if ($parameterClass->allowsNull()) {
