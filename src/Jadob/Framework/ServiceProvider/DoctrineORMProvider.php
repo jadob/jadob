@@ -114,6 +114,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 $defaultManagerName = $managerName;
             }
 
+            $env = $this->env;
             $registry->addManager(
                 $managerName,
                 $proxyManagerFactory->createProxy(
@@ -128,15 +129,16 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         $container,
                         $managerConfig,
                         $managerName,
-                        $cacheDir
+                        $cacheDir,
+                        $env
                     ) {
-                        $isProd = $this->env === 'prod';
+                        $isProd = $env === 'prod';
 
 
                         $doctrineCacheDir =
                             $cacheDir
                             . '/'
-                            . $this->env
+                            . $env
                             . '/doctrine/' . $managerName;
 
                         /**
@@ -153,18 +155,19 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         }
 
                         $metadataCache = new FilesystemAdapter(
-                            namespace: sprintf('doctrine_orm_metadata_%s', $managerName),
-                            directory: sprintf('%s/doctrine/%s/metadata', $doctrineCacheDir, $managerName),
+                            namespace: 'metadata',
+                            directory: $doctrineCacheDir,
+
                         );
 
                         $hydrationCache = new FilesystemAdapter(
-                            namespace: sprintf('doctrine_orm_hydration_%s', $managerName),
-                            directory: sprintf('%s/doctrine/%s/hydration', $doctrineCacheDir, $managerName),
+                            namespace: 'hydration',
+                            directory: $doctrineCacheDir,
                         );
 
                         $queryCache = new FilesystemAdapter(
-                            namespace: sprintf('doctrine_orm_query_%s', $managerName),
-                            directory: sprintf('%s/doctrine/%s/query', $doctrineCacheDir, $managerName),
+                            namespace: 'query',
+                            directory: $doctrineCacheDir,
                         );
 
                         if (!$isProd) {
@@ -190,7 +193,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         );
 
                         $configuration->setProxyNamespace('Doctrine\ORM\Proxies');
-                        $configuration->setProxyDir($cacheDir . '/Doctrine/ORM/Proxies');
+                        $configuration->setProxyDir(sprintf($doctrineCacheDir . '/proxies'));
                         $configuration->setAutoGenerateProxyClasses(true);
 
                         $stringFunctions = $managerConfig['string_functions'] ?? [];
