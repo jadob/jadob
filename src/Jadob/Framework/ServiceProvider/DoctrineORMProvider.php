@@ -78,7 +78,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
          */
         $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir();
         $proxyManagerConfig = new \ProxyManager\Configuration();
-        $proxyManagerCacheDir = sprintf('%s/%s/proxy-manager', $cacheDir, $this->env);
+        $proxyManagerCacheDir = sprintf('%s/%s', $cacheDir, $this->env);
         $proxyManagerFileLocator = new FileLocator(
             $proxyManagerCacheDir,
         );
