@@ -13,20 +13,20 @@ use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
+use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\Session\SessionHandlerFactory;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
-use Jadob\Router\ServiceProvider\RouterServiceProvider;
 use Jadob\Runtime\RuntimeFactory;
 use Jadob\Runtime\RuntimeInterface;
 use LogicException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionException;
@@ -35,8 +35,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use function array_merge;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+
 use function fastcgi_finish_request;
 use function file_exists;
 use function function_exists;
@@ -57,68 +57,32 @@ class Kernel
      */
     public const VERSION = '0.5.0';
 
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var BootstrapInterface
-     */
-    private $bootstrap;
-
-    /**
-     * @var EventDispatcher
-     */
-    protected $eventDispatcher;
-
-    /**
-     * @var ContainerBuilder
-     */
-    protected $containerBuilder;
-
-
-    /**
-     * @var StreamHandler
-     */
-    protected $fileStreamHandler;
-
     protected RuntimeInterface $runtime;
 
     protected RequestContextStore $contextStore;
 
-    /**
-     * @param string $env
-     * @param BootstrapInterface $bootstrap
-     * @throws KernelException
-     * @throws Exception
-     */
     public function __construct(
-        protected string $env,
-        BootstrapInterface $bootstrap,
-        protected bool $deferLogs = false
-    ) {
+        protected string   $env,
+        private BootstrapInterface $bootstrap,
+        private Container $container,
+        private EventDispatcherInterface $eventDispatcher,
+        private ErrorHandlerInterface $errorHandler,
+        private LoggerFactory $loggerFactory,
+    )
+    {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
 
         $this->runtime = RuntimeFactory::fromGlobals();
         $this->bootstrap = $this->wrapBootstrapClass($bootstrap, $this->runtime);
-        $this->logger = $this->initializeLogger();
 
-        $errorHandler = HandlerFactory::factory($env, $this->logger);
         $errorHandler->registerErrorHandler();
         $errorHandler->registerExceptionHandler();
 
-        $this->eventDispatcher = new EventDispatcher();
         $this->contextStore = new RequestContextStore();
-        $this->config = (new Config())->loadDirectory($bootstrap->getConfigDir(), ['php']);
     }
+
 
     private function wrapBootstrapClass(BootstrapInterface $bootstrap, RuntimeInterface $runtime): BootstrapInterface
     {
@@ -135,8 +99,6 @@ class Kernel
      * @param Request $request
      * @param string|null $requestId ID of given request, which will be passed as a parameter to container and will be visible in all logs generated during these one request
      * @return Response
-     * @throws AutowiringException
-     * @throws ContainerBuildException
      * @throws ContainerException
      * @throws KernelException
      * @throws MethodNotAllowedException
@@ -155,38 +117,22 @@ class Kernel
          * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
          * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
          */
-        $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
+        $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
 
         $context = new RequestContext($requestId, $request);
 
-        $this->logger->info(
-            'New request received', [
-                'method' => $request->getMethod(),
-                'path' => $request->getPathInfo(),
-                'query' => $request->query->all(),
-                'request_id' => $requestId
-            ]
-        );
+//        $this->logger->info(
+//            'New request received', [
+//                'method' => $request->getMethod(),
+//                'path' => $request->getPathInfo(),
+//                'query' => $request->query->all(),
+//                'request_id' => $requestId
+//            ]
+//        );
 
-        $builder = $this->getContainerBuilder();
-
-        $configArray = $this->config->toArray();
-        $this->container = $builder->build($configArray);
-        
-        /** @var array<array-key, string|int|float|array> $parameters */
-        $parameters = $configArray['parameters'] ?? [];
-        
-        foreach ($parameters as $paramKey => $paramVal) {
-            $this->container->addParameter($paramKey, $paramVal);
-        }
-
-        /** @var SessionHandlerFactory $sessionHandlerFactory */
-        $sessionHandlerFactory = $this->container->get(SessionHandlerFactory::class);
-        $sessionHandler = $sessionHandlerFactory->create();
-        $sessionStorage = new NativeSessionStorage([], $sessionHandler);
+        /** @var SessionStorageInterface $sessionStorage */
+        $sessionStorage = $this->container->get(SessionStorageInterface::class);
         $session = new Session($sessionStorage);
-
-
         $context->setSession($session);
         $this->contextStore->push($context);
 
@@ -194,7 +140,6 @@ class Kernel
         $loggerFactory =  $this->container->get(LoggerFactory::class);
 
         $dispatcher = new Dispatcher(
-            $dispatcherConfig,
             $this->container,
             $loggerFactory->getLoggerForChannel('dispatcher'),
             $this->eventDispatcher
@@ -221,37 +166,17 @@ class Kernel
         return $this->env;
     }
 
+
     /**
      * @return ContainerBuilder
      * @throws KernelException
      */
     public function getContainerBuilder(): ContainerBuilder
     {
-        /**
-         * Providers for core features are added here, so you do not have to register them elsewhere in your bootstrap.
-         * Also registering them here allow to validate configuration for core services.
-         */
-        $coreServiceProviders = [
-            RouterServiceProvider::class
-        ];
-
-        //merge core & user provided services
-        $serviceProviders = array_merge(
-            $coreServiceProviders,
-            $this->bootstrap->getServiceProviders($this->env)
-        );
 
 
         if ($this->containerBuilder === null) {
-            $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
-            if (!file_exists($servicesFile)) {
-                //TODO named exception constructors?
-                throw new KernelException('There is no services.php file in your config directory.');
-            }
 
-            /** @var array $services */
-            /** @noinspection PhpIncludeInspection */
-            $services = include $servicesFile;
 
             if (!is_array($services)) {
                 //TODO named exception constructors?
@@ -263,8 +188,7 @@ class Kernel
                 $listener = new ContainerEventListener();
             }
             $containerBuilder = new ContainerBuilder($listener);
-            //TODO: When service definitions and aliases will be ready, use them here
-            $containerBuilder->add(EventDispatcherInterface::class, $this->eventDispatcher);
+
             $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
             $containerBuilder->add(__CLASS__, $this);
             $containerBuilder->add(LoggerInterface::class, $this->logger);
@@ -280,9 +204,7 @@ class Kernel
             foreach ($services as $serviceName => $serviceObject) {
                 if (!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
                     throw new RuntimeException(
-                        
                         'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
-                        
                     );
                 }
                 $containerBuilder->add($serviceName, $serviceObject);
