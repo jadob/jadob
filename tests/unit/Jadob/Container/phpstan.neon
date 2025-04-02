@@ -1,0 +1,5 @@
+parameters:
+    ignoreErrors:
+        -
+            message: '#Parameter \#1 \$userRepository of class Jadob#'
+            path: configs/basic_array.php

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
+use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\Exception\EventDispatcherException;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
@@ -28,19 +28,10 @@ class EventDispatcher implements EventDispatcherInterface
      */
     protected array $listeners = [];
 
-    /**
-     * @var LoggerInterface|null
-     */
-    protected ?LoggerInterface $logger;
-
-    /**
-     * EventDispatcher constructor.
-     *
-     * @param LoggerInterface|null $logger
-     */
-    public function __construct(?LoggerInterface $logger = null)
+    public function __construct(
+        private ?LoggerInterface $eventLogger = null
+    )
     {
-        $this->logger = $logger;
     }
 
     /**
@@ -105,11 +96,11 @@ class EventDispatcher implements EventDispatcherInterface
      */
     private function log(string $message, array $context = []): void
     {
-        if ($this->logger === null) {
+        if ($this->eventLogger === null) {
             return;
         }
 
-        $this->logger->info($message, $context);
+        $this->eventLogger->info($message, $context);
     }
 
     /**

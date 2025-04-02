@@ -27,4 +27,9 @@ class Bootstrap extends AbstractBootstrap
     {
         return [];
     }
+
+    public function getModules(): array
+    {
+        // TODO: Implement getModules() method.
+    }
 }

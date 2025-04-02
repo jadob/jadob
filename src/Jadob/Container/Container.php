@@ -5,484 +5,576 @@ declare(strict_types=1);
 namespace Jadob\Container;
 
 use Closure;
-use Jadob\Container\Exception\AutowiringException;
 use Jadob\Container\Exception\ContainerException;
-use Jadob\Container\Exception\ContainerLockedException;
+use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Contracts\DependencyInjection\ContainerAutowiringExtensionInterface;
+use Jadob\Contracts\DependencyInjection\Definition;
+use Jadob\Contracts\DependencyInjection\ServiceProviderHandlerInterface;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
-use ReflectionMethod;
 use ReflectionNamedType;
-use ReflectionParameter;
-use RuntimeException;
-use function call_user_func_array;
-use function class_exists;
-use function in_array;
-use function is_object;
-use function sprintf;
+use function is_array;
 
-/**
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
- */
-class Container implements ContainerInterface
+class Container implements ContainerInterface, ServiceProviderHandlerInterface
 {
-    private const MAX_DEFINITION_WRAPS = 10;
+
+    /**
+     * @var array<ContainerAutowiringExtensionInterface>
+     */
+    private array $autowiringExtensions = [];
+
+    /**
+     * @var array<string|class-string>
+     */
+    private array $resolvingChain = [];
+
+    /**
+     * @var array<ServiceProviderInterface>
+     */
+    private array $serviceProviders = [];
+
+    /**
+     * @var array<class-string,list<class-string|string>>
+     */
+    private array $interfaceMap = [];
+
+    /**
+     * @var array<class-string,list<class-string|string>>
+     */
+    private array $classMap = [];
 
     /**
      * @var array<string|class-string, Definition>
      */
-    protected array $definitions = [];
+    private array $definitions = [];
 
     /**
-     * Instantiated objects, ready to be used.
-     *
-     * @var array<string, object>
+     * @var list<object>
      */
-    protected array $services = [];
-
-    /**
-     * If true, adding new services/aliases will throw an exception.
-     *
-     * @var bool
-     */
-    protected bool $locked = false;
-
-    /**
-     * @var array<string, string|int|float|array?
-     */
-    protected array $parameters = [];
-
-
-    /**
-     * @param array<string, object|Definition> $definitions
-     */
-    public function __construct(array $definitions = [])
-    {
-        foreach ($definitions as $serviceId => $definition) {
-            /**
-             * Each factory must have an return type, otherwise there may be false-positive service not found exceptionw
-             */
-            $service = $definition->getService();
-            if ($service instanceof Closure) {
-                $closureReflection = new ReflectionFunction($service);
-                if ($closureReflection->getReturnType() === null) {
-                    throw new ContainerException(
-                        sprintf(
-                            'Factory for service "%s" is missing a return type.',
-                            $serviceId
-                        )
-                    );
-                }
-            }
-
-            /**
-             * If someting is not an definition, wrap it
-             */
-            if (($definition instanceof Definition) === false) {
-                $definitions[$serviceId] = new Definition($definition);
-            }
-        }
-
-        $this->definitions = $definitions;
-    }
-
-    /**
-     * @param string $serviceName
-     * @return mixed
-     * @throws ServiceNotFoundException
-     * @throws ContainerException
-     */
-    public function get(string $serviceName): object
-    {
-        /**
-         * Return service if exists
-         */
-        if (isset($this->services[$serviceName])) {
-            return $this->services[$serviceName];
-        }
-
-        if (isset($this->definitions[$serviceName])) {
-            return $this->createServiceFromDefinition($serviceName);
-        }
-
-        /**
-         * if reached this moment, the only thing we need to do, is to break
-         */
-        throw new ServiceNotFoundException(
-            sprintf(
-                'Service "%s" is not found in container.',
-                $serviceName
-            )
-        );
-    }
+    private array $instances = [];
 
     /**
      * @throws ContainerException
+     * @throws ReflectionException
      */
-    private function unwrapDefinition(Definition $definition, int $wrapsCount = 0): string|object
+    public function add(string $id, null|object|array $service): void
     {
-        if ($wrapsCount >= self::MAX_DEFINITION_WRAPS) {
-            throw new ContainerException('Could not unwrap a definition as is it wrapped too much.');
+        try {
+            new ReflectionClass($id);
+            $fqcnUsedAsId = true;
+        } catch (ReflectionException) {
+            $fqcnUsedAsId = false;
         }
 
-        $service = $definition->getService();
+        if ($service === null) {
+            $this->addServiceFromClassName($id, $fqcnUsedAsId);
+            return;
+        }
+
+        if (is_array($service)) {
+            $this->addServiceFromArray($id, $service);
+            return;
+        }
+
         if ($service instanceof Definition) {
-            $service = $this->unwrapDefinition($definition, ++$wrapsCount);
+           $this->addServiceFromDefinition($id, $service);
+           return;
         }
 
-        return $service;
+        if($service instanceof Closure) {
+            $this->addServiceFromClosure($id, $service, $fqcnUsedAsId);
+            return;
+        }
+
+        $this->addServiceFromInstantiatedClass($id, $service, $fqcnUsedAsId);
+    }
+
+
+    private function wrapServiceIntoFactory(object $service): Closure
+    {
+        if ($service instanceof Closure) {
+            return $service;
+        }
+
+        return function () use ($service) {
+            return $service;
+        };
+    }
+
+    private function updateInterfaceMap(string $class, string $id): void
+    {
+        /** @var list<class-string> $interfaces */
+        $interfaces = array_values(
+            class_implements($class)
+        );
+
+
+        foreach ($interfaces as $interface) {
+            if (!array_key_exists($interface, $this->interfaceMap)) {
+                $this->interfaceMap[$interface] = [];
+            }
+
+            $this->interfaceMap[$interface][] = $id;
+        }
+    }
+
+    private function updateClassMap(string $class, string $id): void
+    {
+        if (!array_key_exists($class, $this->classMap)) {
+            $this->classMap[$class] = [];
+        }
+
+        $this->classMap[$class][] = $id;
+    }
+
+    private function sharedInstanceExists(string $className): bool
+    {
+        return array_key_exists($className, $this->instances);
+    }
+
+
+    public function get(string $id): object
+    {
+        return $this->doGet($id, true);
     }
 
     /**
+     * Creates a service from factory, or makes from scratch.
+     * @param Definition $definition
+     * @return object
      * @throws ContainerException
+     * @throws ReflectionException
      */
-    private function createServiceFromDefinition(string $serviceId): object
+    private function resolveDefinition(Definition $definition): object
     {
+        $factory = $definition->getFactory();
+        if ($factory !== null) {
+            return $this->instantiate($factory);
+        }
+
+        return $this->make($definition->getClassName());
+    }
+
+
+    /**
+     * @param string $className
+     * @return object
+     * @throws ReflectionException
+     */
+    private function make(string $className): object
+    {
+        $reflectionClass = new ReflectionClass($className);
+        $constructor = $reflectionClass->getConstructor();
+
+        if ($constructor === null) {
+            return $reflectionClass->newInstance();
+        }
+
+        $resolvedArguments = [];
+        $constructorParameters = $constructor->getParameters();
+
+        foreach ($constructorParameters as $parameter) {
+            /** @var ReflectionNamedType $parameterClass */
+            $parameterClass = $parameter->getType();
+            try {
+                foreach ($this->autowiringExtensions as $extension) {
+                    if ($extension->supportsConstructorInjectionFor(
+                        class: $className,
+                        argumentName: $parameter->getName(),
+                        argumentType: $parameterClass->getName(),
+                        argumentAttributes: $parameter->getAttributes()
+                    )) {
+                        $resolvedArguments[] = $extension->injectConstructorArgument(
+                            class: $className,
+                            argumentName: $parameter->getName(),
+                            argumentType: $parameterClass->getName(),
+                            argumentAttributes: $parameter->getAttributes()
+                        );
+                    }
+                }
+
+
+                $resolvedArguments[] = $this->doGet($parameterClass->getName());
+            } catch (ServiceNotFoundException $e) {
+                if ($parameterClass->allowsNull()) {
+                    $resolvedArguments[] = null;
+                    continue;
+                }
+
+                throw new ContainerLogicException(
+                    sprintf(
+                        'Unable to autowire service "%s" (Resolving chain: %s)',
+                        $className,
+                        implode(' -> ', $e->getResolvingChain())
+                    )
+                );
+            }
+        }
+
+        return $reflectionClass->newInstanceArgs($resolvedArguments);
+    }
+
+
+    /**
+     *
+     * @param string $id
+     * @param bool $public
+     * @return object
+     * @throws ContainerException
+     * @throws ServiceNotFoundException
+     */
+    private function doGet(string $id, bool $public = false): object
+    {
+        $this->resolvingChain[] = $id;
+
         /**
-         * Do not instantiate if exists
+         * Service requested by its interface FQCN
          */
-        if (isset($this->services[$serviceId])) {
-            return $this->services[$serviceId];
-        }
-
-        // Pick a present from under the tree
-        $definition = $this->definitions[$serviceId];
-
-        // unwrap them
-        $service = $this->unwrapDefinition($definition);
-
-        // put some batteries to our gift, if needed
-        if ($service instanceof Closure) {
-            $service = $this->instantiateFactory($service);
-        }
-
-        // make sure our present is running fine
-        if (is_object($service) === false) {
-            $service = $this->autowire($service);
-        }
-
-        // our toy can be better if we put some new parts:
-        foreach ($definition->getMethodCalls() as $methodCall) {
-            call_user_func_array(
-                [
-                    $service,
-                    $methodCall->getMethodName()
-                ],
-                $methodCall->getArguments()
+        if (!$this->definitionExists($id) && interface_exists($id)) {
+            $implementations = $this->interfaceMap[$id] ?? [];
+            $definition = match (count($implementations)) {
+                1 => $this->definitions[$implementations[0]],
+                0 => throw new ServiceNotFoundException(
+                    sprintf('Interface "%s" does not have any implementations provided in container', $id),
+                    $this->resolvingChain
+                ),
+                default => throw new ContainerException(
+                    sprintf('Interface "%s" have multiple implementations, cannot determine which one to use.', $id),
+                )
+            };
+        } elseif (!$this->definitionExists($id) && class_exists($id)) {
+            $classes = $this->classMap[$id] ?? [];
+            $definition = match (count($classes)) {
+                1 => $this->definitions[$classes[0]],
+                0 => throw new ServiceNotFoundException(
+                    sprintf('Class "%s" does not have any implementations provided in container', $id),
+                    $this->resolvingChain
+                ),
+                default => throw new ContainerException(
+                    sprintf('Class "%s" have multiple implementations, cannot determine which one to use.', $id)
+                )
+            };
+        } elseif (array_key_exists($id, $this->definitions)) {
+            $definition = $this->definitions[$id];
+        } else {
+            throw new ServiceNotFoundException(
+                sprintf('Service "%s" not found in container.', $id),
+                $this->resolvingChain
             );
         }
 
-        // thank u santa, this is the best gift ever!
-        $this->services[$serviceId] = $service;
+        if ($public && $definition->isPrivate()) {
+            throw new ContainerLogicException('Cannot access private service "' . $id . '".');
+        }
 
-        return $service;
+        $shared = $definition->isShared();
+        if ($shared && $this->sharedInstanceExists($id)) {
+            return $this->onServiceResolved(
+                $id,
+                $this->instances[$id]
+            );
+        }
+
+        $resolvedService = $this->resolveDefinition($definition);
+
+        if (!$shared) {
+            return $this->onServiceResolved(
+                $id,
+                $resolvedService
+            );
+        }
+
+        $this->instances[$id] = $resolvedService;
+        return $this->onServiceResolved(
+            $id,
+            $resolvedService
+        );
     }
 
 
     /**
-     * Turns a factory into service.
-     * @param Closure $factory
-     * @return mixed
-     * @throws ContainerException
-     */
-    protected function instantiateFactory(Closure $factory): object
-    {
-        $service = $factory($this);
-
-        if (!is_object($service)) {
-            throw new ContainerException(sprintf(
-                'Factory should return an object, %s returned',
-                gettype($service)
-            ));
-        }
-
-        return $service;
-    }
-
-    /**
-     * @param string $factoryName
-     * @param string $interfaceToCheck
-     * @return bool|null
-     * @throws ReflectionException
-     */
-    protected function factoryReturnImplements(Closure $factory, string $interfaceToCheck): ?bool
-    {
-        $reflectionMethod = new ReflectionMethod($factory, '__invoke');
-
-        /**
-         * There is no return type defined in factory, return null as at this moment is not possible to resolve
-         * return type without service instantiating
-         */
-        if (!$reflectionMethod->hasReturnType()) {
-            return null;
-        }
-
-        /** @var ReflectionNamedType $returnRypeReflection */
-        $returnRypeReflection = $reflectionMethod->getReturnType();
-        $returnType = $returnRypeReflection->getName();
-
-        return $returnType === $interfaceToCheck
-            || in_array($interfaceToCheck, class_implements($returnType), true)
-            || in_array($interfaceToCheck, class_parents($returnType), true);
-    }
-
-    /**
-     * @param string $interfaceClassName FQCN of interface that need to be verified
-     *
-     * @return array
-     * @throws ReflectionException
-     * @throws ContainerException
-     */
-    public function getObjectsImplementing(string $interfaceClassName): array
-    {
-        $objects = [];
-
-        foreach ($this->services as $service) {
-            if ($service instanceof $interfaceClassName) {
-                $objects[] = $service;
-            }
-        }
-
-        foreach ($this->definitions as $definition) {
-            $unwrappedDefinition = $this->unwrapDefinition($definition);
-
-            if ($unwrappedDefinition instanceof Closure) {
-                /**
-                 * When given factory has got a return type defined, use it and check that returned class implements
-                 * requested interface
-                 *
-                 * Also, factoryReturnImplements() returns bool|null, so explicitly check for return type
-                 */
-                if ($this->factoryReturnImplements($unwrappedDefinition, $interfaceClassName) === false) {
-                    continue;
-                }
-
-                /**
-                 * If given factory does not have return type defined, instantiate them
-                 */
-                $service = $this->instantiateFactory($unwrappedDefinition);
-
-                if ($service instanceof $interfaceClassName) {
-                    $objects[] = $service;
-                }
-            } else {
-                if ($unwrappedDefinition instanceof $interfaceClassName) {
-                    // @TODO: we might autowire a service here, i guess
-                    $objects[] = $unwrappedDefinition;
-                }
-            }
-        }
-
-        return $objects;
-    }
-
-    /**
-     * A has() on steroids.
-     * Checks the services and factories by it's type, not the name.
-     *
-     * @param string $className FQCN of class that we need to find
-     * @return null|object - null when no object found
-     * @throws ReflectionException
-     * @throws ContainerException
-     */
-    public function findObjectByClassName(string $className)
-    {
-        if (in_array($className, [ContainerInterface::class, self::class], true)) {
-            return $this;
-        }
-
-        //search in instantiated stuff
-        foreach ($this->services as $service) {
-            if ($service instanceof $className) {
-                return $service;
-            }
-        }
-
-        /**
-         * Probably there is an issue:
-         * When factory will request yet another service, it will be created and removed from $this->factories,
-         * BUT these ones are still present in current foreach
-         */
-        foreach ($this->definitions as $definition) {
-            $unwrapped = $this->unwrapDefinition($definition);
-
-            if ($unwrapped instanceof Closure) {
-                /**
-                 * Use factory return check as this method works similar to getObjectsImplementing()
-                 * @see self::getObjectsImplementing()
-                 */
-                if ($this->factoryReturnImplements($unwrapped, $className) === false) {
-                    continue;
-                }
-
-                $service = $this->instantiateFactory($unwrapped);
-
-                if ($service instanceof $className) {
-                    return $service;
-                }
-            } elseif (get_class($service) === $className) {
-                return $service;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function has($id): bool
-    {
-        return array_key_exists($id, $this->services) || array_key_exists($id, $this->definitions);
-    }
-
-    /**
+     * This must be called on every return from doGet.
      * @param string $id
-     * @param $object
-     *
-     * @return Definition
-     * @throws ContainerLockedException
+     * @param object $resolvedService
+     * @return object
      */
-    public function add(string $id, string|object $object)
+    private function onServiceResolved(
+        string $id,
+        object $resolvedService,
+    ): object
     {
-        if ($this->locked) {
-            throw new ContainerLockedException('Could not add any services as container is locked.');
+        array_pop($this->resolvingChain);
+        return $resolvedService;
+    }
+
+    private function instantiate(Closure $factory): object
+    {
+        $reflection = new ReflectionFunction($factory);
+        $reflectionParameters = $reflection->getParameters();
+
+        $parametersToInject = [];
+        foreach ($reflectionParameters as $parameter) {
+            $className = $parameter->getType()->getName();
+
+            if ($this->has($className)) {
+                $parametersToInject[] = $this->get($className);
+                continue;
+            }
+
+            if ($className === ContainerInterface::class) {
+                $parametersToInject[] = $this;
+                continue;
+            }
+
+            throw new ContainerException('Undefined behavior');
         }
 
-        $definition = new Definition($object);
-        $this->definitions[$id] = $definition;
+        return $factory(...$parametersToInject);
+    }
 
-        return $definition;
+    private function definitionExists(string $id): bool
+    {
+        return array_key_exists($id, $this->definitions);
+    }
+
+    public function has(string $id): bool
+    {
+        return array_key_exists($id, $this->definitions)
+            || array_key_exists($id, $this->classMap)
+            || array_key_exists($id, $this->interfaceMap);
     }
 
     /**
-     * @param string $from
-     * @param string $to
-     * @return Container
+     * @throws ReflectionException
      * @throws ContainerException
      */
-    public function alias(string $from, string $to): Container
+    public static function fromArrayConfiguration(array $configuration): Container
     {
-        //factories will create different stuff each time so we need to instantiate them
-        if (isset($this->definitions[$from])) {
-            $this->createServiceFromDefinition($from);
-        }
+        $container = new Container();
 
-        if (isset($this->services[$from])) {
-            $this->services[$to] = &$this->services[$from];
-        }
+        foreach ($configuration['services'] ?? [] as $serviceId => $serviceConfig) {
+            if ($serviceConfig instanceof Definition) {
+                throw new ContainerException(
+                    'Passing definitions directly not supported yet.'
+                );
+            }
 
-        return $this;
-    }
-
-    /**
-     * @param string $key
-     * @param string|int|float|array $value
-     * @return void
-     */
-    public function addParameter(string $key, string|int|float|array $value): void
-    {
-        $this->parameters[$key] = $value;
-    }
-
-    /**
-     * @param string $key
-     * @return string|int|float|array
-     */
-    public function getParameter(string $key): string|int|float|array
-    {
-        if (!isset($this->parameters[$key])) {
-            throw new RuntimeException('Could not find "' . $key . '" parameter');
-        }
-
-        return $this->parameters[$key];
-    }
-
-    /**
-     * Creates new instance of object with dependencies that currently have been stored in container
-     * @TODO REFACTOR - method looks ugly af
-     * @param string $className
-     * @return object
-     * @throws AutowiringException
-     * @throws ReflectionException
-     */
-    public function autowire(string $className): object
-    {
-        if (!class_exists($className)) {
-            throw new AutowiringException(
-                sprintf(
-                    'Unable to autowire class "%s", as it does not exists.',
-                    $className
+            $container->add(
+                $serviceId,
+                self::createDefinition(
+                    $serviceId,
+                    $serviceConfig
                 )
             );
         }
 
-        $classReflection = new ReflectionClass($className);
-        $constructor = $classReflection->getConstructor();
+        return $container;
+    }
 
-        //no dependencies required, we can just instantiate them and return
-        if ($constructor === null) {
-            $object = new $className();
-            $this->services[$className] = $object;
-            return $object;
+
+    /**
+     * @throws ReflectionException
+     * @throws ContainerException
+     */
+    private static function createDefinition(
+        string       $serviceId,
+        array|object $serviceConfig,
+    ): Definition
+    {
+        $definition = Definition::create();
+
+        if ($serviceConfig instanceof Closure) {
+            $definition->setFactory($serviceConfig);
+            $closureReflection = new ReflectionFunction($serviceConfig);
+            $returnType = $closureReflection->getReturnType();
+
+            if ($returnType instanceof ReflectionNamedType) {
+                $definition->setClassName($returnType->getName());
+            }
+        } elseif (is_object($serviceConfig)) {
+            $definition->setClassName(get_class($serviceConfig));
+            $definition->setFactory(static function () use ($serviceConfig) {
+                return $serviceConfig;
+            });
+        } elseif (is_array($serviceConfig)) {
+            if (array_key_exists('class', $serviceConfig) && class_exists($serviceConfig['class'])) {
+                $definition->setClassName($serviceConfig['class']);
+            } elseif (class_exists($serviceId)) {
+                $definition->setClassName($serviceId);
+            }
+
+            if (array_key_exists('factory', $serviceConfig)) {
+                $definition->setFactory($serviceConfig['factory']);
+            }
+
+            $definition->setAutowired($serviceConfig['autowire'] ?? false);
+        } else {
+            throw new ContainerException(
+                sprintf('Unable to build configuration for service id "%s" ', $serviceId)
+            );
         }
 
+        if ($definition->getClassName() === null) {
+            throw ContainerLogicException::missingTypeHint($serviceId);
+        }
 
-        $arguments = $constructor->getParameters();
-        $argumentsToInject = [];
+        return $definition;
+    }
 
-        #TODO REFACTOR - method looks ugly af
-        foreach ($arguments as $argument) {
-            $this->checkConstructorArgumentCanBeAutowired($argument, $className);
 
-            $argumentClass = $argument->getType()->getName();
-            try {
-                $argumentsToInject[] = $this->findObjectByClassName($argumentClass);
-            } catch (ServiceNotFoundException $exception) {
-                //try to autowire if not found
-                try {
-                    $argumentsToInject[] = $this->autowire($argumentClass);
-                } catch (ContainerException $autowiringException) {
-                    //@TODO sprintf
-                    throw new AutowiringException('Unable to autowire class "' . $className . '", could not find service ' . $argumentClass . ' in container. See Previous exception for details ', 0, $exception);
-                }
+    public function registerServiceProvider(object $serviceProvider): void
+    {
+        $this->serviceProviders[get_class($serviceProvider)] = $serviceProvider;
+    }
+
+    public function overrideServiceProvider(
+        string $providerClassToOverride,
+        object $serviceProvider
+    ): void
+    {
+        $this->serviceProviders[$providerClassToOverride] = $serviceProvider;
+    }
+
+    /**
+     * @throws ContainerException
+     */
+    public function resolveServiceProviders(array $config): void
+    {
+        $resolver = new ServiceProviderResolver();
+        $orderedServiceProviders = $resolver->resolveServiceProvidersOrder($this->serviceProviders);
+
+        foreach ($orderedServiceProviders as $serviceProviderFqcn) {
+            $serviceProvider = $this->serviceProviders[$serviceProviderFqcn];
+            $providerConfig = null;
+            $requestedConfigNode = $serviceProvider->getConfigNode();
+            if ($requestedConfigNode) {
+                $providerConfig = $config[$requestedConfigNode];
+            }
+
+            $servicesToAdd = $serviceProvider->register($this, $providerConfig);
+            foreach ($servicesToAdd as $serviceId => $serviceConfig) {
+                $this->add($serviceId, $serviceConfig);
             }
         }
-
-        $service = new $className(...$argumentsToInject);
-        $this->services[$className] = $service;
-        return $service;
     }
 
-    /**
-     * @param ReflectionParameter $parameter
-     * @param string $className
-     * @throws AutowiringException
-     */
-    protected function checkConstructorArgumentCanBeAutowired(ReflectionParameter $parameter, string $className)
+    public function addAutowiringExtension(ContainerAutowiringExtensionInterface $extension): void
     {
-        //no nulls allowed
-        if ($parameter->getType() === null) {
-            //@TODO use sprintf
-            throw new AutowiringException('Unable to autowire class "' . $className . '", one of arguments is null.');
+        $this->autowiringExtensions[] = $extension;
+    }
+
+
+    /**
+     * @throws ReflectionException
+     */
+    private function addDefinition(string $id, Definition $definition): void
+    {
+        $hasFactory = $definition->getFactory() !== null;
+        $hasClassName = $definition->getClassName() !== null;
+
+        if (
+            (
+                $hasFactory
+                && !(new ReflectionFunction($definition->getFactory()))->hasReturnType()
+            )
+            && !$hasClassName
+        ) {
+            throw ContainerLogicException::missingTypeHint($id);
         }
 
-        //only classes allowed so far
-        if ($parameter->getType()->isBuiltin()) {
-            //@TODO use sprintf
-            throw new AutowiringException('Unable to autowire class "' . $className . '", as "$' . $parameter->name . '" constructor argument requires a scalar value');
+        $this->definitions[$id] = $definition;
+    }
+
+
+    /**
+     * @throws ReflectionException
+     */
+    private function addServiceFromClosure(string $id, Closure $closure, bool $fqcnUsedAsId): void
+    {
+        if($fqcnUsedAsId) {
+            $className = $id;
+        } else {
+            $reflection = new ReflectionFunction($closure);
+            if(!$reflection->hasReturnType()) {
+                throw ContainerLogicException::missingTypeHint($id);
+            }
+
+            $className = $reflection->getReturnType()->getName();
         }
+
+        $this->updateClassMap($className, $id);
+        $this->updateInterfaceMap($className, $id);
+
+        $definition = Definition::create()
+            ->setFactory(
+                $closure
+            );
+
+        if ($fqcnUsedAsId) {
+            $definition->setClassName($id);
+        }
+
+        $this->addDefinition($id, $definition);
+    }
+
+    private function addServiceFromInstantiatedClass(string $id, object $service, bool $fqcnUsedAsId): void
+    {
+        $this->updateClassMap(get_class($service), $id);
+        $this->updateInterfaceMap(get_class($service), $id);
+
+        $definition = Definition::create()
+            ->setFactory(
+                $this->wrapServiceIntoFactory($service)
+            );
+
+        $definition->setClassName(match ($fqcnUsedAsId) {
+            true => $id,
+            false => get_class($service),
+        });
+
+        $this->addDefinition($id, $definition);
     }
 
     /**
-     * Prevents adding new services to container.
+     * @throws ReflectionException
+     * @throws ContainerException
+     */
+    private function addServiceFromArray(string $id, array $config): void
+    {
+        $definition = self::createDefinition($id, $config);
+        $this->addServiceFromDefinition($id, $definition);
+    }
+
+    private function addServiceFromDefinition(string $id, Definition $definition): void
+    {
+        $this->updateInterfaceMap($definition->getClassName(), $id);
+        $this->updateClassMap($definition->getClassName(), $id);
+        $this->addDefinition($id, $definition);
+    }
+
+    /**
+     * @param string|class-string $id
+     * @param bool $fqcnUsedAsId
      * @return void
+     * @throws ReflectionException
+     * @throws ContainerException
      */
-    public function lock(): void
+    private function addServiceFromClassName(string $id, bool $fqcnUsedAsId): void
     {
-        $this->locked = true;
+        if (!$fqcnUsedAsId && !class_exists($id)) {
+            throw new ContainerException(
+                sprintf('Class "%s" does not exist.', $id)
+            );
+        }
+
+        $this->updateInterfaceMap($id, $id);
+        $this->addDefinition($id,
+            Definition::create()
+                ->setClassName($id)
+        );
     }
 }

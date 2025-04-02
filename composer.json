@@ -24,10 +24,14 @@
     "doctrine/cache": "^1.12",
     "doctrine/dbal": ">=2.13",
     "symfony/mime": "*",
-    "symfony/cache": "^7.2"
+    "symfony/cache": "^7.2",
+    "marcj/topsort": "^2.0"
   },
   "require-dev": {
-    "infection/infection": "^0.26"
+    "phpstan/phpstan-strict-rules": "^2.0",
+    "phpstan/phpstan": "^2.1",
+    "vimeo/psalm": "^5.26",
+    "phpunit/phpunit": "^10.5"
   },
   "autoload": {
     "psr-0": {

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Framework\Module\ModuleInterface;
+
 /**
  * Interface for framework bootstrapping class.
  * This one must be implemented by your Bootstrap class.
@@ -50,7 +53,7 @@ interface BootstrapInterface
      * Returns array of Service providers that will be load while framework bootstrapping.
      *
      * @param string $env
-     * @return array
+     * @return list<ServiceProviderInterface>
      */
     public function getServiceProviders(string $env): array;
 
@@ -60,4 +63,9 @@ interface BootstrapInterface
      * @return string
      */
     public function getDefaultLogStream(string $env): string;
+
+    /**
+     * @return array<ModuleInterface>
+     */
+    public function getModules(): array;
 }

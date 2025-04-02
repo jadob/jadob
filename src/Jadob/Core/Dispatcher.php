@@ -40,26 +40,20 @@ class Dispatcher
 {
     protected Container $container;
 
-    protected bool $verbose = false;
 
     protected EventDispatcherInterface $eventDispatcher;
-
-    protected array $config;
 
     protected LoggerInterface $logger;
 
     public function __construct(
-        array $config,
         Container $container,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->config = $config;
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
 
-        $this->verbose = $this->config['verbose'] ?? false;
     }
 
     /**
@@ -161,23 +155,22 @@ class Dispatcher
      */
     protected function autowireControllerClass(string $controllerClassName): object
     {
-        $autowireEnabled = (bool) $this->config['autowire_controller_arguments'];
+        $autowireEnabled = true;
 
         $reflection = new ReflectionClass($controllerClassName);
         $classConstructor = $reflection->getConstructor();
 
         /**
-         * There is no reasons for class autowiring when there is no constructor
+         * TODO: use container autowiring to create controller class
          */
         if ($classConstructor === null) {
-            $this->verbose && $this->logger->debug(
-                sprintf('Skipping autowiring for "%s" as it does not have a constructor.', $controllerClassName)
-            );
-
             /** @psalm-suppress MixedMethodCall */
             return new $controllerClassName();
         }
 
+        /**
+         * TODO: move into separate class
+         */
         $arguments = [];
         foreach ($classConstructor->getParameters() as $parameter) {
             if (!$parameter->hasType()) {
@@ -193,25 +186,12 @@ class Dispatcher
                 continue;
             }
 
-            $objectByFqcn = $this->container->findObjectByClassName($type);
+            $objectByFqcn = $this->container->get($type);
             if ($objectByFqcn !== null) {
-                $this->verbose && $this->logger->debug(
-                    sprintf('Found "%s" service for type "%s"', get_class($objectByFqcn), $type)
-                );
-
                 $arguments[] = $objectByFqcn;
                 continue;
             }
 
-            if ($autowireEnabled) {
-                $autowiredService = $this->container->autowire($type);
-                $this->verbose && $this->logger->debug(
-                    sprintf('Autowired "%s" service for type "%s"', get_class($autowiredService), $type)
-                );
-
-                $arguments[] = $autowiredService;
-                continue;
-            }
 
             throw new KernelException(
                 sprintf(
@@ -245,7 +225,7 @@ class Dispatcher
         array $routerParams,
         RequestContext $context
     ): array {
-        $autowireEnabled = (bool) $this->config['autowire_controller_arguments'];
+        $autowireEnabled = true;
         $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 
         $methodParameters = $methodReflection->getParameters();
@@ -285,7 +265,7 @@ class Dispatcher
                 /**
                  * When still here, try to get a service from container or autowire them
                  */
-                $service = $this->container->findObjectByClassName($class);
+                $service = $this->container->get($class);
 
                 if ($service !== null) {
                     $output[$parameterName] = $service;

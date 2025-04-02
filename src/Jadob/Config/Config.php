@@ -6,6 +6,7 @@ namespace Jadob\Config;
 use Jadob\Config\Exception\ConfigNodeNotFoundException;
 
 /**
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
