@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Framework\Logger;
 
 use Jadob\Core\BootstrapInterface;
+use LogicException;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
@@ -46,6 +47,16 @@ class LoggerFactory
         if (!array_key_exists($channel, $this->loggers)) {
             $logger = new Logger($channel);
 
+
+            if(!array_key_exists($channel, $this->channelsConfig)) {
+                throw new LogicException(
+                    sprintf(
+                        'Logger channel "%s" does not have any configuration.',
+                        $channel
+                    )
+                );
+            }
+
             foreach ($this->channelsConfig[$channel] as $handlers) {
                 $logger->pushHandler(
                     $this->getOrCreateHandler($handlers)
@@ -74,7 +85,7 @@ class LoggerFactory
                     level: $config['level'],
                 );
             } else {
-                throw new \LogicException(
+                throw new LogicException(
                     sprintf('Unsupported handler: %s', $handlerName)
                 );
             }
