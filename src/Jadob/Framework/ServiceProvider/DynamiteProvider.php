@@ -20,6 +20,7 @@ use Dynamite\TableSchema;
 use Jadob\Bridge\Doctrine\Annotations\ServiceProvider\DoctrineAnnotationsProvider;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Framework\Logger\LoggerFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -42,9 +43,8 @@ class DynamiteProvider implements ServiceProviderInterface
     {
         $output = [];
 
-        $output['dynamite.logger'] = static function (ContainerInterface $container): LoggerInterface {
-            /** @noinspection MissingService */
-            return new Logger('dynamite', [$container->get('logger.handler.default')]);
+        $output['dynamite.logger'] = static function (LoggerFactory $loggerFactory): LoggerInterface {
+            return $loggerFactory->getDefaultLogger();
         };
 
         $useCache = $config['cache'] ?? false;
