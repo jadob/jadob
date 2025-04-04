@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\Module;
 
+use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Jadob\Framework\ServiceProvider\AuthenticationProvider;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
 use Psr\Container\ContainerExceptionInterface;
