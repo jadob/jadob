@@ -30,15 +30,11 @@ class AuthenticationProvider implements ServiceProviderInterface
     public function register(ContainerInterface $container, null|object|array $config = null): array
     {
         return [
-            'jadob.auth.auth_logger' =>
-                fn(ContainerInterface $container): LoggerInterface => new Logger('authenticator', [
-                    $container->get('logger.handler.default')
-                ]),
             IdentityStorageFactory::class =>
                 fn(ContainerInterface $container): IdentityStorageFactory => new IdentityStorageFactory(),
 
             AuthenticatorService::class =>
-                function (ContainerInterface $container) use ($config): AuthenticatorService {
+                static function (ContainerInterface $container) use ($config): AuthenticatorService {
                     /** @var array<string, AuthenticatorInterface> $authenticators */
                     $authenticators = [];
                     /** @var array<string, IdentityProviderInterface> $userProviders */
@@ -66,10 +62,11 @@ class AuthenticationProvider implements ServiceProviderInterface
             AuthenticationListener::class => fn(ContainerInterface $container): AuthenticationListener => new AuthenticationListener(
                 $container->get(AuthenticatorService::class),
                 $container->get(EventDispatcherInterface::class),
-                $container->get('jadob.auth.auth_logger')
+                /**
+                 * @TODO: create separate logger for auth
+                 */
+                $container->get(LoggerInterface::class),
             )
         ];
     }
-
-
 }
