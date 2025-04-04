@@ -9,6 +9,7 @@ use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Contracts\DependencyInjection\ContainerAutowiringExtensionInterface;
+use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\Definition;
 use Jadob\Contracts\DependencyInjection\ServiceProviderHandlerInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -21,6 +22,10 @@ use function is_array;
 
 class Container implements ContainerInterface, ServiceProviderHandlerInterface
 {
+    /**
+     * @var list<ContainerExtensionInterface>
+     */
+    private array $extensions = [];
 
     /**
      * @var array<ContainerAutowiringExtensionInterface>
@@ -603,6 +608,21 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
         return $output;
 
+    }
+
+    public function addExtension(ContainerExtensionInterface $extension): void
+    {
+        $this->extensions[] = $extension;
+    }
+
+
+    public function build(array $config): void
+    {
+        $this->resolveServiceProviders($config);
+
+        foreach ($this->extensions as $extension) {
+            $extension->onContainerBuild($this);
+        }
     }
 
 }
