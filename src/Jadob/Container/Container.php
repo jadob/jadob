@@ -325,7 +325,9 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 continue;
             }
 
-            if ($className === ContainerInterface::class) {
+            if ($className === ContainerInterface::class
+            || $className === Container::class
+            ) {
                 $parametersToInject[] = $this;
                 continue;
             }
