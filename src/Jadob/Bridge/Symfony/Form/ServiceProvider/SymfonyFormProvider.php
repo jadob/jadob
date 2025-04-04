@@ -58,7 +58,11 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProv
             'tags' => [
                 'form.extension'
             ],
-            'class' => ValidatorExtension::class
+            'factory' => static function (ValidatorInterface $validator): ValidatorExtension {
+                return new ValidatorExtension(
+                    $validator
+                );
+            }
         ];
 
         $services[FormFactoryInterface::class] = static function (Container $container): FormFactoryInterface {
