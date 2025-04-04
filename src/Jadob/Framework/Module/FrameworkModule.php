@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\Module;
 
+use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Jadob\Framework\DependencyInjection\ExtensionProvider\FrameworkContainerExtensionProvider;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
 use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
