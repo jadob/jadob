@@ -9,6 +9,7 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
@@ -103,17 +104,13 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
                 }
 
                 /**
-                 * If Logging enabled, wrap the orginal instance into an logging translator
+                 * @TODO: make a separate logger for translator
                  */
                 if (isset($config['logging']) && $config['logging'] === true) {
-                    $defaultLoggerHandler = $container->get('logger.handler.default');
-                    $translationLogger = new Logger('translator', [
-                        $defaultLoggerHandler
-                    ]);
 
-                    $symfonyTranslator = new LoggingTranslator(
+                    return new LoggingTranslator(
                         $symfonyTranslator,
-                        $translationLogger
+                        $container->get(LoggerInterface::class)
                     );
                 }
 
@@ -122,11 +119,4 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
         ];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function onContainerBuild(Container $container, $config)
-    {
-        // TODO: Implement onContainerBuild() method.
-    }
 }
