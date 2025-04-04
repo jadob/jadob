@@ -106,11 +106,6 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
                 }
             }
 
-            $extensions = $container->getTaggedServices('twig.extension');
-            foreach ($extensions as $extension) {
-                $environment->addExtension($extension);
-            }
-
             return $environment;
         };
 
