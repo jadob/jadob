@@ -577,4 +577,24 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 ->setClassName($id)
         );
     }
+
+
+    /**
+     * @param string $tag
+     * @return list<object>
+     */
+    public function getTaggedServices(string $tag): array
+    {
+        $output = [];
+
+        foreach ($this->definitions as $id => $definition) {
+            if ($definition->hasTag($tag)) {
+                $output[] = $this->doGet($id);
+            }
+        }
+
+        return $output;
+
+    }
+
 }
