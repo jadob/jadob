@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\Framework\Module;
+namespace Jadob\Contracts\Framework\Module;
 
 use Jadob\Contracts\DependencyInjection\ContainerExtensionProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
