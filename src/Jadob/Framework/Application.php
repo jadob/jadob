@@ -4,6 +4,7 @@ namespace Jadob\Framework;
 
 use Jadob\Config\Config;
 use Jadob\Container\Container;
+use Jadob\Container\ParameterStore;
 use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Dispatcher;
@@ -70,9 +71,30 @@ readonly class Application
             $this->serviceProviders
         );
 
+        $config = (new Config())->loadDirectory($this->bootstrap->getConfigDir(), ['php']);
+        $parameterNode = [];
+        if ($config->hasNode('parameters')) {
+            $parameterNode = $config->getNode('parameters');
+        }
+
         $container = new Container();
         $container->add(BootstrapInterface::class, $this->bootstrap);
         $container->add(RequestContextStore::class, $this->requestContextStore);
+        $container->add(ParameterStore::class, new ParameterStore(
+            array_merge(
+                $parameterNode,
+                [
+                    'app_env' => $this->env,
+                    'root_dir' => $this->bootstrap->getRootDir(),
+                    'cache_dir' => $this->bootstrap->getCacheDir(),
+                    'env_cache_dir' => sprintf(
+                        '%s/%s',
+                        $this->bootstrap->getCacheDir(),
+                        $this->env
+                    ),
+                ]
+            )
+        ));
 
         foreach ($modules as $module) {
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
@@ -88,7 +110,7 @@ readonly class Application
             $container->add($coreServiceId, $coreService);
         }
 
-        $config = (new Config())->loadDirectory($this->bootstrap->getConfigDir(), ['php']);
+
         $container->resolveServiceProviders($config->toArray());
 
         foreach ($modules as $module) {
