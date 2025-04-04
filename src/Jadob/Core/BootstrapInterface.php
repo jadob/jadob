@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Core;
 
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Framework\Module\ModuleInterface;
+use Jadob\Contracts\Framework\Module\ModuleInterface;
 
 /**
  * Interface for framework bootstrapping class.
