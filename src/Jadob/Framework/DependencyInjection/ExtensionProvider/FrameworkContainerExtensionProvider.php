@@ -21,4 +21,9 @@ class FrameworkContainerExtensionProvider implements ContainerExtensionProviderI
             $container->get(InjectLoggerAutowireExtension::class)
         ];
     }
+
+    public function getContainerExtensions(): array
+    {
+        return [];
+    }
 }
