@@ -21,7 +21,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
         $event->setResponse(new Response($content));
         $event->stopPropagation();
 
-        $this?->logger->critical(
+        $this->logger?->critical(
             $event->getException(),
             $event->getException()->getTrace()
         );
