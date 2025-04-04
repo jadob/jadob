@@ -11,6 +11,7 @@ use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\RequestContext;
 use Jadob\Core\RequestContextStore;
+use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Framework\ErrorHandler\ExceptionHandler;
 use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
@@ -113,11 +114,17 @@ readonly class Application
 
         $container->resolveServiceProviders($config->toArray());
 
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $container->get(EventDispatcherInterface::class);
         foreach ($modules as $module) {
             foreach ($module->getContainerExtensionProviders($this->env) as $containerExtensionProvider) {
                 foreach ($containerExtensionProvider->getAutowiringExtensions($container) as $extension) {
                     $container->addAutowiringExtension($extension);
                 }
+            }
+
+            foreach ($module->getEventListeners($container, $this->env) as $listener) {
+                $eventDispatcher->addListener($listener);
             }
         }
 
