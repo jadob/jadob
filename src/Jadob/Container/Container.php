@@ -410,6 +410,11 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             }
 
             if (array_key_exists('factory', $serviceConfig)) {
+                $factoryReflection = new ReflectionFunction($serviceConfig['factory']);
+                if($factoryReflection->getReturnType() instanceof ReflectionNamedType) {
+                    $definition->setClassName($factoryReflection->getReturnType()->getName());
+                }
+
                 $definition->setFactory($serviceConfig['factory']);
             }
 
