@@ -26,6 +26,6 @@ class TwigModule implements ModuleInterface
 
     public function getEventListeners(ContainerInterface $container, string $env): array
     {
-        // TODO: Implement getEventListeners() method.
+        return [];
     }
 }
