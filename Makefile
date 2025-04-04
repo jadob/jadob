@@ -1,24 +1,11 @@
-psalm-install:
-	mkdir -p tools/psalm
-	composer require --dev --working-dir=tools/psalm vimeo/psalm
-
-php-cs-fixer-install:
-	mkdir -p tools/php-cs-fixer
-	composer require --dev --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
-
-phpunit-install:
-	mkdir -p tools
-	wget -O phpunit https://phar.phpunit.de/phpunit-11.phar -O tools/phpunit.phar
-	chmod +x tools/phpunit.phar
-
 psalm:
-	tools/psalm/vendor/bin/psalm
+	vendor/bin/psalm
 
 cs-fix:
-	tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src --allow-risky=yes
+	vendor/bin/php-cs-fixer fix src --allow-risky=yes
 
 phpunit:
-	./tools/phpunit.phar
+	vendor/bin/phpunit
 
 purge-vendors:
 	rm -rf src/Jadob/Core/vendor
