@@ -117,24 +117,27 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
         $services = [
             LoaderInterface::class => $loaderClosure,
             Environment::class => $environmentClosure,
-            'twig.path_extension' => [
-                'tags' => ['twig.extension'],
-                'factory' => static function (Router $router): PathExtension {
-                    return new PathExtension($router);
-                }
-            ],
-            'twig.debug_extension' => [
-                'tags' => ['twig.extension'],
-                'class' => DebugExtension::class
-            ],
-            'twig.aliased_path_extension' => [
-                'tags' => ['twig.extension'],
-                'factory' => static function () use ($config): AliasedAssetPathExtension {
-                    return new AliasedAssetPathExtension($config['extensions']['aliased_paths'] ?? []);
-                }
-            ],
         ];
 
+
+        $services[PathExtension::class] = [
+            'tags' => ['twig.extension'],
+            'factory' => static function (Router $router): PathExtension {
+                return new PathExtension($router);
+            }
+        ];
+
+        $services[DebugExtension::class] = [
+            'tags' => ['twig.extension'],
+            'class' => DebugExtension::class
+        ];
+
+        $services[AliasedAssetPathExtension::class] = [
+            'tags' => ['twig.extension'],
+            'factory' => static function () use ($config): AliasedAssetPathExtension {
+                return new AliasedAssetPathExtension($config['extensions']['aliased_paths'] ?? []);
+            }
+        ];
 
         if (isset($config['extenstions']['webpack_manifest'])) {
             $services['twig.webpack_manifest_extension'] = [
@@ -163,7 +166,9 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
         $services['twig.translator_extension'] = [
             'tags' => ['twig.extension'],
             'factory' => static function (TranslatorInterface $translator): TranslationExtension {
-                return new TranslationExtension($translator);
+                return new TranslationExtension(
+                    $translator
+                );
             }
         ];
 
