@@ -76,5 +76,4 @@ class Field
     {
         return $this->method;
     }
-
 }

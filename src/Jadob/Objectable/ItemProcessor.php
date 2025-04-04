@@ -14,7 +14,6 @@ use ReflectionClass;
 
 class ItemProcessor
 {
-
     /**
      * @var ItemTransformerInterface[]
      */
@@ -22,8 +21,7 @@ class ItemProcessor
 
     public function __construct(
         iterable $itemTransformers = []
-    )
-    {
+    ) {
         $this->itemTransformers = iterator_to_array($itemTransformers);
     }
 
@@ -94,7 +92,7 @@ class ItemProcessor
 
 
                     if ($instance->isStringable()) {
-                        $output[$instance->getName()] = (string)$val;
+                        $output[$instance->getName()] = (string) $val;
                         continue;
                     }
 

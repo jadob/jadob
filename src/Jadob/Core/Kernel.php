@@ -9,15 +9,12 @@ use Jadob\Config\Config;
 use Jadob\Container\Container;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ContainerEventListener;
-use Jadob\Container\Exception\AutowiringException;
-use Jadob\Container\Exception\ContainerBuildException;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\Session\SessionHandlerFactory;
-use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
@@ -38,7 +35,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 use function fastcgi_finish_request;
-use function file_exists;
 use function function_exists;
 use function in_array;
 use function is_array;
@@ -68,8 +64,7 @@ class Kernel
         private EventDispatcherInterface $eventDispatcher,
         private ErrorHandlerInterface $errorHandler,
         private LoggerFactory $loggerFactory,
-    )
-    {
+    ) {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
         }
@@ -117,7 +112,7 @@ class Kernel
          * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
          * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
          */
-        $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
+        $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
 
         $context = new RequestContext($requestId, $request);
 
@@ -173,11 +168,7 @@ class Kernel
      */
     public function getContainerBuilder(): ContainerBuilder
     {
-
-
         if ($this->containerBuilder === null) {
-
-
             if (!is_array($services)) {
                 //TODO named exception constructors?
                 throw new KernelException('services.php has missing return statement or returned value is not an array.');

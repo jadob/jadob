@@ -53,7 +53,6 @@ class Dispatcher
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
-
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework;
 
@@ -37,8 +38,7 @@ readonly class Application
         private BootstrapInterface $bootstrap,
         private array              $serviceProviders,
         private array              $modules
-    )
-    {
+    ) {
         $this->requestContextStore = new RequestContextStore();
         $this->exceptionHandler = new ExceptionHandler(
             $this->fallbackExceptionListener = ExceptionListenerFactory::createForEnv($this->env)
@@ -156,7 +156,7 @@ readonly class Application
          * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
          * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
          */
-        $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
+        $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
 
         $context = new RequestContext($requestId, $request);
 
@@ -178,7 +178,6 @@ readonly class Application
         $response = $dispatcher->executeRequest($context);
 
         return $response;
-
     }
 
 
@@ -198,5 +197,4 @@ readonly class Application
             fastcgi_finish_request();
         }
     }
-
 }

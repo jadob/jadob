@@ -9,7 +9,6 @@ use Psr\Container\ContainerExceptionInterface;
 
 class ContainerLogicException extends LogicException implements ContainerExceptionInterface
 {
-
     public static function missingTypeHint(string $id): self
     {
         return new self(
@@ -19,5 +18,4 @@ class ContainerLogicException extends LogicException implements ContainerExcepti
             )
         );
     }
-
 }

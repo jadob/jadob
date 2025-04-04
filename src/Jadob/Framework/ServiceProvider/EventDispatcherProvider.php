@@ -9,10 +9,8 @@ use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 use Psr\Container\ContainerInterface;
 
-
 class EventDispatcherProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return null;
@@ -26,5 +24,4 @@ class EventDispatcherProvider implements ServiceProviderInterface
             ]
         ];
     }
-
 }

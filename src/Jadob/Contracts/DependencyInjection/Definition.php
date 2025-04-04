@@ -19,8 +19,7 @@ class Definition
         private bool     $shared = true,
         private bool     $private = false,
         private ?Closure $factory = null,
-    )
-    {
+    ) {
     }
 
     public static function create(): self
@@ -102,7 +101,8 @@ class Definition
         $this->tags = $tags;
     }
 
-    public function hasTag(string $tag): bool {
+    public function hasTag(string $tag): bool
+    {
         return in_array($tag, $this->tags, true);
     }
 }

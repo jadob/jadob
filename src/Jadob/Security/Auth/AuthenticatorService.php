@@ -30,8 +30,7 @@ class AuthenticatorService
         protected array                  $refreshableIdentityProviders = [],
         
         
-    )
-    {
+    ) {
     }
 
     /**
@@ -51,9 +50,7 @@ class AuthenticatorService
     public function getStoredIdentity(
         SessionInterface $session,
         string           $authenticatorName
-    ): ?UserInterface
-    {
-
+    ): ?UserInterface {
         $user = $this->identityStorageFactory
             ->createFor(
                 $this->authenticators[$authenticatorName],
@@ -68,8 +65,7 @@ class AuthenticatorService
         UserInterface    $user,
         SessionInterface $session,
         string           $authenticatorName,
-    ): void
-    {
+    ): void {
         $this
             ->identityStorageFactory
             ->createFor(
@@ -85,9 +81,8 @@ class AuthenticatorService
     public function refreshIdentity(
         UserInterface $identity,
         string $authenticatorName
-    ): UserInterface
-    {
-        if(!array_key_exists($authenticatorName, $this->refreshableIdentityProviders)) {
+    ): UserInterface {
+        if (!array_key_exists($authenticatorName, $this->refreshableIdentityProviders)) {
             return $identity;
         }
 

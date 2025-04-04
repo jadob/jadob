@@ -13,7 +13,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class AuthenticationModule implements ModuleInterface
 {
-
     public function getServiceProviders(string $env): array
     {
         return [

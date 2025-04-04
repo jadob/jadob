@@ -27,7 +27,6 @@ use function strtoupper;
  */
 class Router
 {
-
     /**
      * @param RouteCollection $routeCollection
      * @param Context|null $context
@@ -44,14 +43,13 @@ class Router
         private array $matchers = [],
         protected ?ParameterStoreInterface $paramStore = null
     ) {
-
         $defaultConfig = [
             'case_sensitive' => false
         ];
 
         $this->config = array_merge($defaultConfig, $config);
 
-        if ($context == null) {
+        if ($context === null) {
             $this->context = Context::fromGlobals();
         }
     }
@@ -115,7 +113,7 @@ class Router
                 $route->setParams($parameters);
 
                 foreach ($this->matchers as $matcher) {
-                    if(!$matcher->matches($route, $request)) {
+                    if (!$matcher->matches($route, $request)) {
                         continue 2;
                     }
                 }

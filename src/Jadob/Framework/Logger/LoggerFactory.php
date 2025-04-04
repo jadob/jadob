@@ -23,8 +23,7 @@ class LoggerFactory
         private string             $defaultErrorLoggerChannel,
         private array              $channelsConfig = [],
         private array              $handlersConfig = [],
-    )
-    {
+    ) {
     }
 
     public function getDefaultLogger(): LoggerInterface
@@ -48,7 +47,7 @@ class LoggerFactory
             $logger = new Logger($channel);
 
 
-            if(!array_key_exists($channel, $this->channelsConfig)) {
+            if (!array_key_exists($channel, $this->channelsConfig)) {
                 throw new LogicException(
                     sprintf(
                         'Logger channel "%s" does not have any configuration.',
@@ -71,7 +70,6 @@ class LoggerFactory
     private function getOrCreateHandler(string $handlerName): HandlerInterface
     {
         if (!array_key_exists($handlerName, $this->handlers)) {
-
             $config = $this->handlersConfig[$handlerName];
 
             if ($config['type'] === 'stream' && $config['rotating']) {
@@ -100,5 +98,4 @@ class LoggerFactory
     {
         return str_replace('%log_dir%', $this->bootstrap->getLogsDir(), $path);
     }
-
 }

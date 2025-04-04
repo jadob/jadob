@@ -10,14 +10,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
-use Jadob\Bridge\Doctrine\ORM\EntityManagerFactory;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
-use Jadob\Contracts\DependencyInjection\ParentProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
@@ -38,11 +35,9 @@ use Symfony\Component\Console\Helper\HelperSet;
  */
 class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
-
     public function __construct(
         private string $env,
-    )
-    {
+    ) {
     }
 
     /**
@@ -59,7 +54,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
      *
      * @return Closure[]
      *
-     * @psalm-return array<string, \Closure(ContainerInterface):EntityManager>
+     * @psalm-return array<string, Closure(ContainerInterface):EntityManager>
      */
     public function register(ContainerInterface $container, array|null|object $config = null): array
     {
@@ -105,7 +100,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 throw new LogicException('All Doctrine ORM Manager names must be an string.');
             }
 
-            if (isset($configuration['default']) && (bool)$configuration['default']) {
+            if (isset($configuration['default']) && (bool) $configuration['default']) {
                 if ($defaultManagerName !== null) {
                     throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
                 }
@@ -193,7 +188,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         );
 
                         $configuration->setProxyNamespace('Doctrine\ORM\Proxies');
-                        $configuration->setProxyDir(sprintf($doctrineCacheDir . '/proxies'));
+                        $configuration->setProxyDir($doctrineCacheDir . '/proxies');
                         $configuration->setAutoGenerateProxyClasses(true);
 
                         $stringFunctions = $managerConfig['string_functions'] ?? [];

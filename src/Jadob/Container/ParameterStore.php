@@ -1,17 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container;
 
 class ParameterStore
 {
-
     public function __construct(
         /**
          * @var array<string, int|string|bool|array>
          */
         private array $parameters,
-    )
-    {
+    ) {
     }
 
     public function set(string $key, $value): void
@@ -19,7 +18,8 @@ class ParameterStore
         $this->parameters[$key] = $value;
     }
 
-    public function get(string $key) {
+    public function get(string $key)
+    {
         return $this->parameters[$key];
     }
 }

@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 
 class ProductionExceptionListener implements ExceptionListenerInterface, LoggerAwareInterface
 {
-
     public function setLogger(LoggerInterface $logger)
     {
         dd($logger);

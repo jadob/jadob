@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Validator\ServiceProvider;
 
@@ -9,7 +10,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SymfonyValidatorProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return null;

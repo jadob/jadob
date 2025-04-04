@@ -30,8 +30,7 @@ class EventDispatcher implements EventDispatcherInterface
 
     public function __construct(
         private ?LoggerInterface $eventLogger = null
-    )
-    {
+    ) {
     }
 
     /**

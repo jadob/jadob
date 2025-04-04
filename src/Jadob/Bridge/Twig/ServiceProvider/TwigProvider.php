@@ -46,13 +46,13 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
      *
      * @return (Closure|Closure)[]
      *
-     * @psalm-return array{Twig\Loader\LoaderInterface: \Closure(ContainerInterface):FilesystemLoader, Twig\Environment: \Closure(ContainerInterface):Environment}
+     * @psalm-return array{Twig\Loader\LoaderInterface: Closure(ContainerInterface):FilesystemLoader, Twig\Environment: Closure(ContainerInterface):Environment}
      * @throws \Twig\Error\LoaderError
      *
      */
     public function register(ContainerInterface $container, array|null|object $config = null): array
     {
-        $loaderClosure = static function (Container $container) use ($config): \Twig\Loader\FilesystemLoader {
+        $loaderClosure = static function (Container $container) use ($config): FilesystemLoader {
             $loader = new FilesystemLoader();
 
             //Adds Jadob namespace with some predefined templates (forms, alerts)
@@ -79,7 +79,7 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             LoaderInterface $loader,
             ParameterStore  $parameterStore,
             Container       $container,
-        ) use ($config): \Twig\Environment {
+        ) use ($config): Environment {
             $cache = false;
 
             if ($config['cache']) {
@@ -142,7 +142,7 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
                     $manifestJsonLocation =
                         sprintf('%s/%s',
                             $parameterStore->get('root_dir'),
-                            ltrim((string)$webpackManifestConfig['manifest_json_location'], '/')
+                            ltrim((string) $webpackManifestConfig['manifest_json_location'], '/')
                         );
 
                     $manifest = json_decode(

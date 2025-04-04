@@ -86,11 +86,11 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         }
 
         if ($service instanceof Definition) {
-           $this->addServiceFromDefinition($id, $service);
-           return;
+            $this->addServiceFromDefinition($id, $service);
+            return;
         }
 
-        if($service instanceof Closure) {
+        if ($service instanceof Closure) {
             $this->addServiceFromClosure($id, $service, $fqcnUsedAsId);
             return;
         }
@@ -310,8 +310,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     private function onServiceResolved(
         string $id,
         object $resolvedService,
-    ): object
-    {
+    ): object {
         array_pop($this->resolvingChain);
         return $resolvedService;
     }
@@ -390,8 +389,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     private static function createDefinition(
         string       $serviceId,
         array|object $serviceConfig,
-    ): Definition
-    {
+    ): Definition {
         $definition = Definition::create();
 
         if ($serviceConfig instanceof Closure) {
@@ -416,7 +414,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
             if (array_key_exists('factory', $serviceConfig)) {
                 $factoryReflection = new ReflectionFunction($serviceConfig['factory']);
-                if($factoryReflection->getReturnType() instanceof ReflectionNamedType) {
+                if ($factoryReflection->getReturnType() instanceof ReflectionNamedType) {
                     $definition->setClassName($factoryReflection->getReturnType()->getName());
                 }
 
@@ -447,8 +445,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     public function overrideServiceProvider(
         string $providerClassToOverride,
         object $serviceProvider
-    ): void
-    {
+    ): void {
         $this->serviceProviders[$providerClassToOverride] = $serviceProvider;
     }
 
@@ -508,11 +505,11 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      */
     private function addServiceFromClosure(string $id, Closure $closure, bool $fqcnUsedAsId): void
     {
-        if($fqcnUsedAsId) {
+        if ($fqcnUsedAsId) {
             $className = $id;
         } else {
             $reflection = new ReflectionFunction($closure);
-            if(!$reflection->hasReturnType()) {
+            if (!$reflection->hasReturnType()) {
                 throw ContainerLogicException::missingTypeHint($id);
             }
 
@@ -607,7 +604,6 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         }
 
         return $output;
-
     }
 
     public function addExtension(ContainerExtensionInterface $extension): void
@@ -624,5 +620,4 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             $extension->onContainerBuild($this);
         }
     }
-
 }

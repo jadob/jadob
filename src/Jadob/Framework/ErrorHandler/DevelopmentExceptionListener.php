@@ -29,7 +29,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
 
     public function setLogger(LoggerInterface $logger): void
     {
-       $this->logger = $logger;
+        $this->logger = $logger;
     }
 
 

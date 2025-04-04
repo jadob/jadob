@@ -8,7 +8,6 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\Middleware;
-use Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand;
 use Doctrine\DBAL\Tools\Console\Command\RunSqlCommand;
 use Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider;
 use Doctrine\DBAL\Types\Type;
@@ -48,7 +47,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
      *
      * @return (EventManager|Closure|Closure|Closure|Closure)[]
      *
-     * @psalm-return array<string, EventManager|\Closure(ContainerInterface):Configuration|\Closure(ContainerInterface):Logger|\Closure(ContainerInterface):Psr3QueryLogger|\Closure(ContainerInterface):\Doctrine\DBAL\Connection>
+     * @psalm-return array<string, EventManager|Closure(ContainerInterface):Configuration|Closure(ContainerInterface):Logger|Closure(ContainerInterface):Psr3QueryLogger|Closure(ContainerInterface):\Doctrine\DBAL\Connection>
      * @throws RuntimeException
      *
      * @throws \Doctrine\DBAL\DBALException
@@ -83,8 +82,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface
                 }
 
                 $mappingTypes[$key] = $value;
-
-
             }
         }
 
@@ -119,7 +116,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface
         $defaultConnectionName = null;
         foreach ($config['connections'] as $connectionName => $configuration) {
             $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
-            if (isset($configuration['default']) && (bool)$configuration['default']) {
+            if (isset($configuration['default']) && (bool) $configuration['default']) {
                 if ($defaultConnectionName !== null) {
                     throw new InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');
                 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\ExtensionProvider;
 
@@ -10,7 +11,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class FrameworkContainerExtensionProvider implements ContainerExtensionProviderInterface
 {
-
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

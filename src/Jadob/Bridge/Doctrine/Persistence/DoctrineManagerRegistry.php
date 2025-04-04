@@ -78,7 +78,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getRepository($persistentObject, $persistentManagerName = null): ObjectRepository
     {
-        if($persistentManagerName) {
+        if ($persistentManagerName) {
             return $this->getManager($persistentManagerName)->getRepository($persistentObject);
         }
         return $this->getManagerForClass($persistentObject)->getRepository($persistentObject);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\Event;
 
@@ -14,8 +15,7 @@ class ExceptionEvent implements StoppableEventInterface
 
     public function __construct(
         private Throwable $exception,
-    )
-    {
+    ) {
     }
 
     public function setResponse(?Response $response): void

@@ -19,7 +19,6 @@ use function is_array;
  */
 class RouterServiceProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return 'router';

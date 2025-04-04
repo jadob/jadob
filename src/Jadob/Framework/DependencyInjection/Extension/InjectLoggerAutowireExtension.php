@@ -10,19 +10,17 @@ use Psr\Log\LoggerInterface;
 
 class InjectLoggerAutowireExtension implements ContainerAutowiringExtensionInterface
 {
-
     public function __construct(
         private LoggerFactory $loggerFactory,
-    )
-    {
+    ) {
     }
 
     public function supportsConstructorInjectionFor(string $class, string $argumentName, string $argumentType, array $argumentAttributes): bool
     {
         return $argumentType === LoggerInterface::class && (
-                $argumentName === 'logger'
-                || str_ends_with($argumentName, 'Logger')
-            );
+            $argumentName === 'logger'
+            || str_ends_with($argumentName, 'Logger')
+        );
     }
 
     public function injectConstructorArgument(string $class, string $argumentName, string $argumentType, array $argumentAttributes): object

@@ -216,19 +216,19 @@ use Jadob\Core\Kernel;
                 </thead>
                 <tbody>
                 <?php $stackTrace = $exception->getTrace();
-                $stepsCount = count($stackTrace);
-                foreach ($stackTrace as $element) { ?>
+$stepsCount = count($stackTrace);
+foreach ($stackTrace as $element) { ?>
                     <tr>
                         <td class="key"><?php echo $stepsCount--; ?></td>
                         <td class="function">
                             <?php
-                            $fullFunctionCall = $element['function'];
-                            if (isset($element['class'])) {
-                                $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
-                            }
-                            ?>
+            $fullFunctionCall = $element['function'];
+    if (isset($element['class'])) {
+        $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
+    }
+    ?>
                             <?php echo $fullFunctionCall ?>
-                            (<?php echo \Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>
+                            (<?php echo Jadob\Debug\ErrorHandler\DevelopmentErrorHandler::parseParams($element['args'] ?? null) ?>
                             )
                             <p class="file-path">
                                 <?php if (isset($element['file'])) { ?>

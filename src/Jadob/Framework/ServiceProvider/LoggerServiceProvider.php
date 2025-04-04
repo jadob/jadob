@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
@@ -10,7 +11,6 @@ use Psr\Container\ContainerInterface;
 
 class LoggerServiceProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return 'logger';

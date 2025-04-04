@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Security\Auth\Identity;
 
@@ -10,6 +11,5 @@ use Jadob\Security\Auth\User\UserInterface;
  */
 interface RefreshableIdentityProviderInterface
 {
-
     public function refreshIdentity(UserInterface $identity): UserInterface;
 }

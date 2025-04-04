@@ -17,7 +17,6 @@ use Psr\Container\ContainerInterface;
 
 class FrameworkModule implements ModuleInterface
 {
-
     public function getServiceProviders(string $env): array
     {
         return [

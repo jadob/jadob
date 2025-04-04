@@ -141,7 +141,7 @@ readonly class AuthenticationListener implements ListenerProviderInterface, List
                 $event->setResponse($response);
             }
 
-            if($storedIdentity === null) {
+            if ($storedIdentity === null) {
                 return;
             }
 

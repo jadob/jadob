@@ -34,7 +34,7 @@ class CommandBusProvider implements ServiceProviderInterface
      *
      * @return Closure[]
      *
-     * @psalm-return array{Jadob\EventSourcing\CommandBus\CommandBus: \Closure(ContainerInterface):CommandBus}
+     * @psalm-return array{Jadob\EventSourcing\CommandBus\CommandBus: Closure(ContainerInterface):CommandBus}
      */
     public function register($config)
     {

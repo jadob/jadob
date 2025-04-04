@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Container\Extension;
 
@@ -6,21 +7,20 @@ use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use ReflectionFunction;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigExtension implements ContainerExtensionInterface
 {
-
     /**
      * @throws ContainerExceptionInterface
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws NotFoundExceptionInterface
      */
     public function onContainerBuild(Container $container): void
     {
-
         $twig = $container->get(Environment::class);
         $extensions = $container->getTaggedServices('twig.extension');
 
@@ -29,7 +29,7 @@ class TwigExtension implements ContainerExtensionInterface
         }
 
         $runtimeLoaders = $container->getTaggedServices('twig.runtime_loader');
-        if(count($runtimeLoaders) === 0) {
+        if (count($runtimeLoaders) === 0) {
             return;
         }
 

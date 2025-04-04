@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Monolog\Logger;
@@ -107,7 +106,6 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
                  * @TODO: make a separate logger for translator
                  */
                 if (isset($config['logging']) && $config['logging'] === true) {
-
                     return new LoggingTranslator(
                         $symfonyTranslator,
                         $container->get(LoggerInterface::class)
@@ -118,5 +116,4 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
             }
         ];
     }
-
 }

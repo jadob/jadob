@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Module;
 
@@ -9,7 +10,6 @@ use Psr\Container\ContainerInterface;
 
 class TwigModule implements ModuleInterface
 {
-
     public function getServiceProviders(string $env): array
     {
         return [
@@ -19,9 +19,9 @@ class TwigModule implements ModuleInterface
 
     public function getContainerExtensionProviders(string $env): array
     {
-       return [
-           new TwigExtensionProvider()
-       ];
+        return [
+            new TwigExtensionProvider()
+        ];
     }
 
     public function getEventListeners(ContainerInterface $container, string $env): array

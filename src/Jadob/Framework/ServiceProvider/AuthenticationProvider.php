@@ -3,11 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
-use Jadob\Container\Container;
-use Jadob\Container\Exception\ContainerException;
-use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
@@ -15,7 +11,6 @@ use Jadob\Security\Auth\Identity\IdentityProviderInterface;
 use Jadob\Security\Auth\Identity\IdentityStorageFactory;
 use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
 use Monolog\Logger;
-use Override;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
@@ -46,7 +41,7 @@ class AuthenticationProvider implements ServiceProviderInterface
                         $authenticators[$name] = $container->get($authenticatorConfig['service']);
                         $userProviders[$name] = $container->get($authenticatorConfig['user_provider']);
 
-                        if(array_key_exists('refresher', $authenticatorConfig)) {
+                        if (array_key_exists('refresher', $authenticatorConfig)) {
                             $refreshers[$name] = $container->get($authenticatorConfig['refresher']);
                         }
                     }

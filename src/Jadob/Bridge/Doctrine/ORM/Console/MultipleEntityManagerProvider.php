@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\ORM\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,8 +15,7 @@ final readonly class MultipleEntityManagerProvider implements EntityManagerProvi
 {
     public function __construct(
         protected ManagerRegistry $managerRegistry,
-    )
-    {
+    ) {
     }
 
     public function getManager(string $name): EntityManagerInterface
