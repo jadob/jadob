@@ -55,7 +55,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.7.0';
+    public const VERSION = '0.7.1';
 
     protected RuntimeInterface $runtime;
 
@@ -106,7 +106,7 @@ class Kernel
      * @throws RouteNotFoundException
      * @throws ServiceNotFoundException
      */
-    public function execute(Request $request, string $requestId = null): Response
+    public function execute(Request $request, ?string $requestId = null): Response
     {
         /**
          * An unique ID for each given Request.
