@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Security\Auth\EventListener;
 
 use Jadob\Core\Event\RequestEvent;
+use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\Event\AuthenticationFailedEvent;
 use Jadob\Security\Auth\Exception\AuthenticationException;
@@ -12,7 +13,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 
-readonly class AuthenticationListener implements ListenerProviderInterface
+readonly class AuthenticationListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(
         protected AuthenticatorService     $authenticationService,
@@ -30,6 +31,11 @@ readonly class AuthenticationListener implements ListenerProviderInterface
         }
 
         return [];
+    }
+
+    public function getListenerPriorityForEvent(object $event): int
+    {
+        return 110;
     }
 
     public function onRequestEvent(RequestEvent $event): void
