@@ -15,4 +15,9 @@ interface ContainerExtensionProviderInterface
     public function getAutowiringExtensions(
         ContainerInterface $container
     ): array;
+
+    /**
+     * @return list<ContainerExtensionInterface>
+     */
+    public function getContainerExtensions(): array;
 }
