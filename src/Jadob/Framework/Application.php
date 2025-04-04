@@ -101,6 +101,12 @@ readonly class Application
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
                 $container->registerServiceProvider($serviceProvider);
             }
+
+            foreach ($module->getContainerExtensionProviders($this->env) as $extensionProvider) {
+                foreach ($extensionProvider->getContainerExtensions() as $extension) {
+                    $container->addExtension($extension);
+                }
+            }
         }
 
         foreach ($serviceProviders as $serviceProvider) {
@@ -111,8 +117,7 @@ readonly class Application
             $container->add($coreServiceId, $coreService);
         }
 
-
-        $container->resolveServiceProviders($config->toArray());
+        $container->build($config->toArray());
 
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container->get(EventDispatcherInterface::class);
