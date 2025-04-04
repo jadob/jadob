@@ -96,4 +96,13 @@ class Definition
             factory: $data['factory'] ?? null
         );
     }
+
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
+    }
+
+    public function hasTag(string $tag): bool {
+        return in_array($tag, $this->tags, true);
+    }
 }

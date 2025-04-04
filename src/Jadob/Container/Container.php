@@ -412,6 +412,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             }
 
             $definition->setAutowired($serviceConfig['autowire'] ?? false);
+            $definition->setTags($serviceConfig['tags'] ?? []);
         } else {
             throw new ContainerException(
                 sprintf('Unable to build configuration for service id "%s" ', $serviceId)
