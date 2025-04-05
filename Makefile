@@ -2,7 +2,7 @@ psalm:
 	vendor/bin/psalm
 
 cs-fix:
-	vendor/bin/php-cs-fixer fix src --allow-risky=yes
+	PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix src --allow-risky=yes
 
 phpunit:
 	vendor/bin/phpunit
