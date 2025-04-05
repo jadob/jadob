@@ -10,5 +10,7 @@ class ExceptionListenerFactory
         if ($env === 'dev') {
             return new DevelopmentExceptionListener();
         }
+
+        return new ProductionExceptionListener();
     }
 }

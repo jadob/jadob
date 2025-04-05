@@ -7,16 +7,25 @@ namespace Jadob\Framework\ErrorHandler;
 use Jadob\Framework\Event\ExceptionEvent;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductionExceptionListener implements ExceptionListenerInterface, LoggerAwareInterface
 {
-    public function setLogger(LoggerInterface $logger)
+    private ?LoggerInterface $logger = null;
+
+    public function setLogger(LoggerInterface $logger): void
     {
-        dd($logger);
+        $this->logger = $logger;
     }
 
     public function handleExceptionEvent(ExceptionEvent $event): void
     {
-        dd($event);
+        $event->setResponse(new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR));
+        $event->stopPropagation();
+
+        $this->logger?->critical(
+            $event->getException(),
+            $event->getException()->getTrace()
+        );
     }
 }
