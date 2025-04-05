@@ -6,6 +6,7 @@ namespace Jadob\Framework\ServiceProvider;
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Framework\Logger\LoggerFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -48,7 +49,10 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
             //expose this as a separate service to make it possible to override
             MessageFormatterInterface::class => static fn(): MessageFormatterInterface => new MessageFormatter(),
 
-            TranslatorInterface::class => static function (ContainerInterface $container) use ($config): TranslatorInterface {
+            TranslatorInterface::class => static function (
+                ContainerInterface $container,
+                LoggerFactory $loggerFactory
+            ) use ($config): TranslatorInterface {
                 /** @var BootstrapInterface $bootstrap */
                 $bootstrap = $container->get(BootstrapInterface::class);
                 /** @var TranslationSource[] $sources */
@@ -108,7 +112,7 @@ class SymfonyTranslatorProvider implements ServiceProviderInterface
                 if (isset($config['logging']) && $config['logging'] === true) {
                     return new LoggingTranslator(
                         $symfonyTranslator,
-                        $container->get(LoggerInterface::class)
+                        $loggerFactory->getDefaultLogger()
                     );
                 }
 
