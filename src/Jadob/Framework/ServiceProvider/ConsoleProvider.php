@@ -46,10 +46,4 @@ class ConsoleProvider implements ServiceProviderInterface
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function onContainerBuild(Container $container, $config)
-    {
-    }
 }

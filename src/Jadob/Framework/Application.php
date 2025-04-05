@@ -20,6 +20,7 @@ use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Router;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application as CliApplication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -196,5 +197,10 @@ readonly class Application
         if (function_exists('fastcgi_finish_request')) {
             fastcgi_finish_request();
         }
+    }
+
+    public function getConsole(): CliApplication
+    {
+        return $this->container->get(CliApplication::class);
     }
 }
