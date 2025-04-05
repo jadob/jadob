@@ -118,7 +118,7 @@ readonly class Application
         }
 
         $container->build($config->toArray());
-
+        $container->add(LoggerInterface::class, $container->get(LoggerFactory::class)->getDefaultLogger());
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container->get(EventDispatcherInterface::class);
         foreach ($modules as $module) {
@@ -141,7 +141,7 @@ readonly class Application
                     $this->getLoggerFactory()->getDefaultErrorLogger()
                 );
         }
-        $this->container->add(LoggerInterface::class, $this->getLoggerFactory()->getDefaultLogger());
+
         return $this;
     }
 
