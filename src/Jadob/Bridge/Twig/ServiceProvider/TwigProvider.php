@@ -134,7 +134,7 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             }
         ];
 
-        if (isset($config['extenstions']['webpack_manifest'])) {
+        if (isset($config['extensions']['webpack_manifest'])) {
             $services['twig.webpack_manifest_extension'] = [
                 'tags' => ['twig.extension'],
                 'factory' => static function (ParameterStore $parameterStore) use ($config): WebpackManifestAssetExtension {
