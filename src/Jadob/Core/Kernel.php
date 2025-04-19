@@ -51,7 +51,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.7.6';
+    public const VERSION = '0.7.7';
 
     protected RuntimeInterface $runtime;
 
