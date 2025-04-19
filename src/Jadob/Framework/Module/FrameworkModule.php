@@ -34,7 +34,8 @@ class FrameworkModule implements ModuleInterface
     public function getContainerExtensionProviders(string $env): array
     {
         return [
-            new FrameworkContainerExtensionProvider()
+            new FrameworkContainerExtensionProvider(),
+            new ConsoleExtensionProvider()
         ];
     }
 
