@@ -23,7 +23,8 @@
     "doctrine/dbal": ">=2.13",
     "symfony/mime": "*",
     "symfony/cache": "^7.2",
-    "marcj/topsort": "^2.0"
+    "marcj/topsort": "^2.0",
+    "nunomaduro/termwind": "^2.3"
   },
   "require-dev": {
     "phpstan/phpstan-strict-rules": "^2.0",

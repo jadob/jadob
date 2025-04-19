@@ -8,6 +8,7 @@ use Jadob\Framework\Event\ExceptionEvent;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use function Termwind\{render};
 
 class DevelopmentExceptionListener implements ExceptionListenerInterface, LoggerAwareInterface
 {
@@ -15,16 +16,42 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
 
     public function handleExceptionEvent(ExceptionEvent $event): void
     {
-        ob_start();
-        include_once __DIR__.'/templates/error_view.php';
-        $content = ob_get_contents();
-        $event->setResponse(new Response($content));
-        $event->stopPropagation();
-
         $this->logger?->critical(
             $event->getException(),
             $event->getException()->getTrace()
         );
+
+        if (php_sapi_name() === 'cli') {
+            $template = file_get_contents(__DIR__ . '/templates/error_cli.html');
+
+            $stack = [];
+
+            foreach ($event->getException()->getTrace() as $trace) {
+                $stack[] = sprintf('<li>%s</li>', $trace['file'] . ':' . $trace['line']);
+            }
+
+            $template = str_replace('${thrown_in}',
+                sprintf(
+                    '%s:%s',
+                    $event->getException()->getFile(),
+                    $event->getException()->getLine(),
+                ),
+                $template
+            );
+            $template = str_replace('${exception_class}', get_class($event->getException()), $template);
+            $template = str_replace('${message}', $event->getException()->getMessage(), $template);
+            $template = str_replace('${stack_trace}', join(PHP_EOL, $stack), $template);
+            render($template);
+            return;
+        }
+
+        ob_start();
+        include_once __DIR__ . '/templates/error_view.php';
+        $content = ob_get_contents();
+        $event->setResponse(new Response($content));
+        $event->stopPropagation();
+
+
     }
 
     public function setLogger(LoggerInterface $logger): void
