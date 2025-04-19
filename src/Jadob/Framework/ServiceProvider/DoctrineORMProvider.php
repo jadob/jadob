@@ -9,6 +9,20 @@ use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\EntityRegionCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\QueryRegionCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand;
+use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
+use Doctrine\ORM\Tools\Console\Command\InfoCommand;
+use Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand;
+use Doctrine\ORM\Tools\Console\Command\RunDqlCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
+use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
@@ -37,7 +51,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
 {
     public function __construct(
         private string $env,
-    ) {
+    )
+    {
     }
 
     /**
@@ -100,7 +115,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 throw new LogicException('All Doctrine ORM Manager names must be an string.');
             }
 
-            if (isset($configuration['default']) && (bool) $configuration['default']) {
+            if (isset($configuration['default']) && (bool)$configuration['default']) {
                 if ($defaultManagerName !== null) {
                     throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
                 }
@@ -223,49 +238,103 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
             );
         };
 
+        $services[CollectionRegionCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new CollectionRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[EntityRegionCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new EntityRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[MetadataCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new MetadataCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[QueryCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[QueryRegionCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[ResultCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[CreateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[UpdateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryRegionCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[DropCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new QueryRegionCommand($entityManagerProvider);
+            }
+        ];
+        $services[GenerateProxiesCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new GenerateProxiesCommand($entityManagerProvider);
+            }
+        ];
+        $services[RunDqlCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new RunDqlCommand($entityManagerProvider);
+            }
+        ];
+        $services[ValidateSchemaCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new ValidateSchemaCommand($entityManagerProvider);
+            }
+        ];
+        $services[InfoCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new InfoCommand($entityManagerProvider);
+            }
+        ];
+        $services[MappingDescribeCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new MappingDescribeCommand($entityManagerProvider);
+            }
+        ];
+
+
         return $services;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function onContainerBuild(Container $container, $config)
-    {
-        /**
-         * @TODO: how about providing multiple database console command by providing additional argument
-         * (eg. --conn=<connection_name>)
-         */
-        if ($container->has('console')) {
-            /** @var Application $console */
-            $console = $container->get('console');
-
-            //@TODO: maybe we should add db helper set in DoctrineDBALBridge?
-            $helperSet = new HelperSet([]);
-
-            $console->setHelperSet($helperSet);
-
-            ConsoleRunner::addCommands(
-                $console,
-                $container->get(MultipleEntityManagerProvider::class)
-            );
-        }
-
-
-        /** @var DoctrineManagerRegistry $managerRegistry */
-        $managerRegistry = $container->get(ManagerRegistry::class);
-        foreach ($config['managers'] as $connectionName => $configuration) {
-            $serviceName = sprintf('doctrine.orm.%s', $connectionName);
-
-            $managerRegistry->addManager(
-                $connectionName,
-                $container->get($serviceName)
-            );
-
-            if ($configuration['default']) {
-                $managerRegistry->setDefaultManagerName($connectionName);
-            }
-        }
-    }
 
     /**
      * @return array
