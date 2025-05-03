@@ -92,11 +92,8 @@ class DoctrineManagerRegistry implements ManagerRegistry
     public function getManagerForClass($class): ?ObjectManager
     {
         foreach ($this->managers as $manager) {
-            try {
-                $manager->getClassMetadata($class);
-                return $manager;
-            } catch (MappingException $_) {
-            }
+            $manager->getClassMetadata($class);
+            return $manager;
         }
 
         return null;
