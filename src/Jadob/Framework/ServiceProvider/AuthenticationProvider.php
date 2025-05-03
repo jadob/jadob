@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Security\Auth\AuthenticatorInterface;
 use Jadob\Security\Auth\AuthenticatorService;
 use Jadob\Security\Auth\EventListener\AuthenticationListener;
@@ -12,7 +13,6 @@ use Jadob\Security\Auth\Identity\IdentityStorageFactory;
 use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 
 class AuthenticationProvider implements ServiceProviderInterface
