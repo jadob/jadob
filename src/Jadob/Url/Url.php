@@ -165,6 +165,14 @@ class Url implements Stringable
     }
 
     /**
+     * @param int|null $port
+     */
+    public function setPort(?int $port): self
+    {
+        $this->port = $port;
+        return $this;
+    }
+    /**
      * @return string
      */
     public function getScheme(): string
