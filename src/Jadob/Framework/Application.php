@@ -46,12 +46,10 @@ readonly class Application
         );
     }
 
-
-    public function build(): Application
+    private function build(): void
     {
         $this->exceptionHandler->registerErrorHandler();
         $this->exceptionHandler->registerExceptionHandler();
-
 
         $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
         if (!file_exists($servicesFile)) {
@@ -142,43 +140,48 @@ readonly class Application
                     $this->getLoggerFactory()->getDefaultErrorLogger()
                 );
         }
-
-        return $this;
     }
 
     public function handleWebRequest(Request $request): Response
     {
-        /**
-         * An unique ID for each given Request.
-         * It can be useful during e.g. debugging.
-         * You can override it with your own value.
-         *
-         * Example:
-         * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
-         * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
-         */
-        $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
+        try {
+            $this->build();
+            /**
+             * An unique ID for each given Request.
+             * It can be useful during e.g. debugging.
+             * You can override it with your own value.
+             *
+             * Example:
+             * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
+             * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
+             */
+            $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
 
-        $context = new RequestContext($requestId, $request);
+            $context = new RequestContext($requestId, $request);
 
-        /** @var SessionStorageInterface $sessionStorage */
-        $sessionStorage = $this->container->get(SessionStorageInterface::class);
-        $session = new Session($sessionStorage);
-        $context->setSession($session);
-        $this->requestContextStore->push($context);
+            /** @var SessionStorageInterface $sessionStorage */
+            $sessionStorage = $this->container->get(SessionStorageInterface::class);
+            $session = new Session($sessionStorage);
+            $context->setSession($session);
+            $this->requestContextStore->push($context);
 
-        /** @var LoggerFactory $loggerFactory */
-        $loggerFactory =  $this->container->get(LoggerFactory::class);
+            /** @var LoggerFactory $loggerFactory */
+            $loggerFactory = $this->container->get(LoggerFactory::class);
 
-        $dispatcher = new Dispatcher(
-            $this->container,
-            $loggerFactory->getLoggerForChannel('dispatcher'),
-            $this->container->get(EventDispatcherInterface::class)
-        );
+            $dispatcher = new Dispatcher(
+                $this->container,
+                $loggerFactory->getLoggerForChannel('dispatcher'),
+                $this->container->get(EventDispatcherInterface::class)
+            );
 
-        $response = $dispatcher->executeRequest($context);
+            $response = $dispatcher->executeRequest($context);
 
-        return $response;
+            return $response;
+        } catch (\Throwable $exception) {
+            return $this
+                ->exceptionHandler
+                ->handleException($exception);
+        }
     }
 
 
