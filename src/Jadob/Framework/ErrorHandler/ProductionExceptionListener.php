@@ -20,6 +20,15 @@ class ProductionExceptionListener implements ExceptionListenerInterface, LoggerA
 
     public function handleExceptionEvent(ExceptionEvent $event): void
     {
+        error_log(
+            sprintf(
+                '%s in %s on line %d',
+                $event->getException()->getMessage(),
+                $event->getException()->getFile(),
+                $event->getException()->getLine()
+
+            )
+        );
         $event->setResponse(new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR));
         $event->stopPropagation();
 
