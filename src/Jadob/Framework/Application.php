@@ -204,6 +204,7 @@ readonly class Application
 
     public function getConsole(): CliApplication
     {
+        $this->build();
         return $this->container->get(CliApplication::class);
     }
 }
