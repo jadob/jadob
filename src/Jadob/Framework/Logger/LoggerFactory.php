@@ -6,11 +6,14 @@ namespace Jadob\Framework\Logger;
 
 use Jadob\Core\BootstrapInterface;
 use LogicException;
+use Monolog\Handler\GroupHandler;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Sentry\Monolog\Handler;
+use Sentry\SentrySdk;
 
 class LoggerFactory
 {
@@ -82,6 +85,17 @@ class LoggerFactory
                     stream: $this->resolvePath($config['path']),
                     level: $config['level'],
                 );
+            } elseif($config['type'] === 'sentry') {
+                $handler = new GroupHandler([
+                    new \Sentry\Monolog\BreadcrumbHandler(
+                        hub: \Sentry\SentrySdk::getCurrentHub(),
+                        level: Logger::INFO, // Take note of the level here, messages with that level or higher will be attached to future Sentry events as breadcrumbs
+                    ),
+                    new Handler(
+                        hub: SentrySdk::getCurrentHub(),
+                        level: $config['level'],
+                    ),
+                ]);
             } else {
                 throw new LogicException(
                     sprintf('Unsupported handler: %s', $handlerName)
