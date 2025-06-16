@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
+use AWS\CRT\Log;
+use Jadob\Bridge\Monolog\Configuration\LoggerConfiguration;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\DependencyInjection\Extension\InjectLoggerAutowireExtension;
 use Jadob\Framework\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LogLevel;
 
 class LoggerServiceProvider implements ServiceProviderInterface
 {
@@ -40,5 +43,15 @@ class LoggerServiceProvider implements ServiceProviderInterface
         };
 
         return $services;
+    }
+
+    public function getDefaultConfiguration(): object
+    {
+        $config = new LoggerConfiguration();
+
+        $config->configureChannel('default', LogLevel::INFO);
+
+
+        return $config;
     }
 }

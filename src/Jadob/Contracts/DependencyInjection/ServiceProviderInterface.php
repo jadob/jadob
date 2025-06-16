@@ -27,4 +27,12 @@ interface ServiceProviderInterface
         ContainerInterface $container,
         array|object|null $config = null
     ): array;
+
+
+    /**
+     * Returns default configuration object, which will be passed to configuration files in order for user to adapt for
+     * its own needs.
+     * @return object
+     */
+    public function getDefaultConfiguration(): object;
 }
