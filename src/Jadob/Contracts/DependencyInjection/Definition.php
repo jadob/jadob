@@ -19,6 +19,7 @@ class Definition
         private bool     $shared = true,
         private bool     $private = false,
         private ?Closure $factory = null,
+        private ?array $aliases = [],
     ) {
     }
 
@@ -92,7 +93,8 @@ class Definition
             autowired: $data['autowired'] ?? false,
             shared: $data['shared'] ?? false,
             private: $data['private'] ?? false,
-            factory: $data['factory'] ?? null
+            factory: $data['factory'] ?? null,
+            aliases: $data['aliases'] ?? [],
         );
     }
 
