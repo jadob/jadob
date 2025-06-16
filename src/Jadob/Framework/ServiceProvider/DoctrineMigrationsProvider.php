@@ -117,10 +117,19 @@ class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServ
             'factory' => function (DependencyFactory $dependencyFactory) {
                 return new SyncMetadataCommand($dependencyFactory);
             }
-        ]; $output[VersionCommand::class] = [
+        ];
+
+        $output[VersionCommand::class] = [
             'tags' => ['console.command'],
             'factory' => function (DependencyFactory $dependencyFactory) {
                 return new VersionCommand($dependencyFactory);
+            }
+        ];
+
+        $output[GenerateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (DependencyFactory $dependencyFactory) {
+                return new GenerateCommand($dependencyFactory);
             }
         ];
 
