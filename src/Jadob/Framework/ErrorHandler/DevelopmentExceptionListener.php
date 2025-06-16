@@ -27,7 +27,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
             $stack = [];
 
             foreach ($event->getException()->getTrace() as $trace) {
-                $stack[] = sprintf('<li>%s</li>', $trace['file'] . ':' . $trace['line']);
+                $stack[] = sprintf('<li>%s</li>',( $trace['file'] ?? "(file unknown)") . ':' .( $trace['line'] ?? "(line unknown)" ));
             }
 
             $template = str_replace('${thrown_in}',
@@ -48,7 +48,8 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
         ob_start();
         include_once __DIR__ . '/templates/error_view.php';
         $content = ob_get_contents();
-        $event->setResponse(new Response($content));
+        ob_end_clean();
+        $event->setResponse(new Response($content, status: Response::HTTP_INTERNAL_SERVER_ERROR));
         $event->stopPropagation();
 
 
