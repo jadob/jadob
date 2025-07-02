@@ -33,6 +33,7 @@ use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use LogicException;
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
 use Psr\Container\ContainerInterface;
@@ -82,33 +83,11 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
 
         $services = [];
         $defaultManagerName = null;
-
-        /**
-         * @TODO: separate to another service provider
-         */
-        $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir();
-        $proxyManagerConfig = new \ProxyManager\Configuration();
-        $proxyManagerCacheDir = sprintf('%s/%s', $cacheDir, $this->env);
-        $proxyManagerFileLocator = new FileLocator(
-            $proxyManagerCacheDir,
-        );
-
-        $proxyManagerConfig->setGeneratorStrategy(
-            new FileWriterGeneratorStrategy(
-                $proxyManagerFileLocator
-            )
-        );
-
-        $proxyManagerConfig->setProxiesTargetDir($proxyManagerCacheDir);
-        spl_autoload_register($proxyManagerConfig->getProxyAutoloader());
-
-
-        $proxyManagerFactory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory(
-            $proxyManagerConfig
-        );
+        $proxyManagerFactory = $container->get(LazyLoadingValueHolderFactory::class);
 
         /** @var DoctrineManagerRegistry $registry */
         $registry = $container->get(ManagerRegistry::class);
+        $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir();
 
         foreach ($config['managers'] as $managerName => $managerConfig) {
             if (!is_string($managerName)) {
@@ -344,7 +323,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
     {
         return [
             DoctrinePersistenceProvider::class,
-            DoctrineDBALProvider::class
+            DoctrineDBALProvider::class,
+            ProxyManagerProvider::class,
         ];
     }
 }
