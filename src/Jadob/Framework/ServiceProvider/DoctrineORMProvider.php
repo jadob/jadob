@@ -310,6 +310,26 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
             }
         ];
 
+        $services[CreateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new CreateCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[UpdateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new UpdateCommand($entityManagerProvider);
+            }
+        ];
+        $services[DropCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new DropCommand($entityManagerProvider);
+            }
+        ];
+
 
         return $services;
     }
