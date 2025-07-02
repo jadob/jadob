@@ -6,6 +6,7 @@ namespace Jadob\Framework\Module;
 
 use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Jadob\Framework\DependencyInjection\ExtensionProvider\ConsoleExtensionProvider;
+use Jadob\Framework\DependencyInjection\ExtensionProvider\EventDispatcherExtensionProvider;
 use Jadob\Framework\DependencyInjection\ExtensionProvider\FrameworkContainerExtensionProvider;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
 use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
@@ -35,7 +36,8 @@ class FrameworkModule implements ModuleInterface
     {
         return [
             new FrameworkContainerExtensionProvider(),
-            new ConsoleExtensionProvider()
+            new ConsoleExtensionProvider(),
+            new EventDispatcherExtensionProvider(),
         ];
     }
 
