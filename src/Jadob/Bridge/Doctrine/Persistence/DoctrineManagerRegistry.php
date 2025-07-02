@@ -112,9 +112,9 @@ class DoctrineManagerRegistry implements ManagerRegistry
         return null;
     }
 
-    public function addConnection(string $name, Connection $connection): void
+    public function addConnectionFactory(string $name, \Closure $connection): void
     {
-        $this->connections[$name] = $connection;
+        $this->connectionFactories[$name] = $connection;
     }
 
     public function setDefaultConnectionName(string $defaultConnection): void
