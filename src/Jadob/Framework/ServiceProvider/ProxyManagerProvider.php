@@ -30,7 +30,7 @@ class ProxyManagerProvider implements ServiceProviderInterface
             $cacheDir = $bootstrap->getCacheDir();
             $proxyManagerConfig = new Configuration();
             $proxyManagerCacheDir = sprintf(
-                '%s/%s',
+                '%s/%s/proxy_manager',
                 $cacheDir,
                 $parameterStore->get('app_env')
             );
