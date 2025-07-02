@@ -15,6 +15,8 @@ class DoctrineManagerRegistry implements ManagerRegistry
     /**
      * @var Connection[]
      */
+    protected array $connectionFactories = [];
+
     protected array $connections = [];
     protected string $defaultConnection = 'default';
     /**
@@ -28,12 +30,23 @@ class DoctrineManagerRegistry implements ManagerRegistry
         return $this->defaultConnection;
     }
 
+    private function instantiateConnection(string $connectionName): void
+    {
+        if(isset($this->connectionFactories[$connectionName])) {
+            $connection = $this->connectionFactories[$connectionName]();
+            $this->connections[$connectionName] = $connection;
+            unset($this->connectionFactories[$connectionName]);
+        }
+    }
+
     public function getConnection($name = null): object
     {
         if ($name === null) {
+            $this->instantiateConnection($this->defaultConnection);
             return $this->connections[$this->defaultConnection];
         }
 
+        $this->instantiateConnection($name);
         return $this->connections[$name];
     }
 
