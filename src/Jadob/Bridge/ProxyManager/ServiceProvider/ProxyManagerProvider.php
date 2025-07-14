@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\Framework\ServiceProvider;
+namespace Jadob\Bridge\ProxyManager\ServiceProvider;
 
 
 use Jadob\Container\ParameterStore;
