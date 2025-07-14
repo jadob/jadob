@@ -26,6 +26,7 @@ use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
+use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Container\Container;
