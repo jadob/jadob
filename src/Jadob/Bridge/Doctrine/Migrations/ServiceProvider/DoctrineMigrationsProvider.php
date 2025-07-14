@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Framework\ServiceProvider;
+namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
 
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
@@ -19,13 +19,11 @@ use Doctrine\Migrations\Tools\Console\Command\StatusCommand;
 use Doctrine\Migrations\Tools\Console\Command\SyncMetadataCommand;
 use Doctrine\Migrations\Tools\Console\Command\VersionCommand;
 use Doctrine\Persistence\ManagerRegistry;
-use Jadob\Container\Container;
+use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineORMProvider;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
-use LogicException;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Application;
 
 class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
