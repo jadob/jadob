@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\Framework\ServiceProvider;
+namespace Jadob\Bridge\Doctrine\ORM\ServiceProvider;
 
 use Closure;
 use Doctrine\Common\EventManager;
@@ -23,16 +23,15 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\DBAL\ServiceProvider\DoctrineDBALProvider;
 use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
+use Jadob\Framework\ServiceProvider\DoctrinePersistenceProvider;
 use LogicException;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
@@ -40,8 +39,6 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Adds Doctrine ORM features to Jadob Framework.
@@ -70,7 +67,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
      *
      * @return Closure[]
      *
-     * @psalm-return array<string, Closure(ContainerInterface):EntityManager>
+     * @psalm-return Closure
      */
     public function register(ContainerInterface $container, array|null|object $config = null): array
     {
