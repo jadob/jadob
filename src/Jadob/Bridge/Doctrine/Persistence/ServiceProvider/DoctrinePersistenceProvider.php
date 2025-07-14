@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Framework\ServiceProvider;
+namespace Jadob\Bridge\Doctrine\Persistence\ServiceProvider;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
