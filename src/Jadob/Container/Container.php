@@ -8,6 +8,7 @@ use Closure;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerAutowiringExtensionInterface;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\Definition;
@@ -462,7 +463,25 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             $providerConfig = null;
             $requestedConfigNode = $serviceProvider->getConfigNode();
             if ($requestedConfigNode) {
+                /** @var array|object $providerConfig */
                 $providerConfig = $config[$requestedConfigNode];
+
+                if($serviceProvider instanceof ConfigObjectProviderInterface) {
+                    $defaultConfigObject = $serviceProvider
+                        ->getDefaultConfigurationObject();
+
+                    if(!($providerConfig instanceof Closure)) {
+                        throw new ContainerException(
+                            sprintf(
+                                'Config node for provider "%s" must be a closure as this provider uses object-based configuration',
+                                $serviceProviderFqcn
+                            )
+                        );
+                    }
+
+                    $providerConfig = $providerConfig($defaultConfigObject);
+                }
+
             }
 
             $servicesToAdd = $serviceProvider->register($this, $providerConfig);
