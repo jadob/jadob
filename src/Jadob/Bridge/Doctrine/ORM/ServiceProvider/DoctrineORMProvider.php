@@ -113,7 +113,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 throw new LogicException('All Doctrine ORM Manager names must be an string.');
             }
 
-            if (isset($configuration['default']) && (bool)$configuration['default']) {
+            // @TODO: replace with array_key_exists, or use object config
+            if (isset($managerConfig['default']) && (bool)$managerConfig['default']) {
                 if ($defaultManagerName !== null) {
                     throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
                 }
@@ -326,6 +327,27 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
             'tags' => ['console.command'],
             'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
                 return new MappingDescribeCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[UpdateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new UpdateCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[DropCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new DropCommand($entityManagerProvider);
+            }
+        ];
+
+        $services[CreateCommand::class] = [
+            'tags' => ['console.command'],
+            'factory' => function (MultipleEntityManagerProvider $entityManagerProvider) {
+                return new CreateCommand($entityManagerProvider);
             }
         ];
 
