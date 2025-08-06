@@ -6,6 +6,7 @@ namespace Jadob\Security\Auth\Identity;
 use Jadob\Security\Auth\User\UserInterface;
 
 /**
+ * @deprecated
  * Use this when you need to refresh your user every request
  * @license MIT
  */

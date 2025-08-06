@@ -6,6 +6,9 @@ namespace Jadob\Security\Auth\Event;
 use Jadob\Security\Auth\Exception\AuthenticationException;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated
+ */
 readonly class AuthenticationFailedEvent
 {
     public function __construct(

@@ -13,6 +13,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @deprecated
+ */
 readonly class AuthenticationListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(

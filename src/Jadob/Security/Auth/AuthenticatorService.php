@@ -10,6 +10,9 @@ use Jadob\Security\Auth\Identity\RefreshableIdentityProviderInterface;
 use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * @deprecated
+ */
 class AuthenticatorService
 {
     public function __construct(

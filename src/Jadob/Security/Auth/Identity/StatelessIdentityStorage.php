@@ -6,6 +6,7 @@ namespace Jadob\Security\Auth\Identity;
 use Jadob\Security\Auth\User\UserInterface;
 
 /**
+ * @deprecated
  * @internal
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT

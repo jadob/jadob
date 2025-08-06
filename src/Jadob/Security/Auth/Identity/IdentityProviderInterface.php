@@ -7,6 +7,9 @@ namespace Jadob\Security\Auth\Identity;
 use Jadob\Security\Auth\Exception\UserNotFoundException;
 use Jadob\Security\Auth\User\UserInterface;
 
+/**
+ * @deprecated
+ */
 interface IdentityProviderInterface
 {
     /**

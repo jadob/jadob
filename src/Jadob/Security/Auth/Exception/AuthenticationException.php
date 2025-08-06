@@ -6,6 +6,7 @@ namespace Jadob\Security\Auth\Exception;
 use Exception;
 
 /**
+ * @deprecated
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

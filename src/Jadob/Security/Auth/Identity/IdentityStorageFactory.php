@@ -7,6 +7,7 @@ use Jadob\Security\Auth\AuthenticatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
+ * @deprecated
  * @internal
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
