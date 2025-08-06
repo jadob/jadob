@@ -25,11 +25,11 @@ class StatelessAuthenticatorHandler implements AuthenticatorHandlerInterface
                 $requestEvent->requestContext->request,
             );
 
-            $authenticator->onAuthenticationSuccess(
-                $identityProvider->getByIdentifier($accessToken->identityId),
-            );
+            $identity = $identityProvider->getByIdentifier($accessToken->identityId);
+            $authenticator->onAuthenticationSuccess($identity);
 
             $requestEvent->requestContext->setAccessToken($accessToken);
+            $requestEvent->requestContext->setIdentity($identity);
         } catch (AuthenticationException $exception) {
             $response = $authenticator->onAuthenticationFailure($exception);
             if ($response !== null) {
