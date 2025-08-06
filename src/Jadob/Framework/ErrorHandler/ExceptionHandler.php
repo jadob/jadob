@@ -22,6 +22,12 @@ readonly class ExceptionHandler
 
     public function handleError($errno, $errstr, $errfile, $errline): void
     {
+        //@TODO: make deprecations visible in any way, shape, or form!
+        if ($errno === E_DEPRECATED
+            || $errno === E_USER_DEPRECATED) {
+            return;
+        }
+
         //According to documentation, it is intended to use error number as a severity
         //@see https://www.php.net/manual/en/errorexception.construct.php
         throw new ErrorException($errstr, $errno, $errno, $errfile, $errline);
