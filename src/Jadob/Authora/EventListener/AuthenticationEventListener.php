@@ -53,6 +53,8 @@ final readonly class AuthenticationEventListener implements ListenerProviderInte
                 ?->debug(
                     'None of registered authenticators supports this request.'
                 );
+
+            return;
         }
 
         $authenticator = $this
