@@ -1,0 +1,2 @@
+This is an experimental component, acting as a replacement for current clunky and messy authentication module.
+The current one will remain in the source (albeit deprecated) until authora will be ready.
