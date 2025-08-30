@@ -13,11 +13,11 @@ class AuthenticatorService
     /**
      * @var array<string, AuthenticatorInterface>
      */
-    private array $authenticators;
+    private array $authenticators = [];
     /**
      * @var array<string, IdentityProviderInterface>
      */
-    private array $identityProviders;
+    private array $identityProviders = [];
 
     public function registerNewAuthenticator(
         string                    $name,
@@ -51,13 +51,9 @@ class AuthenticatorService
         Request $request
     ): ?string
     {
-        foreach ($this->authenticators as $name => $authenticator) {
-            if ($authenticator->supports($request)) {
-                return $name;
-            }
-        }
-
-        return null;
+        return \array_find_key(
+            $this->authenticators,
+            fn(AuthenticatorInterface $authenticator) => $authenticator->supports($request)
+        );
     }
-
 }
