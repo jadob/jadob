@@ -11,6 +11,6 @@ class DummyIdentityProvider implements IdentityProviderInterface
 
     public function getByIdentifier(string $identityId): IdentityInterface
     {
-
+        return new DummyIdentity($identityId);
     }
 }

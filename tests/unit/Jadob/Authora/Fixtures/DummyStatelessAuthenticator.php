@@ -22,18 +22,21 @@ class DummyStatelessAuthenticator implements StatelessAuthenticatorInterface
         return $this->supportedPath === $request->getPathInfo();
     }
 
-    public function onAuthenticationFailure(AuthenticationException $exception,): ?Response
+    public function onAuthenticationFailure(AuthenticationException $exception): ?Response
     {
         // TODO: Implement onAuthenticationFailure() method.
     }
 
-    public function onAuthenticationSuccess(IdentityInterface $identity,): ?Response
+    public function onAuthenticationSuccess(IdentityInterface $identity): ?Response
     {
-        // TODO: Implement onAuthenticationSuccess() method.
+        return null;
     }
 
-    public function authenticate(Request $request,): AccessToken
+    public function authenticate(Request $request): AccessToken
     {
-        // TODO: Implement authenticate() method.
+        return new AccessToken(
+            'mruczek',
+            []
+        );
     }
 }

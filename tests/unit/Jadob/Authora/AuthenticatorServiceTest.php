@@ -62,5 +62,15 @@ class AuthenticatorServiceTest extends TestCase
         self::assertNull($authenticatorName);
     }
 
+    public function testNullWillBeReturnedOnEmptyAuthenticatorList()
+    {
+        $authenticatorName = $this
+            ->authenticatorService
+            ->determineEventListenerForRequest(
+                Request::create('/api/v666'),
+            );
+
+        self::assertNull($authenticatorName);
+    }
 
 }

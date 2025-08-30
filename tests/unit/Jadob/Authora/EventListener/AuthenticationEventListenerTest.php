@@ -19,6 +19,7 @@ class AuthenticationEventListenerTest extends TestCase
         $service = new AuthenticationEventListener(
             $this->createMock(AuthenticatorService::class),
             $this->createMock(AccessTokenStorageInterface::class),
+            $this->createMock(AuthenticatorHandlerFactory::class),
         );
 
 
@@ -40,12 +41,14 @@ class AuthenticationEventListenerTest extends TestCase
             );
 
 
+        $storageMock = $this->createMock(AccessTokenStorageInterface::class);
         $service = new AuthenticationEventListener(
             $authenticatorService,
-            $this->createMock(AccessTokenStorageInterface::class),
+            $storageMock,
             new AuthenticatorHandlerFactory()
         );
 
+        $storageMock->expects($this->never())->method($this->anything());
         $service->onRequestEvent(
             new RequestEvent(TestValueProvider::requestContext('/api/v1/pets')),
         );
