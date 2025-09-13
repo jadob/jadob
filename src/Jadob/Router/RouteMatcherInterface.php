@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Allows to perform additional checks while matching a route.
+ * @deprecated
  * @license MIT
  */
 interface RouteMatcherInterface

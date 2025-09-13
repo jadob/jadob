@@ -5,6 +5,9 @@ namespace Jadob\Router;
 
 use Jadob\Core\RequestContextStore;
 
+/**
+ * @deprecated
+ */
 class StickyParameterStore implements ParameterStoreInterface
 {
     public function __construct(protected RequestContextStore $contextStore)
