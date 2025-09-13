@@ -35,7 +35,7 @@ class Router
      */
     public function __construct(
         private RouteCollection $routeCollection,
-        private ?Context $context = null,
+        private Context $context,
         private array $config = [],
         /**
          * @var array<RouteMatcherInterface>
@@ -49,9 +49,6 @@ class Router
 
         $this->config = array_merge($defaultConfig, $config);
 
-        if ($context === null) {
-            $this->context = Context::fromGlobals();
-        }
     }
 
     /**
