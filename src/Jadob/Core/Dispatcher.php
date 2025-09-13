@@ -194,10 +194,9 @@ class Dispatcher
 
             throw new KernelException(
                 sprintf(
-                    'Unable to autowire controller "%s" because service "%s" is not found in container and cannot be autowired as "%s" is false.',
+                    'Unable to autowire controller "%s" because service "%s" is not found in container and cannot be autowired.',
                     $controllerClassName,
                     $type,
-                    'framework.autowire_controller_arguments'
                 )
             );
         }
