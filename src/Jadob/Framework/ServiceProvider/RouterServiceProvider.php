@@ -6,7 +6,7 @@ namespace Jadob\Framework\ServiceProvider;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\RequestContextStore;
-use Jadob\Router\Context;
+use Jadob\Router\RouterContext;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Jadob\Router\StickyParameterStore;
@@ -33,14 +33,14 @@ class RouterServiceProvider implements ServiceProviderInterface
                     $collection = RouteCollection::fromArray($config['routes']);
                 }
 
-                $context = Context::fromGlobals();
+                $context = RouterContext::fromGlobals();
                 if (isset($config['context']) && empty($config['context']['base_url'])) {
                     $context->setHost($config['context']['host']);
                     $context->setPort($config['context']['port']);
                 }
 
                 if (isset($config['context']['base_url'])) {
-                    $context = Context::fromBaseUrl($config['context']['base_url']);
+                    $context = RouterContext::fromBaseUrl($config['context']['base_url']);
                 }
 
                 if (isset($config['force_https']) && (bool) $config['force_https'] === true) {

@@ -16,6 +16,7 @@ use function reset;
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
+ * @template-implements ArrayAccess<non-empty-string, Route>
  */
 class RouteCollection implements ArrayAccess, Iterator, Countable
 {
@@ -54,33 +55,32 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
      */
     public function addRoute(Route $route)
     {
-        $route->setParentCollection($this);
+        $routeName = $route->name;
 
-        if ($route->getHost() === null) {
-            $route->setHost($this->getHost());
+        if($route->parentCollection !== null) {
+            throw new \LogicException(
+                sprintf('Cannot append route "%s to collection as it is already attached to another one.', $routeName)
+            );
         }
-        $this->routes[$route->getName()] = $route;
+
+        if ($route->getHost() !== null) {
+            throw new \LogicException(
+                sprintf('Cannot append route "%s to collection as it have a host.', $routeName)
+            );
+        }
+
+        $route->attachToCollection($this);
+        $this->routes[$routeName] = $route;
         return $this;
     }
 
-    /**
-     * Merges passed $collection with current object.
-     * At this level there is no need to merge paths with prefixes, as Route#getPath() will ask his parentCollection
-     * (if exists) for full prefix.
-     *
-     * @param RouteCollection $collection
-     * @return RouteCollection
-     */
-    public function addCollection(RouteCollection $collection): RouteCollection
+    public function merge(RouteCollection $collection): RouteCollection
     {
         $collection->setParentCollection($this);
 
         foreach ($collection as $route) {
-            if ($route->getHost() === null) {
-                $route->setHost($this->getHost());
-            }
-
-            $this->routes[$route->getName()] = $route;
+            $routeName = $route->name;
+            $this->routes[$routeName] = $route;
         }
 
         return $this;

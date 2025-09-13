@@ -7,7 +7,6 @@ namespace Jadob\Router;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\RouterException;
-use Symfony\Component\HttpFoundation\Request;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
@@ -27,116 +26,111 @@ use function strtoupper;
  */
 class Router
 {
-    /**
-     * @param RouteCollection $routeCollection
-     * @param Context|null $context
-     * @param array $config
-     * @param ParameterStoreInterface|null $paramStore
-     */
     public function __construct(
         private RouteCollection $routeCollection,
-        private Context $context,
-        private array $config = [],
-        /**
-         * @var array<RouteMatcherInterface>
-         */
-        private array $matchers = [],
-        protected ?ParameterStoreInterface $paramStore = null
-    ) {
-        $defaultConfig = [
-            'case_sensitive' => false
-        ];
-
-        $this->config = array_merge($defaultConfig, $config);
-
+        private RouterContext   $context,
+        private bool            $caseSensitive = false
+    )
+    {
     }
 
     /**
-     * @param Route $route
-     * @param $host
-     * @param array $matchedAttributes
-     *
-     * @return bool
+     * @param string $uri
+     * @param string $method
+     * @return MatchedRoute
+     * @throws RouteNotFoundException|MethodNotAllowedException
      */
-    protected function hostMatches(Route $route, string $host, array &$matchedAttributes): bool
+    public function match(
+        string $uri,
+        string $method,
+    ): MatchedRoute
     {
-        //route does not rely on hosts
-        if ($route->getHost() === null) {
-            return true;
-        }
+        $matchedRoutes = [];
+        foreach ($this->routeCollection as $route) {
+            $path = $route->path;
+            $regex = $this->pathToExpression(
+                $path,
+                $route->pathParameters ?? []
+            );
 
-        $hostRegex = $this->getRegex($route->getHost());
-        if (preg_match($hostRegex, $host, $matches) > 0) {
-            $matchedAttributes = $this->transformMatchesToParameters($matches);
-            return true;
-        }
+            $result = (bool)preg_match(
+                $regex,
+                $uri,
+                $matches,
+            );
 
-        return $route->getHost() === $host;
-    }
+            if ($result) {
+                $matchedRoute = new MatchedRoute(
+                    route: $route,
+                    pathParameters: $this->transformMatchesToParameters($matches)
+                );
 
+                $matchedRoutes[] = $matchedRoute;
 
-    /**
-     * @param Request $request
-     * @return Route
-     * @throws RouteNotFoundException
-     * @throws MethodNotAllowedException
-     */
-    public function matchRequest(Request $request): Route
-    {
-        $path = $request->getPathInfo();
-        $method = strtoupper($request->getMethod());
-        $availableMethodsFound = [];
-
-        foreach ($this->routeCollection as $routeKey => $route) {
-            /**
-             * @var Route $route
-             */
-            $pathRegex = $this->getRegex($route->getPath());
-            $parameters = $route->getParams();
-
-            if (
-                preg_match($pathRegex, $path, $matches) > 0
-                && $this->hostMatches($route, $this->context->getHost(), $parameters)
-            ) {
-                if (count(($routeMethods = $route->getMethods())) > 0
-                    && !in_array($method, $routeMethods, true)
-                ) {
-                    $availableMethodsFound[] = $method;
-                    //break later if no given method found
-                    continue;
+                if (in_array($method, $route->methods)) {
+                    return $matchedRoute;
                 }
-
-                $parameters = array_merge($parameters, $this->transformMatchesToParameters($matches));
-                $route->setParams($parameters);
-
-                foreach ($this->matchers as $matcher) {
-                    if (!$matcher->matches($route, $request)) {
-                        continue 2;
-                    }
-                }
-                $request->attributes->add($route->getParams());
-                return $route;
             }
         }
 
-        if (count($availableMethodsFound) > 0) {
-            //TODO Pass methods here
+        if (count($matchedRoutes) > 0) {
             throw new MethodNotAllowedException();
         }
 
-        throw new RouteNotFoundException('No route matched for URI ' . $path);
+        throw new RouteNotFoundException();
     }
+
+
+    private function pathToExpression(string $path, array $params): string
+    {
+        //TODO: caching!
+        if (\preg_match('/[^-:.,\/_{}()a-zA-Z*\d]/', $path)) {
+            throw new \LogicException(
+                sprintf('Unable to match route as phrase "%s" contains illegal characters.', $path)
+            );
+        }
+
+        \preg_match_all(
+            '/{([a-zA-Z0-9\.\_\-]+)}/',
+            $path,
+            $pathParams,
+            PREG_SET_ORDER
+        );
+
+        foreach ($pathParams as $pathParam) {
+            $pathParamMatch = PathParamMatchType::DEFAULT;
+            if (\array_key_exists($pathParam[1], $params)) {
+                $pathParamMatch = $params[$pathParam[1]];
+            }
+
+            $path = \preg_replace(
+                \sprintf('/{(%s)}/', $pathParam[1]),
+                \sprintf('(?<$1>%s)', $pathParamMatch),
+                $path
+            );
+
+        }
+
+        // Add start and end matching
+        $patternAsRegex = '%^' . $path . '$%D';
+        if (!$this->caseSensitive) {
+            $patternAsRegex .= 'i';
+        }
+
+        return $patternAsRegex;
+    }
+
 
     /**
      * @param null|string $pattern
-     *
      * @throws RouterException
+     * @deprecated
      */
     protected function getRegex(?string $pattern): string
     {
-        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', (string) $pattern)) {
+        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', (string)$pattern)) {
             throw new RouterException(
-                sprintf('Unable to match route as phrase "%s" contains illegal characters.',$pattern)
+                sprintf('Unable to match route as phrase "%s" contains illegal characters.', $pattern)
             );
         }
 
@@ -164,8 +158,8 @@ class Router
      * @param bool $full
      *
      * @return string
-     *
      * @throws RouteNotFoundException|RouterException
+     * @deprecated
      */
     public function generateRoute(string $name, array $params = [], $full = false): string
     {
@@ -194,7 +188,7 @@ class Router
                 foreach ($params as $key => $param) {
                     $isFound = 0;
                     if (!is_array($param)) {
-                        $convertedPath = str_replace('{' . $key . '}', (string) $param, $convertedPath, $isFound);
+                        $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
                     }
 
                     if ($isFound !== 0 && is_array($param)) {
@@ -244,6 +238,11 @@ class Router
     }
 
 
+    /**
+     * @param string $path
+     * @return array
+     * @deprecated
+     */
     protected function extractPathParams(string $path): array
     {
         $regexp = '@\{(.+?)\}@i';
@@ -254,18 +253,20 @@ class Router
     }
 
     /**
-     * @return Context
+     * @return RouterContext
+     * @deprecated
      */
-    public function getContext(): Context
+    public function getContext(): RouterContext
     {
         return $this->context;
     }
 
     /**
-     * @param Context $context
+     * @param RouterContext $context
      * @return Router
+     * @deprecated
      */
-    public function setContext(Context $context): Router
+    public function setContext(RouterContext $context): Router
     {
         $this->context = $context;
         return $this;
@@ -273,6 +274,7 @@ class Router
 
     /**
      * @return RouteCollection
+     * @deprecated
      */
     public function getRouteCollection(): RouteCollection
     {
@@ -283,7 +285,7 @@ class Router
      * @param array $matches
      * @return array
      */
-    protected function transformMatchesToParameters(array $matches): array
+    private function transformMatchesToParameters(array $matches): array
     {
         return array_intersect_key(
             $matches,
@@ -299,6 +301,7 @@ class Router
     /**
      * @param Route $route
      * @return $this
+     * @deprecated
      */
     public function addRoute(Route $route): Router
     {
@@ -306,6 +309,11 @@ class Router
         return $this;
     }
 
+    /**
+     * @param RouteMatcherInterface $matcher
+     * @return void
+     * @deprecated
+     */
     public function addRouteMatcher(RouteMatcherInterface $matcher)
     {
         $this->matchers[] = $matcher;

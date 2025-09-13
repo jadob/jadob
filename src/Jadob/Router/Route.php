@@ -11,13 +11,20 @@ use LogicException;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-readonly class Route
+class Route
 {
     public function __construct(
+        /**
+         * @var non-empty-string
+         */
         protected(set) string $name,
+
+        /**
+         * @var non-empty-string
+         */
         protected(set) string $path,
         protected(set) string|array|object $handler,
-        protected(set) ?string $host = null,
+        protected ?string $host = null,
         protected(set) array $methods = [],
         protected(set) array $parameters = [],
         protected(set) array $pathParameters = [],
@@ -36,6 +43,10 @@ readonly class Route
         return $this->path;
     }
 
+    public function attachToCollection(RouteCollection $collection): void
+    {
+        $this->parentCollection = $collection;
+    }
     /**
      * @param array $data
      * @return Route
@@ -64,5 +75,14 @@ readonly class Route
             $data['parameters'] ?? [],
             $data['path_parameters'] ?? []
         );
+    }
+
+    public function getHost(): ?string
+    {
+        if($this->parentCollection !== null) {
+            return $this->parentCollection->getHost();
+        }
+
+        return $this->host;
     }
 }

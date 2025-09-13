@@ -9,46 +9,30 @@ use function strlen;
 use function substr;
 
 /**
- * TODO rename to RouterContext
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Context
+class RouterContext
 {
-    /**
-     * @var string
-     */
-    protected $host;
 
-    /**
-     * @var bool
-     */
-    protected $secure = false;
-
-    /**
-     * @var int|null
-     */
-    protected $port;
-
-    /**
-     * There are at least two examples when alias will be filled:
-     *
-     * 1. App is hidden via Alias directive in webserver configuration
-     * 2. Document root has been run a level below our public directory
-     *
-     * @see https://httpd.apache.org/docs/2.4/mod/mod_alias.html#alias
-     * @see http://nginx.org/en/docs/http/ngx_http_core_module.html#alias
-     * @var string|null
-     */
-    protected ?string $alias = null;
+    public function __construct(
+        private string $host,
+        private string $baseUri,
+        private bool $secure,
+        private int $port,
+    )
+    {
+    }
 
 
     /**
      * @param string $baseUrl
      * @return self
      * @throws RouterException
+     * @deprecated - all tests for this method (either failing or not) have been removed
+     * Please revert them (and fix!) or add new in case of keeping this method still in the codebase.
      */
-    public static function fromBaseUrl(string $baseUrl): Context
+    public static function fromBaseUrl(string $baseUrl): RouterContext
     {
         $url = parse_url($baseUrl);
 
@@ -85,7 +69,7 @@ class Context
     }
 
     /**
-     * @return Context
+     * @return RouterContext
      */
     public static function fromGlobals()
     {
@@ -151,9 +135,9 @@ class Context
 
     /**
      * @param string $host
-     * @return Context
+     * @return RouterContext
      */
-    public function setHost(?string $host): Context
+    public function setHost(?string $host): RouterContext
     {
         $this->host = $host;
         return $this;
@@ -169,9 +153,9 @@ class Context
 
     /**
      * @param bool $secure
-     * @return Context
+     * @return RouterContext
      */
-    public function setSecure(bool $secure): Context
+    public function setSecure(bool $secure): RouterContext
     {
         $this->secure = $secure;
         return $this;
@@ -187,9 +171,9 @@ class Context
 
     /**
      * @param int $port
-     * @return Context
+     * @return RouterContext
      */
-    public function setPort(?int $port): Context
+    public function setPort(?int $port): RouterContext
     {
         $this->port = $port;
         return $this;
@@ -205,9 +189,9 @@ class Context
 
     /**
      * @param string|null $alias
-     * @return Context
+     * @return RouterContext
      */
-    public function setAlias(?string $alias): Context
+    public function setAlias(?string $alias): RouterContext
     {
         $this->alias = $alias;
         return $this;
