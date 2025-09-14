@@ -5,11 +5,13 @@ namespace Jadob\Router;
 
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
+use Jadob\Router\Exception\UrlGenerationException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use function PHPUnit\Framework\assertEquals;
 
 /**
+ * @group router
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -134,5 +136,57 @@ class RouterTest extends TestCase
 
         $this->expectException(RouteNotFoundException::class);
         $router->match('/users', 'GET');
+    }
+
+
+    public function testUrlGenerationForStaticRoutes(): void
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/user', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            $this->getDummyContext(),
+        );
+
+        self::assertEquals('/user', $router->generateRoute('example'));
+    }
+
+    public function testUrlGenerationForRoutesWillPutParametersToQueryStringWhenNotDefinedInPath(): void
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            $this->getDummyContext(),
+        );
+
+        self::assertEquals(
+            '/a/123?b=4',
+            $router->generateRoute('example', [
+                'a' => '123',
+                'b' => '4'
+            ])
+        );
+    }
+
+    public function testUrlGenerationWillThrowAnExceptionWhenNoRequiredParameterWasPassed(): void
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            $this->getDummyContext(),
+        );
+
+
+        $this->expectException(UrlGenerationException::class);
+        $this->expectExceptionMessage('Unable to generate path "example": missing "a" param');
+        self::assertEquals(
+            '/a/123?b=4',
+            $router->generateRoute('example')
+        );
     }
 }

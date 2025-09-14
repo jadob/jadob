@@ -7,6 +7,7 @@ namespace Jadob\Router;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\RouterException;
+use Jadob\Router\Exception\UrlGenerationException;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
@@ -16,7 +17,10 @@ use function count;
 use function http_build_query;
 use function in_array;
 use function is_array;
+use function ltrim;
 use function preg_match;
+use function rtrim;
+use function sprintf;
 use function str_replace;
 use function strtoupper;
 
@@ -104,8 +108,8 @@ class Router
             }
 
             $path = \preg_replace(
-                \sprintf('/{(%s)}/', $pathParam[1]),
-                \sprintf('(?<$1>%s)', $pathParamMatch),
+                sprintf('/{(%s)}/', $pathParam[1]),
+                sprintf('(?<$1>%s)', $pathParamMatch),
                 $path
             );
 
@@ -153,19 +157,17 @@ class Router
     }
 
     /**
-     * @param $name
-     * @param $params
-     * @param bool $full
-     *
      * @return string
      * @throws RouteNotFoundException|RouterException
-     * @deprecated
      */
     public function generateRoute(string $name, array $params = [], $full = false): string
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
-                $path = $this->context->getAlias() . $route->getPath();
+                $path = sprintf('%s/%s',
+                    rtrim((string)$this->context->baseUri, '/'),
+                    ltrim($route->path, '/')
+                );
                 $paramsToGET = [];
                 $convertedPath = $path;
                 $convertedPathParams = $this->extractPathParams($convertedPath);
@@ -175,12 +177,8 @@ class Router
                         continue;
                     }
 
-                    if ($this->paramStore instanceof ParameterStoreInterface && $this->paramStore->has($convertedPathParam)) {
-                        $params[$convertedPathParam] = $this->paramStore->get($convertedPathParam);
-                        continue;
-                    }
 
-                    throw new RouterException(
+                    throw new UrlGenerationException(
                         sprintf('Unable to generate path "%s": missing "%s" param', $name, $convertedPathParam)
                     );
                 }
@@ -192,7 +190,7 @@ class Router
                     }
 
                     if ($isFound !== 0 && is_array($param)) {
-                        throw new RouterException(
+                        throw new UrlGenerationException(
                             sprintf('Param "%s" cannot be injected into route "%s" as it is an array.', $param, $name)
                         );
                     }
@@ -234,16 +232,17 @@ class Router
             }
         }
 
-        throw new RouteNotFoundException('Route "' . $name . '" is not defined');
+        throw new UrlGenerationException(
+            sprintf('Unable to generate url as route "%s" is not found.', $name)
+        );
     }
 
 
     /**
      * @param string $path
      * @return array
-     * @deprecated
      */
-    protected function extractPathParams(string $path): array
+    private function extractPathParams(string $path): array
     {
         $regexp = '@\{(.+?)\}@i';
         $matches = [];
@@ -252,34 +251,6 @@ class Router
         return end($matches);
     }
 
-    /**
-     * @return RouterContext
-     * @deprecated
-     */
-    public function getContext(): RouterContext
-    {
-        return $this->context;
-    }
-
-    /**
-     * @param RouterContext $context
-     * @return Router
-     * @deprecated
-     */
-    public function setContext(RouterContext $context): Router
-    {
-        $this->context = $context;
-        return $this;
-    }
-
-    /**
-     * @return RouteCollection
-     * @deprecated
-     */
-    public function getRouteCollection(): RouteCollection
-    {
-        return $this->routeCollection;
-    }
 
     /**
      * @param array $matches
@@ -309,14 +280,5 @@ class Router
         return $this;
     }
 
-    /**
-     * @param RouteMatcherInterface $matcher
-     * @return void
-     * @deprecated
-     */
-    public function addRouteMatcher(RouteMatcherInterface $matcher)
-    {
-        $this->matchers[] = $matcher;
-    }
 }
 

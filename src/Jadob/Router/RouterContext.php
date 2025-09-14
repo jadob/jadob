@@ -12,14 +12,14 @@ use function substr;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class RouterContext
+final readonly class RouterContext
 {
 
     public function __construct(
         private string $host,
-        private string $baseUri,
         private bool $secure,
         private int $port,
+        private(set) ?string $baseUri = null,
     )
     {
     }
@@ -179,21 +179,4 @@ class RouterContext
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    /**
-     * @param string|null $alias
-     * @return RouterContext
-     */
-    public function setAlias(?string $alias): RouterContext
-    {
-        $this->alias = $alias;
-        return $this;
-    }
 }
