@@ -21,9 +21,9 @@ class RouterTest extends TestCase
     {
         return new RouterContext(
             host: 'example.com',
-            baseUri: '/',
             secure: true,
             port: 443,
+            basePath: '/',
         );
     }
 
