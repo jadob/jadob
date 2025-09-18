@@ -46,10 +46,11 @@ class Dispatcher
     protected LoggerInterface $logger;
 
     public function __construct(
-        Container $container,
-        LoggerInterface $logger,
+        Container                $container,
+        LoggerInterface          $logger,
         EventDispatcherInterface $eventDispatcher
-    ) {
+    )
+    {
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
@@ -72,16 +73,21 @@ class Dispatcher
          */
         $router = $this->container->get('router');
 
-        $route = $router->matchRequest($context->getRequest());
 
-        $context->setContext($router->getContext());
-        $context->setRoute($route);
+        $matchedRouteData = $router->match(
+            uri: $context->getRequest()->getRequestUri(),
+            method: $context->getRequest()->getMethod()
+        );
+
+        $matchedRoute = $matchedRouteData->route;
+        $context->setRoute($matchedRoute);
+
 
         /**
          * Add information about matched route to request object
          */
-        $context->getRequest()->attributes->set('path_name', $route->getName());
-        $context->getRequest()->attributes->set('current_route', $route);
+        $context->getRequest()->attributes->set('path_name', $matchedRoute->path);
+        $context->getRequest()->attributes->set('current_route', $matchedRoute);
 
         $requestEvent = new RequestEvent($context);
         $this->eventDispatcher->dispatch($requestEvent);
@@ -93,33 +99,30 @@ class Dispatcher
         }
 
 
-        $controllerClass = $route->getController();
+        $controllerClass = $matchedRoute->handler;
 
         if ($controllerClass === null) {
-            throw KernelException::invalidControllerPassed($route->getName());
+            throw KernelException::invalidControllerPassed($matchedRoute->name);
         }
 
         $autowiredController = $this->autowireControllerClass($controllerClass);
-        $methodName = $route->getAction();
-
         //@TODO: refactor method name resolving
-        if ($methodName === null) {
-            if (method_exists($autowiredController, '__invoke')) {
-                $methodName = '__invoke';
-            } else {
-                throw new KernelException('Controller ' . $controllerClass . ' does not have nor "action" key in routing or "__invoke" method.');
-            }
+        if (method_exists($autowiredController, '__invoke')) {
+            $methodName = '__invoke';
+        } else {
+            throw new KernelException(sprintf(
+                    'Controller %s does not have "__invoke" method.',
+                    $controllerClass
+                )
+            );
         }
 
-        if (!method_exists($autowiredController, $methodName)) {
-            throw new KernelException('Controller ' . $controllerClass . ' has not method called ' . $route->getAction());
-        }
 
         //@TODO: check if method is accessible
         $methodArguments = $this->resolveControllerMethodArguments(
             $autowiredController,
             $methodName,
-            $route->getParams(),
+            $matchedRouteData->pathParameters,
             $context
         );
 
@@ -129,7 +132,12 @@ class Dispatcher
         if (!($response instanceof Response)) {
             //@TODO named constructor
             throw new KernelException(
-                'Controller ' . get_class($autowiredController) . '#' . $route->getAction() . ' should return an instance of ' . Response::class . ', ' . gettype($response) . ' returned'
+                sprintf(
+                    'Method %s::__invoke() should return an instance of %s, %s returned',
+                    get_class($autowiredController),
+                    Response::class,
+                    gettype($response)
+                )
             );
         }
 
@@ -223,7 +231,8 @@ class Dispatcher
         $methodName,
         array $routerParams,
         RequestContext $context
-    ): array {
+    ): array
+    {
         $autowireEnabled = true;
         $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 
