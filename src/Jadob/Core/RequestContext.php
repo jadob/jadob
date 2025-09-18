@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class RequestContext
 {
-    protected ?RouterContext $context = null;
     protected Route $route;
     /**
      * @deprecated
@@ -35,13 +34,6 @@ class RequestContext
     {
     }
 
-    /**
-     * @param RouterContext $context
-     */
-    public function setContext(RouterContext $context): void
-    {
-        $this->context = $context;
-    }
 
     /**
      * @param Route $route
@@ -67,13 +59,6 @@ class RequestContext
         return $this->request;
     }
 
-    /**
-     * @return RouterContext
-     */
-    public function getContext(): RouterContext
-    {
-        return $this->context;
-    }
 
     /**
      * @return Route
