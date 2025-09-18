@@ -19,7 +19,7 @@ final readonly class RouterContext
         private string $host,
         private bool $secure,
         private int $port,
-        private(set) ?string $baseUri = null,
+        private(set) ?string $basePath = null,
     )
     {
     }
