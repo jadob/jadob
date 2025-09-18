@@ -125,58 +125,5 @@ final readonly class RouterContext
         return $context;
     }
 
-    /**
-     * @return string
-     */
-    public function getHost(): string
-    {
-        return $this->host;
-    }
-
-    /**
-     * @param string $host
-     * @return RouterContext
-     */
-    public function setHost(?string $host): RouterContext
-    {
-        $this->host = $host;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecure(): bool
-    {
-        return $this->secure;
-    }
-
-    /**
-     * @param bool $secure
-     * @return RouterContext
-     */
-    public function setSecure(bool $secure): RouterContext
-    {
-        $this->secure = $secure;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getPort(): ?int
-    {
-        return $this->port;
-    }
-
-    /**
-     * @param int $port
-     * @return RouterContext
-     */
-    public function setPort(?int $port): RouterContext
-    {
-        $this->port = $port;
-        return $this;
-    }
 
 }
