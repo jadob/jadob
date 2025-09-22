@@ -14,7 +14,7 @@
 $routes = [
     'home' => [
         'path' => '/', //required
-        'controller' => 'Your/App/Controller::class, //required
+        'controller' => Your/App/Controller::class, //required
         'action' => 'index' //not required
         'ignore_global_prefix' => true //if true, 
     ],
@@ -53,10 +53,3 @@ $router = new \Jadob\Router\Router($routerConfig);
 
 ````
 
-
-
-
-
-### Changelog
-
-- 0.70.1 - ``locale_prefix`` renamed to ``global_prefix``.

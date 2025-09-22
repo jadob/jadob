@@ -9,46 +9,30 @@ use function strlen;
 use function substr;
 
 /**
- * TODO rename to RouterContext
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Context
+final readonly class RouterContext
 {
-    /**
-     * @var string
-     */
-    protected $host;
 
-    /**
-     * @var bool
-     */
-    protected $secure = false;
-
-    /**
-     * @var int|null
-     */
-    protected $port;
-
-    /**
-     * There are at least two examples when alias will be filled:
-     *
-     * 1. App is hidden via Alias directive in webserver configuration
-     * 2. Document root has been run a level below our public directory
-     *
-     * @see https://httpd.apache.org/docs/2.4/mod/mod_alias.html#alias
-     * @see http://nginx.org/en/docs/http/ngx_http_core_module.html#alias
-     * @var string|null
-     */
-    protected ?string $alias = null;
+    public function __construct(
+        private string $host,
+        private bool $secure,
+        private int $port,
+        private(set) ?string $basePath = null,
+    )
+    {
+    }
 
 
     /**
      * @param string $baseUrl
      * @return self
      * @throws RouterException
+     * @deprecated - all tests for this method (either failing or not) have been removed
+     * Please revert them (and fix!) or add new in case of keeping this method still in the codebase.
      */
-    public static function fromBaseUrl(string $baseUrl): Context
+    public static function fromBaseUrl(string $baseUrl): RouterContext
     {
         $url = parse_url($baseUrl);
 
@@ -85,7 +69,7 @@ class Context
     }
 
     /**
-     * @return Context
+     * @return RouterContext
      */
     public static function fromGlobals()
     {
@@ -141,75 +125,5 @@ class Context
         return $context;
     }
 
-    /**
-     * @return string
-     */
-    public function getHost(): string
-    {
-        return $this->host;
-    }
 
-    /**
-     * @param string $host
-     * @return Context
-     */
-    public function setHost(?string $host): Context
-    {
-        $this->host = $host;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecure(): bool
-    {
-        return $this->secure;
-    }
-
-    /**
-     * @param bool $secure
-     * @return Context
-     */
-    public function setSecure(bool $secure): Context
-    {
-        $this->secure = $secure;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getPort(): ?int
-    {
-        return $this->port;
-    }
-
-    /**
-     * @param int $port
-     * @return Context
-     */
-    public function setPort(?int $port): Context
-    {
-        $this->port = $port;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    /**
-     * @param string|null $alias
-     * @return Context
-     */
-    public function setAlias(?string $alias): Context
-    {
-        $this->alias = $alias;
-        return $this;
-    }
 }

@@ -13,8 +13,8 @@ use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
 use Jadob\Framework\ServiceProvider\EventDispatcherProvider;
 use Jadob\Framework\ServiceProvider\FrameworkServiceProvider;
 use Jadob\Framework\ServiceProvider\LoggerServiceProvider;
-use Jadob\Framework\ServiceProvider\RouterServiceProvider;
 use Jadob\Framework\ServiceProvider\SessionProvider;
+use Jadob\Router\ServiceProvider\RouterServiceProvider;
 use Psr\Container\ContainerInterface;
 
 class FrameworkModule implements ModuleInterface

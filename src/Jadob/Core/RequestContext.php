@@ -6,7 +6,7 @@ namespace Jadob\Core;
 
 use Jadob\Contracts\Auth\AccessToken;
 use Jadob\Contracts\Auth\IdentityInterface;
-use Jadob\Router\Context;
+use Jadob\Router\RouterContext;
 use Jadob\Router\Route;
 use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class RequestContext
 {
-    protected ?Context $context = null;
     protected Route $route;
     /**
      * @deprecated
@@ -35,13 +34,6 @@ class RequestContext
     {
     }
 
-    /**
-     * @param Context $context
-     */
-    public function setContext(Context $context): void
-    {
-        $this->context = $context;
-    }
 
     /**
      * @param Route $route
@@ -67,13 +59,6 @@ class RequestContext
         return $this->request;
     }
 
-    /**
-     * @return Context
-     */
-    public function getContext(): Context
-    {
-        return $this->context;
-    }
 
     /**
      * @return Route

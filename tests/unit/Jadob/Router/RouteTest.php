@@ -13,70 +13,11 @@ use PHPUnit\Framework\TestCase;
 class RouteTest extends TestCase
 {
 
-    public function testBasicRouteFeatures(): void
-    {
-        $route = new Route('example-route-1', '/');
-
-        $route
-            ->setController('App\Controller\ApplicationController')
-            ->setAction('hello')
-            ->setPath('/path/1/2/3')
-            ->setParams(
-                [
-                    '_param1' => 'value1',
-                    'param2' => 'value2'
-                ]
-            );
-
-        $this->assertEquals('example-route-1', $route->getName());
-        $this->assertEquals('hello', $route->getAction());
-        $this->assertEquals('App\Controller\ApplicationController', $route->getController());
-        $this->assertEquals('/path/1/2/3', $route->getPath());
-
-
-    }
-
-
-    public function testRouteParams(): void
-    {
-        $route = new Route('example-route-2', '/');
-
-        $route
-            ->setParams(
-                [
-                    '_param1' => 'value1',
-                    'param2' => 'value2'
-                ]
-            );
-
-        $this->assertCount(2, $route->getParams());
-    }
-
-    public function testRouteNameChanging(): void
-    {
-
-        $route = new Route('example-route-3', '/');
-
-        $this->assertEquals('example-route-3', $route->getName());
-
-        $route->setName('example-route-3-v2');
-
-        $this->assertEquals('example-route-3-v2', $route->getName());
-    }
-
-    public function testRouteMethods(): void
-    {
-        $route = new Route('route-with-many-methods', '/');
-        $route->setMethods(['GET', 'POST']);
-
-        $this->assertCount(2, $route->getMethods());
-    }
-
-    public function testParentCollection(): void
+    public function testParentCollectionIsAssignedToRouteWhenRouteIsAttachedToCollection(): void
     {
         $collection = new RouteCollection();
-        $collection->addRoute($route = new Route('example1', '/'));
-        $this->assertSame($collection, $route->getParentCollection());
+        $collection->addRoute($route = new Route('example1', '/', 'handler_function'));
+        $this->assertSame($collection, $route->parentCollection);
     }
 
     public function testCreatingRouteFromArray(): void
@@ -84,8 +25,7 @@ class RouteTest extends TestCase
         $route = [
             'path' => '/my/path/1',
             'name' => 'my_example_path',
-            'controller' => '/My/Dummy/ControllerClass',
-            'action' => 'indexAction',
+            'handler' => 'handler_function',
             'methods' => ['GET', 'POST']
         ];
 
@@ -123,7 +63,7 @@ class RouteTest extends TestCase
         Route::fromArray($route);
     }
 
-    public function testRouteWillPreventFromMistakingMethodWithMethods()
+    public function testRouteWillPreventFromMistakingMethodWithMethods(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Invalid key "method". Did you mean "methods"?');
@@ -132,4 +72,8 @@ class RouteTest extends TestCase
             'method' => 'GET'
         ]);
     }
+
+    //testRouteWithHostCannotBeAddedToCollection
+    //testRouteAttachedToCollectionWithHostWillBeUsingCollectionsHost
+
 }
