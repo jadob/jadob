@@ -38,9 +38,9 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
                 return new Router(
                     RouteCollection::fromArray($config->getRoutes()),
                     new RouterContext(
-                        host: $config->getHost(),
-                        secure: $config->secure,
                         port: $config->getPort(),
+                        secure: $config->secure || false,
+                        host: $config->getHost(),
                         basePath: $config->getBasePath(),
                     ),
                     $config->isCaseSensitive()
