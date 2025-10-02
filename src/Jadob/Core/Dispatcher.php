@@ -86,7 +86,7 @@ class Dispatcher
         /**
          * Add information about matched route to request object
          */
-        $context->getRequest()->attributes->set('path_name', $matchedRoute->path);
+        $context->getRequest()->attributes->set('path_name', $matchedRoute->name);
         $context->getRequest()->attributes->set('current_route', $matchedRoute);
 
         $requestEvent = new RequestEvent($context);
