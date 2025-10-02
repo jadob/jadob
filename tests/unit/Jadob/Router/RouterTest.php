@@ -152,6 +152,37 @@ class RouterTest extends TestCase
         self::assertEquals('/user', $router->generateRoute('example'));
     }
 
+    public function testMatchingWildcardRouteOnExistingPathButDifferentMethod(): void
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route(
+            name: 'important_method',
+            path: '/api/v1/thing',
+            handler: 'api_function',
+            methods: ['POST']
+        ));
+
+        $routeCollection->addRoute(new Route(
+            name: 'cors_handler',
+            path: '/{any}',
+            handler: 'cors_handler',
+            methods: ['OPTIONS'],
+            pathParameters: [
+                'any' => PathParamMatchType::WILDCARD,
+            ]
+        ));
+
+        $router = new Router(
+            $routeCollection,
+            $this->getDummyContext(),
+        );
+
+        self::assertEquals(
+            'cors_handler',
+            $router->match('/api/v1/thing', 'OPTIONS')->route->name
+        );
+    }
+
     public function testUrlGenerationForRoutesWillPutParametersToQueryStringWhenNotDefinedInPath(): void
     {
         $routeCollection = new RouteCollection();
