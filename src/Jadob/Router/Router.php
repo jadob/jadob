@@ -165,7 +165,7 @@ class Router
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
                 $path = sprintf('%s/%s',
-                    rtrim((string)$this->context->baseUri, '/'),
+                    rtrim((string)$this->context->basePath, '/'),
                     ltrim($route->path, '/')
                 );
                 $paramsToGET = [];
