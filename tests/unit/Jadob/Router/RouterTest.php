@@ -20,9 +20,9 @@ class RouterTest extends TestCase
     private function getDummyContext(): RouterContext
     {
         return new RouterContext(
-            host: 'example.com',
-            secure: true,
             port: 443,
+            secure: true,
+            host: 'example.com',
             basePath: '/',
         );
     }
