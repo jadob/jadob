@@ -213,6 +213,12 @@ class Router
                     }
 
                     $port = $this->context->port;
+                    if ($port === null) {
+                        $port = match ($scheme) {
+                            'https' => 443,
+                            'http' => 80,
+                        };
+                    }
 
                     if (!in_array($port, [80, 443], true)
                         || (!$this->context->isSecure() && $port === 443)
