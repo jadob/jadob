@@ -208,7 +208,7 @@ class Router
                 if ($full) {
                     $scheme = 'http';
 
-                    if ($this->context->isSecure()) {
+                    if ($this->context->secure) {
                         $scheme = 'https';
                     }
 
