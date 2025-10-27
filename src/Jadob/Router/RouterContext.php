@@ -17,7 +17,7 @@ final readonly class RouterContext
     public function __construct(
         private ?string $host = null,
         private(set) ?bool $secure = false,
-        private ?int $port = null,
+        private(set) ?int $port = null,
         private(set) ?string $basePath = null,
     )
     {

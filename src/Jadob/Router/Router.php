@@ -212,7 +212,7 @@ class Router
                         $scheme = 'https';
                     }
 
-                    $port = $this->context->getPort();
+                    $port = $this->context->port;
 
                     if (!in_array($port, [80, 443], true)
                         || (!$this->context->isSecure() && $port === 443)
