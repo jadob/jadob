@@ -3,7 +3,7 @@
   "license": "MIT",
   "description": "PHP Framework.",
   "require": {
-    "php": "^8.3",
+    "php": "^8.4",
     "twig/twig": ">= 3.0",
     "symfony/http-foundation": "^7.2",
     "doctrine/orm": ">= 3.3.2",
