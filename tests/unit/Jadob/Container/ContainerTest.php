@@ -19,6 +19,11 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Watch out:
  * - sprintf() in expectExceptionMessage() is used to make test cases a little bit more readable.
+ *
+ *
+ * @TODO: Things to test (and fix):
+ * - ConnectionRegistry and ManagerRegistry
+ * - PSR event dispatcher and contracts/event dispatcher
  */
 class ContainerTest extends TestCase
 {
