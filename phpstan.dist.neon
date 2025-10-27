@@ -4,5 +4,6 @@ parameters:
         - src
         - tests
 includes:
-        - tests/Jadob/Container/phpstan.neon
+        - resources/code-quality/phpstan-baseline.neon
+        - tests/unit/Jadob/Container/phpstan.neon
         - vendor/phpstan/phpstan-strict-rules/rules.neon

@@ -1,3 +1,5 @@
+PHPSTAN_BASE := vendor/bin/phpstan
+
 psalm:
 	vendor/bin/psalm
 
@@ -6,6 +8,12 @@ cs-fix:
 
 phpunit:
 	vendor/bin/phpunit
+
+phpstan:
+	$(PHPSTAN_BASE) analyse --configuration phpstan.dist.neon
+
+phpstan-baseline:
+	$(PHPSTAN_BASE) --generate-baseline=./resources/code-quality/phpstan-baseline.neon
 
 purge-vendors:
 	rm -rf src/Jadob/Core/vendor
