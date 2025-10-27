@@ -159,6 +159,7 @@ class Router
     /**
      * @return string
      * @throws RouteNotFoundException|RouterException
+     * @TODO: use jadob/url to build an URL!
      */
     public function generateRoute(string $name, array $params = [], $full = false): string
     {
@@ -220,13 +221,14 @@ class Router
                         };
                     }
 
-                    if (!in_array($port, [80, 443], true)
-                        || (!$this->context->isSecure() && $port === 443)
-                    ) {
-                        $port = ':' . $port;
-                    } else {
-                        $port = null;
+                    $shouldIncludePortInUrl =
+                        ($scheme === 'https' && $port === 443)
+                        || ($scheme === 'http' && $port === 80);
+
+                    if($shouldIncludePortInUrl) {
+                        $port = sprintf(':%d', $port);
                     }
+
 
                     return $scheme
                         . '://'
