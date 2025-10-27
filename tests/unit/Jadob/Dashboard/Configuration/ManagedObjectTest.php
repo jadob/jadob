@@ -13,7 +13,7 @@ class ManagedObjectTest extends TestCase
     public function testCreatingObjectFromArrayWillBreakWhenThereWillBeListConfigurationMissing()
     {
         self::expectException(ConfigurationException::class);
-        self::expectDeprecationMessage('Missing "list" key for "Jadob\Dashboard\Fixtures\Cat" object.');
+        self::expectExceptionMessage('Missing "list" key for "Jadob\Dashboard\Fixtures\Cat" object.');
 
         ManagedObject::fromArray(Cat::class, []);
     }
@@ -21,7 +21,7 @@ class ManagedObjectTest extends TestCase
     public function testCreatingObjectFromArrayWillBreakWhenThereWillBeListConfigurationInvalid()
     {
         self::expectException(ConfigurationException::class);
-        self::expectDeprecationMessage('Key "list" for "Jadob\Dashboard\Fixtures\Cat" object is not an array');
+        self::expectExceptionMessage('Key "list" for "Jadob\Dashboard\Fixtures\Cat" object is not an array');
 
         ManagedObject::fromArray(Cat::class, ['list' => false]);
     }
