@@ -230,6 +230,17 @@ class Router
                     }
 
 
+                    $host = $this->context->host;
+
+                    if($host === null) {
+                        throw new UrlGenerationException(
+                            sprintf(
+                                'Unable to generate path for "%s" as the host in context was not provided.',
+                                $name
+                            )
+                        );
+                    }
+
                     return $scheme
                         . '://'
                         . $this->context->host

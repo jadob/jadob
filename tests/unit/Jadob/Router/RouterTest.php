@@ -220,4 +220,23 @@ class RouterTest extends TestCase
             $router->generateRoute('example')
         );
     }
+
+
+    public function testFullUrlGenerationWithNoArgumentsDefinedInRouterContextWillCauseAMissingHostException()
+    {
+
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            new RouterContext()
+        );
+
+        $this->expectException(UrlGenerationException::class);
+        $this->expectExceptionMessage('Unable to generate path for "example" as the host in context was not provided.');
+
+        $router->generateRoute('example', ['a' => 'b'], true);
+
+    }
 }
