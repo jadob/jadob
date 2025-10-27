@@ -232,7 +232,7 @@ class Router
 
                     return $scheme
                         . '://'
-                        . $this->context->getHost()
+                        . $this->context->host
                         . $port
                         . $convertedPath;
                 }
