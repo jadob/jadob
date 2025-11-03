@@ -115,7 +115,15 @@ class Url implements Stringable
             $url = $this->scheme . ':' . $this->host;
         }
 
-        if ($this->port) {
+        $isHttpProtocolAndPort = $this->port === 80 && $this->scheme === 'http';
+        $isHttpsProtocolAndPort = $this->port === 443 && $this->scheme === 'https';
+
+        $shouldIncludePortInUrl = true;
+        if($isHttpProtocolAndPort || $isHttpsProtocolAndPort) {
+            $shouldIncludePortInUrl = false;
+        }
+
+        if ($this->port && $shouldIncludePortInUrl) {
             $url .= ':'.$this->port;
         }
 
