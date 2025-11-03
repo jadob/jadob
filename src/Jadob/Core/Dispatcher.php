@@ -75,7 +75,7 @@ class Dispatcher
 
 
         $matchedRouteData = $router->match(
-            uri: $context->getRequest()->getRequestUri(),
+            uri: $context->getRequest()->getPathInfo(),
             method: $context->getRequest()->getMethod()
         );
 
