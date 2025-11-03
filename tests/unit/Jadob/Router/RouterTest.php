@@ -7,10 +7,11 @@ use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\UrlGenerationException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
-use function PHPUnit\Framework\assertEquals;
+
+
 
 /**
+ * @TODO: testFullUrlGeneration* test probably should be one test case with multiple providers - verify it and refactor
  * @group router
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
@@ -238,5 +239,89 @@ class RouterTest extends TestCase
 
         $router->generateRoute('example', ['a' => 'b'], true);
 
+    }
+
+    public function testFullUrlGenerationWithPortAndNonSecureDefinedInContext()
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            new RouterContext(
+                host: 'example.com',
+                secure: false,
+                port: 8080,
+            )
+        );
+
+
+        self::assertEquals(
+            'http://example.com:8080/a/b',
+            $router->generateRoute('example', ['a' => 'b'], true)
+        );
+    }
+
+    public function testFullUrlGenerationWithPortAndSecureDefinedInContext()
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            new RouterContext(
+                host: 'example.com',
+                secure: true,
+                port: 8080,
+            )
+        );
+
+
+        self::assertEquals(
+            'https://example.com:8080/a/b',
+            $router->generateRoute('example', ['a' => 'b'], true)
+        );
+    }
+
+    public function testFullUrlGenerationWithHttpsPortAndSecureDefinedInContext()
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            new RouterContext(
+                host: 'example.com',
+                secure: true,
+                port: 443,
+            )
+        );
+
+
+        self::assertEquals(
+            'https://example.com/a/b',
+            $router->generateRoute('example', ['a' => 'b'], true)
+        );
+    }
+
+    public function testFullUrlGenerationWithHttpPortAndNonSecureDefinedInContext()
+    {
+        $routeCollection = new RouteCollection();
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+
+        $router = new Router(
+            $routeCollection,
+            new RouterContext(
+                host: 'example.com',
+                secure: false,
+                port: 80,
+            )
+        );
+
+
+        self::assertEquals(
+            'http://example.com/a/b',
+            $router->generateRoute('example', ['a' => 'b'], true)
+        );
     }
 }

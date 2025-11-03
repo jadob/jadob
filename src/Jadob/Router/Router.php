@@ -8,6 +8,7 @@ use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\RouterException;
 use Jadob\Router\Exception\UrlGenerationException;
+use Jadob\Url\Url;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
@@ -159,7 +160,6 @@ class Router
     /**
      * @return string
      * @throws RouteNotFoundException|RouterException
-     * @TODO: use jadob/url to build an URL!
      */
     public function generateRoute(string $name, array $params = [], $full = false): string
     {
@@ -207,31 +207,7 @@ class Router
                 }
 
                 if ($full) {
-                    $scheme = 'http';
-
-                    if ($this->context->secure) {
-                        $scheme = 'https';
-                    }
-
-                    $port = $this->context->port;
-                    if ($port === null) {
-                        $port = match ($scheme) {
-                            'https' => 443,
-                            'http' => 80,
-                        };
-                    }
-
-                    $shouldIncludePortInUrl =
-                        ($scheme === 'https' && $port === 443)
-                        || ($scheme === 'http' && $port === 80);
-
-                    if($shouldIncludePortInUrl) {
-                        $port = sprintf(':%d', $port);
-                    }
-
-
                     $host = $this->context->host;
-
                     if($host === null) {
                         throw new UrlGenerationException(
                             sprintf(
@@ -241,11 +217,18 @@ class Router
                         );
                     }
 
-                    return $scheme
-                        . '://'
-                        . $this->context->host
-                        . $port
-                        . $convertedPath;
+                    $scheme = 'http';
+                    if ($this->context->secure) {
+                        $scheme = 'https';
+                    }
+
+                    $url = new Url();
+                    $url->setPath($convertedPath);
+                    $url->setScheme($scheme);
+                    $url->setHost($this->context->host);
+                    $url->setPort($this->context->port);
+
+                    return $url->build();
                 }
                 return $convertedPath;
             }
