@@ -12,7 +12,7 @@ class AccessToken
          * Additional claims you can pass further to your controllers.
          * @var array<string, string|int|array>
          */
-        private(set) array $metadata
+        private(set) array $metadata = []
     )
     {
     }
