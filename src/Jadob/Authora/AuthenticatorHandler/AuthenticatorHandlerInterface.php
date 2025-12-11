@@ -13,6 +13,7 @@ interface AuthenticatorHandlerInterface
         AuthenticatorInterface      $authenticator,
         AccessTokenStorageInterface $accessTokenStorage,
         RequestEvent                $requestEvent,
-        IdentityProviderInterface   $identityProvider
+        IdentityProviderInterface   $identityProvider,
+        string $authenticatorName,
     ): void;
 }
