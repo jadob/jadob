@@ -14,5 +14,6 @@ interface AccessTokenStorageInterface
 
     public function getCurrentAccessTokenFromSession(
         SessionInterface $session,
+        string $authenticatorName
     ): ?AccessToken;
 }

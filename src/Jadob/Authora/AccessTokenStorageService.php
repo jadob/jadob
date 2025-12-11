@@ -12,11 +12,16 @@ class AccessTokenStorageService implements AccessTokenStorageInterface
 {
     public function storeAsCurrent(AccessToken $accessToken, string $authenticatorName, SessionInterface $session): void
     {
-        // TODO: Implement storeCurrentInSession() method.
+        $sessionKey = sprintf('authenticator.%s', $authenticatorName);
+        $session->set($sessionKey, $accessToken);
     }
 
-    public function getCurrentAccessTokenFromSession(SessionInterface $session,): ?AccessToken
+    public function getCurrentAccessTokenFromSession(
+        SessionInterface $session,
+        string           $authenticatorName
+    ): ?AccessToken
     {
-        // TODO: Implement getCurrentAccessTokenFromSession() method.
+        $sessionKey = sprintf('authenticator.%s', $authenticatorName);
+        return $session->get($sessionKey);
     }
 }

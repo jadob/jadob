@@ -69,7 +69,8 @@ final readonly class AuthenticationEventListener implements ListenerProviderInte
             $authenticator,
             $this->accessTokenStorage,
             $event,
-            $this->authenticatorService->getIdentityProvider($authenticatorName)
+            $this->authenticatorService->getIdentityProvider($authenticatorName),
+            $authenticatorName
         );
     }
 }
