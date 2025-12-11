@@ -10,6 +10,7 @@ use RuntimeException;
 use Stringable;
 
 /**
+ * @deprecated with new URI extension released in PHP8.5, this thing can be retired.
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
