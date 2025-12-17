@@ -66,6 +66,16 @@ class Route
             throw new RouterException('Missing "path" key in $data.');
         }
 
+        if(!array_key_exists('handler', $data)) {
+            throw new RouterException(
+                sprintf(
+                    'Path "%s" does not have a "handler" defined.',
+                    $data['name']
+                )
+            );
+        }
+
+
         return new self(
             $data['name'],
             $data['path'],

@@ -73,6 +73,19 @@ class RouteTest extends TestCase
         ]);
     }
 
+
+    public function testRouteWillVerifyHandlerIsDefined(): void
+    {
+        $this->expectException(RouterException::class);
+        $this->expectExceptionMessage('Path "test_path" does not have a "handler" defined.');
+
+        Route::fromArray([
+            'methods' => ['GET'],
+            'path' => '/my/path/1',
+            'name' => 'test_path',
+        ]);
+    }
+
     //testRouteWithHostCannotBeAddedToCollection
     //testRouteAttachedToCollectionWithHostWillBeUsingCollectionsHost
 
