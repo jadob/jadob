@@ -85,26 +85,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
          * @TODO: separate to another service provider
          */
         $cacheDir = $container->get(BootstrapInterface::class)->getCacheDir();
-        $proxyManagerConfig = new \ProxyManager\Configuration();
-        $proxyManagerCacheDir = sprintf('%s/%s', $cacheDir, $this->env);
-        $proxyManagerFileLocator = new FileLocator(
-            $proxyManagerCacheDir,
-        );
-
-        $proxyManagerConfig->setGeneratorStrategy(
-            new FileWriterGeneratorStrategy(
-                $proxyManagerFileLocator
-            )
-        );
-
-        $proxyManagerConfig->setProxiesTargetDir($proxyManagerCacheDir);
-        spl_autoload_register($proxyManagerConfig->getProxyAutoloader());
-
-
-        $proxyManagerFactory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory(
-            $proxyManagerConfig
-        );
-
+       
         /** @var DoctrineManagerRegistry $registry */
         $registry = $container->get(ManagerRegistry::class);
 
@@ -123,18 +104,12 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 $defaultManagerName = $managerName;
             }
 
+            $emReflector = new \ReflectionClass(EntityManager::class);
             $env = $this->env;
             $registry->addManager(
                 $managerName,
-                $proxyManagerFactory->createProxy(
-                    EntityManager::class,
-                    static function (
-                        &$wrappedObject,
-                        $proxy,
-                        $method,
-                        $parameters,
-                        &$initializer
-                    ) use (
+                $emReflector->newLazyProxy(
+                    function () use (
                         $container,
                         $managerConfig,
                         $managerName,
@@ -204,22 +179,19 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         $configuration->setProxyNamespace('Doctrine\ORM\Proxies');
                         $configuration->setProxyDir($doctrineCacheDir . '/proxies');
                         $configuration->setAutoGenerateProxyClasses(true);
-
+                        $configuration->enableNativeLazyObjects(true);
+    
                         $stringFunctions = $managerConfig['string_functions'] ?? [];
 
                         foreach ($stringFunctions as $name => $function) {
                             $configuration->addCustomStringFunction($name, $function);
                         }
 
-                        $wrappedObject = new EntityManager(
+                        return new EntityManager(
                             $container->get('doctrine.dbal.' . $managerName),
                             $configuration,
                             $container->get(EventManager::class)
                         );
-
-                        $initializer = null; // turning off further lazy initialization
-
-                        return true; // report success
                     }
                 )
             );
