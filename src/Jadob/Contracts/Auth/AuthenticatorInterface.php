@@ -22,4 +22,11 @@ interface AuthenticatorInterface
     public function onAuthenticationSuccess(
         IdentityInterface $identity,
     ): ?Response;
+
+    /**
+     * @throws AuthenticationException
+     */
+    public function authenticate(
+        Request $request,
+    ): AccessToken;
 }

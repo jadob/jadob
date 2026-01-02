@@ -46,7 +46,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         /**
          * Case #1: authenticated user opens another page in admin panel.
          */
-        if(
+        if (
             $isAuthenticationRequest === false
             && $isAnonymousAllowed === false
             && $existingIdentity !== null
@@ -60,19 +60,21 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         /**
          * Case #2: unauthenticated user tries to open any page on admin panel.
          */
-        if(
+        if (
             $isAuthenticationRequest === false
             && $isAnonymousAllowed === false
             && $existingIdentity === null
         ) {
-            throw new AuthenticationException('Unauthenticated user.');
+            $response = $authenticator->onUnauthenticatedRequest($request);
+            $requestEvent->setResponse($response);
+            return;
         }
 
 
         /**
          * Case #3: unauthenticated user tries to access freely available resource
          */
-        if(
+        if (
             $isAnonymousAllowed === true
             && $isAuthenticationRequest === false
             && $existingIdentity === null
@@ -84,7 +86,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         /**
          * Case #4: unauthenticated user tries to log in to admin panel.
          */
-        if(
+        if (
             $isAnonymousAllowed === false
             && $isAuthenticationRequest === true
             && $existingIdentity === null

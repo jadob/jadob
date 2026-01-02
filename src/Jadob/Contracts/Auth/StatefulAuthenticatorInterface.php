@@ -3,6 +3,7 @@
 namespace Jadob\Contracts\Auth;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface StatefulAuthenticatorInterface extends AuthenticatorInterface
 {
@@ -24,4 +25,11 @@ interface StatefulAuthenticatorInterface extends AuthenticatorInterface
      * @return bool
      */
     public function allowsMultipleIdentities(): bool;
+
+    /**
+     * Invoked when unauthenticated user tries to access authenticated resource.
+     * @param Request $request
+     * @return Response
+     */
+    public function onUnauthenticatedRequest(Request $request): Response;
 }
