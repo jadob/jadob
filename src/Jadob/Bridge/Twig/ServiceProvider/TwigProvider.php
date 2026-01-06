@@ -8,6 +8,7 @@ use Jadob\Bridge\Twig\AppContext;
 use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
 use Jadob\Bridge\Twig\Extension\DebugExtension;
 use Jadob\Bridge\Twig\Extension\PathExtension;
+use Jadob\Bridge\Twig\Extension\ViteManifestAssetExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Container;
 use Jadob\Container\ParameterStore;
@@ -134,6 +135,10 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             }
         ];
 
+
+        /**
+         * @TODO: these two extension can be probably done better, in a less copy-and-paste-based manner!
+         */
         if (isset($config['extensions']['webpack_manifest'])) {
             $services['twig.webpack_manifest_extension'] = [
                 'tags' => ['twig.extension'],
@@ -153,6 +158,29 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
                     );
 
                     return new WebpackManifestAssetExtension($manifest);
+                }
+            ];
+        }
+
+        if (isset($config['extensions']['vite'])) {
+            $services['twig.vite_manifest_extension'] = [
+                'tags' => ['twig.extension'],
+                'factory' => static function (ParameterStore $parameterStore) use ($config): ViteManifestAssetExtension {
+                    $webpackManifestConfig = $config['extensions']['webpack_manifest'];
+                    $manifestJsonLocation =
+                        sprintf('%s/%s',
+                            $parameterStore->get('root_dir'),
+                            ltrim((string) $webpackManifestConfig['manifest_json_location'], '/')
+                        );
+
+                    $manifest = json_decode(
+                        file_get_contents($manifestJsonLocation),
+                        true,
+                        512,
+                        JSON_THROW_ON_ERROR
+                    );
+
+                    return new ViteManifestAssetExtension($manifest);
                 }
             ];
         }
