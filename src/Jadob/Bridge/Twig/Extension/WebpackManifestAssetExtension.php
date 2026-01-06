@@ -50,6 +50,8 @@ class WebpackManifestAssetExtension extends AbstractExtension
             return $this->manifest[$assetName];
         }
 
-        throw new RuntimeException('Could not find "' . $assetName . '" in webpack manifest file');
+        throw new RuntimeException(
+            sprintf('Could not find "%s" in webpack manifest file', $assetName)
+        );
     }
 }
