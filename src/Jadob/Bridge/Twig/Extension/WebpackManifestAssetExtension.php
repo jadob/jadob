@@ -17,7 +17,7 @@ class WebpackManifestAssetExtension extends AbstractExtension
     /**
      * @var string[]
      */
-    protected $manifest;
+    protected array $manifest;
 
     /**
      * WebpackManifestAssetExtension constructor.
@@ -32,10 +32,10 @@ class WebpackManifestAssetExtension extends AbstractExtension
     /**
      * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('asset_from_manifest', $this->getAssetFromManifest(...))
+            new TwigFunction('webpack_manifest_asset', $this->getAssetFromManifest(...))
         ];
     }
 
