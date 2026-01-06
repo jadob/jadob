@@ -162,7 +162,7 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             ];
         }
 
-        if (isset($config['extensions']['vite'])) {
+        if (isset($config['extensions']['vite_manifest'])) {
             $services['twig.vite_manifest_extension'] = [
                 'tags' => ['twig.extension'],
                 'factory' => static function (ParameterStore $parameterStore) use ($config): ViteManifestAssetExtension {
