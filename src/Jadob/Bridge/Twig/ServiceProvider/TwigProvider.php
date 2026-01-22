@@ -166,7 +166,7 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             $services['twig.vite_manifest_extension'] = [
                 'tags' => ['twig.extension'],
                 'factory' => static function (ParameterStore $parameterStore) use ($config): ViteManifestAssetExtension {
-                    $webpackManifestConfig = $config['extensions']['webpack_manifest'];
+                    $webpackManifestConfig = $config['extensions']['vite_manifest'];
                     $manifestJsonLocation =
                         sprintf('%s/%s',
                             $parameterStore->get('root_dir'),
