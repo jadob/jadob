@@ -84,7 +84,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
 
 
         /**
-         * Case #4: unauthenticated user tries to log in to admin panel.
+         * Case #4: unauthenticated user tries to log in to resource requiring authentication)
          */
         if (
             $isAnonymousAllowed === false
@@ -122,6 +122,19 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
             }
         }
 
+        /**
+         * Case 5: Authenticated user enters a page which does not require an authentication
+         */
+        if(
+            $isAnonymousAllowed === true
+            && $isAuthenticationRequest === false
+            && $existingIdentity !== null
+        ) {
+            $identity = $identityProvider->getByIdentifier($existingIdentity->identityId);
+            $requestEvent->requestContext->setAccessToken($existingIdentity);
+            $requestEvent->requestContext->setIdentity($identity);
+            return;
+        }
 
         throw new AuthenticationException('Undefined or unimplemented behavior.');
     }
