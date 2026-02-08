@@ -9,7 +9,6 @@ use Jadob\Router\Exception\UrlGenerationException;
 use PHPUnit\Framework\TestCase;
 
 
-
 /**
  * @TODO: testFullUrlGeneration* test probably should be one test case with multiple providers - verify it and refactor
  * @group router
@@ -33,7 +32,43 @@ class RouterTest extends TestCase
 
         $routeCollection = new RouteCollection();
 
-        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff', [], null, ['POST']));
+        $router = new Router(
+            $routeCollection,
+            $this->getDummyContext(),
+        );
+
+
+        $this->expectException(MethodNotAllowedException::class);
+        $router->match('/user/1/stuff', 'GET');
+    }
+
+    public function testWildcardRouteWillNotCatchMethodNotAllowedPaths(): void
+    {
+
+        $routeCollection = new RouteCollection();
+
+        $routeCollection->addRoute(
+            new Route(
+                'get_user_stuff',
+                '/user/{id}/stuff',
+                [],
+                null,
+                ['POST']
+            )
+        );
+
+        $routeCollection->addRoute(
+            new Route(
+                'wildcard',
+                '/{any}',
+                [],
+                methods: ['GET', 'POST'],
+                pathParameters: [
+                    'any' => PathParamMatchType::WILDCARD
+                ]
+            )
+        );
         $router = new Router(
             $routeCollection,
             $this->getDummyContext(),
@@ -129,7 +164,7 @@ class RouterTest extends TestCase
     {
         $routeCollection = new RouteCollection();
 
-        $routeCollection->addRoute(new Route('example', '/user', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/user', [], null, ['POST']));
         $router = new Router(
             $routeCollection,
             $this->getDummyContext(),
@@ -143,7 +178,7 @@ class RouterTest extends TestCase
     public function testUrlGenerationForStaticRoutes(): void
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/user', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/user', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -153,41 +188,11 @@ class RouterTest extends TestCase
         self::assertEquals('/user', $router->generateRoute('example'));
     }
 
-    public function testMatchingWildcardRouteOnExistingPathButDifferentMethod(): void
-    {
-        $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route(
-            name: 'important_method',
-            path: '/api/v1/thing',
-            handler: 'api_function',
-            methods: ['POST']
-        ));
-
-        $routeCollection->addRoute(new Route(
-            name: 'cors_handler',
-            path: '/{any}',
-            handler: 'cors_handler',
-            methods: ['OPTIONS'],
-            pathParameters: [
-                'any' => PathParamMatchType::WILDCARD,
-            ]
-        ));
-
-        $router = new Router(
-            $routeCollection,
-            $this->getDummyContext(),
-        );
-
-        self::assertEquals(
-            'cors_handler',
-            $router->match('/api/v1/thing', 'OPTIONS')->route->name
-        );
-    }
 
     public function testUrlGenerationForRoutesWillPutParametersToQueryStringWhenNotDefinedInPath(): void
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -206,7 +211,7 @@ class RouterTest extends TestCase
     public function testUrlGenerationWillThrowAnExceptionWhenNoRequiredParameterWasPassed(): void
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -227,7 +232,7 @@ class RouterTest extends TestCase
     {
 
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -244,7 +249,7 @@ class RouterTest extends TestCase
     public function testFullUrlGenerationWithPortAndNonSecureDefinedInContext()
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -265,7 +270,7 @@ class RouterTest extends TestCase
     public function testFullUrlGenerationWithPortAndSecureDefinedInContext()
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -286,7 +291,7 @@ class RouterTest extends TestCase
     public function testFullUrlGenerationWithHttpsPortAndSecureDefinedInContext()
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,
@@ -307,7 +312,7 @@ class RouterTest extends TestCase
     public function testFullUrlGenerationWithHttpPortAndNonSecureDefinedInContext()
     {
         $routeCollection = new RouteCollection();
-        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null,  ['POST']));
+        $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
         $router = new Router(
             $routeCollection,

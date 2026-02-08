@@ -51,6 +51,9 @@ class Router
     ): MatchedRoute
     {
         $matchedRoutes = [];
+        $firstMethodMatchedRoute = null;
+        $hasNonWildcardMatch = false;
+        $hasNonWildcardMethodMatch = false;
         foreach ($this->routeCollection as $route) {
             $path = $route->path;
             $regex = $this->pathToExpression(
@@ -72,10 +75,29 @@ class Router
 
                 $matchedRoutes[] = $matchedRoute;
 
+                $isWildcardRoute = $this->isWildcardRoute($route);
+                if (!$isWildcardRoute) {
+                    $hasNonWildcardMatch = true;
+                }
+
                 if (in_array($method, $route->methods)) {
-                    return $matchedRoute;
+                    if (!$isWildcardRoute) {
+                        $hasNonWildcardMethodMatch = true;
+                    }
+
+                    if ($firstMethodMatchedRoute === null) {
+                        $firstMethodMatchedRoute = $matchedRoute;
+                    }
                 }
             }
+        }
+
+        if ($firstMethodMatchedRoute !== null) {
+            if ($hasNonWildcardMatch && !$hasNonWildcardMethodMatch) {
+                throw new MethodNotAllowedException();
+            }
+
+            return $firstMethodMatchedRoute;
         }
 
         if (count($matchedRoutes) > 0) {
@@ -123,6 +145,15 @@ class Router
         }
 
         return $patternAsRegex;
+    }
+
+    private function isWildcardRoute(Route $route): bool
+    {
+        return in_array(
+            PathParamMatchType::WILDCARD,
+            $route->pathParameters ?? [],
+            true
+        );
     }
 
 
