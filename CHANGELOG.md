@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [BridgeDoctrineOrm] Switched to native lazy proxies
 
+### Fixed
+- [Router] - wildcard routes now does not catch `MethodNotAllowed` exceptions on existing routes
+
 ## [0.9.2] - 2025-11-03
 
 ### Changed
