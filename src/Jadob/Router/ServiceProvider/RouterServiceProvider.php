@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Core\RequestContextStore;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Jadob\Router\RouterContext;
-use Jadob\Router\StickyParameterStore;
 use Psr\Container\ContainerInterface;
-use function is_array;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>

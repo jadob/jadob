@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\AuthenticatorHandler;
 
@@ -9,11 +10,9 @@ use LogicException;
 
 class AuthenticatorHandlerFactory
 {
-
     public function createForAuthenticator(
         AuthenticatorInterface $authenticator,
-    ): AuthenticatorHandlerInterface
-    {
+    ): AuthenticatorHandlerInterface {
         if ($authenticator instanceof StatefulAuthenticatorInterface) {
             return new StatefulAuthenticatorHandler();
         }
@@ -31,5 +30,4 @@ class AuthenticatorHandlerFactory
             )
         );
     }
-
 }

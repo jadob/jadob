@@ -19,8 +19,7 @@ class AccessTokenStorageService implements AccessTokenStorageInterface
     public function getCurrentAccessTokenFromSession(
         SessionInterface $session,
         string           $authenticatorName
-    ): ?AccessToken
-    {
+    ): ?AccessToken {
         $sessionKey = sprintf('authenticator.%s', $authenticatorName);
         return $session->get($sessionKey);
     }

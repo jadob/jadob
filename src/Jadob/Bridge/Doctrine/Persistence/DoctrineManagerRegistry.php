@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Doctrine\Persistence;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;

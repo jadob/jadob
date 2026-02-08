@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
@@ -76,6 +77,5 @@ class RouterConfiguration
         $this->basePath = $parsedUrl['path'] ?? null;
         $this->secure = $parsedUrl['scheme'] === 'https';
         $this->port = $parsedUrl['port'] ?? null;
-
     }
 }

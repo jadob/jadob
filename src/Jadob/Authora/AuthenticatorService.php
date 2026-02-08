@@ -1,11 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora;
 
 use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
-use Jadob\Contracts\Auth\StatefulAuthenticatorInterface;
-use Jadob\Contracts\Auth\StatelessAuthenticatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorService
@@ -23,8 +22,7 @@ class AuthenticatorService
         string                    $name,
         AuthenticatorInterface    $authenticator,
         IdentityProviderInterface $identityProvider,
-    ): void
-    {
+    ): void {
         $this->authenticators[$name] = $authenticator;
         $this->identityProviders[$name] = $identityProvider;
     }
@@ -49,8 +47,7 @@ class AuthenticatorService
 
     public function determineEventListenerForRequest(
         Request $request
-    ): ?string
-    {
+    ): ?string {
         return \array_find_key(
             $this->authenticators,
             fn(AuthenticatorInterface $authenticator) => $authenticator->supports($request)

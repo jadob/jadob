@@ -19,8 +19,7 @@ final readonly class AuthenticationEventListener implements ListenerProviderInte
         private AccessTokenStorageInterface $accessTokenStorage,
         private AuthenticatorHandlerFactory $authenticatorHandlerFactory,
         private ?LoggerInterface            $authLogger = null,
-    )
-    {
+    ) {
     }
 
     public function getListenersForEvent(object $event): iterable

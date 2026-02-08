@@ -6,7 +6,6 @@ namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
 use Closure;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Logging\Middleware;
@@ -17,7 +16,6 @@ use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\Common\ServiceProvider\DoctrineCommonServiceProvider;
 use Jadob\Bridge\Doctrine\DBAL\Configuration\DbalConfiguration;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
-use Jadob\Bridge\ProxyManager\ServiceProvider\ProxyManagerProvider;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -25,12 +23,9 @@ use Jadob\Core\BootstrapInterface;
 use LogicException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use ProxyManager\Factory\LazyLoadingValueHolderFactory;
-use ProxyManager\Proxy\VirtualProxyInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use RuntimeException;
 use function count;
 
 /**
@@ -156,7 +151,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
     {
         foreach ($types as $name => $type) {
             Type::addType($name, $type);
-
         }
     }
 
@@ -168,6 +162,5 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
         }
 
         return $configuration;
-
     }
 }

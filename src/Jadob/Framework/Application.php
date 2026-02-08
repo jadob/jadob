@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
+use Throwable;
 use function array_merge;
 
 readonly class Application
@@ -155,7 +156,7 @@ readonly class Application
              * When your app is proxied via CloudFlare, you can pass CF-Request-ID header to match CF logs with application log.
              * When deployed to AWS Lambda, you can use Lambda Request ID to match both CloudWatch and application logs.
              */
-            $requestId = $requestId ?? substr(md5((string)mt_rand()), 0, 15);
+            $requestId = $requestId ?? substr(md5((string) mt_rand()), 0, 15);
 
             $context = new RequestContext($requestId, $request);
 
@@ -177,7 +178,7 @@ readonly class Application
             $response = $dispatcher->executeRequest($context);
 
             return $response;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return $this
                 ->exceptionHandler
                 ->handleException($exception);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\AuthenticatorHandler;
 
@@ -25,8 +26,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         RequestEvent                $requestEvent,
         IdentityProviderInterface   $identityProvider,
         string                      $authenticatorName,
-    ): void
-    {
+    ): void {
         $request = $requestEvent
             ->requestContext
             ->request;
@@ -91,7 +91,6 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
             && $isAuthenticationRequest === true
             && $existingIdentity === null
         ) {
-
             try {
                 $accessToken = $authenticator->authenticate(
                     $requestEvent->requestContext->request,
@@ -113,7 +112,6 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
                     $requestEvent->setResponse($response);
                     return;
                 }
-
             } catch (AuthenticationException $exception) {
                 $response = $authenticator->onAuthenticationFailure($exception);
                 if ($response !== null) {
@@ -125,7 +123,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         /**
          * Case 5: Authenticated user enters a page which does not require an authentication
          */
-        if(
+        if (
             $isAnonymousAllowed === true
             && $isAuthenticationRequest === false
             && $existingIdentity !== null

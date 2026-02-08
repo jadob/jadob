@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\MessageBus;
+
+use LogicException;
+use ReflectionClass;
 
 /**
  * @internal
@@ -9,15 +13,14 @@ class ReflectionMessageBus
 {
     public function __construct(
         private array $handlers
-    )
-    {
+    ) {
     }
 
 
     public function handle(object $message): mixed
     {
         foreach ($this->handlers as $handler) {
-            $reflection = new \ReflectionClass($handler);
+            $reflection = new ReflectionClass($handler);
 
             foreach ($reflection->getMethods() as $method) {
                 $methodName = $method->getName();
@@ -32,12 +35,11 @@ class ReflectionMessageBus
             }
         }
 
-        throw new \LogicException(
+        throw new LogicException(
             sprintf(
                 'No handler for message "%s"',
                 get_class($message)
             )
         );
     }
-
 }

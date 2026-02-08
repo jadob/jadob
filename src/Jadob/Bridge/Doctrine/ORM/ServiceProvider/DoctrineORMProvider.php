@@ -33,9 +33,8 @@ use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use LogicException;
-use ProxyManager\FileLocator\FileLocator;
-use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -49,8 +48,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
 {
     public function __construct(
         private string $env,
-    )
-    {
+    ) {
     }
 
     /**
@@ -95,7 +93,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
             }
 
             // @TODO: replace with array_key_exists, or use object config
-            if (isset($managerConfig['default']) && (bool)$managerConfig['default']) {
+            if (isset($managerConfig['default']) && (bool) $managerConfig['default']) {
                 if ($defaultManagerName !== null) {
                     throw new InvalidArgumentException('There are at least two default ORM connections defined! Check your configuration file.');
                 }
@@ -104,7 +102,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                 $defaultManagerName = $managerName;
             }
 
-            $emReflector = new \ReflectionClass(EntityManager::class);
+            $emReflector = new ReflectionClass(EntityManager::class);
             $env = $this->env;
             $registry->addManager(
                 $managerName,

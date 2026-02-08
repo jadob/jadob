@@ -1,7 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\ProxyManager\ServiceProvider;
-
 
 use Jadob\Container\ParameterStore;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -14,7 +14,6 @@ use Psr\Container\ContainerInterface;
 
 class ProxyManagerProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return null;
@@ -26,7 +25,6 @@ class ProxyManagerProvider implements ServiceProviderInterface
             BootstrapInterface $bootstrap,
             ParameterStore     $parameterStore, //@TODO: when passing parameters will be available, use it here to get env
         ) {
-
             $cacheDir = $bootstrap->getCacheDir();
             $proxyManagerConfig = new Configuration();
             $proxyManagerCacheDir = sprintf(

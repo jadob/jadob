@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Jadob\Authora\ServiceProvider;
 
+use Closure;
 use Jadob\Authora\AccessTokenStorageService;
 use Jadob\Authora\AuthenticatorHandler\AuthenticatorHandlerFactory;
-use Jadob\Authora\AuthenticatorHandler\AuthenticatorHandlerInterface;
 use Jadob\Authora\AuthenticatorService;
 use Jadob\Authora\EventListener\AuthenticationEventListener;
-use Jadob\Container\ServiceProvider\DefaultConfigProviderInterface;
 use Jadob\Contracts\Auth\AccessTokenStorageInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -25,7 +24,7 @@ class AuthoraServiceProvider implements ServiceProviderInterface, ConfigObjectPr
     /**
      * @param ContainerInterface $container
      * @param AuthoraConfiguration $config
-     * @return array|array[]|\Closure[]|object[]
+     * @return array|array[]|Closure[]|object[]
      */
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {

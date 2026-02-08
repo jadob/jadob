@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
 
-use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;

@@ -49,8 +49,7 @@ class Dispatcher
         Container                $container,
         LoggerInterface          $logger,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->container = $container;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
@@ -111,9 +110,9 @@ class Dispatcher
             $methodName = '__invoke';
         } else {
             throw new KernelException(sprintf(
-                    'Controller %s does not have "__invoke" method.',
-                    $controllerClass
-                )
+                'Controller %s does not have "__invoke" method.',
+                $controllerClass
+            )
             );
         }
 
@@ -230,8 +229,7 @@ class Dispatcher
         $methodName,
         array $routerParams,
         RequestContext $context
-    ): array
-    {
+    ): array {
         $autowireEnabled = true;
         $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 

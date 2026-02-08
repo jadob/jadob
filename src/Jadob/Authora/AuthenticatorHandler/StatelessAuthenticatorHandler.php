@@ -12,15 +12,13 @@ use Jadob\Core\Event\RequestEvent;
 
 class StatelessAuthenticatorHandler implements AuthenticatorHandlerInterface
 {
-
     public function __invoke(
         AuthenticatorInterface      $authenticator,
         AccessTokenStorageInterface $accessTokenStorage,
         RequestEvent                $requestEvent,
         IdentityProviderInterface   $identityProvider,
         string $authenticatorName,
-    ): void
-    {
+    ): void {
         try {
             $accessToken = $authenticator->authenticate(
                 $requestEvent->requestContext->request,

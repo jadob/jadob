@@ -120,7 +120,7 @@ class Url implements Stringable
         $isHttpsProtocolAndPort = $this->port === 443 && $this->scheme === 'https';
 
         $shouldIncludePortInUrl = true;
-        if($isHttpProtocolAndPort || $isHttpsProtocolAndPort) {
+        if ($isHttpProtocolAndPort || $isHttpsProtocolAndPort) {
             $shouldIncludePortInUrl = false;
         }
 

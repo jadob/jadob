@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\Configuration;
 
@@ -32,9 +33,7 @@ class DbalConfiguration
         string $name,
         array  $configuration,
         bool   $default = true
-    ): self
-    {
-
+    ): self {
         $this->connections[$name] = [
             'configuration' => $configuration,
             'default' => $default,
@@ -64,5 +63,4 @@ class DbalConfiguration
     {
         return $this->mappingTypes;
     }
-
 }

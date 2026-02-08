@@ -59,5 +59,4 @@ class ConsoleProvider implements ServiceProviderInterface
 
         return [];
     }
-
 }

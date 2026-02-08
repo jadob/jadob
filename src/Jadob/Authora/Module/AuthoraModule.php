@@ -11,7 +11,6 @@ use Psr\Container\ContainerInterface;
 
 class AuthoraModule implements ModuleInterface
 {
-
     public function getServiceProviders(string $env): array
     {
         return [

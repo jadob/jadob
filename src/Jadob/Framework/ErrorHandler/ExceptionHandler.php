@@ -35,7 +35,7 @@ readonly class ExceptionHandler
 
     public function registerExceptionHandler(): void
     {
-        if(PHP_SAPI === 'cli') {
+        if (PHP_SAPI === 'cli') {
             return;
         }
         set_exception_handler($this->handleException(...));

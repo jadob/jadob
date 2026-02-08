@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\ServiceProvider;
 
@@ -18,8 +19,7 @@ class AuthoraConfiguration
         string $name,
         string $authenticatorServiceId,
         string $userProviderServiceId
-    ): self
-    {
+    ): self {
         $this->authenticators[$name] = $authenticatorServiceId;
         $this->userProviders[$name] = $userProviderServiceId;
 

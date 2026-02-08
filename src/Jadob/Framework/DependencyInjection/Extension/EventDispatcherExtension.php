@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\Extension;
 
@@ -9,7 +10,6 @@ use Jadob\EventDispatcher\EventDispatcher;
 
 class EventDispatcherExtension implements ContainerExtensionInterface
 {
-
     public function onContainerBuild(Container $container): void
     {
         /** @var EventDispatcher $eventDispatcher */
@@ -18,5 +18,4 @@ class EventDispatcherExtension implements ContainerExtensionInterface
             $eventDispatcher->addListener($listener);
         }
     }
-
 }

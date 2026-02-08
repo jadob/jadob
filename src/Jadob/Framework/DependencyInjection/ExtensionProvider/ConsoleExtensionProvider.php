@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\ExtensionProvider;
 
@@ -18,7 +19,8 @@ class ConsoleExtensionProvider implements ContainerExtensionProviderInterface
     /**
      * @return list<ContainerExtensionInterface>
      */
-    public function getContainerExtensions(): array {
+    public function getContainerExtensions(): array
+    {
         return [
             new ConsoleCommandExtension()
         ];

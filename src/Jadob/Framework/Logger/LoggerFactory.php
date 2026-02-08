@@ -85,10 +85,10 @@ class LoggerFactory
                     stream: $this->resolvePath($config['path']),
                     level: $config['level'],
                 );
-            } elseif($config['type'] === 'sentry') {
+            } elseif ($config['type'] === 'sentry') {
                 $handler = new GroupHandler([
                     new \Sentry\Monolog\BreadcrumbHandler(
-                        hub: \Sentry\SentrySdk::getCurrentHub(),
+                        hub: SentrySdk::getCurrentHub(),
                         level: Logger::INFO, // Take note of the level here, messages with that level or higher will be attached to future Sentry events as breadcrumbs
                     ),
                     new Handler(

@@ -6,7 +6,6 @@ namespace Jadob\Core;
 
 use Jadob\Contracts\Auth\AccessToken;
 use Jadob\Contracts\Auth\IdentityInterface;
-use Jadob\Router\RouterContext;
 use Jadob\Router\Route;
 use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,8 +29,7 @@ class RequestContext
     public function __construct(
         protected(set) string $requestId,
         protected(set) Request $request
-    )
-    {
+    ) {
     }
 
 
@@ -108,8 +106,7 @@ class RequestContext
 
     public function setAccessToken(
         AccessToken $accessToken
-    ): self
-    {
+    ): self {
         $this->accessToken = $accessToken;
         return $this;
     }

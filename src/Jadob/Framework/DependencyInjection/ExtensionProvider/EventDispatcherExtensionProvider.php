@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\ExtensionProvider;
 
@@ -8,11 +9,9 @@ use Psr\Container\ContainerInterface;
 
 class EventDispatcherExtensionProvider implements ContainerExtensionProviderInterface
 {
-
     public function getAutowiringExtensions(
         ContainerInterface $container
-    ): array
-    {
+    ): array {
         return [];
     }
 

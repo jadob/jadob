@@ -29,9 +29,7 @@ class Route
         protected(set) array $parameters = [],
         protected(set) array $pathParameters = [],
         protected(set) ?RouteCollection $parentCollection = null
-    )
-    {
-
+    ) {
     }
 
     public function getPath(): string
@@ -66,7 +64,7 @@ class Route
             throw new RouterException('Missing "path" key in $data.');
         }
 
-        if(!array_key_exists('handler', $data)) {
+        if (!array_key_exists('handler', $data)) {
             throw new RouterException(
                 sprintf(
                     'Path "%s" does not have a "handler" defined.',
@@ -89,7 +87,7 @@ class Route
 
     public function getHost(): ?string
     {
-        if($this->parentCollection !== null) {
+        if ($this->parentCollection !== null) {
             return $this->parentCollection->getHost();
         }
 

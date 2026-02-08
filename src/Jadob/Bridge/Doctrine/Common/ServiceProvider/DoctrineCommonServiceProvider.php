@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Common\ServiceProvider;
 
@@ -8,7 +9,6 @@ use Psr\Container\ContainerInterface;
 
 class DoctrineCommonServiceProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         return null;

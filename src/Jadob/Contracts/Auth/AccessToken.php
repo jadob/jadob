@@ -13,7 +13,6 @@ class AccessToken
          * @var array<string, string|int|array>
          */
         private(set) array $metadata = []
-    )
-    {
+    ) {
     }
 }

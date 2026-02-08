@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router;
 
@@ -13,7 +14,6 @@ final readonly class MatchedRoute
          * @var array<non-empty-string, string>
          */
         private(set) array $pathParameters,
-    )
-    {
+    ) {
     }
 }

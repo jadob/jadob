@@ -9,11 +9,11 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\RouterException;
 use Jadob\Router\Exception\UrlGenerationException;
 use Jadob\Url\Url;
+use LogicException;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
 use function array_keys;
-use function array_merge;
 use function count;
 use function http_build_query;
 use function in_array;
@@ -23,7 +23,6 @@ use function preg_match;
 use function rtrim;
 use function sprintf;
 use function str_replace;
-use function strtoupper;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -35,8 +34,7 @@ class Router
         private RouteCollection $routeCollection,
         private RouterContext   $context,
         private bool            $caseSensitive = false
-    )
-    {
+    ) {
     }
 
     /**
@@ -48,8 +46,7 @@ class Router
     public function match(
         string $uri,
         string $method,
-    ): MatchedRoute
-    {
+    ): MatchedRoute {
         $matchedRoutes = [];
         $firstMethodMatchedRoute = null;
         $hasNonWildcardMatch = false;
@@ -61,7 +58,7 @@ class Router
                 $route->pathParameters ?? []
             );
 
-            $result = (bool)preg_match(
+            $result = (bool) preg_match(
                 $regex,
                 $uri,
                 $matches,
@@ -80,7 +77,7 @@ class Router
                     $hasNonWildcardMatch = true;
                 }
 
-                if (in_array($method, $route->methods)) {
+                if (in_array($method, $route->methods, true)) {
                     if (!$isWildcardRoute) {
                         $hasNonWildcardMethodMatch = true;
                     }
@@ -112,7 +109,7 @@ class Router
     {
         //TODO: caching!
         if (\preg_match('/[^-:.,\/_{}()a-zA-Z*\d]/', $path)) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf('Unable to match route as phrase "%s" contains illegal characters.', $path)
             );
         }
@@ -135,7 +132,6 @@ class Router
                 sprintf('(?<$1>%s)', $pathParamMatch),
                 $path
             );
-
         }
 
         // Add start and end matching
@@ -164,7 +160,7 @@ class Router
      */
     protected function getRegex(?string $pattern): string
     {
-        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', (string)$pattern)) {
+        if (preg_match('/[^-:.,\/_{}()a-zA-Z\d]/', (string) $pattern)) {
             throw new RouterException(
                 sprintf('Unable to match route as phrase "%s" contains illegal characters.', $pattern)
             );
@@ -197,7 +193,7 @@ class Router
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
                 $path = sprintf('%s/%s',
-                    rtrim((string)$this->context->basePath, '/'),
+                    rtrim((string) $this->context->basePath, '/'),
                     ltrim($route->path, '/')
                 );
                 $paramsToGET = [];
@@ -218,7 +214,7 @@ class Router
                 foreach ($params as $key => $param) {
                     $isFound = 0;
                     if (!is_array($param)) {
-                        $convertedPath = str_replace('{' . $key . '}', (string)$param, $convertedPath, $isFound);
+                        $convertedPath = str_replace('{' . $key . '}', (string) $param, $convertedPath, $isFound);
                     }
 
                     if ($isFound !== 0 && is_array($param)) {
@@ -239,7 +235,7 @@ class Router
 
                 if ($full) {
                     $host = $this->context->host;
-                    if($host === null) {
+                    if ($host === null) {
                         throw new UrlGenerationException(
                             sprintf(
                                 'Unable to generate path for "%s" as the host in context was not provided.',
@@ -312,6 +308,5 @@ class Router
         $this->routeCollection->addRoute($route);
         return $this;
     }
-
 }
 

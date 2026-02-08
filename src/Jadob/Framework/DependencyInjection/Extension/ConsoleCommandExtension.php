@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\Extension;
 
@@ -8,10 +9,9 @@ use Symfony\Component\Console\Application;
 
 class ConsoleCommandExtension implements ContainerExtensionInterface
 {
-
     public function onContainerBuild(Container $container): void
     {
-        if(!$container->has(Application::class)) {
+        if (!$container->has(Application::class)) {
             return;
         }
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\MessageBus;
 
@@ -7,7 +8,6 @@ namespace Jadob\MessageBus;
  */
 class QueryBus
 {
-
     private ReflectionMessageBus $messageBus;
 
     /**
@@ -15,8 +15,7 @@ class QueryBus
      */
     public function __construct(
         array $handlers
-    )
-    {
+    ) {
         $this->messageBus = new ReflectionMessageBus($handlers);
     }
 

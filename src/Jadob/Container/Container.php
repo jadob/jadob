@@ -466,11 +466,11 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 /** @var array|object $providerConfig */
                 $providerConfig = $config[$requestedConfigNode];
 
-                if($serviceProvider instanceof ConfigObjectProviderInterface) {
+                if ($serviceProvider instanceof ConfigObjectProviderInterface) {
                     $defaultConfigObject = $serviceProvider
                         ->getDefaultConfigurationObject();
 
-                    if(!($providerConfig instanceof Closure)) {
+                    if (!($providerConfig instanceof Closure)) {
                         throw new ContainerException(
                             sprintf(
                                 'Config node for provider "%s" must be a closure as this provider uses object-based configuration',
@@ -481,7 +481,6 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
                     $providerConfig = $providerConfig($defaultConfigObject);
                 }
-
             }
 
             $servicesToAdd = $serviceProvider->register($this, $providerConfig);

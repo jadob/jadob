@@ -9,7 +9,6 @@ use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;

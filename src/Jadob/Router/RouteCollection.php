@@ -7,6 +7,7 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 use Jadob\Router\Exception\RouterException;
+use LogicException;
 use function count;
 use function is_string;
 use function key;
@@ -57,14 +58,14 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     {
         $routeName = $route->name;
 
-        if($route->parentCollection !== null) {
-            throw new \LogicException(
+        if ($route->parentCollection !== null) {
+            throw new LogicException(
                 sprintf('Cannot append route "%s to collection as it is already attached to another one.', $routeName)
             );
         }
 
         if ($route->getHost() !== null) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf('Cannot append route "%s to collection as it have a host.', $routeName)
             );
         }

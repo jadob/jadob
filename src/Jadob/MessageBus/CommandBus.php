@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\MessageBus;
 
@@ -11,8 +12,7 @@ class CommandBus
      */
     public function __construct(
         array $handlers
-    )
-    {
+    ) {
         $this->messageBus = new ReflectionMessageBus($handlers);
     }
 
