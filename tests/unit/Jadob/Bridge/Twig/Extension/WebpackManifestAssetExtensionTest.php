@@ -36,7 +36,7 @@ class WebpackManifestAssetExtensionTest extends TestCase
         /** @var TwigFunction $function */
         $function = reset($functions);
 
-        $this->assertEquals('asset_from_manifest', $function->getName());
+        $this->assertEquals('webpack_manifest_asset', $function->getName());
         $this->assertEquals('styles.1234qwer.css', $function->getCallable()('styles.css'));
         $this->assertEquals('styles.1234qwer.css', $extension->getAssetFromManifest('styles.css'));
     }
