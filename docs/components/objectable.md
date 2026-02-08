@@ -1,5 +1,6 @@
 # jadob/objectable 
 
+Warning: This component is deprecated and it is about to be abandoned. 
 
 ## Object serialization
 You can manually declare which fields would be serialized by attributing them:
