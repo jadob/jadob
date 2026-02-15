@@ -7,7 +7,7 @@ use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class AuthenticatorService
+class Authenticator
 {
     /**
      * @var array<string, AuthenticatorInterface>
