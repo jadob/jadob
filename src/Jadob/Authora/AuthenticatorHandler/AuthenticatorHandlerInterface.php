@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Authora\AuthenticatorHandler;
 
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Jadob\Core\Event\RequestEvent;
@@ -11,10 +11,10 @@ use Jadob\Core\Event\RequestEvent;
 interface AuthenticatorHandlerInterface
 {
     public function __invoke(
-        AuthenticatorInterface      $authenticator,
-        AccessTokenStorageInterface $accessTokenStorage,
-        RequestEvent                $requestEvent,
-        IdentityProviderInterface   $identityProvider,
-        string $authenticatorName,
+        AuthenticatorInterface    $authenticator,
+        IdentityPoolInterface     $identityPool,
+        RequestEvent              $requestEvent,
+        IdentityProviderInterface $identityProvider,
+        string                    $authenticatorName,
     ): void;
 }

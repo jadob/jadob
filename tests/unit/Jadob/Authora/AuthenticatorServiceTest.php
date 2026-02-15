@@ -9,11 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorServiceTest extends TestCase
 {
-    private AuthenticatorService $authenticatorService;
+    private Authenticator $authenticatorService;
 
     protected function setUp(): void
     {
-        $this->authenticatorService = new AuthenticatorService();
+        $this->authenticatorService = new Authenticator();
     }
 
     public function testDeterminingExistingAuthenticators()

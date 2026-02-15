@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Jadob\Authora\EventListener;
 
 use Jadob\Authora\AuthenticatorHandler\AuthenticatorHandlerFactory;
-use Jadob\Authora\AuthenticatorService;
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Authora\Authenticator;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Core\Event\RequestEvent;
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -15,8 +15,8 @@ use Psr\Log\LoggerInterface;
 final readonly class AuthenticationEventListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(
-        private AuthenticatorService        $authenticatorService,
-        private AccessTokenStorageInterface $accessTokenStorage,
+        private Authenticator               $authenticatorService,
+        private IdentityPoolInterface       $identityPool,
         private AuthenticatorHandlerFactory $authenticatorHandlerFactory,
         private ?LoggerInterface            $authLogger = null,
     ) {
@@ -66,7 +66,7 @@ final readonly class AuthenticationEventListener implements ListenerProviderInte
 
         $handler(
             $authenticator,
-            $this->accessTokenStorage,
+            $this->identityPool,
             $event,
             $this->authenticatorService->getIdentityProvider($authenticatorName),
             $authenticatorName

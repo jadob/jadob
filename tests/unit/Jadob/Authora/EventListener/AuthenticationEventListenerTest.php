@@ -3,10 +3,10 @@
 namespace Jadob\Authora\EventListener;
 
 use Jadob\Authora\AuthenticatorHandler\AuthenticatorHandlerFactory;
-use Jadob\Authora\AuthenticatorService;
+use Jadob\Authora\Authenticator;
 use Jadob\Authora\Fixtures\DummyIdentityProvider;
 use Jadob\Authora\Fixtures\DummyStatelessAuthenticator;
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Core\Event\RequestEvent;
 use Jadob\TestValueProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -17,8 +17,8 @@ class AuthenticationEventListenerTest extends TestCase
     public function testListenersForRequestEventAreExposed(): void
     {
         $service = new AuthenticationEventListener(
-            $this->createMock(AuthenticatorService::class),
-            $this->createMock(AccessTokenStorageInterface::class),
+            $this->createMock(Authenticator::class),
+            $this->createMock(IdentityPoolInterface::class),
             $this->createMock(AuthenticatorHandlerFactory::class),
         );
 
@@ -31,7 +31,7 @@ class AuthenticationEventListenerTest extends TestCase
 
     public function testHandlingStatelessAuthenticatorWillCauseIdentityStorageNotToBeInvoked(): void
     {
-        $authenticatorService = new AuthenticatorService();
+        $authenticatorService = new Authenticator();
 
         $authenticatorService
             ->registerNewAuthenticator(
@@ -41,7 +41,7 @@ class AuthenticationEventListenerTest extends TestCase
             );
 
 
-        $storageMock = $this->createMock(AccessTokenStorageInterface::class);
+        $storageMock = $this->createMock(IdentityPoolInterface::class);
         $service = new AuthenticationEventListener(
             $authenticatorService,
             $storageMock,

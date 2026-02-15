@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Authora\AuthenticatorHandler;
 
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\Exception\AuthenticationException;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
@@ -13,11 +13,11 @@ use Jadob\Core\Event\RequestEvent;
 class StatelessAuthenticatorHandler implements AuthenticatorHandlerInterface
 {
     public function __invoke(
-        AuthenticatorInterface      $authenticator,
-        AccessTokenStorageInterface $accessTokenStorage,
-        RequestEvent                $requestEvent,
-        IdentityProviderInterface   $identityProvider,
-        string $authenticatorName,
+        AuthenticatorInterface    $authenticator,
+        IdentityPoolInterface     $identityPool,
+        RequestEvent              $requestEvent,
+        IdentityProviderInterface $identityProvider,
+        string                    $authenticatorName,
     ): void {
         try {
             $accessToken = $authenticator->authenticate(

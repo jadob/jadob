@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use Jadob\Contracts\Auth\AccessToken;
+use Jadob\Contracts\Auth\Identity;
 use Jadob\Contracts\Auth\IdentityInterface;
 use Jadob\Router\Route;
 use Jadob\Security\Auth\User\UserInterface;
@@ -23,7 +23,7 @@ class RequestContext
      * @var UserInterface|null
      */
     protected ?UserInterface $user = null;
-    protected(set) ?AccessToken $accessToken = null;
+    protected(set) ?Identity $currentIdentity = null;
     protected(set) ?IdentityInterface $identity = null;
 
     public function __construct(
@@ -105,7 +105,7 @@ class RequestContext
     }
 
     public function setAccessToken(
-        AccessToken $accessToken
+        Identity $accessToken
     ): self {
         $this->accessToken = $accessToken;
         return $this;

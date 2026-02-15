@@ -2,7 +2,7 @@
 
 namespace Jadob\Authora\Fixtures;
 
-use Jadob\Contracts\Auth\AccessToken;
+use Jadob\Contracts\Auth\Identity;
 use Jadob\Contracts\Auth\Exception\AuthenticationException;
 use Jadob\Contracts\Auth\IdentityInterface;
 use Jadob\Contracts\Auth\StatelessAuthenticatorInterface;
@@ -32,9 +32,9 @@ class DummyStatelessAuthenticator implements StatelessAuthenticatorInterface
         return null;
     }
 
-    public function authenticate(Request $request): AccessToken
+    public function authenticate(Request $request): Identity
     {
-        return new AccessToken(
+        return new Identity(
             'mruczek',
             []
         );

@@ -29,5 +29,5 @@ interface AuthenticatorInterface
      */
     public function authenticate(
         Request $request,
-    ): AccessToken;
+    ): Identity;
 }

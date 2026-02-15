@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Jadob\Authora\ServiceProvider;
 
 use Closure;
-use Jadob\Authora\AccessTokenStorageService;
+use Jadob\Authora\IdentityPool;
 use Jadob\Authora\AuthenticatorHandler\AuthenticatorHandlerFactory;
-use Jadob\Authora\AuthenticatorService;
+use Jadob\Authora\Authenticator;
 use Jadob\Authora\EventListener\AuthenticationEventListener;
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
@@ -29,8 +29,8 @@ class AuthoraServiceProvider implements ServiceProviderInterface, ConfigObjectPr
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
         return [
-            AuthenticatorService::class => function (ContainerInterface $container) use ($config) {
-                $authenticationService = new AuthenticatorService();
+            Authenticator::class => function (ContainerInterface $container) use ($config) {
+                $authenticationService = new Authenticator();
                 foreach ($config->authenticators as $name => $serviceId) {
                     $authenticationService
                         ->registerNewAuthenticator(
@@ -42,16 +42,16 @@ class AuthoraServiceProvider implements ServiceProviderInterface, ConfigObjectPr
 
                 return $authenticationService;
             },
-            AccessTokenStorageInterface::class => function (ContainerInterface $container) {
-                return new AccessTokenStorageService();
+            IdentityPoolInterface::class => function (ContainerInterface $container) {
+                return new IdentityPool();
             },
             AuthenticatorHandlerFactory::class => function (ContainerInterface $container) {
                 return new AuthenticatorHandlerFactory();
             },
             AuthenticationEventListener::class => function (ContainerInterface $container) {
                 return new AuthenticationEventListener(
-                    $container->get(AuthenticatorService::class),
-                    $container->get(AccessTokenStorageInterface::class),
+                    $container->get(Authenticator::class),
+                    $container->get(IdentityPoolInterface::class),
                     $container->get(AuthenticatorHandlerFactory::class)
                 );
             }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Authora\AuthenticatorHandler;
 
-use Jadob\Contracts\Auth\AccessTokenStorageInterface;
+use Jadob\Contracts\Auth\IdentityPoolInterface;
 use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\Exception\AuthenticationException;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
@@ -14,18 +14,18 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
 {
     /**
      * @param StatefulAuthenticatorInterface $authenticator
-     * @param AccessTokenStorageInterface $accessTokenStorage
+     * @param IdentityPoolInterface $identityPool
      * @param RequestEvent $requestEvent
      * @param IdentityProviderInterface $identityProvider
      * @param string $authenticatorName
      * @return void
      */
     public function __invoke(
-        AuthenticatorInterface      $authenticator,
-        AccessTokenStorageInterface $accessTokenStorage,
-        RequestEvent                $requestEvent,
-        IdentityProviderInterface   $identityProvider,
-        string                      $authenticatorName,
+        AuthenticatorInterface    $authenticator,
+        IdentityPoolInterface     $identityPool,
+        RequestEvent              $requestEvent,
+        IdentityProviderInterface $identityProvider,
+        string                    $authenticatorName,
     ): void {
         $request = $requestEvent
             ->requestContext
@@ -34,7 +34,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
         $session = $request
             ->getSession();
 
-        $existingIdentity = $accessTokenStorage->getCurrentAccessTokenFromSession(
+        $existingIdentity = $identityPool->getCurrentIdentityFromSession(
             $session,
             $authenticatorName
         );
@@ -101,7 +101,7 @@ class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
                 $requestEvent->requestContext->setAccessToken($accessToken);
                 $requestEvent->requestContext->setIdentity($identity);
 
-                $accessTokenStorage->storeAsCurrent(
+                $identityPool->storeAsCurrent(
                     $accessToken,
                     $authenticatorName,
                     $session
