@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Container\ServiceProvider;
 
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+
 /**
  * Experimental Feature
  * Provides default configuration which can be overriden by user and later used to execute current provider.
- *
+ * @deprecated - use {@see ConfigObjectProviderInterface}
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
