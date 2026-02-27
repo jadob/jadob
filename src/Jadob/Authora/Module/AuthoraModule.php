@@ -9,6 +9,9 @@ use Jadob\Authora\ServiceProvider\AuthoraServiceProvider;
 use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Psr\Container\ContainerInterface;
 
+/**
+ * @deprecated
+ */
 class AuthoraModule implements ModuleInterface
 {
     public function getServiceProviders(string $env): array

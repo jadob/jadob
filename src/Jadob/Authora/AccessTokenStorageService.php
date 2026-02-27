@@ -8,6 +8,9 @@ use Jadob\Contracts\Auth\AccessToken;
 use Jadob\Contracts\Auth\AccessTokenStorageInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * @deprecated
+ */
 class AccessTokenStorageService implements AccessTokenStorageInterface
 {
     public function storeAsCurrent(AccessToken $accessToken, string $authenticatorName, SessionInterface $session): void

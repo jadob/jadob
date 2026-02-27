@@ -7,6 +7,9 @@ use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated
+ */
 class AuthenticatorService
 {
     /**

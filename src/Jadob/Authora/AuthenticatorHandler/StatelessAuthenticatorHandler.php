@@ -10,6 +10,9 @@ use Jadob\Contracts\Auth\Exception\AuthenticationException;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Jadob\Core\Event\RequestEvent;
 
+/**
+ * @deprecated
+ */
 class StatelessAuthenticatorHandler implements AuthenticatorHandlerInterface
 {
     public function __invoke(

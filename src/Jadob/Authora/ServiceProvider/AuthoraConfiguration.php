@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Authora\ServiceProvider;
 
+/**
+ * @deprecated
+ */
 class AuthoraConfiguration
 {
     /**

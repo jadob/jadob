@@ -14,6 +14,9 @@ use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
+/**
+ * @deprecated
+ */
 class AuthoraServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
     public function getConfigNode(): ?string

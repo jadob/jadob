@@ -12,6 +12,9 @@ use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @deprecated
+ */
 final readonly class AuthenticationEventListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(

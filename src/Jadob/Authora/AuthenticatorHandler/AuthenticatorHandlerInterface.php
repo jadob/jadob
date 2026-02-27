@@ -8,6 +8,9 @@ use Jadob\Contracts\Auth\AuthenticatorInterface;
 use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Jadob\Core\Event\RequestEvent;
 
+/**
+ * @deprecated
+ */
 interface AuthenticatorHandlerInterface
 {
     public function __invoke(

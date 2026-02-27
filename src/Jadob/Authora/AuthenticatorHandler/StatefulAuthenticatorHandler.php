@@ -10,6 +10,9 @@ use Jadob\Contracts\Auth\IdentityProviderInterface;
 use Jadob\Contracts\Auth\StatefulAuthenticatorInterface;
 use Jadob\Core\Event\RequestEvent;
 
+/**
+ * @deprecated
+ */
 class StatefulAuthenticatorHandler implements AuthenticatorHandlerInterface
 {
     /**

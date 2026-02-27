@@ -8,6 +8,9 @@ use Jadob\Contracts\Auth\StatefulAuthenticatorInterface;
 use Jadob\Contracts\Auth\StatelessAuthenticatorInterface;
 use LogicException;
 
+/**
+ * @deprecated
+ */
 class AuthenticatorHandlerFactory
 {
     public function createForAuthenticator(
