@@ -6,6 +6,9 @@ namespace Jadob\Contracts\Auth;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @deprecated
+ */
 interface StatefulAuthenticatorInterface extends AuthenticatorInterface
 {
     /**

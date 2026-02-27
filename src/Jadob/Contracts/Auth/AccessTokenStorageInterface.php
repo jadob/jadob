@@ -5,6 +5,9 @@ namespace Jadob\Contracts\Auth;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * @deprecated
+ */
 interface AccessTokenStorageInterface
 {
     public function storeAsCurrent(

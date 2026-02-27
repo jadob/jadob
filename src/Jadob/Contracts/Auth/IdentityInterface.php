@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Contracts\Auth;
 
 /**
+ * @deprecated
  * This interface must be implemented by your User object.
  * @license MIT
  */

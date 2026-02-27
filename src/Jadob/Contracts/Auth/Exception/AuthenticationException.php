@@ -6,6 +6,9 @@ namespace Jadob\Contracts\Auth\Exception;
 
 use Exception;
 
+/**
+ * @deprecated
+ */
 class AuthenticationException extends Exception
 {
 }

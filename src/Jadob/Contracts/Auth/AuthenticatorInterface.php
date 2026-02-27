@@ -7,6 +7,9 @@ use Jadob\Contracts\Auth\Exception\AuthenticationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @deprecated
+ */
 interface AuthenticatorInterface
 {
     public function supports(Request $request): bool;

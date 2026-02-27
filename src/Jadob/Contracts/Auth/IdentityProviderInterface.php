@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Contracts\Auth;
 
 /**
+ * @deprecated
  * Used to fetch identity from your persistence layer (DB, API, anything).
  */
 interface IdentityProviderInterface

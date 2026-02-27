@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Contracts\Auth;
 
+/**
+ * @deprecated
+ */
 class AccessToken
 {
     public function __construct(
