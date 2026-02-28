@@ -19,12 +19,12 @@ class FirewallMapTest extends TestCase
 
     public function testNegativeResponseFromRequestMatchedWouldCauseMatchToNotReturnFirewall()
     {
-        $authMock = $this->createMock(Firewall::class);
-        $authMock->expects(self::once())->method('supports')->willReturn(false);
+        $firewall = $this->createMock(Firewall::class);
+        $firewall->expects(self::once())->method('supports')->willReturn(false);
 
         $map = new FirewallMap(
             [
-                $authMock,
+                $firewall,
             ]
         );
 
