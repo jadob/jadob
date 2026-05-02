@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher\Fixtures;
 
-
 use Psr\EventDispatcher\StoppableEventInterface;
 
 class GenericStoppableEvent implements StoppableEventInterface
 {
-
     protected bool $stopped;
     protected string $content;
 

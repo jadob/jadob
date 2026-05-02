@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Dashboard\Fixtures;
 
+use RuntimeException;
 
 class Cat
 {
-
     protected string $name;
     protected string $breed;
 
@@ -55,16 +55,14 @@ class Cat
 
     public function meow(): void
     {
-
     }
 
     public function woof(): void
     {
-        throw new \RuntimeException('am i a joke to you?');
+        throw new RuntimeException('am i a joke to you?');
     }
 
     public function feed(Tuna $tuna)
     {
-
     }
 }

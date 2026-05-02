@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher\Fixtures;
 
-
-use Jadob\EventDispatcher\Fixtures\GenericStoppableEvent;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 class GenericProvider implements ListenerProviderInterface
 {
-
     public function stopEvent(GenericStoppableEvent $event)
     {
         $event->setStopped(true);
@@ -26,6 +23,4 @@ class GenericProvider implements ListenerProviderInterface
 
         return [];
     }
-
-
 }

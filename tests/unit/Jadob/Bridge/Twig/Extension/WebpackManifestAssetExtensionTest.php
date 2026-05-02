@@ -13,7 +13,6 @@ use Twig\TwigFunction;
  */
 class WebpackManifestAssetExtensionTest extends TestCase
 {
-
     public function testExtensionReturnsTwigFunction(): void
     {
         $extension = new WebpackManifestAssetExtension([]);
@@ -23,7 +22,6 @@ class WebpackManifestAssetExtensionTest extends TestCase
 
         $this->assertCount(1, $functions);
         $this->assertInstanceOf(TwigFunction::class, $function);
-
     }
 
     public function testExtensionCanProperlyReturnValues(): void

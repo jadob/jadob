@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class ManagedObjectTest extends TestCase
 {
-
     public function testCreatingObjectFromArrayWillBreakWhenThereWillBeListConfigurationMissing()
     {
         self::expectException(ConfigurationException::class);
@@ -25,5 +24,4 @@ class ManagedObjectTest extends TestCase
 
         ManagedObject::fromArray(Cat::class, ['list' => false]);
     }
-
 }

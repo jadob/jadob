@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\Fixtures;
 
@@ -13,8 +14,7 @@ class DummyStatelessAuthenticator implements StatelessAuthenticatorInterface
 {
     public function __construct(
         private string $supportedPath,
-    )
-    {
+    ) {
     }
 
     public function supports(Request $request): bool

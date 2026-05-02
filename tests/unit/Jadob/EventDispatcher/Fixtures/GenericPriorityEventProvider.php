@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher\Fixtures;
 
-
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 class GenericPriorityEventProvider implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
-
     protected int $priority;
 
     public function __construct(int $priority)

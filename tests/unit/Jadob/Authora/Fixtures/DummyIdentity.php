@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\Fixtures;
 
@@ -8,8 +9,7 @@ class DummyIdentity implements IdentityInterface
 {
     public function __construct(
         private string $identityId,
-    )
-    {
+    ) {
     }
 
     public function getIdentityId(): string

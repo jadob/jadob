@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\UserDomain;
 
@@ -10,7 +11,6 @@ class UserSignupService
         /** @phpstan-ignore property.onlyWritten */
         private UserNotificationService $userNotificationService
 
-    )
-    {
+    ) {
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora\EventListener;
 
@@ -9,7 +10,6 @@ use Jadob\Authora\Fixtures\DummyStatelessAuthenticator;
 use Jadob\Contracts\Auth\AccessTokenStorageInterface;
 use Jadob\Core\Event\RequestEvent;
 use Jadob\TestValueProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AuthenticationEventListenerTest extends TestCase

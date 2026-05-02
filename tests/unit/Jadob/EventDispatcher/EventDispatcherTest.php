@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
-
 use Jadob\EventDispatcher\Fixtures\GenericPriorityEventProvider;
 use Jadob\EventDispatcher\Fixtures\GenericProvider;
 use Jadob\EventDispatcher\Fixtures\GenericStoppableEvent;
@@ -11,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class EventDispatcherTest extends TestCase
 {
-
     public function testLowestPriorityListenersWouldBeInvokedFirst()
     {
         $dispatcher = new EventDispatcher();
@@ -23,6 +21,5 @@ class EventDispatcherTest extends TestCase
         $processedEvent = $dispatcher->dispatch($event);
 
         $this->assertEquals($processedEvent->getContent(), 'priority');
-
     }
 }

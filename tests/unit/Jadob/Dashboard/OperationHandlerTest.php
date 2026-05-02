@@ -12,10 +12,10 @@ use Jadob\Dashboard\Fixtures\InvokableService;
 use Jadob\Dashboard\Fixtures\Tuna;
 use Jadob\Security\Auth\User\User;
 use Psr\Log\NullLogger;
+use RuntimeException;
 
 class OperationHandlerTest extends BaseDashboardTestCase
 {
-
     public function testHandlerWillCallInvokeWhenThereIsNoHandlerMethodPassedAndNoForcePersist(): void
     {
         $dateTime = new DateTimeImmutable('2021-03-20');
@@ -85,7 +85,6 @@ class OperationHandlerTest extends BaseDashboardTestCase
         );
 
         $operationHandler->processOperation($operation, $cat, $context);
-
     }
 
     public function testHandlerWillCallMethodOnObjectWhenNoHandlerFqcnPassed(): void
@@ -122,7 +121,6 @@ class OperationHandlerTest extends BaseDashboardTestCase
         );
 
         $operationHandler->processOperation($operation, $cat, $context);
-
     }
 
     public function testHandlerWillCatchExceptionAndPassItOn(): void
@@ -155,7 +153,7 @@ class OperationHandlerTest extends BaseDashboardTestCase
             $this->getObjectManagerMock()
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('am i a joke to you?');
 
         $operationHandler->processOperation($operation, $cat, $context);
@@ -164,7 +162,6 @@ class OperationHandlerTest extends BaseDashboardTestCase
 
     public function testArgumentTransformerPassedInOperationIsUsed()
     {
-
         $dateTime = new DateTimeImmutable('2021-03-20');
         $context = new DashboardContext($dateTime, new User('miki', 'miki'));
         $food = new Tuna();
@@ -197,7 +194,6 @@ class OperationHandlerTest extends BaseDashboardTestCase
 
     public function testHandlerWillBreakWhenInvalidArgumentTransformerValueIsReturned(): void
     {
-
         $dateTime = new DateTimeImmutable('2021-03-20');
         $context = new DashboardContext($dateTime, new User('miki', 'miki'));
         $cat = new Cat('cheezburger', 'Lykoi');
@@ -222,5 +218,4 @@ class OperationHandlerTest extends BaseDashboardTestCase
 
         $operationHandler->processOperation($operation, $cat, $context);
     }
-
 }

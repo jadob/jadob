@@ -18,10 +18,8 @@ use PHPUnit\Framework\TestCase;
 
 class ServiceProviderResolverTest extends TestCase
 {
-
     public function testResolvingWouldFailIfThereIsMissingParentProviderCreated(): void
     {
-
         $resolver = new ServiceProviderResolver();
 
         $this->expectException(ContainerLogicException::class);
@@ -97,6 +95,5 @@ class ServiceProviderResolverTest extends TestCase
                 TemplatingProvider::class,
             ], $result
         );
-
     }
 }

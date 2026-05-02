@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Authora;
 
@@ -72,5 +73,4 @@ class AuthenticatorServiceTest extends TestCase
 
         self::assertNull($authenticatorName);
     }
-
 }

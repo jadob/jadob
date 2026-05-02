@@ -28,7 +28,6 @@ class UrlTest extends TestCase
             ],
             $url->getQuery()
         );
-
     }
 
     public function testUrlWillSkipAttachingDefaultPortToHttpUrl(): void

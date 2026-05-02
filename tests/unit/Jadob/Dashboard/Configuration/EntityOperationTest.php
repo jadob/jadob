@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class EntityOperationTest extends TestCase
 {
-
     public function testPassingConfigurationWithMissingOperationLabelWillCauseAnException(): void
     {
         self::expectException(ConfigurationException::class);
@@ -25,6 +24,5 @@ class EntityOperationTest extends TestCase
         EntityOperation::fromArray('update', [
             'label' => 1
         ]);
-
     }
 }

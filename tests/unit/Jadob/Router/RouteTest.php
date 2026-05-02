@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router;
 
@@ -12,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class RouteTest extends TestCase
 {
-
     public function testParentCollectionIsAssignedToRouteWhenRouteIsAttachedToCollection(): void
     {
         $collection = new RouteCollection();
@@ -37,7 +37,7 @@ class RouteTest extends TestCase
     public function testCreatingRouteFromArrayWillBreakIfNoNamePassed(): void
     {
         $this->expectExceptionMessage('Missing "name" key in $data.');
-        $this->expectException(\Jadob\Router\Exception\RouterException::class);
+        $this->expectException(RouterException::class);
         $route = [
             'path' => '/my/path/1',
             'controller' => '/My/Dummy/ControllerClass',
@@ -46,12 +46,11 @@ class RouteTest extends TestCase
         ];
 
         Route::fromArray($route);
-
     }
 
     public function testCreatingRouteFromArrayWillBreakIfNoPathPassed(): void
     {
-        $this->expectException(\Jadob\Router\Exception\RouterException::class);
+        $this->expectException(RouterException::class);
         $this->expectExceptionMessage('Missing "path" key in $data.');
         $route = [
             'name' => '/my/path/1',
@@ -88,5 +87,4 @@ class RouteTest extends TestCase
 
     //testRouteWithHostCannotBeAddedToCollection
     //testRouteAttachedToCollectionWithHostWillBeUsingCollectionsHost
-
 }

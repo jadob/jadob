@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\ServiceProviders;
 
@@ -7,7 +8,6 @@ use Psr\Container\ContainerInterface;
 
 class DatabaseServiceProvider implements ServiceProviderInterface
 {
-
     public function getConfigNode(): ?string
     {
         // TODO: Implement getConfigurationNode() method.

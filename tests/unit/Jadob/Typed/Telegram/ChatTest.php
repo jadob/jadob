@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Typed\Telegram;
 
-
 use PHPUnit\Framework\TestCase;
 
 class ChatTest extends TestCase
 {
-
     public function testFromArrayCreation(): void
     {
         $data = [

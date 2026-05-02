@@ -49,7 +49,6 @@ class ListConfigurationTest extends TestCase
         self::expectExceptionMessage('Value for "operations" key for "Jadob\Dashboard\Fixtures\Cat" object must be an array!');
 
         ListConfiguration::create(Cat::class, ['fields' => [], 'operations' => false]);
-
     }
 
     public function testPassingConfigurationWithIntAsOperationNameWillCauseAnException(): void
@@ -60,6 +59,5 @@ class ListConfigurationTest extends TestCase
         ListConfiguration::create(Cat::class, ['fields' => [], 'operations' => [
             1 => []
         ]]);
-
     }
 }

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob;
 
-use function json_decode;
 use function file_get_contents;
+use function json_decode;
 use function sprintf;
 use const JSON_THROW_ON_ERROR;
 
@@ -21,5 +21,4 @@ class FixtureHelper
             JSON_THROW_ON_ERROR
         );
     }
-
 }

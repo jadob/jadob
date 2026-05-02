@@ -8,14 +8,12 @@ use PHPUnit\Framework\TestCase;
 
 class MessageTest extends TestCase
 {
-
     public function testMessageWithPhoto(): void
     {
         $data = FixtureHelper::getJson('telegram-message-photo');
         $msg = Message::fromArray($data);
 
         self::assertTrue($msg->hasPhoto());
-
     }
 
     public function testPlainMessage(): void
@@ -24,6 +22,5 @@ class MessageTest extends TestCase
         $msg = Message::fromArray($data);
 
         self::assertFalse($msg->hasPhoto());
-
     }
 }

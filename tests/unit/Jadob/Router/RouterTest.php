@@ -8,7 +8,6 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\UrlGenerationException;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * @TODO: testFullUrlGeneration* test probably should be one test case with multiple providers - verify it and refactor
  * @group router
@@ -29,7 +28,6 @@ class RouterTest extends TestCase
 
     public function testMethodNotAllowed(): void
     {
-
         $routeCollection = new RouteCollection();
 
         $routeCollection->addRoute(new Route('get_user_stuff', '/user/{id}/stuff', [], null, ['POST']));
@@ -45,7 +43,6 @@ class RouterTest extends TestCase
 
     public function testWildcardRouteWillNotCatchMethodNotAllowedPaths(): void
     {
-
         $routeCollection = new RouteCollection();
 
         $routeCollection->addRoute(
@@ -230,7 +227,6 @@ class RouterTest extends TestCase
 
     public function testFullUrlGenerationWithNoArgumentsDefinedInRouterContextWillCauseAMissingHostException()
     {
-
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
 
@@ -243,7 +239,6 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('Unable to generate path for "example" as the host in context was not provided.');
 
         $router->generateRoute('example', ['a' => 'b'], true);
-
     }
 
     public function testFullUrlGenerationWithPortAndNonSecureDefinedInContext()

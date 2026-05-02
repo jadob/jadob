@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\CircularServiceProviders;
 
@@ -8,7 +9,6 @@ use Psr\Container\ContainerInterface;
 
 class BarServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
-
     public function getParentServiceProviders(): array
     {
         return [

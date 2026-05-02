@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Router;
 
@@ -10,7 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class RouteCollectionTest extends TestCase
 {
-
     public function testRouteCollectionPassesPrefixAndPathToAllRoutes(): void
     {
         $collection = new RouteCollection('/nice', 'example.com');
@@ -23,7 +23,6 @@ class RouteCollectionTest extends TestCase
 
     public function testRouteCollectionNesting(): void
     {
-
         $collection1 = new RouteCollection('/r1');
         $collection1->addRoute(new Route('route_1', '/resource.html', 'sample_handler'));
 

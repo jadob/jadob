@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Objectable\Fixtures;
 
@@ -6,7 +7,6 @@ use Jadob\Objectable\Transformer\ItemTransformerInterface;
 
 class FoodTransformer implements ItemTransformerInterface
 {
-
     public function supports(string $className, string $context): bool
     {
         return $className === Food::class && $context === 'RECIPE_BOOK';

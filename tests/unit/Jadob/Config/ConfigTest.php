@@ -21,7 +21,7 @@ class ConfigTest extends TestCase
     public function testConfigWillBreakIfNoNodeFound(): void
     {
         $this->expectExceptionMessage('Could not find node "missing".');
-        $this->expectException(\Jadob\Config\Exception\ConfigNodeNotFoundException::class);
+        $this->expectException(Exception\ConfigNodeNotFoundException::class);
         $config = new Config();
 
         $config->loadDirectory(__DIR__ . '/includes/1');
@@ -35,8 +35,8 @@ class ConfigTest extends TestCase
 
         $config->loadDirectory(
             __DIR__ . '/includes/2', [], 1, [
-            'bax' => 'bax',
-            'baz' => 'baz'
+                'bax' => 'bax',
+                'baz' => 'baz'
             ]
         );
 
@@ -44,5 +44,4 @@ class ConfigTest extends TestCase
         $this->assertEquals('bax', $node['bax']);
         $this->assertEquals('baz', $node['bar']);
     }
-
 }

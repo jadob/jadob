@@ -1,13 +1,14 @@
 <?php
-
-use Jadob\Container\Fixtures\ShopDomain\ProductService;
-use Jadob\Container\Fixtures\UserDomain\DbUserRepository;
-use Jadob\Container\Fixtures\UserDomain\UserNotificationService;
-use Jadob\Container\Fixtures\UserDomain\UserRepositoryInterface;
-use Jadob\Container\Fixtures\UserDomain\UserBirthdayService;
-use Jadob\Container\Fixtures\UserDomain\UserService;
+declare(strict_types=1);
 
 use Jadob\Container\Fixtures\KebabShop;
+use Jadob\Container\Fixtures\ShopDomain\ProductService;
+use Jadob\Container\Fixtures\UserDomain\DbUserRepository;
+use Jadob\Container\Fixtures\UserDomain\UserBirthdayService;
+use Jadob\Container\Fixtures\UserDomain\UserNotificationService;
+use Jadob\Container\Fixtures\UserDomain\UserRepositoryInterface;
+
+use Jadob\Container\Fixtures\UserDomain\UserService;
 use Jadob\Container\Fixtures\UserDomain\UserSignupService;
 use Psr\Container\ContainerInterface;
 
@@ -17,7 +18,7 @@ return [
          * This is perfectly fine.
          */
         'kebab_shop' => new KebabShop(),
-//
+        //
         /**
          * More lazy approach - class would not be created until service requested.
          */

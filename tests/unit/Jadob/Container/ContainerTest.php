@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container;
 
@@ -14,7 +15,6 @@ use Jadob\Container\Fixtures\ShopDomain\ProductService;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-
 
 /**
  * Watch out:

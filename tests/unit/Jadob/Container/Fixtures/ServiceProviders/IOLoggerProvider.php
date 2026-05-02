@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\ServiceProviders;
 
@@ -11,7 +12,6 @@ use Psr\Container\ContainerInterface;
  */
 class IOLoggerProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
-
     public function getParentServiceProviders(): array
     {
         return [

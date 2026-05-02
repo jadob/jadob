@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Webhook\Provider\Telegram;
 
-
 use Jadob\FixtureHelper;
 use Jadob\Typed\Telegram\Chat;
 use Jadob\Typed\Telegram\Update;
@@ -14,10 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TelegramEventExtractorTest extends TestCase
 {
-
     public function testEventWrappingWillNotAcceptAnyOtherClassThanATelegramUpdate(): void
     {
-
         $evp = new TelegramEventExtractor();
 
         $this->expectException(LogicException::class);
@@ -28,7 +25,6 @@ class TelegramEventExtractorTest extends TestCase
 
     public function testEventWrappingWillHandleUpdateAndReturnWrappedEvent(): void
     {
-
         $evp = new TelegramEventExtractor();
         $update = Update::fromArray(FixtureHelper::getJson('telegram-update-message'));
 
@@ -41,7 +37,6 @@ class TelegramEventExtractorTest extends TestCase
 
     public function testExtractorWillDisallowToProcessAnRequestThatDoesNotContainAnUpdateKey(): void
     {
-
         $evp = new TelegramEventExtractor();
 
         $req = Request::create('/', 'POST', content: '{"hello": 1}');
@@ -50,7 +45,6 @@ class TelegramEventExtractorTest extends TestCase
 
     public function testExtractorWillDisallowToProcessAnEmptyRequest(): void
     {
-
         $evp = new TelegramEventExtractor();
 
         $req = Request::create('/', 'POST', content: '{}');
@@ -59,7 +53,6 @@ class TelegramEventExtractorTest extends TestCase
 
     public function testExtractorWillDisallowToProcessAnRequestThatHasSomeText(): void
     {
-
         $evp = new TelegramEventExtractor();
 
         $req = Request::create('/', 'POST', content: 'well hello there');

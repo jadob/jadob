@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\ServiceProviders;
 
@@ -8,7 +9,6 @@ use Psr\Container\ContainerInterface;
 
 class ApiServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
-
     public function getParentServiceProviders(): array
     {
         return [
@@ -18,7 +18,7 @@ class ApiServiceProvider implements ServiceProviderInterface, ParentServiceProvi
 
     public function getConfigNode(): ?string
     {
-       return null;
+        return null;
     }
 
     public function register(ContainerInterface $container, object|array|null $config = null): array

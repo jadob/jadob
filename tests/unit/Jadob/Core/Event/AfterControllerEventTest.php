@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AfterControllerEventTest extends TestCase
 {
-
     public function testResponseOverriding()
     {
         $context = new RequestContext('test', Request::createFromGlobals(), false);

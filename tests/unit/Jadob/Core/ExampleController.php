@@ -1,7 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Core;
-
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,5 +14,4 @@ class ExampleController
     {
         return new Response('ok');
     }
-
 }

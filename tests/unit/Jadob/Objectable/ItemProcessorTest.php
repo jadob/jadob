@@ -1,16 +1,15 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Jadob\Objectable;
 
 use Jadob\Objectable\Fixtures\Food;
-use Jadob\Objectable\Fixtures\Ingredient;
 use Jadob\Objectable\Fixtures\FoodTransformer;
 use PHPUnit\Framework\TestCase;
 
 class ItemProcessorTest extends TestCase
 {
-
     public function testItemExtractionWithoutAdditionalParameters(): void
     {
         $processor = new ItemProcessor();
@@ -45,6 +44,5 @@ class ItemProcessorTest extends TestCase
             ],
             $serialized
         );
-
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob;
 
@@ -7,16 +8,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TestValueProvider
 {
-
     public static function requestContext(
         string $path = '/',
         string $method = 'GET'
-    ): RequestContext
-    {
+    ): RequestContext {
         return new RequestContext(
             'test',
             Request::create($path, $method)
         );
     }
-
 }
