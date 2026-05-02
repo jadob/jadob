@@ -33,4 +33,22 @@ class FirewallTest extends TestCase
         self::assertTrue($this->firewall->supports(Request::createFromGlobals()));
     }
 
+
+    /**
+     * @throws FirewallLogicException
+     */
+    public function testEnablingIdentityStackingWillCauseAnExceptionOnStatelessFirewalls()
+    {
+        $this->expectException(FirewallLogicException::class);
+        $this->expectExceptionMessage('Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for firewall test_firewall or make it stateful.');
+
+        new Firewall(
+            name: 'test_firewall',
+            requestMatcher: $this->requestMatcher,
+            authenticators: [],
+            identityProvider: $this->createStub(IdentityProviderInterface::class),
+            stateless: true,
+            identityStackingEnabled: true,
+        );
+    }
 }

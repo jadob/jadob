@@ -18,7 +18,7 @@ class Firewall
      * @param IdentityProviderInterface $identityProvider
      * @param EntryPointInterface|null $entryPoint
      * @param bool $stateless
-     * @throws FirewallConfigurationException
+     * @throws FirewallLogicException
      */
     public function __construct(
         private(set) string                    $name,
@@ -28,13 +28,11 @@ class Firewall
         private(set) ?EntryPointInterface      $entryPoint = null,
         private(set) bool                      $stateless = false,
         private(set) bool                      $identityStackingEnabled = false
-    )
-    {
+    ) {
         if ($this->stateless && $this->identityStackingEnabled) {
-            throw new FirewallConfigurationException(
+            throw new FirewallLogicException(
                 sprintf(
-                    'Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for
-                    firewall %s or make it stateful.', $this->name,
+                    'Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for firewall %s or make it stateful.', $this->name,
                 )
             );
         }
