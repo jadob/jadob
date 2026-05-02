@@ -6,8 +6,9 @@ namespace Jadob\Framework\DependencyInjection\Extension;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 
-class ConsoleCommandExtension implements ContainerExtensionInterface
+final readonly class ConsoleCommandExtension implements ContainerExtensionInterface
 {
     public function onContainerBuild(Container $container): void
     {
@@ -18,8 +19,15 @@ class ConsoleCommandExtension implements ContainerExtensionInterface
         /** @var Application $console */
         $console = $container->get(Application::class);
 
-        foreach ($container->getTaggedServices('console.command') as $command) {
-            $console->add($command);
+        /** @var Command[] $commands */
+        $commands = $container->getTaggedServices('console.command');
+
+        foreach ($commands as $command) {
+            if (method_exists($console, 'addCommand')) {
+                $console->addCommand($command);
+            } else {
+                $console->add($command);
+            }
         }
     }
 }
