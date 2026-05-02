@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Jadob\Auth\Identity\IdentityInterface;
 use Jadob\Contracts\Auth\AccessToken;
-use Jadob\Contracts\Auth\IdentityInterface;
 use Jadob\Router\Route;
 use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;

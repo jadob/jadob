@@ -5,6 +5,7 @@ namespace Jadob\Auth\Firewall;
 
 use Jadob\Auth\AuthenticatorInterface;
 use Jadob\Auth\EntryPointInterface;
+use Jadob\Auth\Identity\IdentityPickerInterface;
 use Jadob\Auth\Identity\IdentityProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
@@ -27,7 +28,8 @@ class Firewall
         private(set) IdentityProviderInterface $identityProvider,
         private(set) ?EntryPointInterface      $entryPoint = null,
         private(set) bool                      $stateless = false,
-        private(set) bool                      $identityStackingEnabled = false
+        private(set) bool                      $identityStackingEnabled = false,
+        private(set) ?IdentityPickerInterface  $identityPicker = null
     ) {
         if ($this->stateless && $this->identityStackingEnabled) {
             throw new FirewallLogicException(
