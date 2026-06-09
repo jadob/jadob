@@ -11,16 +11,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AfterControllerEventTest extends TestCase
 {
-    public function testResponseOverriding()
+    public function testResponseOverriding(): void
     {
-        $context = new RequestContext('test', Request::createFromGlobals(), false);
-        $orginalResponse = new Response();
-        $event = new AfterControllerEvent($orginalResponse, $context);
+        $context = new RequestContext('test', Request::createFromGlobals());
+        $originalResponse = new Response();
+        $event = new AfterControllerEvent($originalResponse, $context);
 
-        $this->assertSame($orginalResponse, $event->getResponse());
+        self::assertSame($originalResponse, $event->getResponse());
 
         $newResponse = new JsonResponse();
         $event->setResponse($newResponse);
-        $this->assertSame($newResponse, $event->getResponse());
+        self::assertSame($newResponse, $event->getResponse());
     }
 }

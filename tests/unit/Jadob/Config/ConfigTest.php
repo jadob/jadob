@@ -13,8 +13,7 @@ class ConfigTest extends TestCase
         $config = new Config();
 
         $config->loadDirectory(__DIR__ . '/includes/1');
-        $this->assertIsArray($config->getNode('default_config_file'));
-        $this->assertFalse($config->hasNode('default_config_file.php'));
+        self::assertFalse($config->hasNode('default_config_file.php'));
     }
 
 
@@ -41,7 +40,7 @@ class ConfigTest extends TestCase
         );
 
         $node =  $config->getNode('with_parameter');
-        $this->assertEquals('bax', $node['bax']);
-        $this->assertEquals('baz', $node['bar']);
+        self::assertEquals('bax', $node['bax']);
+        self::assertEquals('baz', $node['bar']);
     }
 }

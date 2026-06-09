@@ -47,7 +47,7 @@ class ContainerTest extends TestCase
         self::assertSame($instance, $container->get('kebab_shop'));
     }
 
-    public function testAccessingSharedServiceViaServiceIdAndClassNameWillReturnTheSameInstance()
+    public function testAccessingSharedServiceViaServiceIdAndClassNameWillReturnTheSameInstance(): void
     {
         $container = new Container();
         $instance = new KebabShop();
@@ -150,7 +150,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testAddingServiceWithArrayDefinitionWithJustClassDefined()
+    public function testAddingServiceWithArrayDefinitionWithJustClassDefined(): void
     {
         $container = new Container();
         $container->add(KebabShop::class, [
@@ -163,7 +163,7 @@ class ContainerTest extends TestCase
         );
     }
 
-    public function testAddingServiceWithArrayDefinitionWithFactoryDefined()
+    public function testAddingServiceWithArrayDefinitionWithFactoryDefined(): void
     {
         $container = new Container();
         $container->add(KebabShop::class, [
@@ -177,7 +177,7 @@ class ContainerTest extends TestCase
     }
 
 
-    public function testAddingServiceWithArrayDefinitionWithoutExplicitClassName()
+    public function testAddingServiceWithArrayDefinitionWithoutExplicitClassName(): void
     {
         $container = new Container();
         $this->expectException(ContainerLogicException::class);
@@ -190,7 +190,7 @@ class ContainerTest extends TestCase
         ]);
     }
 
-    public function testAddingServiceWithNoClassNameHintWillFail()
+    public function testAddingServiceWithNoClassNameHintWillFail(): void
     {
         $container = new Container();
 
@@ -201,7 +201,7 @@ class ContainerTest extends TestCase
     }
 
 
-    public function testAddingFactoryWithInterfaceAsAServiceId()
+    public function testAddingFactoryWithInterfaceAsAServiceId(): void
     {
         $container = new Container();
 

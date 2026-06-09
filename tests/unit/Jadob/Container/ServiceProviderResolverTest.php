@@ -70,7 +70,7 @@ class ServiceProviderResolverTest extends TestCase
         ]);
     }
 
-    public function testResolving()
+    public function testResolving(): void
     {
         $resolver = new ServiceProviderResolver();
 
