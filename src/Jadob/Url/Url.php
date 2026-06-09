@@ -124,7 +124,7 @@ class Url implements Stringable
             $shouldIncludePortInUrl = false;
         }
 
-        if ($this->port && $shouldIncludePortInUrl) {
+        if ($this->port !== null && $shouldIncludePortInUrl) {
             $url .= ':'.$this->port;
         }
 
