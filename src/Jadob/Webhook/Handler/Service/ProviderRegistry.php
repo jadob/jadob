@@ -8,7 +8,6 @@ use Jadob\Contracts\Webhook\WebhookProviderInterface;
 class ProviderRegistry
 {
     /**
-     * ProviderRegistry constructor.
      * @param array<string, WebhookProviderInterface> $providers
      */
     public function __construct(
@@ -28,5 +27,9 @@ class ProviderRegistry
                 return $provider;
             }
         }
+
+        throw new \RuntimeException(
+            sprintf('Could not find webhook provider for "%s"', $name)
+        );
     }
 }
