@@ -20,8 +20,8 @@ class WebpackManifestAssetExtensionTest extends TestCase
         /** @var TwigFunction $function */
         $function = reset($functions);
 
-        $this->assertCount(1, $functions);
-        $this->assertInstanceOf(TwigFunction::class, $function);
+        self::assertCount(1, $functions);
+        self::assertInstanceOf(TwigFunction::class, $function);
     }
 
     public function testExtensionCanProperlyReturnValues(): void
