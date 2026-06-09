@@ -10,11 +10,11 @@ class TemplatingProvider implements ServiceProviderInterface
 {
     public function getConfigNode(): ?string
     {
-        // TODO: Implement getConfigNode() method.
+        return 'templating';
     }
 
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
-        // TODO: Implement register() method.
+        return [];
     }
 }

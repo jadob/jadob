@@ -18,11 +18,11 @@ class OAuth2Provider implements ServiceProviderInterface, ParentServiceProviderI
 
     public function getConfigNode(): ?string
     {
-        // TODO: Implement getConfigurationNode() method.
+        return 'oauth2';
     }
 
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
-        // TODO: Implement register() method.
+        return [];
     }
 }

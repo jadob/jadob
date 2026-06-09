@@ -16,11 +16,11 @@ class FooServiceProvider implements ServiceProviderInterface, ParentServiceProvi
 
     public function getConfigNode(): ?string
     {
-        // TODO: Implement getConfigurationNode() method.
+        return 'foo';
     }
 
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
-        // TODO: Implement register() method.
+        return [];
     }
 }

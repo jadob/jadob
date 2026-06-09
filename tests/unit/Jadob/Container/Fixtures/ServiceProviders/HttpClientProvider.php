@@ -10,11 +10,11 @@ class HttpClientProvider implements ServiceProviderInterface
 {
     public function getConfigNode(): ?string
     {
-        // TODO: Implement getConfigurationNode() method.
+        return 'http_client';
     }
 
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
-        // TODO: Implement register() method.
+        return [];
     }
 }

@@ -17,11 +17,6 @@ class Bootstrap extends AbstractBootstrap
         return __DIR__;
     }
 
-    /**
-     * Returns array of Service providers that will be load while framework bootstrapping.
-     *
-     * @return array
-     */
     public function getServiceProviders(string $env): array
     {
         return [];
@@ -29,6 +24,6 @@ class Bootstrap extends AbstractBootstrap
 
     public function getModules(): array
     {
-        // TODO: Implement getModules() method.
+        return [];
     }
 }
