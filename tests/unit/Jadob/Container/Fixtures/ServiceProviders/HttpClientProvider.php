@@ -13,6 +13,10 @@ class HttpClientProvider implements ServiceProviderInterface
         return 'http_client';
     }
 
+    /**
+     * @param array<mixed> $config
+     * @return array<string, \Closure>
+     */
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
         return [];

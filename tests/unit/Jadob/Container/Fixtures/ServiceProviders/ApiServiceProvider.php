@@ -21,6 +21,10 @@ class ApiServiceProvider implements ServiceProviderInterface, ParentServiceProvi
         return null;
     }
 
+    /**
+     * @param array<mixed> $config
+     * @return array<string, \Closure>
+     */
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
         return [];

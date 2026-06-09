@@ -13,6 +13,10 @@ class TemplatingProvider implements ServiceProviderInterface
         return 'templating';
     }
 
+    /**
+     * @param array<mixed> $config
+     * @return array<string, \Closure>
+     */
     public function register(ContainerInterface $container, object|array|null $config = null): array
     {
         return [];
