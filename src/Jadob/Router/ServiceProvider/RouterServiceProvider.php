@@ -24,11 +24,18 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
     /**
      * @TODO: when aliases will be available, use router FQCN as service name and point the 'router' alias to them
      * @param ContainerInterface $container
-     * @phpstan-param RouterConfiguration $config
-     * @return mixed
      */
     public function register(ContainerInterface $container, array|null|object $config = null): array
     {
+        if (!($config instanceof RouterConfiguration)) {
+            throw new \LogicException(
+                sprintf(
+                    'Invalid configuration object passed to "%s"',
+                    self::class
+                )
+            );
+        }
+
         return [
             'router' => function () use ($config): Router {
                 return new Router(
