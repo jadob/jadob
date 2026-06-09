@@ -43,7 +43,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
      * @param Route $route
      * @return $this
      */
-    public function addRoute(Route $route)
+    public function addRoute(Route $route): self
     {
         $routeName = $route->name;
 
@@ -87,7 +87,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet($offset): Route
     {
         return $this->routes[$offset];
     }
