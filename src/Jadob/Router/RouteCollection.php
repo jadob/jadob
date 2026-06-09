@@ -243,7 +243,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
                     $nestedRouteCollection->setHost($routeArray['host']);
                 }
 
-                $routeCollection->addCollection($nestedRouteCollection);
+                $routeCollection->merge($nestedRouteCollection);
             } else {
                 if (!isset($routeArray['name'])) {
                     $routeArray['name'] = $routeName;
