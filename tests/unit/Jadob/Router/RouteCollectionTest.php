@@ -16,8 +16,8 @@ class RouteCollectionTest extends TestCase
         $collection = new RouteCollection('/nice', 'example.com');
         $collection->addRoute(new Route('test_route_1', '/route1', 'sample_handler'));
 
-        $this->assertEquals('/nice/route1', $collection['test_route_1']->getPath());
-        $this->assertEquals('example.com', $collection['test_route_1']->getHost());
+        self::assertEquals('/nice/route1', $collection['test_route_1']->getPath());
+        self::assertEquals('example.com', $collection['test_route_1']->getHost());
     }
 
 
@@ -33,9 +33,9 @@ class RouteCollectionTest extends TestCase
         $collection3->merge($collection2);
 
 
-        $this->assertEquals($collection3['route_1']->getPath(), '/r3/r2/r1/resource.html');
-        $this->assertSame($collection3, $collection2->getParentCollection());
-        $this->assertSame($collection2, $collection1->getParentCollection());
+        self::assertEquals('/r3/r2/r1/resource.html', $collection3['route_1']->getPath());
+        self::assertSame($collection3, $collection2->getParentCollection());
+        self::assertSame($collection2, $collection1->getParentCollection());
     }
 
     public function testCreatingRouteCollectionFromArray(): void
@@ -69,7 +69,7 @@ class RouteCollectionTest extends TestCase
 
         $routeCollection = RouteCollection::fromArray($routes);
 
-        $this->assertInstanceOf(Route::class, $routeCollection['my_example_path4']);
-        $this->assertEquals(4, $routeCollection->count());
+        self::assertInstanceOf(Route::class, $routeCollection['my_example_path4']);
+        self::assertEquals(4, $routeCollection->count());
     }
 }
