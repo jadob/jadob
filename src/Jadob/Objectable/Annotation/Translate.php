@@ -7,6 +7,7 @@ use Attribute;
 
 /**
  * Applies transformation to your output value.
+ * @deprecated
  */
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_PROPERTY)]
 class Translate

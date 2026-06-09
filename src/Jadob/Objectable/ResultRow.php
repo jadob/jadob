@@ -6,6 +6,7 @@ namespace Jadob\Objectable;
 use Jadob\Objectable\Annotation\ActionField;
 
 /**
+ * @deprecated
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */

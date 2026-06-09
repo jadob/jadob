@@ -2,6 +2,9 @@
 
 Reflection-based class normalizer. 
 
+> [!WARNING]
+> This component is deprecated and will be removed from the codebase soon. Switch to more reliable serializer (for example `symfony/serializer`).
+
 
 ## Usage
 ```php

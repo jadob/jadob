@@ -7,6 +7,7 @@ namespace Jadob\Objectable\Transformer;
 /**
  * Allows to handle specific use-cases, which may be hard to achieve by just using Field attributes.
  * @license MIT
+ * @deprecated
  */
 interface ItemTransformerInterface
 {

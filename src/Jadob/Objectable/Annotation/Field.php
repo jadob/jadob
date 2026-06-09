@@ -5,6 +5,9 @@ namespace Jadob\Objectable\Annotation;
 
 use Attribute;
 
+/**
+ * @deprecated
+ */
 #[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_PROPERTY)]
 class Field
 {

@@ -12,6 +12,9 @@ use Jadob\Objectable\Transformer\ItemTransformerInterface;
 use LogicException;
 use ReflectionClass;
 
+/**
+ * @deprecated
+ */
 class ItemProcessor
 {
     /**
