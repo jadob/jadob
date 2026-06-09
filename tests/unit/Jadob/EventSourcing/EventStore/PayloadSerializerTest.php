@@ -19,7 +19,7 @@ class PayloadSerializerTest extends TestCase
         $payload = ['foo' => 'bar', 'iron' => 'man'];
         $result = $serializer->serialize($payload);
 
-        $this->assertSame(json_decode($result, true), $payload);
+        self::assertSame(json_decode($result, true), $payload);
     }
 
     public function testDeserialization(): void
@@ -29,6 +29,6 @@ class PayloadSerializerTest extends TestCase
         $payload = ['foo' => 'bar', 'iron' => 'man'];
         $result = $serializer->deserialize('{"foo":"bar","iron":"man"}');
 
-        $this->assertSame($result, $payload);
+        self::assertSame($result, $payload);
     }
 }

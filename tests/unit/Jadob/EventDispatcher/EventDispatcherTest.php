@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class EventDispatcherTest extends TestCase
 {
-    public function testLowestPriorityListenersWouldBeInvokedFirst()
+    public function testLowestPriorityListenersWouldBeInvokedFirst(): void
     {
         $dispatcher = new EventDispatcher();
         $dispatcher->addListener(new GenericProvider());
@@ -20,6 +20,6 @@ class EventDispatcherTest extends TestCase
         /** @var GenericStoppableEvent $processedEvent */
         $processedEvent = $dispatcher->dispatch($event);
 
-        $this->assertEquals($processedEvent->getContent(), 'priority');
+        self::assertEquals('priority', $processedEvent->getContent());
     }
 }

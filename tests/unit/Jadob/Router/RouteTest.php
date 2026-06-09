@@ -17,7 +17,7 @@ class RouteTest extends TestCase
     {
         $collection = new RouteCollection();
         $collection->addRoute($route = new Route('example1', '/', 'handler_function'));
-        $this->assertSame($collection, $route->parentCollection);
+        self::assertSame($collection, $route->parentCollection);
     }
 
     public function testCreatingRouteFromArray(): void
@@ -31,7 +31,7 @@ class RouteTest extends TestCase
 
         $routeObject = Route::fromArray($route);
 
-        $this->assertEquals('/my/path/1', $routeObject->getPath());
+        self::assertEquals('/my/path/1', $routeObject->getPath());
     }
 
     public function testCreatingRouteFromArrayWillBreakIfNoNamePassed(): void

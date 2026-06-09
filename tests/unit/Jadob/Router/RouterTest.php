@@ -225,7 +225,7 @@ class RouterTest extends TestCase
     }
 
 
-    public function testFullUrlGenerationWithNoArgumentsDefinedInRouterContextWillCauseAMissingHostException()
+    public function testFullUrlGenerationWithNoArgumentsDefinedInRouterContextWillCauseAMissingHostException(): void
     {
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
@@ -241,7 +241,7 @@ class RouterTest extends TestCase
         $router->generateRoute('example', ['a' => 'b'], true);
     }
 
-    public function testFullUrlGenerationWithPortAndNonSecureDefinedInContext()
+    public function testFullUrlGenerationWithPortAndNonSecureDefinedInContext(): void
     {
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
@@ -262,7 +262,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testFullUrlGenerationWithPortAndSecureDefinedInContext()
+    public function testFullUrlGenerationWithPortAndSecureDefinedInContext(): void
     {
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
@@ -283,7 +283,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testFullUrlGenerationWithHttpsPortAndSecureDefinedInContext()
+    public function testFullUrlGenerationWithHttpsPortAndSecureDefinedInContext(): void
     {
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
@@ -304,7 +304,7 @@ class RouterTest extends TestCase
         );
     }
 
-    public function testFullUrlGenerationWithHttpPortAndNonSecureDefinedInContext()
+    public function testFullUrlGenerationWithHttpPortAndNonSecureDefinedInContext(): void
     {
         $routeCollection = new RouteCollection();
         $routeCollection->addRoute(new Route('example', '/a/{a}', [], null, ['POST']));
