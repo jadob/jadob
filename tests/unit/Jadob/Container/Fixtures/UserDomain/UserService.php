@@ -6,7 +6,7 @@ namespace Jadob\Container\Fixtures\UserDomain;
 class UserService
 {
     public function __construct(
-        /** @phpstan-ignore property.onlyWritten */
+        /** @phpstan-ignore property.onlyWritten (FIXTURE) */
         private readonly UserRepositoryInterface $userRepository,
     ) {
     }
