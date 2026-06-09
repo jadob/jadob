@@ -22,16 +22,6 @@ use function reset;
 class RouteCollection implements ArrayAccess, Iterator, Countable
 {
     /**
-     * @var string|null
-     */
-    protected $host;
-
-    /**
-     * @var string|null
-     */
-    protected $prefix;
-
-    /**
      * @var Route[]
      */
     protected $routes = [];
@@ -44,10 +34,8 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
      * @param string|null $prefix
      * @param string|null $host
      */
-    public function __construct(?string $prefix = null, ?string $host = null)
+    public function __construct(private ?string $prefix = null, private ?string $host = null)
     {
-        $this->prefix = $prefix;
-        $this->host = $host;
     }
 
     /**
