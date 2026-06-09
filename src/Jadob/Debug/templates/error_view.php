@@ -1,9 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 use Jadob\Core\Kernel;
 
-/**
- * @var $exception Exception 
-*/?><!DOCTYPE html>
+/** @var $exception Exception */
+
+?><!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
