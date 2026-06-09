@@ -18,6 +18,7 @@ use function reset;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  * @template-implements ArrayAccess<non-empty-string, Route>
+ * @template-implements Iterator<non-empty-string, Route>
  */
 class RouteCollection implements ArrayAccess, Iterator, Countable
 {
