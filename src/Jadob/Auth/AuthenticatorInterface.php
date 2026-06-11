@@ -5,6 +5,7 @@ namespace Jadob\Auth;
 
 use Jadob\Auth\AccessToken\AccessToken;
 use Jadob\Auth\Identity\IdentityInterface;
+use Jadob\Contracts\Auth\AuthenticationException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,5 +24,5 @@ interface AuthenticatorInterface
 
     public function onAuthenticationSuccess(Request $request, IdentityInterface $identity): ?Response;
 
-    public function onAuthenticationFailure(Request $request, IdentityInterface $identity): ?Response;
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response;
 }
