@@ -14,7 +14,7 @@ interface IdentityPickerInterface
     /**
      * @param Request $request
      * @param array<AccessToken> $accessTokens
-     * @return AccessToken
+     * @return AccessToken|null AccessToken if found, null if not
      */
-    public function pick(Request $request, array $accessTokens): AccessToken;
+    public function pick(Request $request, array $accessTokens): ?AccessToken;
 }
