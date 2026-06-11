@@ -20,8 +20,19 @@ interface AuthenticatorInterface
      */
     public function supports(Request $request): bool;
 
+    /**
+     * Performs the actual authentication job.
+     * @param Request $request
+     * @return AccessToken
+     */
     public function authenticate(Request $request): AccessToken;
 
+    /**
+     * Called when authenticate() will succeed and authenticated identity will be fetched from storage.
+     * @param Request $request
+     * @param IdentityInterface $identity
+     * @return Response|null
+     */
     public function onAuthenticationSuccess(Request $request, IdentityInterface $identity): ?Response;
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response;
