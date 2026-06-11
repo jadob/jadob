@@ -463,6 +463,15 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             $providerConfig = null;
             $requestedConfigNode = $serviceProvider->getConfigNode();
             if ($requestedConfigNode) {
+                if(!isset($config[$requestedConfigNode])) {
+                    throw new ContainerLogicException(
+                        sprintf(
+                            'Service provider "%s" requested for configuration node "%s", which was not found.',
+                            $serviceProviderFqcn,
+                            $requestedConfigNode
+                        )
+                    );
+                }
                 /** @var array|object $providerConfig */
                 $providerConfig = $config[$requestedConfigNode];
 

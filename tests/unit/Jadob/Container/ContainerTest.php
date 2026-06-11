@@ -9,6 +9,7 @@ use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Container\Fixtures\FastFoodRestaurantInterface;
 use Jadob\Container\Fixtures\FoodTruck;
 use Jadob\Container\Fixtures\KebabShop;
+use Jadob\Container\Fixtures\ServiceProviders\NonExistingConfigNodeServiceProvider;
 use Jadob\Container\Fixtures\ShopDomain\DbProductRepository;
 use Jadob\Container\Fixtures\ShopDomain\ProductRepositoryInterface;
 use Jadob\Container\Fixtures\ShopDomain\ProductService;
@@ -210,5 +211,16 @@ class ContainerTest extends TestCase
         });
 
         self::assertTrue($container->has(FastFoodRestaurantInterface::class));
+    }
+
+    public function testResolvingProviderWithNonExistingConfigNode(): void
+    {
+        $container = new Container();
+
+        $container->registerServiceProvider(new NonExistingConfigNodeServiceProvider());
+
+        $this->expectException(ContainerLogicException::class);
+        $this->expectExceptionMessage('Service provider "Jadob\Container\Fixtures\ServiceProviders\NonExistingConfigNodeServiceProvider" requested for configuration node "yeti", which was not found.');
+        $container->resolveServiceProviders([]);
     }
 }
