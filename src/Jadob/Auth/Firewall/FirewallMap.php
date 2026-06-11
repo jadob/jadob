@@ -21,7 +21,7 @@ final readonly class FirewallMap implements FirewallMapInterface
     {
         return array_find(
             $this->firewalls,
-            fn(Firewall $firewall) => $firewall->supports($request)
+            fn(FirewallInterface $firewall) => $firewall->supports($request)
         );
     }
 }

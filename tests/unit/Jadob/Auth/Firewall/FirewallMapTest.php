@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FirewallMapTest extends TestCase
 {
-    public function testFirewallMapWouldReturnNullOnNoFirewallPresent()
+    public function testFirewallMapWouldReturnNullOnNoFirewallPresent():  void
     {
         $map = new FirewallMap();
 
@@ -16,9 +16,9 @@ class FirewallMapTest extends TestCase
     }
 
 
-    public function testNegativeResponseFromRequestMatchedWouldCauseMatchToNotReturnFirewall()
+    public function testNegativeResponseFromRequestMatchedWouldCauseMatchToNotReturnFirewall(): void
     {
-        $firewall = $this->createMock(Firewall::class);
+        $firewall = $this->createMock(FirewallInterface::class);
         $firewall->expects(self::once())->method('supports')->willReturn(false);
 
         $map = new FirewallMap(
