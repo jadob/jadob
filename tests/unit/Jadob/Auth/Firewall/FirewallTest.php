@@ -22,7 +22,7 @@ class FirewallTest extends TestCase
             name: 'test_firewall',
             requestMatcher: $this->requestMatcher,
             authenticators: [],
-            identityProvider: $this->createStub(IdentityProviderInterface::class),
+            identityProvider: self::createStub(IdentityProviderInterface::class),
         );
     }
 
@@ -37,7 +37,7 @@ class FirewallTest extends TestCase
     /**
      * @throws FirewallLogicException
      */
-    public function testEnablingIdentityStackingWillCauseAnExceptionOnStatelessFirewalls()
+    public function testEnablingIdentityStackingWillCauseAnExceptionOnStatelessFirewalls(): void
     {
         $this->expectException(FirewallLogicException::class);
         $this->expectExceptionMessage('Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for firewall test_firewall or make it stateful.');
@@ -46,7 +46,7 @@ class FirewallTest extends TestCase
             name: 'test_firewall',
             requestMatcher: $this->requestMatcher,
             authenticators: [],
-            identityProvider: $this->createStub(IdentityProviderInterface::class),
+            identityProvider: self::createStub(IdentityProviderInterface::class),
             stateless: true,
             identityStackingEnabled: true,
         );
