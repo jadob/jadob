@@ -144,8 +144,18 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
                     $event->setResponse(
                         $response,
                     );
+
+                    return;
                 }
             }
+        }
+
+        if($firewall->getEntryPoint() !== null) {
+            $event->setResponse(
+                $firewall
+                    ->getEntryPoint()
+                    ->commence($request)
+            );
         }
     }
 
