@@ -22,6 +22,7 @@ interface AuthenticatorInterface
 
     /**
      * Performs the actual authentication job.
+     * @throws AuthenticationException when something goes bad.
      * @param Request $request
      * @return AccessToken
      */
