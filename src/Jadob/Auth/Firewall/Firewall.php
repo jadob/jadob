@@ -79,7 +79,7 @@ class Firewall implements FirewallInterface
         return $this->authenticators;
     }
 
-    public function getEntryPoint(): EntryPointInterface
+    public function getEntryPoint(): ?EntryPointInterface
     {
         return $this->entryPoint;
     }

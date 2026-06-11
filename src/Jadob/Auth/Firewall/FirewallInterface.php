@@ -26,5 +26,5 @@ interface FirewallInterface
      */
     public function getAuthenticators(): array;
 
-    public function getEntryPoint(): EntryPointInterface;
+    public function getEntryPoint(): ?EntryPointInterface;
 }
