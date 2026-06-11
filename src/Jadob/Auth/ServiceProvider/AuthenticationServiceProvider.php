@@ -71,6 +71,11 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                         $firewallConfig->getAuthenticators()
                     );
 
+                    $identityPicker = null;
+                    if($firewallConfig->identityPickerServiceId !== null) {
+                        $identityPicker = $container->get($firewallConfig->identityPickerServiceId);
+                    }
+
                     $firewalls[$name] = new Firewall(
                         name: $name,
                         requestMatcher: $container->get($requestMatcherServiceId),
@@ -79,7 +84,7 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                         entryPoint: $container->get($entryPointServiceId),
                         stateless: $firewallConfig->isStateless(),
                         identityStackingEnabled: $firewallConfig->isIdentityStackingEnabled(),
-                        identityPicker: $container->get($firewallConfig->identityPickerServiceId),
+                        identityPicker: $identityPicker,
                     );
                 }
                 return new FirewallMap($firewalls);

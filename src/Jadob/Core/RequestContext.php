@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Jadob\Auth\AccessToken\AccessToken;
 use Jadob\Auth\Identity\IdentityInterface;
-use Jadob\Contracts\Auth\AccessToken;
 use Jadob\Router\Route;
-use Jadob\Security\Auth\User\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -18,11 +17,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class RequestContext
 {
     protected Route $route;
-    /**
-     * @deprecated
-     * @var UserInterface|null
-     */
-    protected ?UserInterface $user = null;
+
     protected(set) ?AccessToken $accessToken = null;
     protected(set) ?IdentityInterface $identity = null;
 
@@ -57,7 +52,6 @@ class RequestContext
         return $this->request;
     }
 
-
     /**
      * @return Route
      */
@@ -84,26 +78,6 @@ class RequestContext
         return $this;
     }
 
-    /**
-     * @return UserInterface|null
-     * @deprecated
-     */
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param UserInterface|null $user
-     * @return RequestContext
-     * @deprecated
-     */
-    public function setUser(?UserInterface $user): RequestContext
-    {
-        $this->user = $user;
-        return $this;
-    }
-
     public function setAccessToken(
         AccessToken $accessToken
     ): self {
@@ -114,5 +88,13 @@ class RequestContext
     public function setIdentity(?IdentityInterface $identity): void
     {
         $this->identity = $identity;
+    }
+
+    /**
+     * @return IdentityInterface|null
+     */
+    public function getIdentity(): ?IdentityInterface
+    {
+        return $this->identity;
     }
 }

@@ -3,20 +3,23 @@ declare(strict_types=1);
 
 namespace Jadob\Auth\EventListener;
 
-use Jadob\Auth\AccessToken\AccessTokenStorage;
-use Jadob\Auth\Firewall\FirewallMap;
+use Jadob\Auth\AccessToken\AccessToken;
+use Jadob\Auth\AccessToken\AccessTokenStorageInterface;
+use Jadob\Auth\Firewall\Firewall;
+use Jadob\Auth\Firewall\FirewallMapInterface;
+use Jadob\Contracts\Auth\AuthenticationException;
 use Jadob\Core\Event\RequestEvent;
 use Jadob\EventDispatcher\ListenerProviderPriorityInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationEventListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(
-        private FirewallMap        $firewallMap,
-        private ?LoggerInterface   $logger = null,
-        private AccessTokenStorage $accessTokenStorage,
-
+        private FirewallMapInterface $firewallMap,
+        private ?LoggerInterface $logger,
+        private AccessTokenStorageInterface $accessTokenStorage,
     ) {
     }
 
@@ -33,7 +36,7 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
 
     public function getListenerPriorityForEvent(object $event): int
     {
-        // TODO: Implement getListenerPriorityForEvent() method.
+        return 50;
     }
 
     public function handleAuthentication(RequestEvent $event): void
@@ -51,28 +54,26 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
             return;
         }
 
-        foreach ($firewall->authenticators as $authenticator) {
-            if (!$authenticator->supports($request)) {
-                continue;
-            }
+        $stateless = $firewall->isStateless();
+        $identityStackingEnabled = $firewall->isIdentityStackingEnabled();
 
-            $token = $authenticator->authenticate($request);
-            $this
+        /** @var null|AccessToken $currentToken */
+        $currentToken = null;
+        if ($stateless === false && $identityStackingEnabled) {
+            $currentToken = $this->findStackedToken($firewall, $request);
+        }
+
+        if ($stateless === false && $identityStackingEnabled === false) {
+            $currentToken = $this
                 ->accessTokenStorage
-                ->storeAsCurrent($token);
+                ->fetchCurrentFromSession($request->getSession());
+        }
 
-            if ($firewall->stateless === false) {
-                $this
-                    ->accessTokenStorage
-                    ->saveToSession(
-                        $request->getSession()
-                    );
-            }
-
+        if ($currentToken !== null) {
             $currentIdentity = $firewall
-                ->identityProvider
+                ->getIdentityProvider()
                 ->getByIdentifier(
-                    $token->identityId
+                    $currentToken->identityId
                 );
 
             $event
@@ -81,12 +82,90 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
                     $currentIdentity
                 );
 
-            $authenticator->onAuthenticationSuccess(
-                $request,
-                $currentIdentity,
-            );
-
-
+            return;
         }
+
+
+
+        foreach ($firewall->getAuthenticators() as $authenticator) {
+            if (!$authenticator->supports($request)) {
+                $this
+                    ->logger
+                    ?->debug(
+                        sprintf(
+                            'Authenticator "%s" does not support this request.',
+                            get_class($authenticator)
+                        )
+                    );
+                continue;
+            }
+
+            try {
+                $token = $authenticator->authenticate($request);
+
+                if ($stateless === false) {
+                    $this
+                        ->accessTokenStorage
+                        ->saveToSession(
+                            $request->getSession(),
+                            $token
+                        );
+                }
+
+                $currentIdentity = $firewall
+                    ->getIdentityProvider()
+                    ->getByIdentifier(
+                        $token->identityId
+                    );
+
+                $event
+                    ->requestContext
+                    ->setIdentity(
+                        $currentIdentity
+                    );
+
+                $event
+                    ->requestContext
+                    ->setAccessToken(
+                        $token
+                    );
+
+                $authenticator->onAuthenticationSuccess(
+                    $request,
+                    $currentIdentity,
+                );
+            } catch (AuthenticationException $exception) {
+                $response = $authenticator->onAuthenticationFailure(
+                    $request,
+                    $exception
+                );
+
+                if($response !== null) {
+                    $event->setResponse(
+                        $response,
+                    );
+                }
+            }
+        }
+    }
+
+    private function findStackedToken(
+        Firewall $firewall,
+        Request $request,
+    ): ?AccessToken {
+        $accessTokens = $this
+            ->accessTokenStorage
+            ->getAllTokens($request->getSession());
+
+        if (count($accessTokens) === 0) {
+            return null;
+        }
+
+        return $firewall
+            ->getIdentityPicker()
+            ->pick(
+                $request,
+                $accessTokens,
+            );
     }
 }
