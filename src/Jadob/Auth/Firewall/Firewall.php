@@ -10,7 +10,7 @@ use Jadob\Auth\Identity\IdentityProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
-class Firewall
+class Firewall implements FirewallInterface
 {
     /**
      * @param string $name
@@ -22,19 +22,21 @@ class Firewall
      * @throws FirewallLogicException
      */
     public function __construct(
-        private(set) string                    $name,
-        private(set) RequestMatcherInterface   $requestMatcher,
-        private(set) array                     $authenticators,
-        private(set) IdentityProviderInterface $identityProvider,
-        private(set) ?EntryPointInterface      $entryPoint = null,
-        private(set) bool                      $stateless = false,
-        private(set) bool                      $identityStackingEnabled = false,
-        private(set) ?IdentityPickerInterface  $identityPicker = null
-    ) {
+        private string                    $name,
+        private RequestMatcherInterface   $requestMatcher,
+        private array                     $authenticators,
+        private IdentityProviderInterface $identityProvider,
+        private ?EntryPointInterface      $entryPoint = null,
+        private bool                      $stateless = false,
+        private bool                      $identityStackingEnabled = false,
+        private ?IdentityPickerInterface  $identityPicker = null
+    )
+    {
         if ($this->stateless && $this->identityStackingEnabled) {
             throw new FirewallLogicException(
                 sprintf(
-                    'Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for firewall %s or make it stateful.', $this->name,
+                    'Identity stacking is not available for stateless firewalls. Set identityStackingEnabled to false for firewall %s or make it stateful.',
+                    $this->name,
                 )
             );
         }
@@ -50,5 +52,35 @@ class Firewall
         return $this
             ->requestMatcher
             ->matches($request);
+    }
+
+    public function isStateless(): bool
+    {
+        return $this->stateless;
+    }
+
+    public function isIdentityStackingEnabled(): bool
+    {
+        return $this->identityStackingEnabled;
+    }
+
+    public function getIdentityProvider(): IdentityProviderInterface
+    {
+        return $this->identityProvider;
+    }
+
+    public function getIdentityPicker(): IdentityPickerInterface
+    {
+        return $this->identityPicker;
+    }
+
+    public function getAuthenticators(): array
+    {
+        return $this->authenticators;
+    }
+
+    public function getEntryPoint(): EntryPointInterface
+    {
+        return $this->entryPoint;
     }
 }

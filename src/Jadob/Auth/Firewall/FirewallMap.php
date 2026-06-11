@@ -6,7 +6,7 @@ namespace Jadob\Auth\Firewall;
 use Symfony\Component\HttpFoundation\Request;
 use function array_find;
 
-final readonly class FirewallMap
+final readonly class FirewallMap implements FirewallMapInterface
 {
     /**
      * @param array<Firewall> $firewalls
@@ -17,7 +17,7 @@ final readonly class FirewallMap
     }
 
 
-    public function match(Request $request): ?Firewall
+    public function match(Request $request): ?FirewallInterface
     {
         return array_find(
             $this->firewalls,
