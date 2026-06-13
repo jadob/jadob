@@ -1,9 +1,0 @@
-{
-  "name": "jadob/event-store",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "Jadob\\EventStore\\": ""
-    }
-  }
-}
