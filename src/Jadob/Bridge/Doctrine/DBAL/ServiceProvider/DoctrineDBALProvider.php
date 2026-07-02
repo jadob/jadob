@@ -113,7 +113,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
 
 
             $managerRegistry->addConnection(
-                $serviceName,
+                $connectionName,
                 $connection
             );
 
