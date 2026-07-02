@@ -1,4 +1,23 @@
-# `jadob/container` overview
+The base `Container` is strict: it never reflects on arbitrary classes or autowires constructors by itself. Autowiring 
+can be enabled by wrapping the container instance with `AutowiringContainer`, and configuring namespaces (or its prefixes)
+allowed to be autowired:
+
+```php
+
+$container = new \Jadob\Container\Container();
+// Add services, providers, here.
+// At this point if some unrecognized service will be requested, container will throw an exception.
+
+$container = new \Jadob\Container\AutowiringContainer(
+    inner: $container,
+    autowirableNamespacePrefixes: [
+        'App\\Infrastructure',
+        'App\\Ui'
+    ]
+);
+
+// Every class within these two namespaces can be now autowired, no need for explicit definition.
+```
 
 ## Getting started
 
