@@ -104,38 +104,22 @@ class ContainerTest extends TestCase
         $container->get('half-life3');
     }
 
-
-    public function testAutowiringWillFailWhenThereAreMissingDependencies(): void
+    public function testClassOnlyDefinitionThrowsWhenResolvedByBaseContainer(): void
     {
-        $container = Container::fromArrayConfiguration([
-            'services' => [
-                ProductService::class => []
-            ]
+        $container = new Container();
+        $container->add(KebabShop::class, [
+            'class' => KebabShop::class,
         ]);
 
         $this->expectException(ContainerLogicException::class);
         $this->expectExceptionMessage(
             sprintf(
-                'Unable to autowire service "Jadob\Container\Fixtures\ShopDomain\ProductService" (Resolving chain: %s -> %s)',
-                ProductService::class,
-                ProductRepositoryInterface::class
+                'Service "%s" has no factory; register an explicit factory or use AutowiringContainer.',
+                KebabShop::class
             )
         );
-        $container->get(ProductService::class);
+        $container->get(KebabShop::class);
     }
-
-    public function testAutowiringWillSuccessWhenThereAreRequiredDependenciesRegistered(): void
-    {
-        $container = Container::fromArrayConfiguration([
-            'services' => [
-                ProductService::class => [],
-                DbProductRepository::class => new DbProductRepository()
-            ]
-        ]);
-
-        self::assertInstanceOf(ProductService::class, $container->get(ProductService::class));
-    }
-
 
     /**
      * @throws ContainerExceptionInterface
@@ -146,19 +130,6 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $container->add(KebabShop::class, static fn() => new KebabShop());
-
-        self::assertInstanceOf(
-            KebabShop::class,
-            $container->get(KebabShop::class)
-        );
-    }
-
-    public function testAddingServiceWithArrayDefinitionWithJustClassDefined(): void
-    {
-        $container = new Container();
-        $container->add(KebabShop::class, [
-            'class' => KebabShop::class
-        ]);
 
         self::assertInstanceOf(
             KebabShop::class,
@@ -242,9 +213,7 @@ class ContainerTest extends TestCase
     public function testAccessingSharedFactoryServiceViaInterfaceAndConcreteClassReturnsSameInstance(): void
     {
         $container = new Container();
-        $container->add(FastFoodRestaurantInterface::class, [
-            'class' => KebabShop::class,
-        ]);
+        $container->add(KebabShop::class, static fn(): KebabShop => new KebabShop());
 
         self::assertSame(
             $container->get(FastFoodRestaurantInterface::class),

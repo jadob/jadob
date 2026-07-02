@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\Extension;
 
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
+use Jadob\Contracts\DependencyInjection\ExtendedContainerInterface;
 use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 
 class EventDispatcherExtension implements ContainerExtensionInterface
 {
-    public function onContainerBuild(Container $container): void
+    public function onContainerBuild(ExtendedContainerInterface $container): void
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $container->get(EventDispatcherInterface::class);

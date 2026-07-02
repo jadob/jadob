@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Container\Extension;
 
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
+use Jadob\Contracts\DependencyInjection\ExtendedContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
@@ -19,7 +19,7 @@ class TwigExtension implements ContainerExtensionInterface
      * @throws ReflectionException
      * @throws NotFoundExceptionInterface
      */
-    public function onContainerBuild(Container $container): void
+    public function onContainerBuild(ExtendedContainerInterface $container): void
     {
         $twig = $container->get(Environment::class);
         $extensions = $container->getTaggedServices('twig.extension');

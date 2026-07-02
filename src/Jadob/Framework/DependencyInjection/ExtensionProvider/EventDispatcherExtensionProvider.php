@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 
 class EventDispatcherExtensionProvider implements ContainerExtensionProviderInterface
 {
-    public function getAutowiringExtensions(
+    public function getConstructorInjectionExtensions(
         ContainerInterface $container
     ): array {
         return [];

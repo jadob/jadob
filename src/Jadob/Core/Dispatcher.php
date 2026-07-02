@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Core;
 
 use Exception;
-use Jadob\Container\Container;
-use Jadob\Container\Exception\AutowiringException;
+use Jadob\Container\AutowiringContainer;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Event\AfterControllerEvent;
 use Jadob\Core\Event\RequestEvent;
@@ -15,10 +14,8 @@ use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
 use Jadob\Security\Auth\User\UserInterface;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -38,7 +35,7 @@ use function method_exists;
  */
 class Dispatcher
 {
-    protected Container $container;
+    protected AutowiringContainer $container;
 
 
     protected EventDispatcherInterface $eventDispatcher;
@@ -46,7 +43,7 @@ class Dispatcher
     protected LoggerInterface $logger;
 
     public function __construct(
-        Container                $container,
+        AutowiringContainer        $container,
         LoggerInterface          $logger,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -58,7 +55,6 @@ class Dispatcher
     /**
      * @param RequestContext $context
      * @return Response
-     * @throws AutowiringException
      * @throws KernelException
      * @throws MethodNotAllowedException
      * @throws ReflectionException
@@ -104,7 +100,7 @@ class Dispatcher
             throw KernelException::invalidControllerPassed($matchedRoute->name);
         }
 
-        $autowiredController = $this->autowireControllerClass($controllerClass);
+        $autowiredController = $this->container->get($controllerClass);
         //@TODO: refactor method name resolving
         if (method_exists($autowiredController, '__invoke')) {
             $methodName = '__invoke';
@@ -152,66 +148,6 @@ class Dispatcher
     }
 
     /**
-     * @psalm-param class-string $controllerClassName
-     * @param string $controllerClassName
-     * @throws AutowiringException
-     * @throws KernelException
-     * @throws ReflectionException
-     * @throws ServiceNotFoundException
-     */
-    protected function autowireControllerClass(string $controllerClassName): object
-    {
-        $autowireEnabled = true;
-
-        $reflection = new ReflectionClass($controllerClassName);
-        $classConstructor = $reflection->getConstructor();
-
-        /**
-         * TODO: use container autowiring to create controller class
-         */
-        if ($classConstructor === null) {
-            /** @psalm-suppress MixedMethodCall */
-            return new $controllerClassName();
-        }
-
-        /**
-         * TODO: move into separate class
-         */
-        $arguments = [];
-        foreach ($classConstructor->getParameters() as $parameter) {
-            if (!$parameter->hasType()) {
-                throw new KernelException('Argument "' . $parameter->getName() . '" defined in ' . $controllerClassName . ' does not have any type.');
-            }
-
-            /** @var ReflectionNamedType $parameterType */
-            $parameterType = $parameter->getType();
-            $type = $parameterType->getName();
-
-            if ($type === ContainerInterface::class) {
-                $arguments[] = $this->container;
-                continue;
-            }
-
-            $objectByFqcn = $this->container->get($type);
-            if ($objectByFqcn !== null) {
-                $arguments[] = $objectByFqcn;
-                continue;
-            }
-
-
-            throw new KernelException(
-                sprintf(
-                    'Unable to autowire controller "%s" because service "%s" is not found in container and cannot be autowired.',
-                    $controllerClassName,
-                    $type,
-                )
-            );
-        }
-
-        return new $controllerClassName(...$arguments);
-    }
-
-    /**
      * Allows for inject container services directly to method.
      *
      * @param object $controllerClass instantiated controller class
@@ -219,7 +155,6 @@ class Dispatcher
      * @param array $routerParams arguments resolved from route
      * @param RequestContext $context
      * @return array
-     * @throws AutowiringException
      * @throws ReflectionException
      * @throws ServiceNotFoundException
      * @throws \Jadob\Container\Exception\ContainerException
@@ -230,7 +165,6 @@ class Dispatcher
         array $routerParams,
         RequestContext $context
     ): array {
-        $autowireEnabled = true;
         $methodReflection = new ReflectionMethod($controllerClass, $methodName);
 
         $methodParameters = $methodReflection->getParameters();
@@ -268,23 +202,9 @@ class Dispatcher
                 }
 
                 /**
-                 * When still here, try to get a service from container or autowire them
+                 * When still here, try to get a service from container
                  */
-                $service = $this->container->get($class);
-
-                if ($service !== null) {
-                    $output[$parameterName] = $service;
-                    continue;
-                }
-
-                if ($autowireEnabled) {
-                    $output[$parameterName] = $this->container->autowire($class);
-                    continue;
-                }
-
-                /**
-                 * Exit current iteration as requested dependency has been found
-                 */
+                $output[$parameterName] = $this->container->get($class);
                 continue;
             }
 

@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use Jadob\Container\Fixtures\KebabShop;
+use Jadob\Container\Fixtures\ShopDomain\DbProductRepository;
+use Jadob\Container\Fixtures\ShopDomain\ProductRepositoryInterface;
 use Jadob\Container\Fixtures\ShopDomain\ProductService;
 use Jadob\Container\Fixtures\UserDomain\DbUserRepository;
 use Jadob\Container\Fixtures\UserDomain\UserBirthdayService;
@@ -52,20 +54,22 @@ return [
             return new DbUserRepository();
         },
 
+        ProductRepositoryInterface::class => static function (): DbProductRepository {
+            return new DbProductRepository();
+        },
+
         /**
          * You can use arrays to add service definition
          */
-        'user_notification_service' => [
-            'class' => UserNotificationService::class,
-            'autowire' => true,
-        ],
+        'user_notification_service' => static function (): UserNotificationService {
+            return new UserNotificationService();
+        },
 
-        /**
-         * Same as above, but class name is a service id.
-         */
-        ProductService::class => [
-            'autowire' => true,
-        ],
+        ProductService::class => static function (
+            ProductRepositoryInterface $productRepository
+        ): ProductService {
+            return new ProductService($productRepository);
+        },
 
     ],
     'parameters' => [

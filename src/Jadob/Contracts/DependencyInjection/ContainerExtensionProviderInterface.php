@@ -9,10 +9,9 @@ use Psr\Container\ContainerInterface;
 interface ContainerExtensionProviderInterface
 {
     /**
-     * @param ContainerInterface $container
-     * @return list<ContainerAutowiringExtensionInterface>
+     * @return list<ConstructorInjectionExtensionInterface>
      */
-    public function getAutowiringExtensions(
+    public function getConstructorInjectionExtensions(
         ContainerInterface $container
     ): array;
 

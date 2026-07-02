@@ -15,7 +15,7 @@ class FrameworkContainerExtensionProvider implements ContainerExtensionProviderI
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getAutowiringExtensions(ContainerInterface $container): array
+    public function getConstructorInjectionExtensions(ContainerInterface $container): array
     {
         return [
             $container->get(InjectLoggerAutowireExtension::class)

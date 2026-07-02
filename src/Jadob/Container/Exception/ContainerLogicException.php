@@ -18,4 +18,14 @@ class ContainerLogicException extends LogicException implements ContainerExcepti
             )
         );
     }
+
+    public static function missingFactory(string $id): self
+    {
+        return new self(
+            sprintf(
+                'Service "%s" has no factory; register an explicit factory or use AutowiringContainer.',
+                $id
+            )
+        );
+    }
 }

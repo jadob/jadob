@@ -48,4 +48,9 @@ class WrappedBootstrap implements BootstrapInterface
     {
         return $this->parent->getDefaultLogStream($env);
     }
+
+    public function getModules(): array
+    {
+        return $this->parent->getModules();
+    }
 }

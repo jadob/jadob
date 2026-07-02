@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 
 class TwigExtensionProvider implements ContainerExtensionProviderInterface
 {
-    public function getAutowiringExtensions(ContainerInterface $container): array
+    public function getConstructorInjectionExtensions(ContainerInterface $container): array
     {
         return [];
     }

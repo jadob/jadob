@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 
 class ConsoleExtensionProvider implements ContainerExtensionProviderInterface
 {
-    public function getAutowiringExtensions(
+    public function getConstructorInjectionExtensions(
         ContainerInterface $container
     ): array {
         return [];

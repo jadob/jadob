@@ -33,7 +33,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $services['jadob.framework.logger_extension'] = static function (LoggerFactory $loggerFactory): InjectLoggerAutowireExtension {
+        $services[InjectLoggerAutowireExtension::class] = static function (LoggerFactory $loggerFactory): InjectLoggerAutowireExtension {
             return new InjectLoggerAutowireExtension(
                 $loggerFactory
             );

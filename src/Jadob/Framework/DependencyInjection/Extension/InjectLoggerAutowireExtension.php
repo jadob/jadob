@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\DependencyInjection\Extension;
 
-use Jadob\Contracts\DependencyInjection\ContainerAutowiringExtensionInterface;
+use Jadob\Contracts\DependencyInjection\ConstructorInjectionExtensionInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Psr\Log\LoggerInterface;
 
-class InjectLoggerAutowireExtension implements ContainerAutowiringExtensionInterface
+class InjectLoggerAutowireExtension implements ConstructorInjectionExtensionInterface
 {
     public function __construct(
         private LoggerFactory $loggerFactory,
