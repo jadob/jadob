@@ -16,9 +16,9 @@ use Twig\TwigFunction;
 class DebugExtension extends AbstractExtension
 {
     /**
-     * @return array
+     * @return array<TwigFunction>
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('r', [$this, 'debug'], ['is_safe' => ['html'],]),
