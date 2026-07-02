@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Framework;
 
 use Jadob\Config\Config;
+use Jadob\Container\AutowiringContainer;
 use Jadob\Container\Container;
 use Jadob\Container\ParameterStore;
 use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -32,7 +33,7 @@ readonly class Application
 {
     private ExceptionHandler $exceptionHandler;
     private ExceptionListenerInterface $fallbackExceptionListener;
-    private Container $container;
+    private AutowiringContainer $container;
     private RequestContextStore $requestContextStore;
 
     public function __construct(
@@ -117,23 +118,33 @@ readonly class Application
             $container->add($coreServiceId, $coreService);
         }
 
-        $container->build($config->toArray());
-        $container->add(LoggerInterface::class, $container->get(LoggerFactory::class)->getDefaultLogger());
-        /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $container->get(EventDispatcherInterface::class);
+        $autowiringConfig = $config->hasNode('autowiring') ? $config->getNode('autowiring') : [];
+        /** @var list<string> $autowirableNamespaces */
+        $autowirableNamespaces = $autowiringConfig['namespaces'] ?? ['Jadob\\'];
+
+        $autowiringContainer = new AutowiringContainer($container, [], $autowirableNamespaces);
+        $container->build($config->toArray(), $autowiringContainer);
+
+        $injectionExtensions = [];
         foreach ($modules as $module) {
             foreach ($module->getContainerExtensionProviders($this->env) as $containerExtensionProvider) {
-                foreach ($containerExtensionProvider->getAutowiringExtensions($container) as $extension) {
-                    $container->addAutowiringExtension($extension);
+                foreach ($containerExtensionProvider->getConstructorInjectionExtensions($autowiringContainer) as $extension) {
+                    $injectionExtensions[] = $extension;
                 }
             }
+        }
+        $autowiringContainer->setInjectionExtensions($injectionExtensions);
 
-            foreach ($module->getEventListeners($container, $this->env) as $listener) {
+        $container->add(LoggerInterface::class, $container->get(LoggerFactory::class)->getDefaultLogger());
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $autowiringContainer->get(EventDispatcherInterface::class);
+        foreach ($modules as $module) {
+            foreach ($module->getEventListeners($autowiringContainer, $this->env) as $listener) {
                 $eventDispatcher->addListener($listener);
             }
         }
 
-        $this->container = $container;
+        $this->container = $autowiringContainer;
 
         if ($this->fallbackExceptionListener instanceof LoggerAwareInterface) {
             $this->fallbackExceptionListener
@@ -143,7 +154,10 @@ readonly class Application
         }
     }
 
-    public function handleWebRequest(Request $request): Response
+    public function handleWebRequest(
+        Request $request,
+        ?string $requestId = null,
+    ): Response
     {
         try {
             $this->build();

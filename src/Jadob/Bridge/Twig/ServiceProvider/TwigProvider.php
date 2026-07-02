@@ -125,7 +125,9 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
 
         $services[DebugExtension::class] = [
             'tags' => ['twig.extension'],
-            'class' => DebugExtension::class
+            'factory' => static function (): DebugExtension {
+                return new DebugExtension();
+            }
         ];
 
         $services[AliasedAssetPathExtension::class] = [

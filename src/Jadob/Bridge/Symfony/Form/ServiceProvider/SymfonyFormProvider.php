@@ -74,6 +74,9 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProv
 
         $services[FormExtension::class] = [
             'tags' => ['twig.extension'],
+            'factory' => static function (): FormExtension {
+                return new FormExtension();
+            }
         ];
 
         $services[TwigRendererEngine::class] = [
