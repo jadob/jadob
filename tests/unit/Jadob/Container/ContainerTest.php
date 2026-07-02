@@ -6,9 +6,12 @@ namespace Jadob\Container;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Container\Exception\ServiceNotFoundException;
+use Jadob\Container\Fixtures\ConnectionRegistryInterface;
+use Jadob\Container\Fixtures\DoctrineLikeRegistry;
 use Jadob\Container\Fixtures\FastFoodRestaurantInterface;
 use Jadob\Container\Fixtures\FoodTruck;
 use Jadob\Container\Fixtures\KebabShop;
+use Jadob\Container\Fixtures\ManagerRegistryInterface;
 use Jadob\Container\Fixtures\ServiceProviders\NonExistingConfigNodeServiceProvider;
 use Jadob\Container\Fixtures\ShopDomain\DbProductRepository;
 use Jadob\Container\Fixtures\ShopDomain\ProductRepositoryInterface;
@@ -23,7 +26,6 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  *
  * @TODO: Things to test (and fix):
- * - ConnectionRegistry and ManagerRegistry
  * - PSR event dispatcher and contracts/event dispatcher
  */
 class ContainerTest extends TestCase
@@ -222,5 +224,80 @@ class ContainerTest extends TestCase
         $this->expectException(ContainerLogicException::class);
         $this->expectExceptionMessage('Service provider "Jadob\Container\Fixtures\ServiceProviders\NonExistingConfigNodeServiceProvider" requested for configuration node "yeti", which was not found.');
         $container->resolveServiceProviders([]);
+    }
+
+    public function testAccessingSharedFactoryServiceViaParentInterfaceReturnsSameInstance(): void
+    {
+        $container = new Container();
+        $container->add(ManagerRegistryInterface::class, static function (): ManagerRegistryInterface {
+            return new DoctrineLikeRegistry();
+        });
+
+        self::assertSame(
+            $container->get(ManagerRegistryInterface::class),
+            $container->get(ConnectionRegistryInterface::class)
+        );
+    }
+
+    public function testAccessingSharedFactoryServiceViaInterfaceAndConcreteClassReturnsSameInstance(): void
+    {
+        $container = new Container();
+        $container->add(FastFoodRestaurantInterface::class, [
+            'class' => KebabShop::class,
+        ]);
+
+        self::assertSame(
+            $container->get(FastFoodRestaurantInterface::class),
+            $container->get(KebabShop::class)
+        );
+    }
+
+    public function testAccessingSharedFactoryServiceViaServiceIdAndClassNameReturnsSameInstance(): void
+    {
+        $container = new Container();
+        $container->add('kebab_shop', static fn(): KebabShop => new KebabShop());
+
+        self::assertSame(
+            $container->get('kebab_shop'),
+            $container->get(KebabShop::class)
+        );
+    }
+
+    public function testAliasResolvesToSameSharedInstance(): void
+    {
+        $container = new Container();
+        $container->add(KebabShop::class, static fn(): KebabShop => new KebabShop());
+        $container->alias('kebab_shop', KebabShop::class);
+
+        self::assertTrue($container->has('kebab_shop'));
+        self::assertSame(
+            $container->get(KebabShop::class),
+            $container->get('kebab_shop')
+        );
+    }
+
+    public function testSetReplacesServiceAndInvalidatesCachedInstance(): void
+    {
+        $container = new Container();
+        $container->add(KebabShop::class, static fn(): KebabShop => new KebabShop());
+        $firstInstance = $container->get(KebabShop::class);
+
+        $container->set(KebabShop::class, static fn(): KebabShop => new KebabShop());
+        $secondInstance = $container->get(KebabShop::class);
+
+        self::assertNotSame($firstInstance, $secondInstance);
+    }
+
+    public function testReRegisteringSameServiceIdDoesNotCreateDuplicateClassMapEntries(): void
+    {
+        $container = new Container();
+        $container->add(KebabShop::class, static fn(): KebabShop => new KebabShop());
+        $container->add(KebabShop::class, static fn(): KebabShop => new KebabShop());
+
+        self::assertInstanceOf(KebabShop::class, $container->get(KebabShop::class));
+        self::assertSame(
+            $container->get(KebabShop::class),
+            $container->get(FastFoodRestaurantInterface::class)
+        );
     }
 }

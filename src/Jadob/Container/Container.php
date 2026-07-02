@@ -59,7 +59,17 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     private array $definitions = [];
 
     /**
-     * @var list<object>
+     * @var array<string, string>
+     */
+    private array $aliases = [];
+
+    /**
+     * @var array<string, list<string>>
+     */
+    private array $serviceTypeMap = [];
+
+    /**
+     * @var array<string|class-string, object>
      */
     private array $instances = [];
 
@@ -99,6 +109,21 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
         $this->addServiceFromInstantiatedClass($id, $service, $fqcnUsedAsId);
     }
 
+    /**
+     * @throws ContainerException
+     * @throws ReflectionException
+     */
+    public function set(string $id, null|object|array $service): void
+    {
+        unset($this->instances[$id]);
+        $this->add($id, $service);
+    }
+
+    public function alias(string $alias, string $id): void
+    {
+        $this->aliases[$alias] = $id;
+    }
+
 
     private function wrapServiceIntoFactory(object $service): Closure
     {
@@ -124,7 +149,11 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 $this->interfaceMap[$interface] = [];
             }
 
-            $this->interfaceMap[$interface][] = $id;
+            if (!in_array($id, $this->interfaceMap[$interface], true)) {
+                $this->interfaceMap[$interface][] = $id;
+            }
+
+            $this->trackServiceType($id, $interface);
         }
     }
 
@@ -134,12 +163,136 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             $this->classMap[$class] = [];
         }
 
-        $this->classMap[$class][] = $id;
+        if (!in_array($id, $this->classMap[$class], true)) {
+            $this->classMap[$class][] = $id;
+        }
+
+        $this->trackServiceType($id, $class);
     }
 
-    private function sharedInstanceExists(string $className): bool
+    private function trackServiceType(string $id, string $typeKey): void
     {
-        return array_key_exists($className, $this->instances);
+        if (!array_key_exists($id, $this->serviceTypeMap)) {
+            $this->serviceTypeMap[$id] = [];
+        }
+
+        if (!in_array($typeKey, $this->serviceTypeMap[$id], true)) {
+            $this->serviceTypeMap[$id][] = $typeKey;
+        }
+    }
+
+    private function removeServiceFromMaps(string $id): void
+    {
+        if (!array_key_exists($id, $this->serviceTypeMap)) {
+            return;
+        }
+
+        foreach ($this->serviceTypeMap[$id] as $typeKey) {
+            if (array_key_exists($typeKey, $this->interfaceMap)) {
+                $this->interfaceMap[$typeKey] = array_values(array_filter(
+                    $this->interfaceMap[$typeKey],
+                    static fn(string $serviceId): bool => $serviceId !== $id
+                ));
+
+                if ($this->interfaceMap[$typeKey] === []) {
+                    unset($this->interfaceMap[$typeKey]);
+                }
+
+                continue;
+            }
+
+            if (array_key_exists($typeKey, $this->classMap)) {
+                $this->classMap[$typeKey] = array_values(array_filter(
+                    $this->classMap[$typeKey],
+                    static fn(string $serviceId): bool => $serviceId !== $id
+                ));
+
+                if ($this->classMap[$typeKey] === []) {
+                    unset($this->classMap[$typeKey]);
+                }
+            }
+        }
+
+        unset($this->serviceTypeMap[$id]);
+    }
+
+    private function prepareServiceRegistration(string $id): void
+    {
+        if (!array_key_exists($id, $this->definitions)) {
+            return;
+        }
+
+        $this->removeServiceFromMaps($id);
+    }
+
+    private function sharedInstanceExists(string $definitionId): bool
+    {
+        return array_key_exists($definitionId, $this->instances);
+    }
+
+    private function resolveAlias(string $id): string
+    {
+        $visited = [];
+
+        while (array_key_exists($id, $this->aliases)) {
+            if (in_array($id, $visited, true)) {
+                throw new ContainerLogicException(
+                    sprintf('Circular alias chain detected for service "%s".', $id)
+                );
+            }
+
+            $visited[] = $id;
+            $id = $this->aliases[$id];
+        }
+
+        return $id;
+    }
+
+    /**
+     * @return array{Definition, string}
+     * @throws ContainerException
+     * @throws ServiceNotFoundException
+     */
+    private function resolveDefinitionAndId(string $id): array
+    {
+        if (!$this->definitionExists($id) && interface_exists($id)) {
+            $implementations = $this->interfaceMap[$id] ?? [];
+
+            return match (count($implementations)) {
+                1 => [$this->definitions[$implementations[0]], $implementations[0]],
+                0 => throw new ServiceNotFoundException(
+                    sprintf('Interface "%s" does not have any implementations provided in container', $id),
+                    $this->resolvingChain
+                ),
+                default => throw new ContainerException(
+                    sprintf('Interface "%s" have multiple implementations, cannot determine which one to use.', $id),
+                )
+            };
+        }
+
+        if (!$this->definitionExists($id) && class_exists($id)) {
+            $classes = $this->classMap[$id] ?? [];
+
+            return match (count($classes)) {
+                1 => [$this->definitions[$classes[0]], $classes[0]],
+                0 => throw new ServiceNotFoundException(
+                    sprintf('Class "%s" does not have any implementations provided in container', $id),
+                    $this->resolvingChain
+                ),
+                default => throw new ContainerException(
+                    sprintf('Class "%s" have multiple implementations, cannot determine which one to use.', $id)
+                )
+            };
+        }
+
+        if (array_key_exists($id, $this->definitions)) {
+            return [$this->definitions[$id], $id];
+        }
+
+        throw new ServiceNotFoundException(
+            sprintf('Service "%s" not found in container.', $id),
+            $this->resolvingChain
+        );
     }
 
 
@@ -237,51 +390,18 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
     {
         $this->resolvingChain[] = $id;
 
-        /**
-         * Service requested by its interface FQCN
-         */
-        if (!$this->definitionExists($id) && interface_exists($id)) {
-            $implementations = $this->interfaceMap[$id] ?? [];
-            $definition = match (count($implementations)) {
-                1 => $this->definitions[$implementations[0]],
-                0 => throw new ServiceNotFoundException(
-                    sprintf('Interface "%s" does not have any implementations provided in container', $id),
-                    $this->resolvingChain
-                ),
-                default => throw new ContainerException(
-                    sprintf('Interface "%s" have multiple implementations, cannot determine which one to use.', $id),
-                )
-            };
-        } elseif (!$this->definitionExists($id) && class_exists($id)) {
-            $classes = $this->classMap[$id] ?? [];
-            $definition = match (count($classes)) {
-                1 => $this->definitions[$classes[0]],
-                0 => throw new ServiceNotFoundException(
-                    sprintf('Class "%s" does not have any implementations provided in container', $id),
-                    $this->resolvingChain
-                ),
-                default => throw new ContainerException(
-                    sprintf('Class "%s" have multiple implementations, cannot determine which one to use.', $id)
-                )
-            };
-        } elseif (array_key_exists($id, $this->definitions)) {
-            $definition = $this->definitions[$id];
-        } else {
-            throw new ServiceNotFoundException(
-                sprintf('Service "%s" not found in container.', $id),
-                $this->resolvingChain
-            );
-        }
+        $id = $this->resolveAlias($id);
+        [$definition, $definitionId] = $this->resolveDefinitionAndId($id);
 
         if ($public && $definition->isPrivate()) {
             throw new ContainerLogicException('Cannot access private service "' . $id . '".');
         }
 
         $shared = $definition->isShared();
-        if ($shared && $this->sharedInstanceExists($id)) {
+        if ($shared && $this->sharedInstanceExists($definitionId)) {
             return $this->onServiceResolved(
                 $id,
-                $this->instances[$id]
+                $this->instances[$definitionId]
             );
         }
 
@@ -294,7 +414,7 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
             );
         }
 
-        $this->instances[$id] = $resolvedService;
+        $this->instances[$definitionId] = $resolvedService;
         return $this->onServiceResolved(
             $id,
             $resolvedService
@@ -350,6 +470,10 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
     public function has(string $id): bool
     {
+        if (array_key_exists($id, $this->aliases)) {
+            return true;
+        }
+
         return array_key_exists($id, $this->definitions)
             || array_key_exists($id, $this->classMap)
             || array_key_exists($id, $this->interfaceMap);
@@ -532,6 +656,8 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
      */
     private function addServiceFromClosure(string $id, Closure $closure, bool $fqcnUsedAsId): void
     {
+        $this->prepareServiceRegistration($id);
+
         if ($fqcnUsedAsId) {
             $className = $id;
         } else {
@@ -560,6 +686,8 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
     private function addServiceFromInstantiatedClass(string $id, object $service, bool $fqcnUsedAsId): void
     {
+        $this->prepareServiceRegistration($id);
+
         $this->updateClassMap(get_class($service), $id);
         $this->updateInterfaceMap(get_class($service), $id);
 
@@ -588,6 +716,8 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
 
     private function addServiceFromDefinition(string $id, Definition $definition): void
     {
+        $this->prepareServiceRegistration($id);
+
         $this->updateInterfaceMap($definition->getClassName(), $id);
         $this->updateClassMap($definition->getClassName(), $id);
         $this->addDefinition($id, $definition);
@@ -607,6 +737,8 @@ class Container implements ContainerInterface, ServiceProviderHandlerInterface
                 sprintf('Class "%s" does not exist.', $id)
             );
         }
+
+        $this->prepareServiceRegistration($id);
 
         $this->updateInterfaceMap($id, $id);
         $this->addDefinition($id,
