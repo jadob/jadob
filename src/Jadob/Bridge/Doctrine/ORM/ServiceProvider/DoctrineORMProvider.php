@@ -112,7 +112,8 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         $managerConfig,
                         $managerName,
                         $cacheDir,
-                        $env
+                        $env,
+                        $registry,
                     ) {
                         $isProd = $env === 'prod';
 
@@ -186,7 +187,7 @@ class DoctrineORMProvider implements ServiceProviderInterface, ParentServiceProv
                         }
 
                         return new EntityManager(
-                            $container->get('doctrine.dbal.' . $managerName),
+                            $registry->getConnection($managerName),
                             $configuration,
                             $container->get(EventManager::class)
                         );
