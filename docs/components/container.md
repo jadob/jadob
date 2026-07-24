@@ -1,3 +1,13 @@
+# Container
+
+Jadob uses a PSR-11 compatible dependency injection container split into two layers:
+
+| Layer      | Class                                 | Role                                                                                 |
+|------------|---------------------------------------|--------------------------------------------------------------------------------------|
+| Registry   | `Jadob\Container\Container`           | Stores and resolves explicit service definitions (instances, factories).             |
+| Autowiring | `Jadob\Container\AutowiringContainer` | Decorator used at runtime. Adds constructor autowiring on top of the base container. |
+
+
 The base `Container` is strict: it never reflects on arbitrary classes or autowires constructors by itself. Autowiring 
 can be enabled by wrapping the container instance with `AutowiringContainer`, and configuring namespaces (or its prefixes)
 allowed to be autowired:
@@ -63,16 +73,15 @@ class BProvider implements ServiceProviderInterface, ParentProviderInterface {
 
 ## Parameters
 
-### Adding new parameter
+Application parameters from `config/parameters.php` (or the `parameters` config node) are loaded into a `ParameterStore` service registered on the container:
 
-You can add/override parameters by using `Container#addParameter` method:
+```php
+$parameterStore = $container->get(ParameterStore::class);
+$parameterStore->get('admin_email');
+$parameterStore->set('admin_email', 'other@example.com');
+```
 
-````
-$container = getContainer();
-$container->addParameter('mailer.reply-to-address', 'hello@example.com');
-````
-
-### Getting a value of a parameter:
+Parameters are not injected automatically by the container. Resolve `ParameterStore` in a factory or use constructor autowiring if the service is registered.
 
 Use `getParameter` method:
 ````php
