@@ -13,7 +13,7 @@ phpstan:
 	$(PHPSTAN_BASE) analyse --configuration phpstan.dist.neon
 
 phpstan-baseline:
-	$(PHPSTAN_BASE) --generate-baseline=./resources/code-quality/phpstan-baseline.neon
+	$(PHPSTAN_BASE) --memory-limit=256M --generate-baseline=./resources/code-quality/phpstan-baseline.php
 
 purge-vendors:
 	rm -rf src/Jadob/Core/vendor
