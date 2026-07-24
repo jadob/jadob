@@ -6,14 +6,15 @@ namespace Jadob\Router;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Exception\UrlGenerationException;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @TODO: testFullUrlGeneration* test probably should be one test case with multiple providers - verify it and refactor
- * @group router
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
+#[Group('router')]
 class RouterTest extends TestCase
 {
     private function getDummyContext(): RouterContext

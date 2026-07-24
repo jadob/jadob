@@ -2,198 +2,6 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
-	'message' => '#^Call to static method uuid4\\(\\) on an unknown class Ramsey\\\\Uuid\\\\Uuid\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method toString\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:assignAggregateId\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:assignRecordTimestamp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:popUncommittedEvents\\(\\) should return array\\<Jadob\\\\Aggregate\\\\AbstractDomainEvent\\> but returns array\\<Jadob\\\\Aggregate\\\\DomainEventInterface\\>\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:recreate\\(\\) has parameter \\$events with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$event of method Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:apply\\(\\) expects object, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:\\$aggregateId \\(string\\) does not accept mixed\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:\\$aggregateVersion is never read, only written\\.$#',
-	'identifier' => 'property.onlyWritten',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:\\$events type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Aggregate\\\\AbstractAggregateRoot\\:\\:\\$recordedEvents \\(array\\<Jadob\\\\Aggregate\\\\DomainEventInterface\\>\\) does not accept array\\<object\\>\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractAggregateRoot.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to static method generate\\(\\) on an unknown class Ulid\\\\Ulid\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot cast mixed to string\\.$#',
-	'identifier' => 'cast.string',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractDomainEvent\\:\\:assignEventId\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractDomainEvent\\:\\:assignRecordTimestamp\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AbstractDomainEvent\\:\\:getAttributes\\(\\) should return array\\<string, string\\> but returns array\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Aggregate\\\\AbstractDomainEvent\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AbstractDomainEvent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to static method createFromMilliseconds\\(\\) on an unknown class Jadob\\\\EventStore\\\\DateTimeFactory\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'agv\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'aid\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'eid\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'ety\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'pld\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'tme\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @var with type Jadob\\\\Aggregate\\\\AbstractAggregateRoot is not subtype of native type string\\.$#',
-	'identifier' => 'varTag.nativeType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$serialized of method Jadob\\\\EventStore\\\\PayloadSerializer\\:\\:deserialize\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$eventId of static method Jadob\\\\Aggregate\\\\DomainEventInterface\\:\\:recreate\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#4 \\$version of static method Jadob\\\\Aggregate\\\\DomainEventInterface\\:\\:recreate\\(\\) expects int, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#5 \\$recordedAt of static method Jadob\\\\Aggregate\\\\DomainEventInterface\\:\\:recreate\\(\\) expects DateTimeInterface, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\AggregateRootInterface\\:\\:recreate\\(\\) has parameter \\$events with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/AggregateRootInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\DomainEventInterface\\:\\:recreate\\(\\) has parameter \\$payload with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/DomainEventInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Aggregate\\\\DomainEventInterface\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Aggregate/DomainEventInterface.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Auth\\\\AccessToken\\\\AccessToken\\:\\:__construct\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#',
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
@@ -836,7 +644,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$conn of class Doctrine\\\\ORM\\\\EntityManager constructor expects Doctrine\\\\DBAL\\\\Connection, mixed given\\.$#',
+	'message' => '#^Parameter \\#1 \\$conn of class Doctrine\\\\ORM\\\\EntityManager constructor expects Doctrine\\\\DBAL\\\\Connection, object given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
@@ -1268,14 +1076,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Symfony/Validator/ServiceProvider/SymfonyValidatorProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method object\\:\\:addExtension\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
+	'message' => '#^Cannot call method addExtension\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Container/Extension/TwigExtension.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method object\\:\\:addRuntimeLoader\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
+	'message' => '#^Cannot call method addRuntimeLoader\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Container/Extension/TwigExtension.php',
 ];
@@ -1307,24 +1115,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\:\\:debug\\(\\) should return string\\|null but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/DebugExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\:\\:getFunctions\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/DebugExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Return type \\(array\\) of method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\:\\:getFunctions\\(\\) should be covariant with return type \\(array\\<Twig\\\\TwigFunction\\>\\) of method Twig\\\\Extension\\\\AbstractExtension\\:\\:getFunctions\\(\\)$#',
-	'identifier' => 'method.childReturnType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/DebugExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Return type \\(array\\) of method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\:\\:getFunctions\\(\\) should be covariant with return type \\(array\\<Twig\\\\TwigFunction\\>\\) of method Twig\\\\Extension\\\\ExtensionInterface\\:\\:getFunctions\\(\\)$#',
-	'identifier' => 'method.childReturnType',
-	'count' => 2,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/DebugExtension.php',
 ];
 $ignoreErrors[] = [
@@ -1460,7 +1250,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\ServiceProvider\\\\TwigProvider\\:\\:register\\(\\) should return array\\{Twig\\\\Loader\\\\LoaderInterface\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Twig\\\\Loader\\\\FilesystemLoader, Twig\\\\Environment\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Twig\\\\Environment\\} but returns array\\{Twig\\\\Loader\\\\LoaderInterface\\: Closure\\(Jadob\\\\Container\\\\Container\\)\\: Twig\\\\Loader\\\\FilesystemLoader, Twig\\\\Environment\\: Closure\\(Twig\\\\Loader\\\\LoaderInterface, Jadob\\\\Container\\\\ParameterStore, Jadob\\\\Container\\\\Container\\)\\: Twig\\\\Environment, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\PathExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Router\\\\Router\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\PathExtension\\}, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, class\\: \'Jadob\\\\\\\\Bridge\\\\\\\\Twig\\\\\\\\Extension\\\\\\\\DebugExtension\'\\}, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\AliasedAssetPathExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\AliasedAssetPathExtension\\}, \'twig\\.webpack_manifest_extension\'\\?\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Container\\\\ParameterStore\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\WebpackManifestAssetExtension\\}, \'twig\\.vite_manifest_extension\'\\?\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Container\\\\ParameterStore\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\ViteManifestAssetExtension\\}, \'twig\\.translator_extension\'\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\)\\: Symfony\\\\Bridge\\\\Twig\\\\Extension\\\\TranslationExtension\\}\\}\\.$#',
+	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\ServiceProvider\\\\TwigProvider\\:\\:register\\(\\) should return array\\{Twig\\\\Loader\\\\LoaderInterface\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Twig\\\\Loader\\\\FilesystemLoader, Twig\\\\Environment\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Twig\\\\Environment\\} but returns array\\{Twig\\\\Loader\\\\LoaderInterface\\: Closure\\(Jadob\\\\Container\\\\Container\\)\\: Twig\\\\Loader\\\\FilesystemLoader, Twig\\\\Environment\\: Closure\\(Twig\\\\Loader\\\\LoaderInterface, Jadob\\\\Container\\\\ParameterStore, Jadob\\\\Container\\\\Container\\)\\: Twig\\\\Environment, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\PathExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Router\\\\Router\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\PathExtension\\}, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\DebugExtension\\}, Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\AliasedAssetPathExtension\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\AliasedAssetPathExtension\\}, \'twig\\.webpack_manifest_extension\'\\?\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Container\\\\ParameterStore\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\WebpackManifestAssetExtension\\}, \'twig\\.vite_manifest_extension\'\\?\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Jadob\\\\Container\\\\ParameterStore\\)\\: Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\ViteManifestAssetExtension\\}, \'twig\\.translator_extension\'\\: array\\{tags\\: array\\{\'twig\\.extension\'\\}, factory\\: Closure\\(Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\)\\: Symfony\\\\Bridge\\\\Twig\\\\Extension\\\\TranslationExtension\\}\\}\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigProvider.php',
@@ -1562,6 +1352,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Config/Config.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$className of method Jadob\\\\Container\\\\AutowiringContainer\\:\\:make\\(\\) expects class\\-string, string\\|null given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/AutowiringContainer.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
 	'identifier' => 'foreach.nonIterable',
 	'count' => 1,
@@ -1622,8 +1418,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Offset string does not exist on list\\<object\\>\\.$#',
-	'identifier' => 'offsetAccess.notFound',
+	'message' => '#^Method Jadob\\\\Container\\\\Container\\:\\:set\\(\\) has parameter \\$service with no value type specified in iterable type array\\.$#',
+	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
@@ -1641,12 +1437,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$array of function array_values expects array\\<class\\-string\\>, array\\<string, class\\-string\\>\\|false given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$autowired of method Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition\\:\\:setAutowired\\(\\) expects bool, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
@@ -1677,12 +1467,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$class of method Jadob\\\\Container\\\\Container\\:\\:updateInterfaceMap\\(\\) expects string, string\\|null given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$className of method Jadob\\\\Container\\\\Container\\:\\:make\\(\\) expects string, string\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
@@ -1720,13 +1504,13 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$name of method Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition\\:\\:setClassName\\(\\) expects class\\-string, string given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 5,
+	'count' => 4,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
 $ignoreErrors[] = [
@@ -1743,12 +1527,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$tags of method Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition\\:\\:setTags\\(\\) expects array, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
@@ -1772,30 +1550,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\$argumentAttributes of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface\\:\\:injectConstructorArgument\\(\\) expects list\\<Attribute\\>, list\\<ReflectionAttribute\\<object\\>\\> given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$argumentAttributes of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface\\:\\:supportsConstructorInjectionFor\\(\\) expects list\\<Attribute\\>, list\\<ReflectionAttribute\\<object\\>\\> given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$class of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface\\:\\:injectConstructorArgument\\(\\) expects class\\-string, string given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$class of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface\\:\\:supportsConstructorInjectionFor\\(\\) expects class\\-string, string given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Possibly invalid array key type mixed\\.$#',
 	'identifier' => 'offsetAccess.invalidOffset',
 	'count' => 1,
@@ -1805,12 +1559,6 @@ $ignoreErrors[] = [
 	'message' => '#^Property Jadob\\\\Container\\\\Container\\:\\:\\$classMap \\(array\\<class\\-string, list\\<string\\>\\>\\) does not accept non\\-empty\\-array\\<string, list\\<string\\>\\>\\.$#',
 	'identifier' => 'assign.propertyType',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Container\\\\Container\\:\\:\\$instances \\(list\\<object\\>\\) does not accept non\\-empty\\-array\\<int\\<0, max\\>\\|string, object\\>\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Container.php',
 ];
 $ignoreErrors[] = [
@@ -1898,12 +1646,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Contracts/DependencyInjection/Definition.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\$autowired of class Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition constructor expects bool, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Contracts/DependencyInjection/Definition.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\$className of class Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition constructor expects class\\-string\\|null, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
@@ -1936,12 +1678,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\$tags of class Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition constructor expects array, mixed given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Contracts/DependencyInjection/Definition.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Contracts\\\\DependencyInjection\\\\Definition\\:\\:\\$autowired is never read, only written\\.$#',
-	'identifier' => 'property.onlyWritten',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Contracts/DependencyInjection/Definition.php',
 ];
@@ -2150,25 +1886,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Jadob\\\\Container\\\\Exception\\\\AutowiringException\\|Jadob\\\\Container\\\\Exception\\\\ContainerException\\|Jadob\\\\Container\\\\Exception\\\\ServiceNotFoundException\\|ReflectionException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Jadob\\\\Container\\\\Exception\\\\AutowiringException\\|Jadob\\\\Container\\\\Exception\\\\ServiceNotFoundException\\|Jadob\\\\Core\\\\Exception\\\\KernelException\\|Jadob\\\\Router\\\\Exception\\\\MethodNotAllowedException\\|Jadob\\\\Router\\\\Exception\\\\RouteNotFoundException\\|ReflectionException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Jadob\\\\Container\\\\Exception\\\\AutowiringException\\|Jadob\\\\Container\\\\Exception\\\\ServiceNotFoundException\\|Jadob\\\\Core\\\\Exception\\\\KernelException\\|ReflectionException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$controllerClassName of method Jadob\\\\Core\\\\Dispatcher\\:\\:autowireControllerClass\\(\\) expects class\\-string, array\\|object\\|string given\\.$#',
+	'message' => '#^Parameter \\#1 \\$id of method Jadob\\\\Container\\\\AutowiringContainer\\:\\:get\\(\\) expects string, array\\|object\\|string given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
@@ -2198,12 +1916,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Strict comparison using \\!\\=\\= between object and null will always evaluate to true\\.$#',
-	'identifier' => 'notIdentical.alwaysTrue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Strict comparison using \\=\\=\\= between ReflectionNamedType and null will always evaluate to false\\.$#',
 	'identifier' => 'identical.alwaysFalse',
 	'count' => 1,
@@ -2218,7 +1930,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Unreachable statement \\- code above always terminates\\.$#',
 	'identifier' => 'deadCode.unreachable',
-	'count' => 3,
+	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Core/Dispatcher.php',
 ];
 $ignoreErrors[] = [
@@ -2343,6 +2055,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$bootstrap of class Jadob\\\\Framework\\\\Logger\\\\LoggerFactory constructor expects Jadob\\\\Core\\\\BootstrapInterface, string given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Core/Kernel.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$container of class Jadob\\\\Core\\\\Dispatcher constructor expects Jadob\\\\Container\\\\AutowiringContainer, Jadob\\\\Container\\\\Container given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Core/Kernel.php',
@@ -2596,570 +2314,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
 	'identifier' => 'foreach.nonIterable',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Doctrine\\\\DBAL\\\\Driver\\\\Connection\\:\\:createQueryBuilder\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Doctrine\\\\DBAL\\\\Driver\\\\Connection\\:\\:insert\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Jadob\\\\Aggregate\\\\AggregateRootInterface\\:\\:getCreatedAt\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Jadob\\\\Aggregate\\\\AggregateRootInterface\\:\\:popUncomittedEvents\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method aggregateTableExists\\(\\) on an unknown class Jadob\\\\EventStore\\\\DBALConnectionUtility\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method createAggregateTable\\(\\) on an unknown class Jadob\\\\EventStore\\\\DBALConnectionUtility\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method createMetadataTable\\(\\) on an unknown class Jadob\\\\EventStore\\\\DBALConnectionUtility\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method dispatch\\(\\) on an unknown class Prooph\\\\ServiceBus\\\\CommandBus\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method metadataTableExists\\(\\) on an unknown class Jadob\\\\EventStore\\\\DBALConnectionUtility\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access constant class on mixed\\.$#',
-	'identifier' => 'classConstant.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method execute\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method fetchAll\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method from\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getAggregateVersion\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method orderBy\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method recordedAt\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method select\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method setParameter\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method toArray\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method where\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\EventStore\\\\DbalConnectionUtility not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:getAggregateMetadata\\(\\) has invalid return type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:getEventsByAggregateId\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:getStream\\(\\) should return array\\<Jadob\\\\Aggregate\\\\AbstractDomainEvent\\> but returns mixed\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException\\|Jadob\\\\EventStore\\\\Exception\\\\EventStoreException\\|JsonException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$dateTime of method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:dateTimeToTimestamp\\(\\) expects DateTimeInterface, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$payload of method Jadob\\\\EventStore\\\\PayloadSerializer\\:\\:serialize\\(\\) expects array, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$commandBus of method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:__construct\\(\\) has invalid type Prooph\\\\ServiceBus\\\\CommandBus\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\DbalEventStore\\:\\:saveAggregateMetadata\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\DbalEventStore\\:\\:\\$commandBus has unknown class Prooph\\\\ServiceBus\\\\CommandBus as its type\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\DbalEventStore\\:\\:\\$utility \\(Jadob\\\\EventStore\\\\DBALConnectionUtility\\) does not accept Jadob\\\\EventStore\\\\DbalConnectionUtility\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\DbalEventStore\\:\\:\\$utility has unknown class Jadob\\\\EventStore\\\\DBALConnectionUtility as its type\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DbalEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
-	'identifier' => 'foreach.nonIterable',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Jadob\\\\Aggregate\\\\AggregateRootInterface\\:\\:getCreatedAt\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Jadob\\\\Aggregate\\\\AggregateRootInterface\\:\\:popUncomittedEvents\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method dispatch\\(\\) on an unknown class Jadob\\\\MessageBus\\\\ServiceBus\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method getAggregateId\\(\\) on an unknown class Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method getAggregateType\\(\\) on an unknown class Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method getCreatedAt\\(\\) on an unknown class Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to static method createFromMilliseconds\\(\\) on an unknown class Jadob\\\\EventStore\\\\DateTimeFactory\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access constant class on mixed\\.$#',
-	'identifier' => 'classConstant.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'aid\' on array\\|stdClass\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'aty\' on array\\|stdClass\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'tme\' on array\\|stdClass\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getAggregateVersion\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getAttributes\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getEventId\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method recordedAt\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method toArray\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\EventStore\\\\AggregateMetadata not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Invalid type mixed to throw\\.$#',
-	'identifier' => 'throw.notThrowable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:getAggregateMetadata\\(\\) has invalid return type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:getEventsByAggregateId\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$data of method Aws\\\\DynamoDb\\\\Marshaler\\:\\:unmarshalItem\\(\\) expects array, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$dateTime of method Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:dateTimeToTimestamp\\(\\) expects DateTimeInterface, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$event of method Jadob\\\\EventStore\\\\ExtensionManager\\:\\:dispatchOnEventAppend\\(\\) expects Jadob\\\\Aggregate\\\\DomainEventInterface, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$payload of method Jadob\\\\EventStore\\\\PayloadSerializer\\:\\:serialize\\(\\) expects array, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$commandBus of method Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:__construct\\(\\) has invalid type Jadob\\\\MessageBus\\\\ServiceBus\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:saveAggregateMetadata\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\DynamoDbEventStore\\:\\:\\$commandBus has unknown class Jadob\\\\MessageBus\\\\ServiceBus as its type\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/DynamoDbEventStore.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
-	'identifier' => 'foreach.nonIterable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method ReflectionType\\:\\:isBuiltin\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access an offset on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$name on ReflectionClass\\|null\\.$#',
-	'identifier' => 'property.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getClass\\(\\) on ReflectionParameter\\|false\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getType\\(\\) on ReflectionParameter\\|false\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\EventDispatcher\\:\\:\\$listeners has no type specified\\.$#',
-	'identifier' => 'missingType.property',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable method call on mixed\\.$#',
-	'identifier' => 'method.dynamicName',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventDispatcher.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\EventStoreExtensionInterface\\:\\:onAggregateCreate\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventStoreExtensionInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\EventStoreInterface\\:\\:getAggregateMetadata\\(\\) has invalid return type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventStoreInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\EventStoreInterface\\:\\:getEventsByAggregateId\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventStoreInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\EventStoreInterface\\:\\:saveAggregateMetadata\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/EventStoreInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\Exception\\\\AggregateMetadataNotFoundException\\:\\:for\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Exception/AggregateMetadataNotFoundException.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\Extension\\\\EventHashExtension\\:\\:onAggregateCreate\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Extension/EventHashExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\ExtensionManager\\:\\:dispatchOnAggregateCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/ExtensionManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\ExtensionManager\\:\\:dispatchOnEventAppend\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/ExtensionManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$metadata of method Jadob\\\\EventStore\\\\ExtensionManager\\:\\:dispatchOnAggregateCreate\\(\\) has invalid type Jadob\\\\EventStore\\\\AggregateMetadata\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/ExtensionManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\PayloadSerializer\\:\\:deserialize\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/PayloadSerializer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\PayloadSerializer\\:\\:serialize\\(\\) has parameter \\$payload with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/PayloadSerializer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Doctrine\\\\DBAL\\\\Connection\\:\\:getSchemaManager\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 4,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method createTable\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method tablesExist\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\EventStore\\\\DbalEventStore referenced with incorrect case\\: Jadob\\\\EventStore\\\\DBALEventStore\\.$#',
-	'identifier' => 'class.nameCase',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\Storage\\\\DBALConnectionUtility\\:\\:aggregateTableExists\\(\\) should return bool but returns mixed\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\EventStore\\\\Storage\\\\DBALConnectionUtility\\:\\:metadataTableExists\\(\\) should return bool but returns mixed\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @throws with type Doctrine\\\\DBAL\\\\DBALException is not subtype of Throwable$#',
-	'identifier' => 'throws.notThrowable',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\EventStore\\\\Storage\\\\DBALConnectionUtility\\:\\:\\$metadataTableExists \\(bool\\) does not accept mixed\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALConnectionUtility.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Constructor of class Jadob\\\\EventStore\\\\Storage\\\\DBALEventStorage has an unused parameter \\$config\\.$#',
-	'identifier' => 'constructor.unusedParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/EventStore/Storage/DBALEventStorage.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
-	'identifier' => 'foreach.nonIterable',
 	'count' => 6,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
@@ -3170,7 +2324,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getAutowiringExtensions\\(\\) on mixed\\.$#',
+	'message' => '#^Cannot call method getConstructorInjectionExtensions\\(\\) on mixed\\.$#',
 	'identifier' => 'method.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
@@ -3248,13 +2402,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$extension of method Jadob\\\\Container\\\\Container\\:\\:addAutowiringExtension\\(\\) expects Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface, mixed given\\.$#',
+	'message' => '#^Parameter \\#1 \\$extension of method Jadob\\\\Container\\\\Container\\:\\:addExtension\\(\\) expects Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerExtensionInterface, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$extension of method Jadob\\\\Container\\\\Container\\:\\:addExtension\\(\\) expects Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerExtensionInterface, mixed given\\.$#',
+	'message' => '#^Parameter \\#1 \\$injectionExtensions of method Jadob\\\\Container\\\\AutowiringContainer\\:\\:setInjectionExtensions\\(\\) expects list\\<Jadob\\\\Contracts\\\\DependencyInjection\\\\ConstructorInjectionExtensionInterface\\>, list given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
@@ -3278,7 +2432,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$service of method Jadob\\\\Container\\\\Container\\:\\:add\\(\\) expects array\\|object\\|null, mixed given\\.$#',
+	'message' => '#^Parameter \\#2 \\$service of method Jadob\\\\Container\\\\Container\\:\\:add\\(\\) expects array\\|object, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 2,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
@@ -3292,12 +2446,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Readonly property Jadob\\\\Framework\\\\Application\\:\\:\\$container is assigned outside of the constructor\\.$#',
 	'identifier' => 'property.readOnlyAssignNotInConstructor',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$requestId on left side of \\?\\? is never defined\\.$#',
-	'identifier' => 'nullCoalesce.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
@@ -3320,7 +2468,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/Extension/EventDispatcherExtension.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\DependencyInjection\\\\ExtensionProvider\\\\FrameworkContainerExtensionProvider\\:\\:getAutowiringExtensions\\(\\) should return list\\<Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerAutowiringExtensionInterface\\> but returns array\\{mixed\\}\\.$#',
+	'message' => '#^Method Jadob\\\\Framework\\\\DependencyInjection\\\\ExtensionProvider\\\\FrameworkContainerExtensionProvider\\:\\:getConstructorInjectionExtensions\\(\\) should return list\\<Jadob\\\\Contracts\\\\DependencyInjection\\\\ConstructorInjectionExtensionInterface\\> but returns array\\{mixed\\}\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/ExtensionProvider/FrameworkContainerExtensionProvider.php',
@@ -3740,192 +2888,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/CsrfProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\Bridge\\\\Jadob\\\\JadobUrlGenerator\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\Component\\\\BigNumberComponent\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\Component\\\\ComponentProcessor\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\Configuration\\\\DashboardConfiguration\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\ObjectManager\\\\DoctrineOrmObjectManager\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\OperationHandler\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Jadob\\\\Dashboard\\\\PathGenerator\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Anonymous function should return Jadob\\\\Dashboard\\\\Configuration\\\\DashboardConfiguration but returns mixed\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to static method fromArray\\(\\) on an unknown class Jadob\\\\Dashboard\\\\Configuration\\\\DashboardConfiguration\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\Component\\\\BigNumberComponent not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\Component\\\\ComponentProcessor not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\Configuration\\\\DashboardConfiguration not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\ObjectManager\\\\DoctrineOrmObjectManager not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\OperationHandler not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\PathGenerator not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\Dashboard\\\\UrlGeneratorInterface not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Bridge\\\\Jadob\\\\JadobUrlGenerator not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Component\\\\BigNumberComponent not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Component\\\\ComponentProcessor not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\ObjectManager\\\\DoctrineOrmObjectManager not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\OperationHandler not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\PathGenerator not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Twig\\\\DashboardConfigurationExtension not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Twig\\\\DashboardExtension not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\Dashboard\\\\Twig\\\\DashboardRoutingExtension not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\DashboardProvider\\:\\:onContainerBuild\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\DashboardProvider\\:\\:onContainerBuild\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\DashboardProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$extension of method Twig\\\\Environment\\:\\:addExtension\\(\\) expects Twig\\\\Extension\\\\ExtensionInterface, Jadob\\\\Dashboard\\\\Twig\\\\DashboardConfigurationExtension given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$extension of method Twig\\\\Environment\\:\\:addExtension\\(\\) expects Twig\\\\Extension\\\\ExtensionInterface, Jadob\\\\Dashboard\\\\Twig\\\\DashboardExtension given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$extension of method Twig\\\\Environment\\:\\:addExtension\\(\\) expects Twig\\\\Extension\\\\ExtensionInterface, Jadob\\\\Dashboard\\\\Twig\\\\DashboardRoutingExtension given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/DashboardProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\ErrorHandlerServiceProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
@@ -3948,114 +2910,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventDispatcherProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
-	'identifier' => 'foreach.nonIterable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Binary operation "\\." between \'doctrine\\.dbal\\.\' and mixed results in an error\\.$#',
-	'identifier' => 'binaryOp.invalid',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Binary operation "\\." between mixed and \'/event_store\\.log\' results in an error\\.$#',
-	'identifier' => 'binaryOp.invalid',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to method addProjection\\(\\) on an unknown class Jadob\\\\EventStore\\\\ProjectionManager\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'connection_name\' on Psr\\\\Container\\\\ContainerInterface\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getLogsDir\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\EventStore\\\\DbalEventStore constructor invoked with 4 parameters, 3 required\\.$#',
-	'identifier' => 'arguments.count',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\EventStore\\\\DbalEventStore referenced with incorrect case\\: Jadob\\\\EventStore\\\\DBALEventStore\\.$#',
-	'identifier' => 'class.nameCase',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Jadob\\\\EventStore\\\\ProjectionManager not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Jadob\\\\EventStore\\\\ProjectionManager not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\EventStoreProvider\\:\\:onContainerBuild\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\EventStoreProvider\\:\\:onContainerBuild\\(\\) has parameter \\$config with no type specified\\.$#',
-	'identifier' => 'missingType.parameter',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\EventStoreProvider\\:\\:register\\(\\) has invalid return type Jadob\\\\EventStore\\\\ProjectionManager\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\EventStoreProvider\\:\\:register\\(\\) should return array\\{Jadob\\\\EventSourcing\\\\EventStore\\\\ProjectionManager\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\ProjectionManager, Jadob\\\\EventSourcing\\\\EventStore\\\\EventDispatcher\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\EventDispatcher, Jadob\\\\EventSourcing\\\\EventStore\\\\EventStoreInterface\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\DBALEventStore\\} but returns array\\{Jadob\\\\EventStore\\\\ProjectionManager\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\ProjectionManager, Jadob\\\\EventStore\\\\EventDispatcher\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\EventDispatcher, Jadob\\\\EventStore\\\\EventStoreInterface\\: Closure\\(Psr\\\\Container\\\\ContainerInterface\\)\\: Jadob\\\\EventStore\\\\DBALEventStore\\}\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$connection of class Jadob\\\\EventStore\\\\DbalEventStore constructor expects Doctrine\\\\DBAL\\\\Driver\\\\Connection, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$id of method Psr\\\\Container\\\\ContainerInterface\\:\\:get\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$logger of class Jadob\\\\EventStore\\\\DbalEventStore constructor expects Psr\\\\Log\\\\LoggerInterface, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#3 \\$commandBus of class Jadob\\\\EventStore\\\\DbalEventStore constructor expects Prooph\\\\ServiceBus\\\\CommandBus, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/EventStoreProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\FrameworkServiceProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
