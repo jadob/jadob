@@ -1,6 +1,7 @@
 name: static_analysis.yml
 on:
-  pull_request
+  pull_request:
+  push:
 jobs:
   psalm:
     name: Psalm
