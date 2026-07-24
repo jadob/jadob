@@ -6,6 +6,7 @@ namespace Jadob\Framework\ServiceProvider;
 use Closure;
 use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
@@ -15,26 +16,22 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class CsrfProvider implements ServiceProviderInterface
+final readonly class CsrfProvider implements ServiceProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @return void
-     */
-    public function getConfigNode()
+    public function getConfigNode(): ?string
     {
-        // TODO: Implement getConfigNode() method.
+        return null;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return (Closure|Closure)[]
-     *
-     * @psalm-return array{symfony.csrf.token.manager: \Closure(Container):CsrfTokenManager, symfony.forms.csrf.extension: \Closure(Container):CsrfExtension}
+     * @param array<mixed>|null $config
+     * @return array<non-empty-string,Closure>
      */
-    public function register($config)
+    public function register(
+        ContainerInterface $container,
+        array|object|null $config = null
+    ): array
     {
         return [
             'symfony.csrf.token.manager' => function (Container $container) {
@@ -45,12 +42,5 @@ class CsrfProvider implements ServiceProviderInterface
             'symfony.forms.csrf.extension' => function (Container $container) {
                 return new CsrfExtension($container->get('symfony.csrf.token.manager'));
             }];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onContainerBuild(Container $container, $config)
-    {
     }
 }
