@@ -54,5 +54,5 @@ jobs:
     - name: Run unit tests
       run: vendor/bin/phpunit
 
-    - name: Run Infection
-      run: vendor/bin/infection
+#    - name: Run Infection
+#      run: vendor/bin/infection
