@@ -1,37 +1,12 @@
-name: PHP Composer
-on: [push]
+name: Unit Tests
+on:
+  push:
+  pull_request:
+
 jobs:
-  psalm:
-    name: Psalm Static Analysis 
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['8.4', '8.5']
-        composer-deps:
-          - stable
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install PHP ${{ matrix.php-versions }}
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-versions }}
-        tools: composer:v2
-
-    - name: Install dependencies
-      run: composer update --prefer-${{ matrix.composer-deps }} --prefer-dist --no-interaction
-
-    - name: Install Psalm
-      run: make psalm-install
-
-    - name: Run Psalm
-      run: make psalm
-            
   phpunit_infection:
-    name: PHPUnit + Infection (PHP ${{ matrix.php-versions }}, Composer ${{ matrix.composer-versions }} --prefer-${{ matrix.composer-deps }})
+    name: PHPUnit + Infection PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.php-versions == '8.0' }}
-    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
     strategy:
       matrix:
         php-versions: ['8.4', '8.5']

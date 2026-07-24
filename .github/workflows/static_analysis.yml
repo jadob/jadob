@@ -1,0 +1,48 @@
+name: static_analysis.yml
+on:
+  pull_request
+jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [ '8.4', '8.5' ]
+        composer-deps:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction
+
+      - name: Run Psalm
+        run: make psalm
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: [ '8.4', '8.5' ]
+        composer-deps:
+          - stable
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction
+
+      - name: Run PHPStan
+        run: make phpstan
