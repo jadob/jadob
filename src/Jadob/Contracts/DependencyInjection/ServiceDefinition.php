@@ -6,7 +6,7 @@ namespace Jadob\Contracts\DependencyInjection;
 
 use Closure;
 
-class Definition
+class ServiceDefinition
 {
     private function __construct(
         /**
