@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Contracts\DependencyInjection;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+
 interface ConfigObjectProviderInterface
 {
     /**
@@ -11,5 +13,5 @@ interface ConfigObjectProviderInterface
      */
     public function getConfigNode(): string;
 
-    public function getDefaultConfigurationObject(): ConfigNode;
+    public function getDefaultConfigurationObject(): ConfigNodeInterface;
 }
