@@ -5,9 +5,11 @@ namespace Jadob\Container\Compiler;
 use Jadob\BetterContainer\Contract\ServiceProviderInterface;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
+use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
 use Jadob\Container\Exception\ContainerLogicException;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use MJS\TopSort\CircularDependencyException as TopSortCircularDependencyException;
+use MJS\TopSort\ElementNotFoundException;
 use MJS\TopSort\Implementations\StringSort;
 
 final readonly class ContainerCompiler
@@ -37,6 +39,7 @@ final readonly class ContainerCompiler
      * @param array<ServiceProviderInterface> $providers
      * @return array
      * @throws CircularDependencyException
+     * @throws MissingParentServiceProviderException
      */
     private function calculateServiceProviderRegisterOrder(
         array $providers,
@@ -57,6 +60,14 @@ final readonly class ContainerCompiler
         } catch (TopSortCircularDependencyException $exception) {
             throw new CircularDependencyException(
                 $exception->getMessage()
+            );
+        } catch(ElementNotFoundException $exception) {
+            throw new MissingParentServiceProviderException(
+                sprintf(
+                    'Service provider "%s" requires provider "%s" to be registered but it was not found in container config.',
+                    $exception->getSource(),
+                    $exception->getTarget()
+                )
             );
         }
 
