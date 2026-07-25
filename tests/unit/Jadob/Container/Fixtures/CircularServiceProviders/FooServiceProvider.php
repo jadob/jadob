@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\CircularServiceProviders;
 
-use Jadob\Contracts\DependencyInjection\ConfigNode;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;

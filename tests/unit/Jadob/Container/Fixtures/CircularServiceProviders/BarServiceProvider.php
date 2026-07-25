@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\CircularServiceProviders;
 
-use Jadob\Contracts\DependencyInjection\ConfigNode;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 
 final readonly class BarServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
@@ -20,7 +19,7 @@ final readonly class BarServiceProvider implements ServiceProviderInterface, Par
 
     public function register(
         ContainerBuilderInterface $builder,
-        ?ConfigNode $config = null
+        ?ConfigNodeInterface $config = null
     ): void
     {
 

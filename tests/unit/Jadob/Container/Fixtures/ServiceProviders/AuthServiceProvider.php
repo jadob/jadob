@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\ServiceProviders;
 
-use Jadob\Contracts\DependencyInjection\ConfigNode;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -19,7 +19,7 @@ final readonly class AuthServiceProvider implements ServiceProviderInterface, Pa
 
     public function register(
         ContainerBuilderInterface $builder,
-        ?ConfigNode $config = null
+        ?ConfigNodeInterface $config = null
     ): void
     {
     }
