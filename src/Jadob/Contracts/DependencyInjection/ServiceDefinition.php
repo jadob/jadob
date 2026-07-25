@@ -8,90 +8,20 @@ use Closure;
 
 class ServiceDefinition
 {
-    private function __construct(
-        /**
-         * @var class-string
-         */
-        private ?string  $className = null,
-        private array    $tags = [],
-        private bool     $lazy = false,
-        private bool     $shared = true,
-        private bool     $private = false,
-        private ?Closure $factory = null,
-    ) {
-    }
+    /** @var array<non-empty-string, Reference> */
+    private array $args = [];
 
-    public static function create(): self
+    public function withArg(
+        string $name,
+        Reference|string|int|array|null|bool $argument,
+    ): self
     {
-        return new self();
-    }
+        if(!($argument instanceof Reference)) {
+            $argument = Reference::literal($argument);
+        }
 
-    /**
-     * @phpstan-param class-string $name
-     */
-    public function setClassName(string $name): self
-    {
-        $this->className = $name;
+        $this->args[$name] = $argument;
+
         return $this;
-    }
-
-    public function setFactory(Closure $factory): self
-    {
-        $this->factory = $factory;
-        return $this;
-    }
-
-    public function isShared(): bool
-    {
-        return $this->shared;
-    }
-
-    public function setShared(bool $shared): self
-    {
-        $this->shared = $shared;
-        return $this;
-    }
-
-    public function isPrivate(): bool
-    {
-        return $this->private;
-    }
-
-    public function setPrivate(bool $private): self
-    {
-        $this->private = $private;
-        return $this;
-    }
-
-    public function getFactory(): ?Closure
-    {
-        return $this->factory;
-    }
-
-    public function getClassName(): ?string
-    {
-        return $this->className;
-    }
-
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            className: $data['class'] ?? null,
-            tags: $data['tags'] ?? [],
-            lazy: $data['lazy'] ?? false,
-            shared: $data['shared'] ?? true,
-            private: $data['private'] ?? false,
-            factory: $data['factory'] ?? null,
-        );
-    }
-
-    public function setTags(array $tags): void
-    {
-        $this->tags = $tags;
-    }
-
-    public function hasTag(string $tag): bool
-    {
-        return in_array($tag, $this->tags, true);
     }
 }
