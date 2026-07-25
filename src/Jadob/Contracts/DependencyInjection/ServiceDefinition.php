@@ -8,6 +8,13 @@ use Closure;
 
 class ServiceDefinition
 {
+    public function __construct(
+        private string $id,
+        private string $className,
+    )
+    {
+    }
+
     /** @var array<non-empty-string, Reference> */
     private array $args = [];
 
