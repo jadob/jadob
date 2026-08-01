@@ -8,6 +8,9 @@ use Jadob\Contracts\DependencyInjection\ExtendedContainerInterface;
 use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 
+/**
+ * @deprecated
+ */
 class EventDispatcherExtension implements ContainerExtensionInterface
 {
     public function onContainerBuild(ExtendedContainerInterface $container): void
