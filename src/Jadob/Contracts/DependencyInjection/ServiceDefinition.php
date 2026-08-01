@@ -8,6 +8,8 @@ use Closure;
 
 class ServiceDefinition
 {
+    private ?Closure $factory = null;
+
     private array $tags = [];
     public function __construct(
         private string $id,
@@ -29,6 +31,14 @@ class ServiceDefinition
         }
 
         $this->args[$name] = $argument;
+
+    public function factory(
+        Closure $factory,
+    ): self
+    {
+        $this->factory = $factory;
+        return $this;
+    }
 
     public function withTag(
         string $tag,
