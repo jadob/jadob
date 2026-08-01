@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
@@ -7,10 +8,17 @@ use Closure;
 use Exception;
 use Jadob\Bridge\Symfony\Validator\ServiceProvider\SymfonyValidatorProvider;
 use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
+use Jadob\Container\Builder\ContainerBuilder;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Container\Container;
+use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\ServiceProvider\SymfonyTranslatorProvider;
+use LogicException;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -24,84 +32,83 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 /**
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProviderInterface
+final readonly class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigNode(): ?string
+
+    public function getConfigNode(): string
     {
         return 'forms';
     }
 
-    public function register(ContainerInterface $container, object|null|array $config = null): array
+    /**
+     * @param ContainerBuilderInterface $builder
+     * @param FormsConfig|null $config
+     * @return void
+     */
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        $services = [];
+        if (!($config instanceof FormsConfig)) {
+            throw new LogicException(
+                sprintf('%s requires a forms config object', __CLASS__)
+            );
+        }
 
-        $services[HttpFoundationExtension::class] = [
-            'tags' => [
-                'form.extension'
-            ],
-            'class' => HttpFoundationExtension::class
-        ];
+        $builder
+            ->set(HttpFoundationExtension::class)
+            ->withTag('form.extension');
 
-        $services[ValidatorExtension::class] = [
-            'tags' => [
-                'form.extension'
-            ],
-            'factory' => static function (ValidatorInterface $validator): ValidatorExtension {
-                return new ValidatorExtension(
-                    $validator
-                );
-            }
-        ];
+        $builder
+            ->set(ValidatorExtension::class)
+            ->withTag('form.validator')
+            ->withArgument(
+                'validator',
+                Reference::service(ValidatorInterface::class)
+            );
 
-        $services[FormFactoryInterface::class] = static function (Container $container): FormFactoryInterface {
-            $formFactoryBuilder = Forms::createFormFactoryBuilder();
 
-            /** @var FormExtensionInterface $extensions */
-            $extensions = $container->getTaggedServices('form.extension');
-
-            foreach ($extensions as $extension) {
-                $formFactoryBuilder->addExtension($extension);
-            }
-
-            return $formFactoryBuilder->getFormFactory();
-        };
-
-        $services[FormExtension::class] = [
-            'tags' => ['twig.extension'],
-            'factory' => static function (): FormExtension {
-                return new FormExtension();
-            }
-        ];
-
-        $services[TwigRendererEngine::class] = [
-            'factory' => static function (Environment $twig) use ($config): TwigRendererEngine {
-                if (!array_key_exists('forms', $config)) {
-                    throw new Exception('There is no `forms` key in `translator` node.');
+        $builder
+            ->set(FormFactoryInterface::class)
+            ->factory(
+                function (
+                    #[InjectTaggedServices('form.extension')] array $extensions
+                ): FormFactoryInterface {
+                    $formFactoryBuilder = Forms::createFormFactoryBuilder();
+                    foreach ($extensions as $extension) {
+                        $formFactoryBuilder->addExtension($extension);
+                    }
+                    return $formFactoryBuilder->getFormFactory();
                 }
+            );
 
-                if (count($config['forms']) === 0) {
-                    throw new Exception('There is no form layouts defined in `translator` node.');
+        $builder
+            ->set(FormExtension::class)
+            ->withTag('form.extension');
+
+        $builder
+            ->set(TwigRendererEngine::class)
+            ->factory(
+                function (Environment $twig) use ($config) {
+                    return new TwigRendererEngine(
+                        $config->getFormThemes(),
+                        $twig
+                    );
                 }
+            );
 
-                return new TwigRendererEngine($config['forms'], $twig);
-            }
-        ];
-        $services[FormRenderer::class] = [
-            'tags' => ['twig.runtime_loader'],
-            'factory' => static function (TwigRendererEngine $rendererEngine): Closure {
-                return function () use ($rendererEngine): FormRenderer {
-                    return new FormRenderer($rendererEngine);
-                };
-            }
-        ];
 
-        return $services;
+        /**
+         * TODO: CSRF token manager
+         */
+        $builder
+            ->set(FormRenderer::class)
+            ->withTag('twig.runtime_loader')
+            ->withArgument(
+                'engine',
+                Reference::service(FormRenderer::class)
+            );
     }
 
     public function getParentServiceProviders(): array
@@ -111,5 +118,10 @@ class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProv
             SymfonyValidatorProvider::class,
             SymfonyTranslatorProvider::class
         ];
+    }
+
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
+    {
+        return new FormsConfig();
     }
 }
