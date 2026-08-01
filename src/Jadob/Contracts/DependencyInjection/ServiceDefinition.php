@@ -8,6 +8,7 @@ use Closure;
 
 class ServiceDefinition
 {
+    private array $tags = [];
     public function __construct(
         private string $id,
         private string $className,
@@ -29,6 +30,11 @@ class ServiceDefinition
 
         $this->args[$name] = $argument;
 
+    public function withTag(
+        string $tag,
+    ): self
+    {
+        $this->tags[] = $tag;
         return $this;
     }
 }
