@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 interface ContainerExtensionProviderInterface
 {
     /**
+     * @deprecated
      * @return list<ConstructorInjectionExtensionInterface>
      */
     public function getConstructorInjectionExtensions(
