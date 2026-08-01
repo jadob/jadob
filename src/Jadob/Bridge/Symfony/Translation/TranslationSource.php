@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Translation;
 
 /**
- * @internal
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
