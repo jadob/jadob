@@ -8,5 +8,6 @@ namespace Jadob\Contracts\DependencyInjection;
 enum ReferenceType
 {
     case Param;
+    case Service;
 
 }

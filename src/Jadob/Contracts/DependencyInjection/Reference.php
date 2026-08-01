@@ -8,8 +8,8 @@ namespace Jadob\Contracts\DependencyInjection;
 final readonly class Reference
 {
     public function __construct(
-        private ReferenceType $type,
-        private string $value,
+        private(set) ReferenceType $type,
+        private(set) string $value,
     )
     {
     }
@@ -23,6 +23,15 @@ final readonly class Reference
     {
 
     }
+
+    public static function service(string $serviceId): self
+    {
+        return new self(
+            ReferenceType::Service,
+            $serviceId,
+        );
+    }
+
 
     public static function param(string $paramName): self
     {
