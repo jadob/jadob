@@ -11,17 +11,20 @@ class ServiceDefinition
     private ?Closure $factory = null;
 
     private array $tags = [];
+
     public function __construct(
-        private string $id,
+        private(set) string $id,
         private string $className,
     )
     {
     }
 
-    /** @var array<non-empty-string, Reference> */
-    private array $args = [];
+    /**
+     * @var array<non-empty-string, Reference>
+     */
+    private(set) array $arguments = [];
 
-    public function withArg(
+    public function withArgument(
         string $name,
         Reference|string|int|array|null|bool $argument,
     ): self
@@ -30,7 +33,10 @@ class ServiceDefinition
             $argument = Reference::literal($argument);
         }
 
-        $this->args[$name] = $argument;
+        $this->arguments[$name] = $argument;
+
+        return $this;
+    }
 
     public function factory(
         Closure $factory,
