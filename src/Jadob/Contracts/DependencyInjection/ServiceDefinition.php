@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Contracts\DependencyInjection;
 
 use Closure;
+use function in_array;
 
 class ServiceDefinition
 {
@@ -52,5 +53,10 @@ class ServiceDefinition
     {
         $this->tags[] = $tag;
         return $this;
+    }
+
+    public function hasTag(string $tag): bool
+    {
+        return in_array($tag, $this->tags);
     }
 }
