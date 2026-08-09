@@ -206,4 +206,9 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
             SymfonyTranslatorProvider::class
         ];
     }
+
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
+    {
+        return new TwigConfig();
+    }
 }
