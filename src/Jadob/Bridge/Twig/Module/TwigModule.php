@@ -21,7 +21,7 @@ final readonly class TwigModule implements ModuleInterface
     public function getContainerCompilerExtensions(): array
     {
         return [
-            new TwigExtension()
+            600 => new TwigExtension()
         ];
     }
 }
