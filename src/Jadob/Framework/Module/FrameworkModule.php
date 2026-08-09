@@ -35,9 +35,9 @@ final readonly class FrameworkModule implements ModuleInterface
     public function getContainerCompilerExtensions(): array
     {
         return [
-            new RegisterEventListenersExtension(),
-            new RegisterConsoleCommandsExtension(),
-            new InjectLoggerExtension(),
+            500 => new RegisterEventListenersExtension(),
+            510 => new RegisterConsoleCommandsExtension(),
+            520 => new InjectLoggerExtension(),
         ];
     }
 
