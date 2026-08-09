@@ -25,6 +25,7 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormExtensionInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
@@ -82,6 +83,11 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
                     return $formFactoryBuilder->getFormFactory();
                 }
             );
+
+        $builder->bind(
+            FormFactoryInterface::class,
+            FormFactory::class
+        );
 
         $builder
             ->set(FormExtension::class)
