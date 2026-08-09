@@ -51,7 +51,7 @@ final class ContainerBuilder implements ContainerBuilderInterface
         $this->bindings[$type] = $serviceId;
     }
 
-    public function alias(string $alias, string $serviceId): void
+    public function alias(string $serviceId, string $alias): void
     {
         $this->aliases[$alias] = $serviceId;
     }

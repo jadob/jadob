@@ -22,6 +22,7 @@ interface ContainerBuilderInterface
     ): void;
 
     public function alias(
+        string $serviceId,
         string $alias,
         string $serviceId
     ): void;
