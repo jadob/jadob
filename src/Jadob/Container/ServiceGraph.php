@@ -28,6 +28,10 @@ class ServiceGraph
 
     public function get(string $id): ServiceDefinition
     {
+        if(isset($this->aliases[$id])) {
+            return $this->get($this->aliases[$id]);
+        }
+
         return $this->definitions[$id];
     }
 
