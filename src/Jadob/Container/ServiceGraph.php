@@ -61,6 +61,9 @@ class ServiceGraph
         return $this->tags[$tag] ?? [];
     }
 
+    /**
+     * @return ServiceDefinition[]
+     */
     public function all(): array
     {
         return $this->definitions;
