@@ -13,8 +13,8 @@ class ServiceDefinition
     private array $tags = [];
 
     public function __construct(
-        private(set) string $id,
-        private string $className,
+        private(set) readonly string $id,
+        private(set) readonly string $className,
     )
     {
     }
