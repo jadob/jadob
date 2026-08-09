@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Container\Extension;
 
+use Jadob\Container\ServiceGraph;
+use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
-use Jadob\Contracts\DependencyInjection\ExtendedContainerInterface;
+use Jadob\Contracts\DependencyInjection\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
@@ -12,15 +14,12 @@ use ReflectionFunction;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class TwigExtension implements ContainerExtensionInterface
+class TwigExtension implements CompilerExtensionInterface
 {
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws ReflectionException
-     * @throws NotFoundExceptionInterface
-     */
-    public function onContainerBuild(ExtendedContainerInterface $container): void
+
+    public function onContainerBuild(ServiceGraph $serviceGraph): void
     {
+        dd(__METHOD__);
         $twig = $container->get(Environment::class);
         $extensions = $container->getTaggedServices('twig.extension');
 
