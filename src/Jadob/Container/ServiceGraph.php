@@ -33,7 +33,8 @@ class ServiceGraph
 
     public function has(string $id): bool
     {
-        return isset($this->definitions[$id]);
+        return isset($this->definitions[$id])
+            || isset($this->aliases[$id]);
     }
 
     public function remove(string $id): void
