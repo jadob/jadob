@@ -24,15 +24,6 @@ interface ContainerBuilderInterface
     public function alias(
         string $serviceId,
         string $alias,
-        string $serviceId
-    ): void;
-
-    /**
-     * @param Closure $callable
-     * @return void
-     */
-    public function loadConfig(
-        Closure $callable
     ): void;
 
     public function registerServiceProvider(

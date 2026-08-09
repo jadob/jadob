@@ -71,6 +71,15 @@ final class ContainerBuilder implements ContainerBuilderInterface
         return Reference::env($name);
     }
 
+    public function loadConfiguration(
+        Closure $config
+    ): self
+    {
+        $this->configs[] = $config;
+
+        return $this;
+    }
+
     public function requireParameter(string $name,): void
     {
         $this->requiredParameters[] = $name;
