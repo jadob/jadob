@@ -2,37 +2,84 @@
 
 namespace Jadob\Container\Compiler;
 
-use Jadob\BetterContainer\Contract\ServiceProviderInterface;
+use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
-use Jadob\Container\Exception\ContainerLogicException;
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Container\Config\ConfigNodeFinder;
+use Jadob\Container\Config\ConfigNodeFinderInterface;
+use Jadob\Container\ServiceGraph;
+use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
+use Jadob\Contracts\DependencyInjection\ReferenceType;
+use Jadob\Contracts\DependencyInjection\ServiceDefinition;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use MJS\TopSort\CircularDependencyException as TopSortCircularDependencyException;
 use MJS\TopSort\ElementNotFoundException;
 use MJS\TopSort\Implementations\StringSort;
+use function array_map;
+use function array_merge;
+use function array_values;
 
-final readonly class ContainerCompiler
+final class ContainerCompiler
 {
 
     /**
-     * @param ContainerBuilder $container
+     * @var array<CompilerExtensionEntry>
+     */
+    private array $extensions = [];
+
+    /**
+     * @param ConfigNodeFinderInterface $configNodeFinder
+     */
+    public function __construct(
+        private ConfigNodeFinderInterface $configNodeFinder,
+    )
+    {
+    }
+
+    public function addExtension(
+        CompilerExtensionInterface $extension,
+        string $id,
+        int $priority,
+    ): void
+    {
+        $this->extensions[] = new CompilerExtensionEntry(
+            extension: $extension,
+            id: $id,
+            priority: $priority,
+        );
+
+    }
+
+    public function registerNativeExtensions(): void
+    {
+        
+    }
+
+    /**
+     * @param ContainerBuilder $builder
      * @param array $parameters
      * @return void
      */
     public function compile(
         ContainerBuilder $builder,
-        array            $parameters = [],
-    ): void
+    ): ServiceGraph
     {
-
         $serviceProviders = $builder
             ->getServiceProviders();
 
-        $serviceProviderOrder = $this
-            ->calculateServiceProviderRegisterOrder(
-                $serviceProviders,
-            );
+        $this->resolveServiceProviders(
+            $builder,
+            $serviceProviders,
+        );
+
+        return $this->buildServiceGraph(
+            $builder,
+        );
     }
 
     /**
@@ -87,6 +134,95 @@ final readonly class ContainerCompiler
             );
         }
 
+    }
+
+    /**
+     * @param ContainerBuilder $builder
+     * @param array<ServiceProviderInterface|(ServiceProviderInterface&ConfigObjectProviderInterface)> $providers
+     * @return void
+     * @throws CircularDependencyException
+     * @throws MissingParentServiceProviderException
+     */
+    private function resolveServiceProviders(
+        ContainerBuilder $builder,
+        array            $providers,
+    ): void
+    {
+        $serviceProviderOrder = $this
+            ->calculateServiceProviderRegisterOrder(
+                $providers,
+            );
+
+        foreach ($serviceProviderOrder as $provider) {
+            if ($provider instanceof ConfigObjectProviderInterface) {
+                $config = $this->processConfigForProvider($provider);
+                $provider->register($builder, $config);
+                continue;
+            }
+
+            $provider->register($builder);
+        }
+    }
+
+    private function processConfigForProvider(
+        ConfigObjectProviderInterface $provider,
+    ): ConfigNodeInterface
+    {
+        $config = $provider->getDefaultConfigurationObject();
+        /** @var array<Closure> $availableConfigs */
+        $availableConfigs = $this
+            ->configNodeFinder
+            ->find(
+                $provider->getConfigNode(),
+            );
+
+        foreach ($availableConfigs as $override) {
+            $config = $override($config);
+        }
+
+        return $config;
+    }
+
+    private function buildServiceGraph(
+        ContainerBuilder $builder
+    ): ServiceGraph
+    {
+        $graph = new ServiceGraph();
+
+        foreach ($builder->getDefinitions() as $definition) {
+            $graph->add($definition);
+        }
+
+        foreach ($builder->getAliases() as $serviceId => $alias) {
+            $graph->alias($serviceId, $alias);
+        }
+
+        foreach ($builder->getBindings() as $serviceId => $binding) {
+            $graph->alias($serviceId, $binding);
+        }
+
+        $extensions = $this->getSortedBuildExtensions();
+        foreach ($extensions as $extensionsInPriority) {
+            foreach ($extensionsInPriority as $extension) {
+                $extension->onContainerBuild($graph);
+            }
+        }
+
+        return $graph;
+    }
+
+    /**
+     * @return array<int, array<CompilerExtensionInterface>>
+     */
+    private function getSortedBuildExtensions(): array
+    {
+        $map = [];
+
+        foreach ($this->extensions as $extension) {
+            $map[$extension->priority][] = $extension;
+        }
+
+        return $map;
     }
 
 }
