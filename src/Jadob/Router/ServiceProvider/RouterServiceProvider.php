@@ -36,7 +36,7 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
 
 
         $builder->set(Router::class)
-            ->factory(
+            ->withFactory(
                 static function () use ($config) {
                     return new Router(
                         RouteCollection::fromArray($config->getRoutes()),

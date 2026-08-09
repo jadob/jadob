@@ -22,7 +22,7 @@ final readonly class SessionProvider implements ServiceProviderInterface
 
         $builder
             ->set(NativeSessionStorage::class)
-            ->factory(
+            ->withFactory(
                 function (SessionHandlerFactory $factory) {
                     return new NativeSessionStorage(
                         [],

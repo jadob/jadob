@@ -27,7 +27,7 @@ class ConsoleProvider implements ServiceProviderInterface
             $builder->set(HelperSet::class);
 
             $builder->set(Application::class)
-                ->factory(
+                ->withFactory(
                     function (HelperSet $helperSet) {
                         $application = new Application('Jadob', Kernel::VERSION);
                         $application->setHelperSet($helperSet);

@@ -22,7 +22,7 @@ class ErrorHandlerServiceProvider implements ServiceProviderInterface, ParentSer
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         $builder->set(HandlerFactory::class)
-            ->factory(
+            ->withFactory(
                 function (LoggerFactory $loggerFactory) {
                     return HandlerFactory::factory(
                         $this->env,

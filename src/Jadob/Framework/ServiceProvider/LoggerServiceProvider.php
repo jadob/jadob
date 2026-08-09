@@ -22,7 +22,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
     {
         $builder
             ->set(LoggerFactory::class)
-            ->factory(
+            ->withFactory(
                 function (BootstrapInterface $bootstrap) use ($config): LoggerFactory {
                     /**
                      * TODO: when defining arguments in DI definitions would be available, refactor this to nod use the factory

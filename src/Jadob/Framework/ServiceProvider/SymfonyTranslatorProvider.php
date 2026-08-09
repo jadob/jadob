@@ -64,7 +64,7 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
 
         $builder
             ->set(Translator::class)
-            ->factory(
+            ->withFactory(
                 static function (
                     #[InjectParameter('translations_directory')] string $translationsDirectory,
                     MessageFormatterInterface                           $messageFormatter,
@@ -123,7 +123,7 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
         if ($config->loggingEnabled) {
             $builder
                 ->set('translator.logger', LoggerInterface::class)
-                ->factory(function (LoggerFactory $factory) {
+                ->withFactory(function (LoggerFactory $factory) {
                     return $factory->getLoggerForChannel('translator');
                 });
 

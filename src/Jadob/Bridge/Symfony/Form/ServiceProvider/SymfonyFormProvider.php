@@ -10,7 +10,6 @@ use Jadob\Bridge\Symfony\Validator\ServiceProvider\SymfonyValidatorProvider;
 use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Config\ConfigNodeInterface;
-use Jadob\Container\Container;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
@@ -72,7 +71,7 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
 
         $builder
             ->set(FormFactory::class)
-            ->factory(
+            ->withFactory(
                 function (
                     #[InjectTaggedServices('form.extension')] array $extensions
                 ): FormFactoryInterface {
@@ -95,7 +94,7 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
 
         $builder
             ->set(TwigRendererEngine::class)
-            ->factory(
+            ->withFactory(
                 function (Environment $twig) use ($config) {
                     return new TwigRendererEngine(
                         $config->getFormThemes(),

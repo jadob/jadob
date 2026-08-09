@@ -21,7 +21,7 @@ final readonly class SymfonyValidatorProvider implements ServiceProviderInterfac
     {
         $builder
             ->set(RecursiveValidator::class)
-            ->factory(function () {
+            ->withFactory(function () {
                 return Validation::createValidatorBuilder()->getValidator();
             });
 
