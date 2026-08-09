@@ -6,6 +6,7 @@ use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
+use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Container\Config\ConfigNodeFinder;
 use Jadob\Container\Config\ConfigNodeFinderInterface;
@@ -57,6 +58,11 @@ final class ContainerCompiler
 
     public function registerNativeExtensions(): void
     {
+        $this->extensions[] = new CompilerExtensionEntry(
+            extension: new ResolveFactoryArguments(),
+            id: 'resolve_factory_arguments',
+            priority: 1,
+        );
         
     }
 
