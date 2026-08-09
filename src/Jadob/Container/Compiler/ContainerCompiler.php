@@ -219,7 +219,7 @@ final class ContainerCompiler
         $map = [];
 
         foreach ($this->extensions as $extension) {
-            $map[$extension->priority][] = $extension;
+            $map[$extension->priority][] = $extension->extension;
         }
 
         return $map;
