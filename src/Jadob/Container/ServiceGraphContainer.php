@@ -21,7 +21,7 @@ use ReflectionFunction;
 use ReflectionNamedType;
 use function is_array;
 
-class Container implements ContainerInterface, ServiceProviderHandlerInterface, ExtendedContainerInterface
+class ServiceGraphContainer implements  ContainerInterface
 {
     /**
      * @var list<ContainerExtensionInterface>
