@@ -71,7 +71,7 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
 
 
         $builder
-            ->set(FormFactoryInterface::class)
+            ->set(FormFactory::class)
             ->factory(
                 function (
                     #[InjectTaggedServices('form.extension')] array $extensions
