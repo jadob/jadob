@@ -82,6 +82,16 @@ readonly class Application
 
         $builder = new ContainerBuilder();
 
+        $bootstrapFileFqcn = get_class($this->bootstrap);
+        $builder
+            ->set($bootstrapFileFqcn)
+            ->withFactory(fn (): BootstrapInterface => $this->bootstrap);
+
+        $builder->bind(
+            BootstrapInterface::class,
+            $bootstrapFileFqcn
+        );
+
         $builder->loadConfiguration($userspaceContainerConfig);
         foreach ($modules as $module) {
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
