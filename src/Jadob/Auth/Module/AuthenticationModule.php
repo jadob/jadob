@@ -13,7 +13,7 @@ final readonly class AuthenticationModule implements ModuleInterface
     public function getServiceProviders(string $env): array
     {
         return [
-            new AuthenticationServiceProvider(),
+            600 => new AuthenticationServiceProvider(),
         ];
     }
 
