@@ -9,7 +9,7 @@ use function in_array;
 
 class ServiceDefinition
 {
-    private ?Closure $factory = null;
+    private(set) ?Closure $factory = null;
 
     private array $tags = [];
 
