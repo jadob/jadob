@@ -34,8 +34,6 @@ final class ContainerBuilder implements ContainerBuilderInterface
     private array $aliases = [];
 
     public function set(
-        string $id,
-        ?string $class = null,
         string  $id,
         ?string $className = null,
     ): ServiceDefinition
@@ -72,9 +70,14 @@ final class ContainerBuilder implements ContainerBuilderInterface
 
     }
 
+    public function replace(
+        string  $id,
+        ?string $className = null
     ): ServiceDefinition
     {
+        unset($this->definitions[$id]);
 
+        return $this->set($id, $className);
     }
 
     /**
