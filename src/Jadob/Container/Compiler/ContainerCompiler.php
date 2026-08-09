@@ -83,6 +83,10 @@ final class ContainerCompiler
             $serviceProviders,
         );
 
+        $this->resolveConfigurations(
+            $builder,
+        );
+
         return $this->buildServiceGraph(
             $builder,
         );
@@ -229,6 +233,20 @@ final class ContainerCompiler
         }
 
         return $map;
+    }
+
+    private function resolveConfigurations(
+        ContainerBuilder $builder,
+    ): void
+    {
+        $emptyConfigsReceived = false;
+        while (!$emptyConfigsReceived) {
+            $configs = $builder->popConfigurations();
+            $emptyConfigsReceived = count($configs) === 0;
+            foreach ($configs as $config) {
+                $config($builder);
+            }
+        }
     }
 
 }
