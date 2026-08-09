@@ -16,7 +16,7 @@ interface ModuleInterface
     public function getServiceProviders(string $env): array;
 
     /**
-     * @return array{extension: CompilerExtensionInterface, priority: int}[]
+     * @return array<int, CompilerExtensionInterface>
      */
     public function getContainerCompilerExtensions(): array;
 }
