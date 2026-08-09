@@ -17,15 +17,8 @@ final readonly class AuthenticationModule implements ModuleInterface
         ];
     }
 
-    public function getContainerExtensionProviders(string $env): array
+    public function getContainerCompilerExtensions(): array
     {
         return [];
-    }
-
-    public function getEventListeners(ContainerInterface $container, string $env): array
-    {
-        return [
-           $container->get(AuthenticationEventListener::class),
-        ];
     }
 }
