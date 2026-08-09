@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Throwable;
 use function array_merge;
+use function get_class;
 use function Symfony\Component\String\b;
 
 readonly class Application
@@ -109,16 +110,22 @@ readonly class Application
         );
 
         $compiler->registerNativeExtensions();
+
+        foreach ($modules as $module) {
+            foreach ($module->getContainerCompilerExtensions() as $priority => $extension) {
+                $compiler->addExtension(
+                    extension: $extension,
+                    id: get_class($extension),
+                    priority: $priority,
+                );
+            }
+        }
+
+
         $container = new ServiceGraphContainer(
             $compiler->compile($builder)
         );
 
-        $injectionExtensions = [];
-        foreach ($modules as $module) {
-            foreach ($module->getContainerExtensionProviders($this->env) as $containerExtensionProvider) {
-
-            }
-        }
 
     }
 
