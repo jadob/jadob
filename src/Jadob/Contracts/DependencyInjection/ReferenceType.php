@@ -9,5 +9,5 @@ enum ReferenceType
 {
     case Param;
     case Service;
-
+    case TaggedServices;
 }

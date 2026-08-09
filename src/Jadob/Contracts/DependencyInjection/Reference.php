@@ -32,6 +32,13 @@ final readonly class Reference
         );
     }
 
+    public static function taggedServices(string $tag): self
+    {
+        return new self(
+            ReferenceType::TaggedServices,
+            $tag,
+        );
+    }
 
     public static function param(string $paramName): self
     {

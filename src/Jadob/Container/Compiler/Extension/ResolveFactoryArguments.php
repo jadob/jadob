@@ -49,7 +49,13 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
 
                 $injectTaggedAttrs = $parameter->getAttributes(InjectTaggedServices::class);
                 if (count($injectTaggedAttrs) > 0) {
-                    throw new LogicException('Not implemented');
+                    /** @var InjectTaggedServices $attr */
+                    $attr = $injectTaggedAttrs[0]->newInstance();
+
+                    $definition->withArgument(
+                        $parameter->name,
+                        Reference::service($attr->tag)
+                    );
                 }
 
                 /** @var ReflectionNamedType $paramType */
