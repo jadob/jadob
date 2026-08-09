@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Jadob\Framework\DependencyInjection\Extension;
 
 use Jadob\Contracts\DependencyInjection\ContainerExtensionInterface;
-use Jadob\Contracts\DependencyInjection\ExtendedContainerInterface;
+use Jadob\Contracts\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
 final readonly class ConsoleCommandExtension implements ContainerExtensionInterface
 {
-    public function onContainerBuild(ExtendedContainerInterface $container): void
+    public function onContainerBuild(ContainerInterface $container): void
     {
         if (!$container->has(Application::class)) {
             return;

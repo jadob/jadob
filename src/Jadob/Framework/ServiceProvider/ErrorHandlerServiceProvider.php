@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
-use Psr\Container\ContainerInterface;
 
 class ErrorHandlerServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
@@ -17,21 +18,20 @@ class ErrorHandlerServiceProvider implements ServiceProviderInterface, ParentSer
     {
     }
 
-    public function getConfigNode(): ?string
-    {
-        return null;
-    }
 
-    public function register(ContainerInterface $container, object|array|null $config = null): array
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        return [
-            ErrorHandlerInterface::class => function (LoggerFactory $loggerFactory) {
-                return HandlerFactory::factory(
-                    $this->env,
-                    $loggerFactory->getDefaultLogger()
-                );
-            }
-        ];
+        $builder->set(HandlerFactory::class)
+            ->factory(
+                function (LoggerFactory $loggerFactory) {
+                    return HandlerFactory::factory(
+                        $this->env,
+                        $loggerFactory->getDefaultLogger()
+                    );
+                }
+            );
+
+        $builder->bind(ErrorHandlerInterface::class, HandlerFactory::class);
     }
 
     public function getParentServiceProviders(): array
