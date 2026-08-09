@@ -9,6 +9,7 @@ use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final readonly class SymfonyValidatorProvider implements ServiceProviderInterface
@@ -19,9 +20,12 @@ final readonly class SymfonyValidatorProvider implements ServiceProviderInterfac
     ): void
     {
         $builder
-            ->set(ValidatorInterface::class)
+            ->set(RecursiveValidator::class)
             ->factory(function () {
                 return Validation::createValidatorBuilder()->getValidator();
             });
+
+        $builder
+            ->bind(ValidatorInterface::class, RecursiveValidator::class);
     }
 }
