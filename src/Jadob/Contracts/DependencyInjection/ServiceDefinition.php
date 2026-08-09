@@ -39,7 +39,7 @@ class ServiceDefinition
         return $this;
     }
 
-    public function factory(
+    public function withFactory(
         Closure $factory,
     ): self
     {
