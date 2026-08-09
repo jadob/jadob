@@ -95,10 +95,6 @@ final class ContainerBuilder implements ContainerBuilderInterface
         $this->aliases[$alias] = $serviceId;
     }
 
-    public function loadConfig(Closure $callable): void
-    {
-        // TODO: Implement loadConfig() method.
-    }
 
     public function registerServiceProvider(ServiceProviderInterface $serviceProvider): void
     {
