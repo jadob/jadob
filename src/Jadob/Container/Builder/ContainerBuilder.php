@@ -36,6 +36,42 @@ final class ContainerBuilder implements ContainerBuilderInterface
     public function set(
         string $id,
         ?string $class = null,
+        string  $id,
+        ?string $className = null,
+    ): ServiceDefinition
+    {
+        if ($id === '') {
+            throw new ContainerBuildException('A service ID cannot be empty.');
+        }
+
+        if (isset($this->definitions[$id])) {
+            throw new ContainerBuildException(
+                sprintf(
+                    'Service "%s" is already defined; use replace() to override it.',
+                    $id,
+                ));
+        }
+
+        if ($className === null && \class_exists($id)) {
+            $className = $id;
+        }
+
+        if ($className === null && \interface_exists($id)) {
+            throw new ContainerBuildException(
+                \sprintf(
+                    'Service "%s" is an interface, register a concrete implementation and use bind() to map it to interface.',
+                    $id,
+                )
+            );
+        }
+
+        return $this->definitions[$id] = new ServiceDefinition(
+            $id,
+            $className
+        );
+
+    }
+
     ): ServiceDefinition
     {
 
