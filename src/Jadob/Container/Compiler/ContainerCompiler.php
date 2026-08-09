@@ -37,7 +37,7 @@ final readonly class ContainerCompiler
 
     /**
      * @param array<ServiceProviderInterface> $providers
-     * @return array
+     * @return array<ServiceProviderInterface> Topological sorted list of providers
      * @throws CircularDependencyException
      * @throws MissingParentServiceProviderException
      */
@@ -46,22 +46,38 @@ final readonly class ContainerCompiler
     ): array
     {
         try {
+            $providersIndexed = [];
             $sorter = new StringSort();
             foreach ($providers as $provider) {
+                $providerFqcn = \get_class($provider);
+                $providersIndexed[$providerFqcn] = $provider;
+
                 $dependencies = [];
                 if ($provider instanceof ParentServiceProviderInterface) {
                     $dependencies = $provider->getParentServiceProviders();
                 }
 
-                $sorter->add(get_class($provider), $dependencies);
+                $sorter->add(
+                    $providerFqcn,
+                    $dependencies
+                );
             }
 
-            return $sorter->sort();
+            /** @var array<class-string> $result */
+            $result = $sorter->sort();
+
+            $output = [];
+            foreach ($result as $providerFqcn) {
+                $output[] = $providersIndexed[$providerFqcn];
+            }
+
+            return $output;
+
         } catch (TopSortCircularDependencyException $exception) {
             throw new CircularDependencyException(
                 $exception->getMessage()
             );
-        } catch(ElementNotFoundException $exception) {
+        } catch (ElementNotFoundException $exception) {
             throw new MissingParentServiceProviderException(
                 sprintf(
                     'Service provider "%s" requires provider "%s" to be registered but it was not found in container config.',
