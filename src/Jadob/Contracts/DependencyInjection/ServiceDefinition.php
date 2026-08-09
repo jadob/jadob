@@ -13,6 +13,8 @@ class ServiceDefinition
 
     private array $tags = [];
 
+    private array $methodCalls = [];
+
     public function __construct(
         private(set) readonly string $id,
         private(set) readonly string $className,
@@ -58,5 +60,13 @@ class ServiceDefinition
     public function hasTag(string $tag): bool
     {
         return in_array($tag, $this->tags);
+    }
+
+    public function addMethodCall(
+        string $methodName,
+        array $arguments = [],
+    ): void
+    {
+        $this->methodCalls[$methodName][] = $arguments;
     }
 }
