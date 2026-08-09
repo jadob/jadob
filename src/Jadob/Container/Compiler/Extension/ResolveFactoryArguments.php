@@ -10,6 +10,7 @@ use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
 use LogicException;
 use ReflectionFunction;
+use ReflectionNamedType;
 use function count;
 
 final readonly class ResolveFactoryArguments implements CompilerExtensionInterface
@@ -50,6 +51,14 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
                 if (count($injectTaggedAttrs) > 0) {
                     throw new LogicException('Not implemented');
                 }
+
+                /** @var ReflectionNamedType $paramType */
+                $paramType = $parameter->getType();
+
+                $definition->withArgument(
+                    $parameter->name,
+                    Reference::service($paramType)
+                );
             }
         }
     }
