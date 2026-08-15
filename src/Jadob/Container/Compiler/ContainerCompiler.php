@@ -92,6 +92,10 @@ final class ContainerCompiler
             $builder,
         );
 
+        $this->processNamespaceScans(
+            $builder
+        );
+
         return $this->buildServiceGraph(
             $builder,
         );
@@ -111,7 +115,7 @@ final class ContainerCompiler
             $providersIndexed = [];
             $sorter = new StringSort();
             foreach ($providers as $provider) {
-                $providerFqcn = \get_class($provider);
+                $providerFqcn = get_class($provider);
                 $providersIndexed[$providerFqcn] = $provider;
 
                 $dependencies = [];
