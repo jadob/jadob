@@ -7,13 +7,13 @@ namespace Jadob\Container;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ReferenceType;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use function array_map;
 use function call_user_func_array;
 use function is_string;
 
-class ServiceGraphContainer implements ContainerInterface
+final class ServiceGraphContainer implements ContainerInterface
 {
-
     /**
      * @var array<string, object>
      */
@@ -32,12 +32,12 @@ class ServiceGraphContainer implements ContainerInterface
         }
 
         $definition = $this->graph->get($id);
-
-        $args = $this->resolveArgs($definition->arguments);
-
+        $args = $this->resolveArgs(
+            $definition->arguments
+        );
 
         if($definition->factory === null) {
-            $reflectionClass = new \ReflectionClass($definition->className);
+            $reflectionClass = new ReflectionClass($definition->className);
 
             return $this
                 ->doInitialize(
@@ -69,14 +69,23 @@ class ServiceGraphContainer implements ContainerInterface
     private function resolveArgs(array $args): array
     {
         return array_map(
-            function (string|Reference $arg): string|object {
-                if(is_string($arg)) {
+            function (string|Reference $arg): string|object|array {
+                if (is_string($arg)) {
                     return $arg;
                 }
 
-                if($arg->type === ReferenceType::Service) {
+                if ($arg->type === ReferenceType::Service) {
                     return $this->get(
                         $arg->value
+                    );
+                }
+
+                if($arg->type === ReferenceType::TaggedServices) {
+                    $tag = $arg->value;
+
+                    return array_map(
+                        fn(string $id): object => $this->get($id),
+                        $this->graph->findTagged($tag)
                     );
                 }
 
