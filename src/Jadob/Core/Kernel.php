@@ -6,7 +6,7 @@ namespace Jadob\Core;
 
 use Exception;
 use Jadob\Config\Config;
-use Jadob\Container\Container;
+use Jadob\Container\ServiceGraphContainer;
 use Jadob\Container\ContainerBuilder;
 use Jadob\Container\ContainerEventListener;
 use Jadob\Container\Exception\ContainerException;
@@ -40,6 +40,7 @@ use function in_array;
 use function is_array;
 
 /**
+ * @deprecated
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
@@ -58,12 +59,12 @@ class Kernel
     protected RequestContextStore $contextStore;
 
     public function __construct(
-        protected string   $env,
-        private BootstrapInterface $bootstrap,
-        private Container $container,
+        protected string                 $env,
+        private BootstrapInterface       $bootstrap,
+        private ServiceGraphContainer    $container,
         private EventDispatcherInterface $eventDispatcher,
-        private ErrorHandlerInterface $errorHandler,
-        private LoggerFactory $loggerFactory,
+        private ErrorHandlerInterface    $errorHandler,
+        private LoggerFactory            $loggerFactory,
     ) {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
@@ -146,9 +147,9 @@ class Kernel
     }
 
     /**
-     * @return Container
+     * @return ServiceGraphContainer
      */
-    public function getContainer(): Container
+    public function getContainer(): ServiceGraphContainer
     {
         return $this->container;
     }
