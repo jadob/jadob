@@ -10,13 +10,15 @@ final class TranslatorConfig implements ConfigNodeInterface
 
     private(set) bool $loggingEnabled = false;
 
-    public function enableLogging(): bool
+    public function enableLogging(): self
     {
         $this->loggingEnabled = true;
+        return $this;
     }
 
     public function withLocale(string $locale): self
     {
         $this->locale = $locale;
+        return $this;
     }
 }
