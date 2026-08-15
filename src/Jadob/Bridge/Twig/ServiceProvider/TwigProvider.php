@@ -209,6 +209,10 @@ class TwigProvider implements ServiceProviderInterface, ParentServiceProviderInt
 
     public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
-        return new TwigConfig();
+        return new TwigConfig(
+            cache: false,
+            strictVariables: false,
+            templatePaths: []
+        );
     }
 }
