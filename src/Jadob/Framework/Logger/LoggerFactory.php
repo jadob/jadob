@@ -10,9 +10,6 @@ use Monolog\Handler\HandlerInterface;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
-use function array_keys;
-use function array_map;
-use function implode;
 use function sprintf;
 
 class LoggerFactory
@@ -76,23 +73,32 @@ class LoggerFactory
     {
         if (!array_key_exists($handlerName, $this->handlers)) {
             $config = $this->handlersConfig[$handlerName];
-            $handlerType = $config->type;
+            $factory = $this->getLogHandlerFactoryForType($config->type);
 
-            if (!array_key_exists($handlerType, $this->handlerFactories)) {
-                throw new LogicException(
-                    sprintf(
-                        'There is no factory for log handler type "%s".',
-                        $handlerType,
-                    )
-                );
-            }
-
-            $this->handlers[$handlerName] = $this->handlerFactories[$handlerName]->create(
+            $this->handlers[$handlerName] = $factory->create(
                 parameters: $config->parameters,
                 level: $config->level
             );
         }
 
         return $this->handlers[$handlerName];
+    }
+
+    private function getLogHandlerFactoryForType(
+        string $type
+    ): LogHandlerFactoryInterface
+    {
+        foreach ($this->handlerFactories as $handlerFactory) {
+            if($handlerFactory->supports($type)) {
+                return $handlerFactory;
+            }
+        }
+
+        throw new LogicException(
+            sprintf(
+            'There is no log handler factory for type "%s"',
+                $type
+            )
+        );
     }
 }
