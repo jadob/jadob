@@ -18,4 +18,9 @@ final readonly class RotatingFileHandlerFactory implements LogHandlerFactoryInte
             level: $level,
         );
     }
+
+    public function supports(string $type): bool
+    {
+        return $type === 'rotating_file';
+    }
 }

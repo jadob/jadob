@@ -17,4 +17,9 @@ final readonly class StreamHandlerFactory implements LogHandlerFactoryInterface
             level: $level,
         );
     }
+
+    public function supports(string $type): bool
+    {
+        return $type === 'stream';
+    }
 }

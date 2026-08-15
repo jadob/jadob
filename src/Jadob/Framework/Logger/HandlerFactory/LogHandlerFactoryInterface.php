@@ -10,4 +10,8 @@ interface LogHandlerFactoryInterface
         array $parameters,
         string $level
     ): HandlerInterface;
+
+    public function supports(
+        string $type
+    ): bool;
 }
