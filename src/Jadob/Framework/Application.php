@@ -97,12 +97,6 @@ readonly class Application
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
                 $serviceProviders[] = $serviceProvider;
             }
-
-//            foreach ($module->getContainerExtensionProviders($this->env) as $extensionProvider) {
-//                foreach ($extensionProvider->getContainerExtensions() as $extension) {
-//                    $container->addExtension($extension);
-//                }
-//            }
         }
 
         foreach ($serviceProviders as $serviceProvider) {
