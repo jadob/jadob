@@ -4,6 +4,7 @@ namespace Jadob\Container\Compiler;
 
 use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
+use Jadob\Container\Builder\NamespaceScanConfigurator;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
 use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
@@ -21,9 +22,13 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use MJS\TopSort\CircularDependencyException as TopSortCircularDependencyException;
 use MJS\TopSort\ElementNotFoundException;
 use MJS\TopSort\Implementations\StringSort;
+use Roave\BetterReflection\BetterReflection;
+use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 use function array_map;
 use function array_merge;
 use function array_values;
+use function get_class;
 
 final class ContainerCompiler
 {
@@ -245,6 +250,33 @@ final class ContainerCompiler
             $emptyConfigsReceived = count($configs) === 0;
             foreach ($configs as $config) {
                 $config($builder);
+            }
+        }
+    }
+
+    private function processNamespaceScans(
+        ContainerBuilder $builder
+    ): void
+    {
+        foreach ($builder->getNamespaceScans() as $namespaceScan) {
+            $sourceLocator = new DirectoriesSourceLocator(
+                $namespaceScan->paths,
+                new BetterReflection()->astLocator()
+            );
+
+            $reflector = new DefaultReflector($sourceLocator);
+
+            $classReflections = $reflector->reflectAllClasses();
+
+            foreach ($classReflections as $classReflection) {
+                $service = $builder->set(
+                    $classReflection->getName()
+                );
+
+                foreach ($namespaceScan->tags as $tag) {
+                    $service->withTag($tag);
+                }
+
             }
         }
     }
