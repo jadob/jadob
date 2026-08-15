@@ -15,10 +15,7 @@ final class FormsConfig implements ConfigNodeInterface
     public function withFormTheme(string $formTheme): self
     {
         $this->formThemes[] = $formTheme;
-    }
 
-    public function getFormThemes(): array
-    {
-        return $this->formThemes;
+        return $this;
     }
 }
