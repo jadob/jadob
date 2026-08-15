@@ -2,6 +2,8 @@
 
 namespace Jadob\Framework\Logger;
 
+use function in_array;
+
 final class HandlerConfiguration
 {
     /**
@@ -10,11 +12,21 @@ final class HandlerConfiguration
      * @param array<string, string|int> $parameters
      */
     public function __construct(
-        private string $type,
-        private int $level,
+        private(set) string $type,
+        private(set) string $level,
         private array $channels,
-        private array $parameters
+        private(set) array $parameters
     )
     {
+    }
+
+    public function supportsChannel(
+        string $channel,
+    ): bool
+    {
+        return in_array(
+            $channel,
+            $this->channels
+        );
     }
 }
