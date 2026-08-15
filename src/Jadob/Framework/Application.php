@@ -110,9 +110,9 @@ readonly class Application
         }
 
         $configLocations = [
-            $this->bootstrap->getConfigDir(), // base configs
-            sprintf('%s/%s/', $configDir, $this->env), // environment overrides
-            sprintf('%s/local/', $configDir), // local overrides
+            $configDir, // base configs
+            sprintf('%s/%s', $configDir, $this->env), // environment overrides
+            sprintf('%s/local', $configDir), // local overrides
         ];
 
         $compiler = new ContainerCompiler(
