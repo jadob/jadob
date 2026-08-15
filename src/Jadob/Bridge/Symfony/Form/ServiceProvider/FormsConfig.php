@@ -6,8 +6,11 @@ use Jadob\Container\Config\ConfigNodeInterface;
 
 final class FormsConfig implements ConfigNodeInterface
 {
-
-    private array $formThemes = [];
+    public function __construct(
+        private(set) array $formThemes = []
+    )
+    {
+    }
 
     public function withFormTheme(string $formTheme): self
     {
