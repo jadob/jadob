@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Container;
 
+use Jadob\Container\Exception\ContainerException;
 use Jadob\Contracts\DependencyInjection\ServiceDefinition;
 
 class ServiceGraph
@@ -30,10 +33,19 @@ class ServiceGraph
         }
     }
 
+    /**
+     * @throws ContainerException
+     */
     public function get(string $id): ServiceDefinition
     {
         if(isset($this->aliases[$id])) {
             return $this->get($this->aliases[$id]);
+        }
+
+        if(array_key_exists($id, $this->definitions) === false) {
+            throw new ContainerException(
+                sprintf('Service "%s" not found.', $id)
+            );
         }
 
         return $this->definitions[$id];
