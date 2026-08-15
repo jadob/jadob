@@ -28,28 +28,23 @@ class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectPro
      */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-
         $builder
             ->set(LoggerFactory::class)
             ->withFactory(
-                static function () use ($config): LoggerFactory {
-                    $handlers = [];
-                    foreach ($config->handlers as $handlerName => $handlerConfig) {
-                        $handlers[$handlerName] = new HandlerConfiguration(
+                fn(): LoggerFactory => new LoggerFactory(
+                    defaultLoggerChannel: $config->defaultLoggerChannel,
+                    defaultErrorLoggerChannel: $config->defaultErrorLoggerChannel,
+                    channelsConfig: $config->channels,
+                    handlersConfig: array_map(
+                        fn(LoggerHandlerConfig $handlerConfig): HandlerConfiguration => new HandlerConfiguration(
                             type: $handlerConfig->type,
                             level: $handlerConfig->level,
                             channels: $handlerConfig->channels,
                             parameters: $handlerConfig->parameters,
-                        );
-                    }
-
-                    return new LoggerFactory(
-                        defaultLoggerChannel: $config->defaultLoggerChannel,
-                        defaultErrorLoggerChannel: $config->defaultErrorLoggerChannel,
-                        channelsConfig: [],
-                        handlersConfig: $handlers,
-                    );
-                }
+                        ),
+                        $config->handlers
+                    ),
+                )
             );
     }
 
