@@ -4,18 +4,24 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\DependencyInjection\CompilerExtension\InjectLoggerExtension;
 use Jadob\Framework\Logger\HandlerConfiguration;
+use Jadob\Framework\Logger\HandlerFactory\RotatingFileHandlerFactory;
+use Jadob\Framework\Logger\HandlerFactory\StreamHandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use function in_array;
 
-class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
+final readonly class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
+    private const string HANDLER_FACTORY_TAG = 'logger.handler_factory';
+
     public function getConfigNode(): string
     {
         return 'logger';
@@ -31,7 +37,9 @@ class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectPro
         $builder
             ->set(LoggerFactory::class)
             ->withFactory(
-                fn(): LoggerFactory => new LoggerFactory(
+                fn(
+                    #[InjectTaggedServices(self::HANDLER_FACTORY_TAG)] array $handlerFactories
+                ): LoggerFactory => new LoggerFactory(
                     defaultLoggerChannel: $config->defaultLoggerChannel,
                     defaultErrorLoggerChannel: $config->defaultErrorLoggerChannel,
                     channelsConfig: $config->channels,
@@ -44,8 +52,21 @@ class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectPro
                         ),
                         $config->handlers
                     ),
+                    handlerFactories: $handlerFactories
                 )
             );
+
+        $this->registerLoggerHandlerFactories(
+            builder: $builder,
+            handlerTypes: array_unique(
+                array_values(
+                    array_map(
+                        fn(LoggerHandlerConfig $handlerConfig): string => $handlerConfig->type,
+                        $config->handlers
+                    )
+                )
+            )
+        );
     }
 
     public function getDefaultConfigurationObject(): ConfigNodeInterface
@@ -70,5 +91,24 @@ class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectPro
             );
 
         return $config;
+    }
+
+    private function registerLoggerHandlerFactories(
+        ContainerBuilderInterface $builder,
+        array                     $handlerTypes
+    ): void
+    {
+        if (in_array('rotating_file', $handlerTypes)) {
+            $builder
+                ->set(RotatingFileHandlerFactory::class)
+                ->withTag(self::HANDLER_FACTORY_TAG);
+        }
+
+        if (in_array('stream', $handlerTypes)) {
+            $builder
+                ->set(StreamHandlerFactory::class)
+                ->withTag(self::HANDLER_FACTORY_TAG);
+        }
+
     }
 }
