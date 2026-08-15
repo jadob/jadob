@@ -26,7 +26,10 @@
     "marcj/topsort": "^2.0",
     "nunomaduro/termwind": "^2.3",
     "symfony/var-dumper": "^7.2",
-    "friendsofphp/proxy-manager-lts": "^1.0"
+    "friendsofphp/proxy-manager-lts": "^1.0",
+    "roave/better-reflection": "^6.71",
+    "dynamite/dynamite": "^0.0.7",
+    "sentry/sentry": "^4.30"
   },
   "require-dev": {
     "phpstan/phpstan-strict-rules": "^2.0",
