@@ -3,6 +3,7 @@
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
+use LogicException;
 
 class LoggerConfig implements ConfigNodeInterface
 {
@@ -33,7 +34,6 @@ class LoggerConfig implements ConfigNodeInterface
         return $this;
     }
 
-
     public function withLoggerChannel(
         string $channel,
     ): self
@@ -52,12 +52,11 @@ class LoggerConfig implements ConfigNodeInterface
 
     public function configureStreamHandler(
         string $handlerName,
-        array $channels,
-        int $level,
+        array  $channels,
+        int    $level,
         string $stream
     ): self
     {
-
         $this->handlers[$handlerName] = new LoggerHandlerConfig(
             type: 'stream',
             level: $level,
@@ -68,5 +67,21 @@ class LoggerConfig implements ConfigNodeInterface
         );
 
         return $this;
+    }
+
+    public function configureHandler(
+        string $handlerName,
+    ): LoggerHandlerConfig
+    {
+        if (!isset($this->handlers[$handlerName])) {
+            throw new LogicException(
+                sprintf('Cannot modify handler "%s" as it is not found. use withHandler() to define new handler.',
+                    $handlerName
+                )
+            );
+        }
+
+        return $this->handlers[$handlerName];
+
     }
 }
