@@ -7,11 +7,11 @@ namespace Jadob\Contracts\DependencyInjection;
 use Closure;
 use function in_array;
 
-class ServiceDefinition
+final class ServiceDefinition
 {
     private(set) ?Closure $factory = null;
 
-    private array $tags = [];
+    private(set) array $tags = [];
 
     private array $methodCalls = [];
 

@@ -24,6 +24,10 @@ class ServiceGraph
     public function add(ServiceDefinition $def): void
     {
         $this->definitions[$def->id] = $def;
+
+        foreach ($def->tags as $tag) {
+            $this->tag($def->id, $tag);
+        }
     }
 
     public function get(string $id): ServiceDefinition
@@ -53,7 +57,7 @@ class ServiceGraph
 
     public function tag(string $id, string $tag): void
     {
-        $this->tags[$tag][] = $tag;
+        $this->tags[$tag][] = $id;
     }
 
     public function findTagged(string $tag): array
