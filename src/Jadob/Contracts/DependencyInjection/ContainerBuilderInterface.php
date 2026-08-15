@@ -2,13 +2,16 @@
 
 namespace Jadob\Contracts\DependencyInjection;
 
-use Closure;
-
 interface ContainerBuilderInterface
 {
     public function set(
         string $id,
-        ?string $class = null,
+        ?string $className = null,
+    ): ServiceDefinition;
+
+    public function replace(
+        string $id,
+        ?string $className = null
     ): ServiceDefinition;
 
     /**

@@ -3,10 +3,12 @@
 namespace Jadob\Container\Builder;
 
 use Closure;
+use Jadob\Container\Builder\Exception\ContainerBuildException;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceDefinition;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use function sprintf;
 
 final class ContainerBuilder implements ContainerBuilderInterface
 {
@@ -15,13 +17,21 @@ final class ContainerBuilder implements ContainerBuilderInterface
      */
     private array $definitions = [];
 
-    private array $configs = [];
+    /**
+     * @var array<Closure>
+     */
+    private array $configurations = [];
 
     private array $serviceProviders = [];
 
     private array $requiredParameters = [];
 
     private array $fallbackParameters = [];
+
+    /**
+     * @var array<non-empty-string, NamespaceScanConfigurator>
+     */
+    private array $namespaceScans = [];
 
     /**
      * @var array<class-string, non-empty-string|class-string>
@@ -33,6 +43,9 @@ final class ContainerBuilder implements ContainerBuilderInterface
      */
     private array $aliases = [];
 
+    /**
+     * @throws ContainerBuildException
+     */
     public function set(
         string  $id,
         ?string $className = null,
@@ -95,7 +108,6 @@ final class ContainerBuilder implements ContainerBuilderInterface
         $this->aliases[$alias] = $serviceId;
     }
 
-
     public function registerServiceProvider(ServiceProviderInterface $serviceProvider): void
     {
         $this->serviceProviders[] = $serviceProvider;
@@ -110,12 +122,12 @@ final class ContainerBuilder implements ContainerBuilderInterface
         Closure $config
     ): self
     {
-        $this->configs[] = $config;
+        $this->configurations[] = $config;
 
         return $this;
     }
 
-    public function requireParameter(string $name,): void
+    public function requireParameter(string $name): void
     {
         $this->requiredParameters[] = $name;
     }
@@ -140,4 +152,50 @@ final class ContainerBuilder implements ContainerBuilderInterface
         return $this->fallbackParameters;
     }
 
+    public function getDefinitions(): array
+    {
+        return $this->definitions;
+    }
+
+    /**
+     * @return array<class-string, non-empty-string>
+     */
+    public function getBindings(): array
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * @return array<non-empty-string, non-empty-string|class-string>
+     */
+    public function getAliases(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @return array<Closure>
+     */
+    public function popConfigurations(): array
+    {
+        $configs = $this->configurations;
+        $this->configurations = [];
+        return $configs;
+    }
+
+    public function configureNamespaceScan(): NamespaceScanConfigurator
+    {
+        $scanner = new NamespaceScanConfigurator();
+        $this->namespaceScans[] = $scanner;
+
+        return $scanner;
+    }
+
+    /**
+     * @return array<NamespaceScanConfigurator>
+     */
+    public function getNamespaceScans(): array
+    {
+        return $this->namespaceScans;
+    }
 }
