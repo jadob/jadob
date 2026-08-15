@@ -56,6 +56,7 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
                         $parameter->name,
                         Reference::taggedServices($attr->tag)
                     );
+                    continue;
                 }
 
                 /** @var ReflectionNamedType $paramType */
