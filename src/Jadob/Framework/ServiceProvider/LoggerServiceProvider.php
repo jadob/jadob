@@ -4,38 +4,76 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
-use Jadob\Framework\DependencyInjection\Extension\InjectLoggerAutowireExtension;
+use Jadob\Framework\DependencyInjection\CompilerExtension\InjectLoggerExtension;
+use Jadob\Framework\Logger\HandlerConfiguration;
 use Jadob\Framework\Logger\LoggerFactory;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class LoggerServiceProvider implements ServiceProviderInterface
+class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'logger';
     }
 
+    /**
+     * @param ContainerBuilderInterface $builder
+     * @param LoggerConfig $config
+     * @return void
+     */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
+
         $builder
             ->set(LoggerFactory::class)
             ->withFactory(
-                function (BootstrapInterface $bootstrap) use ($config): LoggerFactory {
-                    /**
-                     * TODO: when defining arguments in DI definitions would be available, refactor this to nod use the factory
-                     * and use array/definition syntax
-                     */
+                static function () use ($config): LoggerFactory {
+                    $handlers = [];
+                    foreach ($config->handlers as $handlerName => $handlerConfig) {
+                        $handlers[$handlerName] = new HandlerConfiguration(
+                            type: $handlerConfig->type,
+                            level: $handlerConfig->level,
+                            channels: $handlerConfig->channels,
+                            parameters: $handlerConfig->parameters,
+                        );
+                    }
+
                     return new LoggerFactory(
-                        bootstrap: $bootstrap,
-                        defaultLoggerChannel: $config['default_logger_channel'],
-                        defaultErrorLoggerChannel: $config['default_error_logger_channel'],
-                        channelsConfig: $config['channels'],
-                        handlersConfig: $config['handlers'],
+                        defaultLoggerChannel: $config->defaultLoggerChannel,
+                        defaultErrorLoggerChannel: $config->defaultErrorLoggerChannel,
+                        channelsConfig: [],
+                        handlersConfig: $handlers,
                     );
                 }
             );
+    }
+
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
+    {
+        $config = new LoggerConfig();
+
+        $config
+            ->withDefaultErrorLoggerChannel('error')
+            ->withDefaultLoggerChannel('default')
+            ->withLoggerChannel('dispatcher')
+            ->configureStreamHandler(
+                handlerName: 'stderr',
+                channels: ['error'],
+                level: Logger::ERROR,
+                stream: 'php://stderr',
+            )
+            ->configureStreamHandler(
+                handlerName: 'stdout',
+                channels: ['default', 'dispatcher'],
+                level: Logger::INFO,
+                stream: 'php://stdout',
+            );
+
+        return $config;
     }
 }
