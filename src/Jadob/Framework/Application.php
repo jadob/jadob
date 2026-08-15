@@ -125,12 +125,9 @@ readonly class Application
             }
         }
 
-
-        $container = new ServiceGraphContainer(
+        $this->container = new ServiceGraphContainer(
             $compiler->compile($builder)
         );
-
-
     }
 
     public function handleWebRequest(
