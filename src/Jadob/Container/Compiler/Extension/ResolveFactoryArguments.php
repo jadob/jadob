@@ -54,7 +54,7 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
 
                     $definition->withArgument(
                         $parameter->name,
-                        Reference::service($attr->tag)
+                        Reference::taggedServices($attr->tag)
                     );
                 }
 
