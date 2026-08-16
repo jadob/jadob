@@ -56,7 +56,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
 
                 if($injectHintRef instanceof Reference) {
                     $service->withArgument(
-                        $argumentType,
+                        $argumentName,
                         $injectHintRef
                     );
 
@@ -67,7 +67,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
 
                 if ($serviceExists) {
                     $service->withArgument(
-                        $argumentType,
+                        $argumentName,
                         Reference::service($argumentType)
                     );
                 }
@@ -92,7 +92,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
                     && $nullable === true
                 ) {
                     $service->withArgument(
-                        $argumentName,
+                        $argumentType,
                         null
                     );
                 }
