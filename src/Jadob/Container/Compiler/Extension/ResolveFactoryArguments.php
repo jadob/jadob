@@ -2,6 +2,7 @@
 
 namespace Jadob\Container\Compiler\Extension;
 
+use Jadob\Container\Compiler\ArgumentInjectHintsHandler;
 use Jadob\Container\ServiceGraph;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectParameter;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectService;
@@ -29,32 +30,14 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
 
             $reflection = new ReflectionFunction($definition->factory);
             foreach ($reflection->getParameters() as $parameter) {
-                $injectServiceAttrs = $parameter->getAttributes(InjectService::class);
-                if (count($injectServiceAttrs) > 0) {
-                    throw new LogicException('Not implemented');
-                }
+                $injectHintsReference = ArgumentInjectHintsHandler::process(
+                    $parameter,
+                );
 
-                $injectParameterAttrs = $parameter->getAttributes(InjectParameter::class);
-                if (count($injectParameterAttrs) > 0) {
-                    /** @var InjectParameter $attr */
-                    $attr = $injectParameterAttrs[0]->newInstance();
-
+                if($injectHintsReference instanceof Reference) {
                     $definition->withArgument(
                         $parameter->name,
-                        Reference::param($attr->parameter)
-                    );
-
-                    continue;
-                }
-
-                $injectTaggedAttrs = $parameter->getAttributes(InjectTaggedServices::class);
-                if (count($injectTaggedAttrs) > 0) {
-                    /** @var InjectTaggedServices $attr */
-                    $attr = $injectTaggedAttrs[0]->newInstance();
-
-                    $definition->withArgument(
-                        $parameter->name,
-                        Reference::taggedServices($attr->tag)
+                        $injectHintsReference
                     );
                     continue;
                 }
