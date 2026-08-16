@@ -2,6 +2,7 @@
 
 namespace Jadob\Container\Compiler\Extension;
 
+use Jadob\Container\Compiler\ArgumentInjectHintsHandler;
 use Jadob\Container\Compiler\Exception\ContainerCompilerException;
 use Jadob\Container\Compiler\Exception\InvalidServiceDefinitionException;
 use Jadob\Container\ServiceGraph;
@@ -50,6 +51,17 @@ final readonly class AutowireServices implements CompilerExtensionInterface
                 $argumentType = $constructorArg
                     ->getType()
                     ->getName();
+
+                $injectHintRef = ArgumentInjectHintsHandler::process($constructorArg);
+
+                if($injectHintRef instanceof Reference) {
+                    $service->withArgument(
+                        $argumentType,
+                        $injectHintRef
+                    );
+
+                    continue;
+                }
 
                 $serviceExists = $serviceGraph->has($argumentType);
 
