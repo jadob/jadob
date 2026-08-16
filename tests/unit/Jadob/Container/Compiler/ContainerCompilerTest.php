@@ -5,24 +5,28 @@ namespace Jadob\Container\Compiler;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
-use Jadob\Container\Compiler\Exception\MissingRequiredParameterException;
+use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
+use Jadob\Container\Config\ConfigNodeFinderInterface;
 use Jadob\Container\Fixtures\CircularServiceProviders\BarServiceProvider;
 use Jadob\Container\Fixtures\CircularServiceProviders\FooServiceProvider;
 use Jadob\Container\Fixtures\SampleApp\Infrastructure\ServiceProvider\EmailServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\AuthServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\DatabaseServiceProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 #[Group('container')]
 #[Group('container-compiler')]
 final class ContainerCompilerTest extends TestCase
 {
+    private ConfigNodeFinderInterface&MockObject $configNodeFinder;
     private ContainerCompiler $compiler;
 
     protected function setUp(): void
     {
-        $this->compiler = new ContainerCompiler();
+        $this->configNodeFinder = $this->createMock(ConfigNodeFinderInterface::class);
+        $this->compiler = new ContainerCompiler($this->configNodeFinder);
     }
 
     public function testCompilerWillBeDetectServiceProviderCircularDependency(): void
@@ -73,22 +77,21 @@ final class ContainerCompilerTest extends TestCase
 
     }
 
+    public function testCompilerWillFailWhenServiceProviderWillRequestAMissingParameterWithoutFallback(): void
+    {
+        $builder = new ContainerBuilder();
+        $builder->registerServiceProvider(
+            new EmailServiceProvider()
+        );
 
-//    public function testCompilerWillFailWhenServiceProviderWillRequestAMissingParameterWithoutFallback(): void
-//    {
-//        $builder = new ContainerBuilder();
-//        $builder->registerServiceProvider(
-//            new EmailServiceProvider()
-//        );
-//
-//        $this->expectException(MissingRequiredParameterException::class);
-//
-//        $this
-//            ->compiler
-//            ->compile(
-//                $builder,
-//                []
-//            );
-//
-//    }
+        $this->expectException(MissingRequiredParametersException::class);
+        $this->expectExceptionMessage('Required parameters "smtp_username, smtp_password, smtp_host, smtp_port" not found');
+
+        $this
+            ->compiler
+            ->compile(
+                $builder,
+            );
+
+    }
 }

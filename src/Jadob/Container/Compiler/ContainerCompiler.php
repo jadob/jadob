@@ -7,6 +7,7 @@ use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Builder\NamespaceScanConfigurator;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
+use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
 use Jadob\Container\Compiler\Extension\AutowireServices;
 use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
 use Jadob\Container\Config\ConfigNodeInterface;
@@ -100,6 +101,10 @@ final class ContainerCompiler
         );
 
         $this->processNamespaceScans(
+            $builder
+        );
+
+        $this->assertPresenceOfRequiredParameters(
             $builder
         );
 
@@ -290,6 +295,30 @@ final class ContainerCompiler
 
             }
         }
+    }
+
+    /**
+     * @throws MissingRequiredParametersException
+     */
+    private function assertPresenceOfRequiredParameters(
+        ContainerBuilder $builder
+    ): void
+    {
+        $requiredParameters = $builder->getRequiredParameters();
+        $fallbackParameters = $builder->getFallbackParameters();
+
+        $missingParameters = array_diff(
+            $requiredParameters,
+            $fallbackParameters
+        );
+
+        if(count($missingParameters) === 0) {
+            return;
+        }
+
+        throw new MissingRequiredParametersException(
+            sprintf('Required parameters "%s" not found', implode(', ', $missingParameters))
+        );
     }
 
 }
