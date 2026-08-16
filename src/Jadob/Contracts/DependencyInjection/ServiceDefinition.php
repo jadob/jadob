@@ -13,7 +13,9 @@ final class ServiceDefinition
 
     private(set) array $tags = [];
 
-    private array $methodCalls = [];
+    private(set) array $methodCalls = [];
+
+    private(set) bool $autowired = false;
 
     public function __construct(
         private(set) readonly string $id,
@@ -32,6 +34,32 @@ final class ServiceDefinition
         Reference|string|int|array|null|bool $argument,
     ): self
     {
+        if(array_key_exists($name, $this->arguments) === true) {
+            throw new \LogicException(
+                sprintf('Argument "%s" is already defined, use replaceArgument() to override it.', $name)
+            );
+        }
+
+        if(!($argument instanceof Reference)) {
+            $argument = Reference::literal($argument);
+        }
+
+        $this->arguments[$name] = $argument;
+
+        return $this;
+    }
+
+    public function replaceArgument(
+        string $name,
+        Reference|string|int|array|null|bool $argument,
+    ): self
+    {
+        if(array_key_exists($name, $this->arguments) === false) {
+            throw new \LogicException(
+                sprintf('Argument "%s" does not exists, use withArgument() to define it.', $name)
+            );
+        }
+
         if(!($argument instanceof Reference)) {
             $argument = Reference::literal($argument);
         }
@@ -68,5 +96,19 @@ final class ServiceDefinition
     ): void
     {
         $this->methodCalls[$methodName][] = $arguments;
+    }
+
+    public function autowire(): self
+    {
+        $this->autowired = true;
+
+        return $this;
+    }
+
+    public function hasArgument(
+        string $name,
+    ): bool
+    {
+        return array_key_exists($name, $this->arguments);
     }
 }
