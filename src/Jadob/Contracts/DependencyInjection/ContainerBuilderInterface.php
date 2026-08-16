@@ -33,10 +33,6 @@ interface ContainerBuilderInterface
         ServiceProviderInterface $serviceProvider
     ): void;
 
-    public function createEnvReference(
-        string $name
-    ): Reference;
-
     public function requireParameter(
         string $name,
     );

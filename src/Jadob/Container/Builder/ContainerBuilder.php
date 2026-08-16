@@ -113,11 +113,6 @@ final class ContainerBuilder implements ContainerBuilderInterface
         $this->serviceProviders[] = $serviceProvider;
     }
 
-    public function createEnvReference(string $name): Reference
-    {
-        return Reference::env($name);
-    }
-
     public function loadConfiguration(
         Closure $config
     ): self
