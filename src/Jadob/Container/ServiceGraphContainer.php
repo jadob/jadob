@@ -27,7 +27,11 @@ final class ServiceGraphContainer implements ContainerInterface
 
     public function get(string $id): object
     {
-        if(isset($this->initialized[$id])) {
+        if($id === ContainerInterface::class) {
+            return $this;
+        }
+
+        if (isset($this->initialized[$id])) {
             return $this->initialized[$id];
         }
 
