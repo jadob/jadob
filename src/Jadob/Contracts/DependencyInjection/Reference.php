@@ -21,7 +21,10 @@ final readonly class Reference
 
     public static function literal(mixed $value): self
     {
-
+        return new self(
+            ReferenceType::Literal,
+            $value,
+        );
     }
 
     public static function service(string $serviceId): self
