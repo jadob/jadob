@@ -13,6 +13,9 @@ final class ServiceDefinition
 
     private(set) array $tags = [];
 
+    /**
+     * @var array<string, array<string, mixed>>
+     */
     private(set) array $methodCalls = [];
 
     private(set) bool $autowired = false;
