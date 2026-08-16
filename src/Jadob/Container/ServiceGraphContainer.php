@@ -40,20 +40,20 @@ final class ServiceGraphContainer implements ContainerInterface
             $reflectionClass = new ReflectionClass($definition->className);
 
             return $this
-                ->doInitialize(
+                ->onServiceInitialized(
                     $id,
                     $reflectionClass->newInstanceArgs($args),
                 );
         }
 
         return $this
-            ->doInitialize(
+            ->onServiceInitialized(
                 $id,
                 call_user_func_array($definition->factory, $args)
             );
     }
 
-    private function doInitialize(
+    private function onServiceInitialized(
         string $id,
         object $service,
     ): object
