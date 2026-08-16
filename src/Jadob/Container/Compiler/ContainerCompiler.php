@@ -7,6 +7,7 @@ use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Builder\NamespaceScanConfigurator;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
+use Jadob\Container\Compiler\Extension\AutowireServices;
 use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Container\Config\ConfigNodeFinder;
@@ -66,6 +67,12 @@ final class ContainerCompiler
         $this->extensions[] = new CompilerExtensionEntry(
             extension: new ResolveFactoryArguments(),
             id: 'resolve_factory_arguments',
+            priority: 1,
+        );
+
+        $this->extensions[] = new CompilerExtensionEntry(
+            extension: new AutowireServices(),
+            id: 'autowire',
             priority: 1,
         );
         
