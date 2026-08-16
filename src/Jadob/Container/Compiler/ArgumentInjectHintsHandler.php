@@ -6,6 +6,7 @@ use Jadob\Contracts\DependencyInjection\Attribute\InjectParameter;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectService;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\Reference;
+use LogicException;
 
 /**
  * @internal
@@ -17,8 +18,15 @@ final readonly class ArgumentInjectHintsHandler
     ): Reference|false
     {
         $injectServiceAttrs = $parameter->getAttributes(InjectService::class);
-        if (count($injectServiceAttrs) > 0) {
-            throw new LogicException('Not implemented');
+        if (count($injectServiceAttrs) > 1) {
+            throw new LogicException('More than one #[InjectService] attribute is attached to constructor property.');
+        }
+
+        if(count($injectServiceAttrs) ===1) {
+            /** @var InjectService $attr */
+            $attr = $injectServiceAttrs[0]->newInstance();
+
+            return Reference::service($attr->serviceId);
         }
 
         $injectParameterAttrs = $parameter->getAttributes(InjectParameter::class);
