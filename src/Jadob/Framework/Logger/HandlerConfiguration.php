@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\Logger;
 
@@ -16,17 +17,16 @@ final class HandlerConfiguration
         private(set) string $level,
         private array $channels,
         private(set) array $parameters
-    )
-    {
+    ) {
     }
 
     public function supportsChannel(
         string $channel,
-    ): bool
-    {
+    ): bool {
         return in_array(
             $channel,
-            $this->channels
+            $this->channels,
+            true
         );
     }
 }
