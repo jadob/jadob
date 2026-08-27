@@ -12,12 +12,10 @@ use Psr\EventDispatcher\EventDispatcherInterface as PsrEventDispatcherInterface;
 
 final readonly class EventDispatcherProvider implements ServiceProviderInterface
 {
-
     public function register(
         ContainerBuilderInterface $builder,
         ?ConfigNodeInterface $config = null
-    ): void
-    {
+    ): void {
         $builder
             ->set(EventDispatcher::class);
 
