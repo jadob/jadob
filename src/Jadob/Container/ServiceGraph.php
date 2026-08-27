@@ -94,4 +94,14 @@ class ServiceGraph
     {
         return $this->definitions;
     }
+
+    public function getParameter(string $name): string
+    {
+        return $this->parameters[$name];
+    }
+
+    public function hasParameter(string $name): bool
+    {
+        return array_key_exists($name, $this->parameters);
+    }
 }
