@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Auth\ServiceProvider;
@@ -10,44 +11,53 @@ use Jadob\Auth\EventListener\AuthenticationEventListener;
 use Jadob\Auth\Firewall\Firewall;
 use Jadob\Auth\Firewall\FirewallMap;
 use Jadob\Auth\Firewall\FirewallMapInterface;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use LogicException;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestMatcherInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 
 final readonly class AuthenticationServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
-    public function getDefaultConfigurationObject(): object
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
         return new AuthenticationConfig();
     }
 
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'authentication';
     }
 
-    /**
-     * @param ContainerInterface $container
-     * @param AuthenticationConfig $config
-     * @return array|array[]|\Closure[]|object[]
-     */
-    public function register(ContainerInterface $container, object|array|null $config = null): array
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        return [
-            'authentication.logger' => static function (ContainerInterface $container): LoggerInterface {
-                /** @var LoggerFactory $loggerFactory */
-                $loggerFactory = $container->get(LoggerFactory::class);
+        $builder
+            ->set(AccessTokenStorage::class);
 
+        $builder
+            ->bind(AccessTokenStorageInterface::class, AccessTokenStorage::class);
+
+        $builder
+            ->set('authentication.logger', LoggerInterface::class)
+            ->withFactory(static function (LoggerFactory $loggerFactory): LoggerInterface {
                 return $loggerFactory
                     ->getLoggerForChannel('authentication');
-            },
+            });
 
-            FirewallMapInterface::class => static function (ContainerInterface $container) use ($config): FirewallMapInterface {
+        $builder
+            ->set(AuthenticationEventListener::class)
+            ->autowire()
+            ->withArgument('logger', Reference::service('authentication.logger'))
+            ->withTag('event_listener');
+
+
+        $builder
+            ->set(FirewallMap::class)
+            ->withFactory(static function (ContainerInterface $container) use ($config): FirewallMapInterface {
                 $firewalls = [];
 
                 foreach ($config->firewalls as $name => $firewallConfig) {
@@ -72,7 +82,7 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                     );
 
                     $identityPicker = null;
-                    if($firewallConfig->identityPickerServiceId !== null) {
+                    if ($firewallConfig->identityPickerServiceId !== null) {
                         $identityPicker = $container->get($firewallConfig->identityPickerServiceId);
                     }
 
@@ -88,19 +98,9 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                     );
                 }
                 return new FirewallMap($firewalls);
-            },
+            });
 
-            AccessTokenStorageInterface::class => function (): AccessTokenStorageInterface {
-                return new AccessTokenStorage();
-            },
-
-            AuthenticationEventListener::class => static function (ContainerInterface $container): AuthenticationEventListener {
-                return new AuthenticationEventListener(
-                    firewallMap: $container->get(FirewallMapInterface::class),
-                    logger: $container->get('authentication.logger'),
-                    accessTokenStorage: $container->get(AccessTokenStorageInterface::class),
-                );
-            }
-        ];
+        $builder
+            ->bind(FirewallMapInterface::class, FirewallMap::class);
     }
 }
