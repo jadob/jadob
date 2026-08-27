@@ -23,6 +23,7 @@ use MJS\TopSort\Implementations\StringSort;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+use function array_filter;
 use function get_class;
 
 final class ContainerCompiler
@@ -131,8 +132,17 @@ final class ContainerCompiler
             /** @var array<class-string> $result */
             $result = $sorter->sort();
 
+            /**
+             * When no providers was passed, sorter returns an array with single empty string, which needs to
+             * be filtered as it is useless.
+             */
+            $filteredResults = array_filter(
+                $result,
+                fn(string $val): bool => !empty($val),
+            );
+
             $output = [];
-            foreach ($result as $providerFqcn) {
+            foreach ($filteredResults as $providerFqcn) {
                 $output[] = $providersIndexed[$providerFqcn];
             }
 
