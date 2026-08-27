@@ -19,7 +19,7 @@ final readonly class FooServiceProvider implements ServiceProviderInterface, Par
 
     public function register(
         ContainerBuilderInterface $builder,
-        ?ConfigNode $config = null
+        ?ConfigNodeInterface $config = null
     ): void
     {
 
