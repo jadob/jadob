@@ -10,7 +10,7 @@ final readonly class Reference
 {
     public function __construct(
         private(set) ReferenceType $type,
-        private(set) string $value,
+        private(set) mixed $value,
     ) {
     }
 
