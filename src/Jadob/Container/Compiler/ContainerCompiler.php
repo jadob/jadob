@@ -23,7 +23,10 @@ use MJS\TopSort\Implementations\StringSort;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
+
 use function array_filter;
+use function array_keys;
+use function array_values;
 use function get_class;
 
 final class ContainerCompiler
@@ -297,8 +300,8 @@ final class ContainerCompiler
         $fallbackParameters = $builder->getFallbackParameters();
 
         $missingParameters = array_diff(
-            $requiredParameters,
-            $fallbackParameters
+            array_values($requiredParameters),
+            array_keys($fallbackParameters)
         );
 
         if (count($missingParameters) === 0) {
