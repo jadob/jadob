@@ -8,8 +8,6 @@ use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Jadob\Framework\DependencyInjection\CompilerExtension\InjectLoggerExtension;
 use Jadob\Framework\DependencyInjection\CompilerExtension\RegisterConsoleCommandsExtension;
 use Jadob\Framework\DependencyInjection\CompilerExtension\RegisterEventListenersExtension;
-use Jadob\Framework\DependencyInjection\ExtensionProvider\EventDispatcherExtensionProvider;
-use Jadob\Framework\DependencyInjection\ExtensionProvider\FrameworkContainerExtensionProvider;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
 use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
 use Jadob\Framework\ServiceProvider\EventDispatcherProvider;
@@ -40,5 +38,4 @@ final readonly class FrameworkModule implements ModuleInterface
             520 => new InjectLoggerExtension(),
         ];
     }
-
 }
