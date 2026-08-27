@@ -54,6 +54,7 @@ class EventDispatcher implements EventDispatcherInterface
 
             if ($listener instanceof ListenerProviderPriorityInterface && $eventsCount > 0) {
                 $listenerPriority = $listener->getListenerPriorityForEvent($event);
+
                 if ($listenerPriority < 0) {
                     throw EventDispatcherException::negativeListenerPriority($listener, $event);
                 }
@@ -86,6 +87,7 @@ class EventDispatcher implements EventDispatcherInterface
         }
 
         $this->log('Event ' . $className . ' has been consumed by ' . $handlersCount . ' listeners without interrupting.');
+
         return $event;
     }
 
@@ -109,6 +111,7 @@ class EventDispatcher implements EventDispatcherInterface
     public function addListener(ListenerProviderInterface $provider): EventDispatcher
     {
         $this->listeners[] = $provider;
+
         return $this;
     }
 }
