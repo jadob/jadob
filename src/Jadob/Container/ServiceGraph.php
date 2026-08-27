@@ -24,6 +24,16 @@ class ServiceGraph
      */
     private array $tags = [];
 
+    /**
+     * @var array<string, string>
+     */
+    private array $parameters = [];
+
+    public function addParameter(string $param, string $value): void
+    {
+        $this->parameters[$param] = $value;
+    }
+
     public function add(ServiceDefinition $def): void
     {
         $this->definitions[$def->id] = $def;
