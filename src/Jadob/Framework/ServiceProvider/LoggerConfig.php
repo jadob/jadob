@@ -51,7 +51,7 @@ class LoggerConfig implements ConfigNodeInterface
     public function configureStreamHandler(
         string $handlerName,
         array $channels,
-        int $level,
+        string $level,
         string $stream
     ): self {
         $this->handlers[$handlerName] = new LoggerHandlerConfig(

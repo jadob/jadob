@@ -12,7 +12,7 @@ use Jadob\Framework\Logger\HandlerConfiguration;
 use Jadob\Framework\Logger\HandlerFactory\RotatingFileHandlerFactory;
 use Jadob\Framework\Logger\HandlerFactory\StreamHandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
-use Monolog\Logger;
+use Psr\Log\LogLevel;
 use function in_array;
 
 final readonly class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
@@ -78,13 +78,13 @@ final readonly class LoggerServiceProvider implements ServiceProviderInterface, 
             ->configureStreamHandler(
                 handlerName: 'stderr',
                 channels: ['error'],
-                level: Logger::ERROR,
+                level: LogLevel::ERROR,
                 stream: 'php://stderr',
             )
             ->configureStreamHandler(
                 handlerName: 'stdout',
                 channels: ['default', 'dispatcher'],
-                level: Logger::INFO,
+                level: LogLevel::INFO,
                 stream: 'php://stdout',
             );
 
