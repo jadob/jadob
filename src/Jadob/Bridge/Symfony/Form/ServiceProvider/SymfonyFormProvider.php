@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Symfony\Form\ServiceProvider;
 
-use Closure;
-use Exception;
 use Jadob\Bridge\Symfony\Validator\ServiceProvider\SymfonyValidatorProvider;
 use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
-use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
@@ -18,12 +15,10 @@ use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\ServiceProvider\SymfonyTranslatorProvider;
 use LogicException;
-use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
-use Symfony\Component\Form\FormExtensionInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormRenderer;
@@ -37,7 +32,6 @@ use Twig\Environment;
  */
 final readonly class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
-
     public function getConfigNode(): string
     {
         return 'forms';
@@ -73,12 +67,14 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
             ->set(FormFactory::class)
             ->withFactory(
                 function (
-                    #[InjectTaggedServices('form.extension')] array $extensions
+                    #[InjectTaggedServices('form.extension')]
+                    array $extensions
                 ): FormFactoryInterface {
                     $formFactoryBuilder = Forms::createFormFactoryBuilder();
                     foreach ($extensions as $extension) {
                         $formFactoryBuilder->addExtension($extension);
                     }
+
                     return $formFactoryBuilder->getFormFactory();
                 }
             );

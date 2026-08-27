@@ -14,7 +14,6 @@ final readonly class TranslationSource
         private(set) string $path,
         private(set) string $locale,
         private(set) string $domain
-    )
-    {
+    ) {
     }
 }

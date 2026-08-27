@@ -75,6 +75,7 @@ class RequestContext
     public function setSession(SessionInterface $session): RequestContext
     {
         $this->request->setSession($session);
+
         return $this;
     }
 
@@ -82,6 +83,7 @@ class RequestContext
         AccessToken $accessToken
     ): self {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 

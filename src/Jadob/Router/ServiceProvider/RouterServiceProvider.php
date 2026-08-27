@@ -10,7 +10,7 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Jadob\Router\RouterContext;
-use Psr\Container\ContainerInterface;
+use LogicException;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -26,7 +26,7 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         if (!($config instanceof RouterConfiguration)) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     'Invalid configuration object passed to "%s"',
                     self::class
@@ -52,7 +52,6 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
             );
 
         $builder->alias(Router::class, 'router');
-
     }
 
 

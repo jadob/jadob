@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Compiler\Extension;
 
@@ -54,7 +55,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
 
                 $injectHintRef = ArgumentInjectHintsHandler::process($constructorArg);
 
-                if($injectHintRef instanceof Reference) {
+                if ($injectHintRef instanceof Reference) {
                     $service->withArgument(
                         $argumentName,
                         $injectHintRef

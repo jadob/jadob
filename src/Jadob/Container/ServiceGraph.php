@@ -38,11 +38,11 @@ class ServiceGraph
      */
     public function get(string $id): ServiceDefinition
     {
-        if(isset($this->aliases[$id])) {
+        if (isset($this->aliases[$id])) {
             return $this->get($this->aliases[$id]);
         }
 
-        if(array_key_exists($id, $this->definitions) === false) {
+        if (array_key_exists($id, $this->definitions) === false) {
             throw new ContainerException(
                 sprintf('Service "%s" not found.', $id)
             );

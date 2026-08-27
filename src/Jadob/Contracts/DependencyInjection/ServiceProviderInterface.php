@@ -20,6 +20,6 @@ interface ServiceProviderInterface
      */
     public function register(
         ContainerBuilderInterface $builder,
-        ConfigNodeInterface|null  $config = null,
+        ConfigNodeInterface|null $config = null,
     ): void;
 }

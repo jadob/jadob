@@ -8,14 +8,11 @@ use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Core\BootstrapInterface;
-use Jadob\Framework\DependencyInjection\CompilerExtension\InjectLoggerExtension;
 use Jadob\Framework\Logger\HandlerConfiguration;
 use Jadob\Framework\Logger\HandlerFactory\RotatingFileHandlerFactory;
 use Jadob\Framework\Logger\HandlerFactory\StreamHandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 use Monolog\Logger;
-use Psr\Container\ContainerInterface;
 use function in_array;
 
 final readonly class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
@@ -38,7 +35,8 @@ final readonly class LoggerServiceProvider implements ServiceProviderInterface, 
             ->set(LoggerFactory::class)
             ->withFactory(
                 fn(
-                    #[InjectTaggedServices(self::HANDLER_FACTORY_TAG)] array $handlerFactories
+                    #[InjectTaggedServices(self::HANDLER_FACTORY_TAG)]
+                    array $handlerFactories
                 ): LoggerFactory => new LoggerFactory(
                     defaultLoggerChannel: $config->defaultLoggerChannel,
                     defaultErrorLoggerChannel: $config->defaultErrorLoggerChannel,
@@ -95,20 +93,18 @@ final readonly class LoggerServiceProvider implements ServiceProviderInterface, 
 
     private function registerLoggerHandlerFactories(
         ContainerBuilderInterface $builder,
-        array                     $handlerTypes
-    ): void
-    {
-        if (in_array('rotating_file', $handlerTypes)) {
+        array $handlerTypes
+    ): void {
+        if (in_array('rotating_file', $handlerTypes, true)) {
             $builder
                 ->set(RotatingFileHandlerFactory::class)
                 ->withTag(self::HANDLER_FACTORY_TAG);
         }
 
-        if (in_array('stream', $handlerTypes)) {
+        if (in_array('stream', $handlerTypes, true)) {
             $builder
                 ->set(StreamHandlerFactory::class)
                 ->withTag(self::HANDLER_FACTORY_TAG);
         }
-
     }
 }

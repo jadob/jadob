@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
  */
 final readonly class SessionProvider implements ServiceProviderInterface
 {
-
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         $builder->set(SessionHandlerFactory::class);

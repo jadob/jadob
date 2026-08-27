@@ -82,6 +82,7 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                     );
 
                     $identityPicker = null;
+
                     if ($firewallConfig->identityPickerServiceId !== null) {
                         $identityPicker = $container->get($firewallConfig->identityPickerServiceId);
                     }
@@ -97,6 +98,7 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                         identityPicker: $identityPicker,
                     );
                 }
+
                 return new FirewallMap($firewalls);
             });
 

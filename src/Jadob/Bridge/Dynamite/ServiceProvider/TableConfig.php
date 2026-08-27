@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Dynamite\ServiceProvider;
 
@@ -14,15 +15,13 @@ final class TableConfig
         private(set) ?string $name = null,
         private(set) ?string $partitionKeyName = null,
         private(set) ?string $sortKeyName = null,
-        private(set) array  $managedObjects = []
-    )
-    {
+        private(set) array $managedObjects = []
+    ) {
     }
 
     public function withName(
         string $name,
-    ): self
-    {
+    ): self {
         $this->name = $name;
 
         return $this;
@@ -30,25 +29,25 @@ final class TableConfig
 
     public function withPartitionKeyName(
         string $partitionKeyName,
-    ): self
-    {
+    ): self {
         $this->partitionKeyName = $partitionKeyName;
+
         return $this;
     }
 
     public function withSortKeyName(
         string $sortKeyName,
-    ): self
-    {
+    ): self {
         $this->sortKeyName = $sortKeyName;
+
         return $this;
     }
 
     public function withManagedObject(
         string $managedObject,
-    ): self
-    {
+    ): self {
         $this->managedObjects[] = $managedObject;
+
         return $this;
     }
 }

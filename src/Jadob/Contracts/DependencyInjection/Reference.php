@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Contracts\DependencyInjection;
 
@@ -10,13 +11,11 @@ final readonly class Reference
     public function __construct(
         private(set) ReferenceType $type,
         private(set) string $value,
-    )
-    {
+    ) {
     }
 
     public static function env(string $envName): self
     {
-
     }
 
     public static function literal(mixed $value): self

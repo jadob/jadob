@@ -1,25 +1,21 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Compiler;
 
 use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
-use Jadob\Container\Builder\NamespaceScanConfigurator;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
 use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
 use Jadob\Container\Compiler\Extension\AutowireServices;
 use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
-use Jadob\Container\Config\ConfigNodeInterface;
-use Jadob\Container\Config\ConfigNodeFinder;
 use Jadob\Container\Config\ConfigNodeFinderInterface;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Container\ServiceGraph;
 use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
-use Jadob\Contracts\DependencyInjection\Reference;
-use Jadob\Contracts\DependencyInjection\ReferenceType;
-use Jadob\Contracts\DependencyInjection\ServiceDefinition;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use MJS\TopSort\CircularDependencyException as TopSortCircularDependencyException;
 use MJS\TopSort\ElementNotFoundException;
@@ -27,14 +23,10 @@ use MJS\TopSort\Implementations\StringSort;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\DefaultReflector;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
-use function array_map;
-use function array_merge;
-use function array_values;
 use function get_class;
 
 final class ContainerCompiler
 {
-
     /**
      * @var array<CompilerExtensionEntry>
      */
@@ -45,22 +37,19 @@ final class ContainerCompiler
      */
     public function __construct(
         private ConfigNodeFinderInterface $configNodeFinder,
-    )
-    {
+    ) {
     }
 
     public function addExtension(
         CompilerExtensionInterface $extension,
         string $id,
         int $priority,
-    ): void
-    {
+    ): void {
         $this->extensions[] = new CompilerExtensionEntry(
             extension: $extension,
             id: $id,
             priority: $priority,
         );
-
     }
 
     public function registerNativeExtensions(): void
@@ -76,7 +65,6 @@ final class ContainerCompiler
             id: 'autowire',
             priority: 1,
         );
-        
     }
 
     /**
@@ -86,8 +74,7 @@ final class ContainerCompiler
      */
     public function compile(
         ContainerBuilder $builder,
-    ): ServiceGraph
-    {
+    ): ServiceGraph {
         $serviceProviders = $builder
             ->getServiceProviders();
 
@@ -121,8 +108,7 @@ final class ContainerCompiler
      */
     private function calculateServiceProviderRegisterOrder(
         array $providers,
-    ): array
-    {
+    ): array {
         try {
             $providersIndexed = [];
             $sorter = new StringSort();
@@ -131,6 +117,7 @@ final class ContainerCompiler
                 $providersIndexed[$providerFqcn] = $provider;
 
                 $dependencies = [];
+
                 if ($provider instanceof ParentServiceProviderInterface) {
                     $dependencies = $provider->getParentServiceProviders();
                 }
@@ -150,7 +137,6 @@ final class ContainerCompiler
             }
 
             return $output;
-
         } catch (TopSortCircularDependencyException $exception) {
             throw new CircularDependencyException(
                 $exception->getMessage()
@@ -164,7 +150,6 @@ final class ContainerCompiler
                 )
             );
         }
-
     }
 
     /**
@@ -176,9 +161,8 @@ final class ContainerCompiler
      */
     private function resolveServiceProviders(
         ContainerBuilder $builder,
-        array            $providers,
-    ): void
-    {
+        array $providers,
+    ): void {
         $serviceProviderOrder = $this
             ->calculateServiceProviderRegisterOrder(
                 $providers,
@@ -188,6 +172,7 @@ final class ContainerCompiler
             if ($provider instanceof ConfigObjectProviderInterface) {
                 $config = $this->processConfigForProvider($provider);
                 $provider->register($builder, $config);
+
                 continue;
             }
 
@@ -197,8 +182,7 @@ final class ContainerCompiler
 
     private function processConfigForProvider(
         ConfigObjectProviderInterface $provider,
-    ): ConfigNodeInterface
-    {
+    ): ConfigNodeInterface {
         $config = $provider->getDefaultConfigurationObject();
         /** @var array<Closure> $availableConfigs */
         $availableConfigs = $this
@@ -216,8 +200,7 @@ final class ContainerCompiler
 
     private function buildServiceGraph(
         ContainerBuilder $builder
-    ): ServiceGraph
-    {
+    ): ServiceGraph {
         $graph = new ServiceGraph();
 
         foreach ($builder->getDefinitions() as $definition) {
@@ -258,8 +241,7 @@ final class ContainerCompiler
 
     private function resolveConfigurations(
         ContainerBuilder $builder,
-    ): void
-    {
+    ): void {
         $emptyConfigsReceived = false;
         while (!$emptyConfigsReceived) {
             $configs = $builder->popConfigurations();
@@ -272,8 +254,7 @@ final class ContainerCompiler
 
     private function processNamespaceScans(
         ContainerBuilder $builder
-    ): void
-    {
+    ): void {
         foreach ($builder->getNamespaceScans() as $namespaceScan) {
             $sourceLocator = new DirectoriesSourceLocator(
                 $namespaceScan->paths,
@@ -292,7 +273,6 @@ final class ContainerCompiler
                 foreach ($namespaceScan->tags as $tag) {
                     $service->withTag($tag);
                 }
-
             }
         }
     }
@@ -302,8 +282,7 @@ final class ContainerCompiler
      */
     private function assertPresenceOfRequiredParameters(
         ContainerBuilder $builder
-    ): void
-    {
+    ): void {
         $requiredParameters = $builder->getRequiredParameters();
         $fallbackParameters = $builder->getFallbackParameters();
 
@@ -312,7 +291,7 @@ final class ContainerCompiler
             $fallbackParameters
         );
 
-        if(count($missingParameters) === 0) {
+        if (count($missingParameters) === 0) {
             return;
         }
 
@@ -320,5 +299,4 @@ final class ContainerCompiler
             sprintf('Required parameters "%s" not found', implode(', ', $missingParameters))
         );
     }
-
 }

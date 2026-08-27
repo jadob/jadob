@@ -7,7 +7,6 @@ namespace Jadob\Bridge\Symfony\Validator\ServiceProvider;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -17,8 +16,7 @@ final readonly class SymfonyValidatorProvider implements ServiceProviderInterfac
     public function register(
         ContainerBuilderInterface $builder,
         ?ConfigNodeInterface $config = null
-    ): void
-    {
+    ): void {
         $builder
             ->set(RecursiveValidator::class)
             ->withFactory(function () {

@@ -27,11 +27,10 @@ class LoggerFactory
     public function __construct(
         private readonly string $defaultLoggerChannel,
         private readonly string $defaultErrorLoggerChannel,
-        private readonly array  $channelsConfig = [],
-        private readonly array  $handlersConfig = [],
-        private array           $handlerFactories = [],
-    )
-    {
+        private readonly array $channelsConfig = [],
+        private readonly array $handlersConfig = [],
+        private array $handlerFactories = [],
+    ) {
     }
 
     public function getDefaultLogger(): LoggerInterface
@@ -86,17 +85,16 @@ class LoggerFactory
 
     private function getLogHandlerFactoryForType(
         string $type
-    ): LogHandlerFactoryInterface
-    {
+    ): LogHandlerFactoryInterface {
         foreach ($this->handlerFactories as $handlerFactory) {
-            if($handlerFactory->supports($type)) {
+            if ($handlerFactory->supports($type)) {
                 return $handlerFactory;
             }
         }
 
         throw new LogicException(
             sprintf(
-            'There is no log handler factory for type "%s"',
+                'There is no log handler factory for type "%s"',
                 $type
             )
         );

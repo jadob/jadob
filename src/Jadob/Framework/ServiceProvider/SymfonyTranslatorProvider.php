@@ -7,21 +7,16 @@ namespace Jadob\Framework\ServiceProvider;
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectParameter;
-use Jadob\Contracts\DependencyInjection\Attribute\InjectService;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\Logger\LoggerFactory;
-use Monolog\Logger;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
 use Symfony\Component\Translation\LoggingTranslator;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function glob;
@@ -34,7 +29,6 @@ use function sprintf;
  */
 final readonly class SymfonyTranslatorProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
-
     public function getConfigNode(): string
     {
         return 'translator';
@@ -47,9 +41,8 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
      */
     public function register(
         ContainerBuilderInterface $builder,
-        ?ConfigNodeInterface      $config = null
-    ): void
-    {
+        ?ConfigNodeInterface $config = null
+    ): void {
         $builder->requireParameter('translations_directory');
         $builder->addFallbackParameter(
             'translations_directory',
@@ -60,14 +53,16 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
 
         $builder->bind(
             MessageFormatterInterface::class,
-            MessageFormatter::class);
+            MessageFormatter::class
+        );
 
         $builder
             ->set(Translator::class)
             ->withFactory(
                 static function (
-                    #[InjectParameter('translations_directory')] string $translationsDirectory,
-                    MessageFormatterInterface                           $messageFormatter,
+                    #[InjectParameter('translations_directory')]
+                    string $translationsDirectory,
+                    MessageFormatterInterface $messageFormatter,
                 ) use ($config): TranslatorInterface {
                     /** @var TranslationSource[] $sources */
                     $sources = [];
@@ -140,7 +135,8 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
 
             $builder->bind(
                 TranslatorInterface::class,
-                LoggingTranslator::class);
+                LoggingTranslator::class
+            );
         }
     }
 

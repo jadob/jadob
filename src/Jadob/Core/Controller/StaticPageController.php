@@ -25,6 +25,7 @@ class StaticPageController extends AbstractController
     public function __invoke(Route $route)
     {
         $template = $route->getParams()['template_name'];
+
         return new Response($this->renderTemplate($template));
     }
 }

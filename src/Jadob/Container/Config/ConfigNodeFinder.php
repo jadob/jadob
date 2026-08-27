@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Config;
 
@@ -14,15 +15,15 @@ class ConfigNodeFinder implements ConfigNodeFinderInterface
      */
     public function __construct(
         private array $paths = []
-    )
-    {
+    ) {
     }
 
     public function find(string $node): array
     {
         $result = [];
         foreach ($this->paths as $path) {
-            $path = sprintf('%s/%s.php',
+            $path = sprintf(
+                '%s/%s.php',
                 rtrim($path, '/'),
                 $node
             );
@@ -32,6 +33,7 @@ class ConfigNodeFinder implements ConfigNodeFinderInterface
             }
 
             $config = include $path;
+
             if (is_object($config) === false) {
                 throw new LogicException(
                     sprintf(
@@ -46,6 +48,4 @@ class ConfigNodeFinder implements ConfigNodeFinderInterface
 
         return $result;
     }
-
-
 }

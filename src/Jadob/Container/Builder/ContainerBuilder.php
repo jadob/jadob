@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Builder;
 
 use Closure;
 use Jadob\Container\Builder\Exception\ContainerBuildException;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
-use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceDefinition;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use function sprintf;
@@ -47,10 +47,9 @@ final class ContainerBuilder implements ContainerBuilderInterface
      * @throws ContainerBuildException
      */
     public function set(
-        string  $id,
+        string $id,
         ?string $className = null,
-    ): ServiceDefinition
-    {
+    ): ServiceDefinition {
         if ($id === '') {
             throw new ContainerBuildException('A service ID cannot be empty.');
         }
@@ -60,7 +59,8 @@ final class ContainerBuilder implements ContainerBuilderInterface
                 sprintf(
                     'Service "%s" is already defined; use replace() to override it.',
                     $id,
-                ));
+                )
+            );
         }
 
         if ($className === null && \class_exists($id)) {
@@ -80,14 +80,12 @@ final class ContainerBuilder implements ContainerBuilderInterface
             $id,
             $className
         );
-
     }
 
     public function replace(
-        string  $id,
+        string $id,
         ?string $className = null
-    ): ServiceDefinition
-    {
+    ): ServiceDefinition {
         unset($this->definitions[$id]);
 
         return $this->set($id, $className);
@@ -115,8 +113,7 @@ final class ContainerBuilder implements ContainerBuilderInterface
 
     public function loadConfiguration(
         Closure $config
-    ): self
-    {
+    ): self {
         $this->configurations[] = $config;
 
         return $this;
@@ -175,6 +172,7 @@ final class ContainerBuilder implements ContainerBuilderInterface
     {
         $configs = $this->configurations;
         $this->configurations = [];
+
         return $configs;
     }
 

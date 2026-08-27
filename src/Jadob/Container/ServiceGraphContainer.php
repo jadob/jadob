@@ -60,9 +60,9 @@ final class ServiceGraphContainer implements ContainerInterface
     private function onServiceInitialized(
         string $id,
         object $service,
-    ): object
-    {
+    ): object {
         $this->initialized[$id] = $service;
+
         return $service;
     }
 
@@ -93,7 +93,7 @@ final class ServiceGraphContainer implements ContainerInterface
                     );
                 }
 
-                throw new \LogicException('not implemented');
+                throw new LogicException('not implemented');
             },
             $args
         );

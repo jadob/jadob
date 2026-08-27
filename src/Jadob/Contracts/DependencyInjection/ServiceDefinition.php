@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jadob\Contracts\DependencyInjection;
 
 use Closure;
+use LogicException;
 use function in_array;
 
 final class ServiceDefinition
@@ -23,8 +24,7 @@ final class ServiceDefinition
     public function __construct(
         private(set) readonly string $id,
         private(set) readonly string $className,
-    )
-    {
+    ) {
     }
 
     /**
@@ -35,15 +35,14 @@ final class ServiceDefinition
     public function withArgument(
         string $name,
         Reference|string|int|array|null|bool $argument,
-    ): self
-    {
-        if(array_key_exists($name, $this->arguments) === true) {
-            throw new \LogicException(
+    ): self {
+        if (array_key_exists($name, $this->arguments) === true) {
+            throw new LogicException(
                 sprintf('Argument "%s" is already defined, use replaceArgument() to override it.', $name)
             );
         }
 
-        if(!($argument instanceof Reference)) {
+        if (!($argument instanceof Reference)) {
             $argument = Reference::literal($argument);
         }
 
@@ -55,15 +54,14 @@ final class ServiceDefinition
     public function replaceArgument(
         string $name,
         Reference|string|int|array|null|bool $argument,
-    ): self
-    {
-        if(array_key_exists($name, $this->arguments) === false) {
-            throw new \LogicException(
+    ): self {
+        if (array_key_exists($name, $this->arguments) === false) {
+            throw new LogicException(
                 sprintf('Argument "%s" does not exists, use withArgument() to define it.', $name)
             );
         }
 
-        if(!($argument instanceof Reference)) {
+        if (!($argument instanceof Reference)) {
             $argument = Reference::literal($argument);
         }
 
@@ -74,30 +72,29 @@ final class ServiceDefinition
 
     public function withFactory(
         Closure $factory,
-    ): self
-    {
+    ): self {
         $this->factory = $factory;
+
         return $this;
     }
 
     public function withTag(
         string $tag,
-    ): self
-    {
+    ): self {
         $this->tags[] = $tag;
+
         return $this;
     }
 
     public function hasTag(string $tag): bool
     {
-        return in_array($tag, $this->tags);
+        return in_array($tag, $this->tags, true);
     }
 
     public function addMethodCall(
         string $methodName,
         array $arguments = [],
-    ): void
-    {
+    ): void {
         $this->methodCalls[$methodName][] = $arguments;
     }
 
@@ -110,8 +107,7 @@ final class ServiceDefinition
 
     public function hasArgument(
         string $name,
-    ): bool
-    {
+    ): bool {
         return array_key_exists($name, $this->arguments);
     }
 }

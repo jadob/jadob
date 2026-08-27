@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
@@ -13,39 +14,38 @@ final class LoggerHandlerConfig
         private(set) ?string $level = null,
         private(set) array $parameters = [],
         private(set) array $channels = []
-    )
-    {
+    ) {
     }
 
     public function withType(
         string $type,
-    ): self
-    {
+    ): self {
         $this->type = $type;
+
         return $this;
     }
 
     public function withLevel(
         string $level,
-    ): self
-    {
+    ): self {
         $this->level = $level;
+
         return $this;
     }
 
     public function withParameters(
         array $parameters
-    ): self
-    {
+    ): self {
         $this->parameters = $parameters;
+
         return $this;
     }
 
     public function withChannel(
         string $channel,
-    ): self
-    {
+    ): self {
         $this->channels[] = $channel;
+
         return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
@@ -6,8 +7,7 @@ final class ViteManifestExtensionConfig
 {
     public function __construct(
         private(set) ?string $manifestLocation = null,
-    )
-    {
+    ) {
     }
 
     /**
@@ -17,9 +17,9 @@ final class ViteManifestExtensionConfig
      */
     public function withManifestLocation(
         string $location,
-    ): self
-    {
+    ): self {
         $this->manifestLocation = $location;
+
         return $this;
     }
 }

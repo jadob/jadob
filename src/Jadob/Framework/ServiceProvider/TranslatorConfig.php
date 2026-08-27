@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
@@ -13,12 +14,14 @@ final class TranslatorConfig implements ConfigNodeInterface
     public function enableLogging(): self
     {
         $this->loggingEnabled = true;
+
         return $this;
     }
 
     public function withLocale(string $locale): self
     {
         $this->locale = $locale;
+
         return $this;
     }
 }

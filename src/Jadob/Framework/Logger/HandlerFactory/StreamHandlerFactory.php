@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Framework\Logger\HandlerFactory;
 
@@ -10,8 +11,7 @@ final readonly class StreamHandlerFactory implements LogHandlerFactoryInterface
     public function create(
         array $parameters,
         string $level
-    ): HandlerInterface
-    {
+    ): HandlerInterface {
         return new StreamHandler(
             stream: $parameters['stream'],
             level: $level,
