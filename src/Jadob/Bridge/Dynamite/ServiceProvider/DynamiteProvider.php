@@ -107,7 +107,7 @@ final readonly class DynamiteProvider implements ServiceProviderInterface, Confi
 
             foreach ($config->tableConfigs as $tableConfig) {
                 $tableSchema = new TableSchema(
-                    $tableConfig->tableName,
+                    $tableConfig->name,
                     $tableConfig->partitionKeyName,
                     $tableConfig->sortKeyName,
                     $tableConfig->indexes
