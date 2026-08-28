@@ -17,44 +17,80 @@ use Dynamite\PrimaryKey\Filter\UppercaseFilter;
 use Dynamite\PrimaryKey\Filter\UppercaseFirstFilter;
 use Dynamite\PrimaryKey\KeyFormatResolver;
 use Dynamite\TableSchema;
-use Jadob\Container\Container;
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
+use LogicException;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
-class DynamiteProvider implements ServiceProviderInterface
+final readonly class DynamiteProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
     /**
      * @inheritDoc
      */
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'dynamite';
     }
 
+
     /**
-     * @inheritDoc
+     * @param ContainerBuilderInterface $builder
+     * @param DynamiteConfig|null $config
+     * @return void
      */
-    public function register(ContainerInterface $container, null|object|array $config = null): array
-    {
-        $output = [];
+    public function register(
+        ContainerBuilderInterface $builder,
+        ?ConfigNodeInterface $config = null
+    ): void {
+        $builder->set('dynamite.logger', LoggerInterface::class)
+            ->withFactory(
+                function (LoggerFactory $loggerFactory): LoggerInterface {
+                    return $loggerFactory->getLoggerForChannel('dynamite');
+                }
+            );
 
-        $output['dynamite.logger'] = static function (LoggerFactory $loggerFactory): LoggerInterface {
-            return $loggerFactory->getDefaultLogger();
-        };
+        $builder->set(Marshaler::class);
+        $builder->set(ItemSerializer::class);
+        $builder->set(ItemMappingReader::class);
 
-        $useCache = $config['cache'] ?? false;
-        $output['dynamite.item_mapping_reader'] = function (ContainerInterface $container) use ($useCache): ItemMappingReader {
-            if ($useCache) {
-                return new CachedItemMappingReader(
-                    $container->get(CacheInterface::class)
-                );
+        if ($config->mappingCacheEnabled) {
+            if (interface_exists(CacheInterface::class) === false) {
+                throw new LogicException('"symfony/cache" is required to enable caching!');
             }
 
-            return new ItemMappingReader();
-        };
+            $builder
+                ->replace(ItemMappingReader::class, CachedItemMappingReader::class)
+                ->withArgument(
+                    'cache',
+                    Reference::service(CacheInterface::class)
+                );
+        }
+
+        $builder->set(KeyFormatResolver::class)
+            ->withFactory(
+                static function (): KeyFormatResolver {
+                    $resolver = new KeyFormatResolver();
+
+                    /**
+                     * @TODO: switch to tagged services
+                     */
+                    $resolver->addFilter('upper', new UppercaseFilter());
+                    $resolver->addFilter('lower', new LowercaseFilter());
+                    $resolver->addFilter('ucfirst', new UppercaseFirstFilter());
+                    $resolver->addFilter('md5', new Md5Filter());
+                    $resolver->addFilter('nodash', new NoDashFilter());
+
+                    return $resolver;
+                }
+            );
+
 
         $instanceServiceIds = [];
         foreach ($config['tables'] as $instanceName => $table) {
@@ -72,7 +108,6 @@ class DynamiteProvider implements ServiceProviderInterface
                     $table['indexes'] ?? []
                 );
 
-                /** @noinspection MissingService */
                 return new ItemManager(
                     $container->get($clientId),
                     $tableSchema,
@@ -90,20 +125,8 @@ class DynamiteProvider implements ServiceProviderInterface
             $output[$instanceServiceId] = $instanceDef;
         }
 
-        $output[ItemSerializer::class] = static function (): ItemSerializer {
-            return new ItemSerializer();
-        };
 
-        $output[KeyFormatResolver::class] = static function (): KeyFormatResolver {
-            $kfr = new KeyFormatResolver();
 
-            $kfr->addFilter('upper', new UppercaseFilter());
-            $kfr->addFilter('lower', new LowercaseFilter());
-            $kfr->addFilter('ucfirst', new UppercaseFirstFilter());
-            $kfr->addFilter('md5', new Md5Filter());
-            $kfr->addFilter('nodash', new NoDashFilter());
-            return $kfr;
-        };
 
         $output[ItemManagerRegistry::class] = static function (ContainerInterface $container) use ($instanceServiceIds): ItemManagerRegistry {
             $registry = new ItemManagerRegistry();
@@ -114,14 +137,10 @@ class DynamiteProvider implements ServiceProviderInterface
 
             return $registry;
         };
-        return $output;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function onContainerBuild(Container $container, $config)
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
-        // TODO: Implement onContainerBuild() method.
+        return new DynamiteConfig();
     }
 }
