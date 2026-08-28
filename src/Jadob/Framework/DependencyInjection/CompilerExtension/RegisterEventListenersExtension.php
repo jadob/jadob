@@ -21,14 +21,14 @@ final readonly class RegisterEventListenersExtension implements CompilerExtensio
 
         $eventDispatcherDefinition = $serviceGraph->get(EventDispatcherInterface::class);
 
-
         foreach ($serviceGraph->all() as $definition) {
             $hasTag = $definition->hasTag('event_listener');
             $hasPsrImplementation = in_array(
                 ListenerProviderInterface::class,
                 class_implements(
                     $definition->className,
-                )
+                ),
+                true
             );
 
             if ($hasTag || $hasPsrImplementation) {
