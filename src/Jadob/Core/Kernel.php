@@ -4,28 +4,18 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
-use Exception;
-use Jadob\Config\Config;
-use Jadob\Container\ServiceGraphContainer;
-use Jadob\Container\ContainerBuilder;
-use Jadob\Container\ContainerEventListener;
 use Jadob\Container\Exception\ContainerException;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
-use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Core\Exception\KernelException;
-use Jadob\Core\Session\SessionHandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Runtime\RuntimeFactory;
 use Jadob\Runtime\RuntimeInterface;
 use LogicException;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,12 +49,12 @@ class Kernel
     protected RequestContextStore $contextStore;
 
     public function __construct(
-        protected string                 $env,
-        private BootstrapInterface       $bootstrap,
-        private ServiceGraphContainer    $container,
+        protected string $env,
+        private BootstrapInterface $bootstrap,
+        private ContainerInterface $container,
         private EventDispatcherInterface $eventDispatcher,
-        private ErrorHandlerInterface    $errorHandler,
-        private LoggerFactory            $loggerFactory,
+        private ErrorHandlerInterface $errorHandler,
+        private LoggerFactory $loggerFactory,
     ) {
         if (!in_array($env, ['dev', 'prod'], true)) {
             throw new KernelException('Invalid environment passed to application kernel (expected: dev|prod, ' . $env . ' given)');
@@ -147,98 +137,11 @@ class Kernel
     }
 
     /**
-     * @return ServiceGraphContainer
-     */
-    public function getContainer(): ServiceGraphContainer
-    {
-        return $this->container;
-    }
-
-    /**
      * @return string
      */
     public function getEnv(): string
     {
         return $this->env;
-    }
-
-
-    /**
-     * @return ContainerBuilder
-     * @throws KernelException
-     */
-    public function getContainerBuilder(): ContainerBuilder
-    {
-        if ($this->containerBuilder === null) {
-            if (!is_array($services)) {
-                //TODO named exception constructors?
-                throw new KernelException('services.php has missing return statement or returned value is not an array.');
-            }
-
-            $listener = null;
-            if ($this->env !== 'prod') {
-                $listener = new ContainerEventListener();
-            }
-            $containerBuilder = new ContainerBuilder($listener);
-
-            $containerBuilder->add(BootstrapInterface::class, $this->bootstrap);
-            $containerBuilder->add(__CLASS__, $this);
-            $containerBuilder->add(LoggerInterface::class, $this->logger);
-            $containerBuilder->add('logger.handler.default', $this->fileStreamHandler);
-            $containerBuilder->add(RuntimeInterface::class, $this->runtime);
-            $containerBuilder->add(RequestContextStore::class, $this->contextStore);
-            $containerBuilder->setServiceProviders($serviceProviders);
-
-            $containerBuilder->add(SessionHandlerFactory::class, static function (): SessionHandlerFactory {
-                return new SessionHandlerFactory();
-            });
-
-            foreach ($services as $serviceName => $serviceObject) {
-                if (!is_string($serviceName) || !(is_array($serviceObject) || is_object($serviceObject))) {
-                    throw new RuntimeException(
-                        'There is an malformed entry in services.php as there is neither string as a key nor array|object in value'
-                    );
-                }
-                $containerBuilder->add($serviceName, $serviceObject);
-            }
-
-            $this->containerBuilder = $containerBuilder;
-        }
-
-        return $this->containerBuilder;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @deprecated
-     * Creates and preconfigures a monolog instance.
-     *
-     * @return LoggerInterface
-     * @throws Exception
-     */
-    protected function initializeLogger(): LoggerInterface
-    {
-        $logLevel = LogLevel::DEBUG;
-        if ($this->env === 'prod') {
-            $logLevel = LogLevel::INFO;
-        }
-
-        $this->fileStreamHandler = new StreamHandler(
-            $this->bootstrap->getDefaultLogStream($this->env),
-            $logLevel
-        );
-
-        $factory = new LoggerFactory('app', $this->deferLogs);
-        $factory->withHandler($this->fileStreamHandler);
-
-        return $factory->create();
     }
 
     //@TODO: if prod, do not collect profiler data, disallow xdebug features if xdebug is not installed
@@ -248,12 +151,6 @@ class Kernel
             fastcgi_finish_request();
         }
     }
-
-    public function setContainer(ContainerInterface $container): void
-    {
-        $this->container = $container;
-    }
-
 
     /**
      * @param Response $response
@@ -275,22 +172,6 @@ class Kernel
         $response->prepare($request);
 
         return $response;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPsr7Compliant(): bool
-    {
-        return $this->psr7Compliant;
-    }
-
-    /**
-     * @param bool $psr7Compliant
-     */
-    public function setPsr7Compliant(bool $psr7Compliant): void
-    {
-        $this->psr7Compliant = $psr7Compliant;
     }
 
     /**
