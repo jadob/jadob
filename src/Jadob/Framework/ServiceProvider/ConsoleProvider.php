@@ -17,10 +17,8 @@ use Symfony\Component\Console\Helper\HelperSet;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class ConsoleProvider implements ServiceProviderInterface
+final readonly class ConsoleProvider implements ServiceProviderInterface
 {
-
-
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         if (strtolower(PHP_SAPI) === 'cli') {
