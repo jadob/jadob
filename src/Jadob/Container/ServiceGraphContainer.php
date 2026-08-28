@@ -6,6 +6,7 @@ namespace Jadob\Container;
 
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ReferenceType;
+use LogicException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use function array_map;
@@ -27,7 +28,7 @@ final class ServiceGraphContainer implements ContainerInterface
 
     public function get(string $id): object
     {
-        if($id === ContainerInterface::class) {
+        if ($id === ContainerInterface::class) {
             return $this;
         }
 
@@ -35,32 +36,50 @@ final class ServiceGraphContainer implements ContainerInterface
             return $this->initialized[$id];
         }
 
+        return $this->doInitialize($id);
+    }
+
+    private function doInitialize(
+        string $id,
+    ): object
+    {
         $definition = $this->graph->get($id);
         $args = $this->resolveArgs(
             $definition->arguments
         );
 
-        if($definition->factory === null) {
+        if ($definition->factory === null) {
             $reflectionClass = new ReflectionClass($definition->className);
 
-            return $this
-                ->onServiceInitialized(
-                    $id,
-                    $reflectionClass->newInstanceArgs($args),
+            $service = $reflectionClass->newInstanceArgs($args);
+        } else {
+            $service = call_user_func_array(
+                $definition->factory,
+                $args
+            );
+        }
+
+        foreach ($definition->methodCalls as $methodName => $methodArgsList) {
+            foreach ($methodArgsList as $methodArgs) {
+                call_user_func_array(
+                    [$service, $methodName],
+                    $this->resolveArgs($methodArgs)
                 );
+            }
         }
 
         return $this
             ->onServiceInitialized(
                 $id,
-                call_user_func_array($definition->factory, $args)
+                $service,
             );
     }
 
     private function onServiceInitialized(
         string $id,
         object $service,
-    ): object {
+    ): object
+    {
         $this->initialized[$id] = $service;
 
         return $service;
@@ -84,7 +103,7 @@ final class ServiceGraphContainer implements ContainerInterface
                     );
                 }
 
-                if($arg->type === ReferenceType::TaggedServices) {
+                if ($arg->type === ReferenceType::TaggedServices) {
                     $tag = $arg->value;
 
                     return array_map(
