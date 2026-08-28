@@ -57,4 +57,13 @@ final class TwigConfig implements ConfigNodeInterface
 
         return $this->webpackManifestExtensionConfig;
     }
+
+    public function withGlobal(
+        string $key,
+        mixed $value,
+    ): self
+    {
+        $this->globals[$key] = $value;
+        return $this;
+    }
 }
