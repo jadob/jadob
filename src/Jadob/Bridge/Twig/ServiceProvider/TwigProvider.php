@@ -79,7 +79,8 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
                             $key = FilesystemLoader::MAIN_NAMESPACE;
                         }
                         $loader->addPath(
-                            sprintf('%s/%s',
+                            sprintf(
+                                '%s/%s',
                                 $bootstrap->getRootDir(),
                                 ltrim($path, '/')
                             ),
@@ -101,7 +102,7 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
 
         $environmentClosure = static function (
             LoaderInterface $loader,
-            BootstrapInterface  $bootstrap,
+            BootstrapInterface $bootstrap,
         ) use ($config, $builder): Environment {
             $cache = false;
 
@@ -139,6 +140,27 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
 
         $builder->set(Environment::class)
             ->withFactory($environmentClosure);
+
+        if($config->webpackManifestExtensionConfig !== null) {
+            $webpackManifestConfig = $config->webpackManifestExtensionConfig;
+
+            $builder
+                ->set(WebpackManifestAssetExtension::class)
+                ->withTag('twig.extension')
+                ->withFactory(
+                    function(BootstrapInterface $bootstrap) use ($webpackManifestConfig): WebpackManifestAssetExtension {
+                        $manifestPath = sprintf(
+                            '%s/%s',
+                            rtrim($bootstrap->getRootDir(), '/'),
+                            ltrim($webpackManifestConfig->manifestLocation, '/')
+                        );
+
+                        return new WebpackManifestAssetExtension(
+                            manifestPath: $manifestPath
+                        );
+                    }
+                );
+        }
 //
 //
 //        $services[PathExtension::class] = [
