@@ -38,6 +38,10 @@ final readonly class AutowireServices implements CompilerExtensionInterface
             }
 
             $classConstructor = new ReflectionClass($service->className)->getConstructor();
+            if($classConstructor === null) {
+                continue;
+            }
+
             $constructorArgs = $classConstructor->getParameters();
 
             foreach ($constructorArgs as $constructorArg) {
