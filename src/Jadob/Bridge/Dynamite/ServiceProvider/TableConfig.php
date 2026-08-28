@@ -10,12 +10,14 @@ final class TableConfig
      * @param string $partitionKeyName
      * @param string $sortKeyName
      * @param array<class-string> $managedObjects
+     * @param array<non-empty-string> $indexes
      */
     public function __construct(
         private(set) ?string $name = null,
         private(set) ?string $partitionKeyName = null,
         private(set) ?string $sortKeyName = null,
-        private(set) array $managedObjects = []
+        private(set) array $managedObjects = [],
+        private(set) array $indexes = []
     ) {
     }
 
