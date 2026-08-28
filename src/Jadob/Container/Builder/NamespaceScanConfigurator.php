@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Container\Builder;
 
@@ -40,18 +41,21 @@ class NamespaceScanConfigurator
     public function markedWith(string $attribute): self
     {
         $this->attributesToMatch[] = $attribute;
+
         return $this;
     }
 
     public function withClassNameSuffix(string $suffix): self
     {
         $this->suffix = $suffix;
+
         return $this;
     }
 
     public function excludeClasses(string ...$fqcns): self
     {
         $this->fqcnsToExclude += $fqcns;
+
         return $this;
     }
 
