@@ -45,6 +45,10 @@ final class TableConfig
         return $this;
     }
 
+    /**
+     * @param class-string $managedObject
+     * @return $this
+     */
     public function withManagedObject(
         string $managedObject,
     ): self {
