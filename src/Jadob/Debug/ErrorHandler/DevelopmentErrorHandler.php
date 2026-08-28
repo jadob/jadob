@@ -69,6 +69,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
                         $context['line'] = $errline;
                         $context['stacktrace'] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
                         $logger->warning($message, $context);
+
                         return;
                     }
 
@@ -86,6 +87,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     public function registerExceptionHandler()
     {
         $logger = $this->logger;
+
         if (PHP_SAPI !== 'cli') {
             set_exception_handler(
                 static function (Throwable $exception) use ($logger) {
@@ -95,7 +97,8 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
                     error_log($exception->getTraceAsString());
 
                     $logger->critical(
-                        $exception->getMessage(), [
+                        $exception->getMessage(),
+                        [
                             'file' => $exception->getFile(),
                             'line' => $exception->getLine(),
                             'trace' => $exception->getTrace(),
@@ -119,6 +122,7 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
         if ($variable === null) {
             return 'null';
         }
+
         if (is_string($variable)) {
             if (strlen($variable) === 0) {
                 return '""';
@@ -126,18 +130,23 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
 
             return $variable;
         }
+
         if (is_scalar($variable)) {
             return 'scalar';
         }
+
         if (is_object($variable)) {
             return get_class($variable);
         }
+
         if (is_array($variable)) {
             return 'array';
         }
+
         if (is_resource($variable)) {
             return 'resource';
         }
+
         return 'unknown';
     }
 
@@ -149,12 +158,14 @@ class DevelopmentErrorHandler implements ErrorHandlerInterface
     public static function parseParams($params)
     {
         $output = [];
+
         if (!is_array($params)) {
             return htmlspecialchars(self::getVariableType($params));
         }
         foreach ($params as $param) {
             $output[] = htmlspecialchars(self::getVariableType($param));
         }
+
         return implode(',', $output);
     }
 }

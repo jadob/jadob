@@ -80,6 +80,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
         if ($persistentManagerName) {
             return $this->getManager($persistentManagerName)->getRepository($persistentObject);
         }
+
         return $this->getManagerForClass($persistentObject)->getRepository($persistentObject);
     }
 
@@ -92,6 +93,7 @@ class DoctrineManagerRegistry implements ManagerRegistry
     {
         foreach ($this->managers as $manager) {
             $manager->getClassMetadata($class);
+
             return $manager;
         }
 
