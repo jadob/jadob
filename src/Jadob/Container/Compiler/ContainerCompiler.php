@@ -228,6 +228,10 @@ final class ContainerCompiler
             $graph->alias($serviceId, $binding);
         }
 
+        foreach ($builder->getFallbackParameters() as $name => $value) {
+            $graph->addParameter($name, $value);
+        }
+
         $extensions = $this->getSortedBuildExtensions();
         foreach ($extensions as $extensionsInPriority) {
             foreach ($extensionsInPriority as $extension) {

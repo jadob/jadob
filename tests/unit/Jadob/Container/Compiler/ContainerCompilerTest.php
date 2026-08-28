@@ -94,4 +94,21 @@ final class ContainerCompilerTest extends TestCase
             );
 
     }
+
+    public function testCompilerWillIncludeFallbackParameterValuesPresence(): void
+    {
+        $builder = new ContainerBuilder();
+        $builder->addFallbackParameter('favorite_ham', 'gabagool');
+        $builder->requireParameter('favorite_ham');
+
+        $graph = $this
+            ->compiler
+            ->compile(
+                $builder,
+            );
+
+        self::assertTrue($graph->hasParameter('favorite_ham'));
+        self::assertEquals('gabagool', $graph->getParameter('favorite_ham'));
+
+    }
 }
