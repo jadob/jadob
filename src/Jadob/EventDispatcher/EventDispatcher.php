@@ -108,9 +108,11 @@ class EventDispatcher implements EventDispatcherInterface
      * @param ListenerProviderInterface $provider
      * @return $this
      */
-    public function addListener(ListenerProviderInterface $provider): EventDispatcher
+    public function addListener(
+        ListenerProviderInterface $listener
+    ): EventDispatcher
     {
-        $this->listeners[] = $provider;
+        $this->listeners[] = $listener;
 
         return $this;
     }
