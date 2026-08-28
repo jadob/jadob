@@ -93,6 +93,10 @@ final class ServiceGraphContainer implements ContainerInterface
                     );
                 }
 
+                if ($arg->type === ReferenceType::Literal) {
+                    return $arg->value;
+                }
+
                 throw new LogicException('not implemented');
             },
             $args
