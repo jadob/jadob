@@ -27,10 +27,11 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
             $stack = [];
 
             foreach ($event->getException()->getTrace() as $trace) {
-                $stack[] = sprintf('<li>%s</li>',( $trace['file'] ?? "(file unknown)") . ':' .( $trace['line'] ?? "(line unknown)" ));
+                $stack[] = sprintf('<li>%s</li>', ( $trace['file'] ?? "(file unknown)") . ':' .( $trace['line'] ?? "(line unknown)" ));
             }
 
-            $template = str_replace('${thrown_in}',
+            $template = str_replace(
+                '${thrown_in}',
                 sprintf(
                     '%s:%s',
                     $event->getException()->getFile(),
@@ -42,6 +43,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
             $template = str_replace('${message}', $event->getException()->getMessage(), $template);
             $template = str_replace('${stack_trace}', implode(PHP_EOL, $stack), $template);
             render($template);
+
             return;
         }
 
@@ -69,6 +71,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
         if ($variable === null) {
             return 'null';
         }
+
         if (is_string($variable)) {
             if (strlen($variable) === 0) {
                 return '""';
@@ -76,18 +79,23 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
 
             return $variable;
         }
+
         if (is_scalar($variable)) {
             return 'scalar';
         }
+
         if (is_object($variable)) {
             return get_class($variable);
         }
+
         if (is_array($variable)) {
             return 'array';
         }
+
         if (is_resource($variable)) {
             return 'resource';
         }
+
         return 'unknown';
     }
 
@@ -99,12 +107,14 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
     public static function parseParams($params)
     {
         $output = [];
+
         if (!is_array($params)) {
             return htmlspecialchars(self::getVariableType($params));
         }
         foreach ($params as $param) {
             $output[] = htmlspecialchars(self::getVariableType($param));
         }
+
         return implode(',', $output);
     }
 }
