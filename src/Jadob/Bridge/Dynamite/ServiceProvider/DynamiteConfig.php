@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Dynamite\ServiceProvider;
 
@@ -13,8 +14,7 @@ final class DynamiteConfig implements ConfigNodeInterface
     public function __construct(
         private(set) bool $mappingCacheEnabled = false,
         private(set) array $tableConfigs = []
-    )
-    {
+    ) {
     }
 
     public function enableMappingCache(): self
@@ -31,5 +31,4 @@ final class DynamiteConfig implements ConfigNodeInterface
 
         return $tableConfig;
     }
-
 }

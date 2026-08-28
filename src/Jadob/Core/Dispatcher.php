@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Jadob\Core;
 
 use Exception;
-use Jadob\Container\AutowiringContainer;
 use Jadob\Container\Exception\ServiceNotFoundException;
 use Jadob\Core\Event\AfterControllerEvent;
 use Jadob\Core\Event\RequestEvent;
@@ -13,7 +12,7 @@ use Jadob\Router\Exception\MethodNotAllowedException;
 use Jadob\Router\Exception\RouteNotFoundException;
 use Jadob\Router\Route;
 use Jadob\Router\Router;
-use Jadob\Security\Auth\User\UserInterface;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
@@ -33,23 +32,13 @@ use function method_exists;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class Dispatcher
+final readonly class Dispatcher
 {
-    protected AutowiringContainer $container;
-
-
-    protected EventDispatcherInterface $eventDispatcher;
-
-    protected LoggerInterface $logger;
-
     public function __construct(
-        AutowiringContainer        $container,
-        LoggerInterface          $logger,
-        EventDispatcherInterface $eventDispatcher
+        private ContainerInterface $container,
+        private LoggerInterface $logger,
+        private EventDispatcherInterface $eventDispatcher
     ) {
-        $this->container = $container;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -63,11 +52,8 @@ class Dispatcher
      */
     public function executeRequest(RequestContext $context): Response
     {
-        /**
-         * @var Router $router
-         */
+        /** @var Router $router */
         $router = $this->container->get('router');
-
 
         $matchedRouteData = $router->match(
             uri: $context->getRequest()->getPathInfo(),
@@ -85,14 +71,17 @@ class Dispatcher
         $context->getRequest()->attributes->set('current_route', $matchedRoute);
 
         $requestEvent = new RequestEvent($context);
-        $this->eventDispatcher->dispatch($requestEvent);
+        $this
+            ->eventDispatcher
+            ->dispatch($requestEvent);
+
         $eventResponse = $requestEvent->getResponse();
 
         if ($eventResponse !== null) {
             $this->logger->debug('Received response from BeforeControllerEvent, further execution is stopped.');
+
             return $eventResponse;
         }
-
 
         $controllerClass = $matchedRoute->handler;
 
@@ -101,17 +90,18 @@ class Dispatcher
         }
 
         $autowiredController = $this->container->get($controllerClass);
+
         //@TODO: refactor method name resolving
         if (method_exists($autowiredController, '__invoke')) {
             $methodName = '__invoke';
         } else {
-            throw new KernelException(sprintf(
-                'Controller %s does not have "__invoke" method.',
-                $controllerClass
-            )
+            throw new KernelException(
+                sprintf(
+                    'Controller %s does not have "__invoke" method.',
+                    $controllerClass
+                )
             );
         }
-
 
         //@TODO: check if method is accessible
         $methodArguments = $this->resolveControllerMethodArguments(
@@ -141,6 +131,7 @@ class Dispatcher
 
         if ($afterControllerEvent->getResponse() !== null) {
             $this->logger->debug('Received response from AfterControllerEvent.');
+
             return $afterControllerEvent->getResponse();
         }
 
@@ -184,6 +175,7 @@ class Dispatcher
                 && ($parameterType === null || ($parameterType !== null && $parameterType->isBuiltin()))
             ) {
                 $output[$parameterName] = $routerParams[$parameterName];
+
                 continue;
             }
 
@@ -193,11 +185,13 @@ class Dispatcher
 
                 if (($request = $this->matchRequestObject($class, $context)) !== null) {
                     $output[$parameterName] = $request;
+
                     continue;
                 }
 
                 if ($class === Route::class) {
                     $output[$parameterName] = $context->getRoute();
+
                     continue;
                 }
 
@@ -205,11 +199,13 @@ class Dispatcher
                  * When still here, try to get a service from container
                  */
                 $output[$parameterName] = $this->container->get($class);
+
                 continue;
             }
 
             throw new RuntimeException('Missing service or route parameter with name "' . $parameterName . '"');
         }
+
         return $output;
     }
 
@@ -234,6 +230,7 @@ class Dispatcher
             || $className === UserInterface::class
         ) {
             $user = $context->getUser();
+
             if ($user === null) {
                 throw new Exception('Could not autowire user to controller as user seem to be not authenticated.');
             }
@@ -247,6 +244,7 @@ class Dispatcher
         ) {
             return $context->getRequest();
         }
+
         return null;
     }
 }

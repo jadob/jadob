@@ -91,6 +91,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
         $defaultConnectionName = null;
         foreach ($connections as $connectionName => $configuration) {
             $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
+
             if ($configuration['default']) {
                 if ($defaultConnectionName !== null) {
                     throw new InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');

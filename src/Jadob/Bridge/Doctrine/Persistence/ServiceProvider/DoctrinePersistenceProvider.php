@@ -14,8 +14,7 @@ final readonly class DoctrinePersistenceProvider implements ServiceProviderInter
     public function register(
         ContainerBuilderInterface $builder,
         ?ConfigNodeInterface $config = null
-    ): void
-    {
+    ): void {
         $builder
             ->set(DoctrineManagerRegistry::class);
 
@@ -24,6 +23,5 @@ final readonly class DoctrinePersistenceProvider implements ServiceProviderInter
                 ManagerRegistry::class,
                 DoctrineManagerRegistry::class
             );
-
     }
 }
