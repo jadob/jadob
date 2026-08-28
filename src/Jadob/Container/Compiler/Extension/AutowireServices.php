@@ -31,7 +31,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
             if ($service->factory !== null) {
                 throw new InvalidServiceDefinitionException(
                     sprintf(
-                        'Service "%s" cannot use autowire() because it uses factory which was autowired automatically.',
+                        'Service "%s" cannot use autowire() because it uses factory which is autowired automatically.',
                         $service->id
                     )
                 );
