@@ -283,6 +283,13 @@ final class ContainerCompiler
             $classReflections = $reflector->reflectAllClasses();
 
             foreach ($classReflections as $classReflection) {
+                if ($classReflection->isInterface()
+                    || $classReflection->isAbstract()
+                    || $classReflection->isTrait()
+                ) {
+                    continue;
+                }
+
                 $service = $builder->set(
                     $classReflection->getName()
                 );

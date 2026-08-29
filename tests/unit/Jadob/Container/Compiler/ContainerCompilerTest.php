@@ -9,6 +9,7 @@ use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
 use Jadob\Container\Config\ConfigNodeFinderInterface;
 use Jadob\Container\Fixtures\CircularServiceProviders\BarServiceProvider;
 use Jadob\Container\Fixtures\CircularServiceProviders\FooServiceProvider;
+use Jadob\Container\Fixtures\SampleApp\Domain\Repository\UserRepositoryInterface;
 use Jadob\Container\Fixtures\SampleApp\Infrastructure\ServiceProvider\EmailServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\AuthServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\DatabaseServiceProvider;
@@ -110,5 +111,23 @@ final class ContainerCompilerTest extends TestCase
         self::assertTrue($graph->hasParameter('favorite_ham'));
         self::assertEquals('gabagool', $graph->getParameter('favorite_ham'));
 
+    }
+
+    public function testNamespaceScanWillSkipInterfaces(): void
+    {
+        $builder = new ContainerBuilder();
+        $builder->configureNamespaceScan()
+            ->in(__DIR__.'/../Fixtures/SampleApp')
+            ->autowire();
+
+        $graph = $this
+            ->compiler
+            ->compile(
+                $builder,
+            );
+
+        self::assertFalse(
+            $graph->has(UserRepositoryInterface::class)
+        );
     }
 }
