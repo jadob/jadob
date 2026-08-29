@@ -41,14 +41,16 @@ final class ContainerCompiler
      */
     public function __construct(
         private ConfigNodeFinderInterface $configNodeFinder,
-    ) {
+    )
+    {
     }
 
     public function addExtension(
         CompilerExtensionInterface $extension,
-        string $id,
-        int $priority,
-    ): void {
+        string                     $id,
+        int                        $priority,
+    ): void
+    {
         $this->extensions[] = new CompilerExtensionEntry(
             extension: $extension,
             id: $id,
@@ -78,7 +80,8 @@ final class ContainerCompiler
      */
     public function compile(
         ContainerBuilder $builder,
-    ): ServiceGraph {
+    ): ServiceGraph
+    {
         $serviceProviders = $builder
             ->getServiceProviders();
 
@@ -112,7 +115,8 @@ final class ContainerCompiler
      */
     private function calculateServiceProviderRegisterOrder(
         array $providers,
-    ): array {
+    ): array
+    {
         try {
             $providersIndexed = [];
             $sorter = new StringSort();
@@ -174,8 +178,9 @@ final class ContainerCompiler
      */
     private function resolveServiceProviders(
         ContainerBuilder $builder,
-        array $providers,
-    ): void {
+        array            $providers,
+    ): void
+    {
         $serviceProviderOrder = $this
             ->calculateServiceProviderRegisterOrder(
                 $providers,
@@ -195,7 +200,8 @@ final class ContainerCompiler
 
     private function processConfigForProvider(
         ConfigObjectProviderInterface $provider,
-    ): ConfigNodeInterface {
+    ): ConfigNodeInterface
+    {
         $config = $provider->getDefaultConfigurationObject();
         /** @var array<Closure> $availableConfigs */
         $availableConfigs = $this
@@ -213,7 +219,8 @@ final class ContainerCompiler
 
     private function buildServiceGraph(
         ContainerBuilder $builder
-    ): ServiceGraph {
+    ): ServiceGraph
+    {
         $graph = new ServiceGraph();
 
         foreach ($builder->getDefinitions() as $definition) {
@@ -258,7 +265,8 @@ final class ContainerCompiler
 
     private function resolveConfigurations(
         ContainerBuilder $builder,
-    ): void {
+    ): void
+    {
         $emptyConfigsReceived = false;
         while (!$emptyConfigsReceived) {
             $configs = $builder->popConfigurations();
@@ -271,7 +279,8 @@ final class ContainerCompiler
 
     private function processNamespaceScans(
         ContainerBuilder $builder
-    ): void {
+    ): void
+    {
         foreach ($builder->getNamespaceScans() as $namespaceScan) {
             $sourceLocator = new DirectoriesSourceLocator(
                 $namespaceScan->paths,
@@ -297,6 +306,10 @@ final class ContainerCompiler
                 foreach ($namespaceScan->tags as $tag) {
                     $service->withTag($tag);
                 }
+
+                if ($namespaceScan->autowire) {
+                    $service->autowire();
+                }
             }
         }
     }
@@ -306,7 +319,8 @@ final class ContainerCompiler
      */
     private function assertPresenceOfRequiredParameters(
         ContainerBuilder $builder
-    ): void {
+    ): void
+    {
         $requiredParameters = $builder->getRequiredParameters();
         $fallbackParameters = $builder->getFallbackParameters();
 
