@@ -12,6 +12,8 @@ use Jadob\Framework\Logger\HandlerConfiguration;
 use Jadob\Framework\Logger\HandlerFactory\RotatingFileHandlerFactory;
 use Jadob\Framework\Logger\HandlerFactory\StreamHandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use function in_array;
 
@@ -52,6 +54,12 @@ final readonly class LoggerServiceProvider implements ServiceProviderInterface, 
                     ),
                     handlerFactories: $handlerFactories
                 )
+            );
+
+        $builder
+            ->set(LoggerInterface::class, Logger::class)
+            ->withFactory(
+                fn(LoggerFactory $factory): LoggerInterface => $factory->getDefaultLogger()
             );
 
         $this->registerLoggerHandlerFactories(
