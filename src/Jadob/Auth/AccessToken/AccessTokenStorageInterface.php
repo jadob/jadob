@@ -16,4 +16,9 @@ interface AccessTokenStorageInterface
     public function fetchCurrentFromSession(SessionInterface $session): ?AccessToken;
 
     public function saveToSession(SessionInterface $session, AccessToken $accessToken): int;
+
+    public function removeTokenFromSession(
+        SessionInterface $session,
+        int $tokenId
+    ): void;
 }

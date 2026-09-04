@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Jadob\Auth\AccessToken;
 
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use function array_key_exists;
+use function sprintf;
 
 final readonly class AccessTokenStorage implements AccessTokenStorageInterface
 {
@@ -32,6 +35,27 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
 
     public function fetchCurrentFromSession(SessionInterface $session): ?AccessToken
     {
+    }
+
+    public function removeTokenFromSession(
+        SessionInterface $session,
+        int $tokenId
+    ): void
+    {
+        /** @var array<array-key, AccessToken> $tokens */
+        $tokens = $session->get(self::TOKENS_KEY);
+
+        if(
+            $tokens === null
+            || (is_array($tokens) && array_key_exists($tokenId, $tokens) === false)
+        ) {
+            throw new RuntimeException(
+                sprintf('Access token with id "%s" does not exist in session.', $tokenId)
+            );
+        }
+
+        unset($tokens[$tokenId]);
+        $session->set(self::TOKENS_KEY, $tokens);
     }
 
     public function saveToSession(SessionInterface $session, AccessToken $accessToken): int
