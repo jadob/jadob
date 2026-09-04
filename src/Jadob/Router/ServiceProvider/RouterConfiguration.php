@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
-class RouterConfiguration
+use Jadob\Container\Config\ConfigNodeInterface;
+
+class RouterConfiguration implements ConfigNodeInterface
 {
     private array $routes = [];
     private bool $caseSensitive = false;

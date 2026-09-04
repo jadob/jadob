@@ -9,7 +9,7 @@ use Psr\Container\NotFoundExceptionInterface;
 final class ServiceNotFoundException extends Exception implements NotFoundExceptionInterface
 {
     public function __construct(
-        string                 $message,
+        string $message,
         private readonly array $resolvingChain
     ) {
         parent::__construct($message);

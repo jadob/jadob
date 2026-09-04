@@ -3,33 +3,30 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
-use Jadob\Container\Container;
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\MessageBus\CommandBus;
 use Jadob\MessageBus\QueryBus;
-use Psr\Container\ContainerInterface;
 
-class MessageBusServiceProvider implements ServiceProviderInterface
+final readonly class MessageBusServiceProvider implements ServiceProviderInterface
 {
-    public function getConfigNode(): ?string
+    public function register(
+        ContainerBuilderInterface $builder,
+        ConfigNodeInterface|null $config = null,
+    ): void
     {
-        return null;
-    }
+        $builder
+            ->set(CommandBus::class)
+            ->withArgument(
+                'handlers', Reference::taggedServices('command_bus_handler')
+            );
 
-    public function register(ContainerInterface $container, object|array|null $config = null): array
-    {
-        return [
-            CommandBus::class => function (Container $container) {
-                return new CommandBus(
-                    $container->getTaggedServices('command_bus_handler')
-                );
-            },
-            QueryBus::class => function (Container $container) {
-                return new QueryBus(
-                    $container->getTaggedServices('query_bus_handler')
-                );
-            },
-
-        ];
+        $builder
+            ->set(QueryBus::class)
+            ->withArgument(
+                'handlers', Reference::taggedServices('query_bus_handler')
+            );
     }
 }

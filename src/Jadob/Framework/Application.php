@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Jadob\Framework;
 
-use Jadob\Config\Config;
-use Jadob\Container\AutowiringContainer;
-use Jadob\Container\Container;
+use Jadob\Container\Builder\ContainerBuilder;
+use Jadob\Container\Compiler\ContainerCompiler;
+use Jadob\Container\Config\ConfigNodeFinder;
+use Jadob\Container\ServiceGraphContainer;
 use Jadob\Container\ParameterStore;
-use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
@@ -19,6 +19,8 @@ use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Router;
+use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application as CliApplication;
@@ -28,12 +30,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Throwable;
 use function array_merge;
+use function get_class;
+use function Symfony\Component\String\b;
 
 readonly class Application
 {
     private ExceptionHandler $exceptionHandler;
     private ExceptionListenerInterface $fallbackExceptionListener;
-    private AutowiringContainer $container;
+    private ContainerInterface $container;
     private RequestContextStore $requestContextStore;
 
     public function __construct(
@@ -59,10 +63,6 @@ readonly class Application
             throw new KernelException('There is no services.php file in your config directory.');
         }
 
-        /** @var array $services */
-        $services = include $servicesFile;
-
-
         $modules = array_merge(
             $this->bootstrap->getModules(),
             $this->modules
@@ -73,85 +73,61 @@ readonly class Application
             $this->serviceProviders
         );
 
-        $config = (new Config())->loadDirectory($this->bootstrap->getConfigDir(), ['php']);
-        $parameterNode = [];
-        if ($config->hasNode('parameters')) {
-            $parameterNode = $config->getNode('parameters');
-        }
+        $configDir = $this
+            ->bootstrap
+            ->getConfigDir();
 
-        $container = new Container();
-        $container->add(BootstrapInterface::class, $this->bootstrap);
-        $container->add(RequestContextStore::class, $this->requestContextStore);
-        $container->add(ParameterStore::class, new ParameterStore(
-            array_merge(
-                $parameterNode,
-                [
-                    'app_env' => $this->env,
-                    'root_dir' => $this->bootstrap->getRootDir(),
-                    'cache_dir' => $this->bootstrap->getCacheDir(),
-                    'env_cache_dir' => sprintf(
-                        '%s/%s',
-                        $this->bootstrap->getCacheDir(),
-                        $this->env
-                    ),
-                ]
-            )
-        ));
+        /** @var \Closure $userspaceContainerConfig */
+        $userspaceContainerConfig = include $servicesFile;
 
+        $builder = new ContainerBuilder();
+
+        $bootstrapFileFqcn = get_class($this->bootstrap);
+        $builder
+            ->set($bootstrapFileFqcn)
+            ->withFactory(fn (): BootstrapInterface => $this->bootstrap);
+
+        $builder->bind(
+            BootstrapInterface::class,
+            $bootstrapFileFqcn
+        );
+
+        $builder->loadConfiguration($userspaceContainerConfig);
         foreach ($modules as $module) {
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
-                $container->registerServiceProvider($serviceProvider);
-            }
-
-            foreach ($module->getContainerExtensionProviders($this->env) as $extensionProvider) {
-                foreach ($extensionProvider->getContainerExtensions() as $extension) {
-                    $container->addExtension($extension);
-                }
+                $serviceProviders[] = $serviceProvider;
             }
         }
 
         foreach ($serviceProviders as $serviceProvider) {
-            $container->registerServiceProvider($serviceProvider);
+            $builder->registerServiceProvider($serviceProvider);
         }
 
-        foreach ($services as $coreServiceId => $coreService) {
-            $container->add($coreServiceId, $coreService);
-        }
+        $configLocations = [
+            $configDir, // base configs
+            sprintf('%s/%s', $configDir, $this->env), // environment overrides
+            sprintf('%s/local', $configDir), // local overrides
+        ];
 
-        $autowiringConfig = $config->hasNode('autowiring') ? $config->getNode('autowiring') : [];
-        /** @var list<string> $autowirableNamespaces */
-        $autowirableNamespaces = $autowiringConfig['namespaces'] ?? ['Jadob\\'];
+        $compiler = new ContainerCompiler(
+            new ConfigNodeFinder($configLocations)
+        );
 
-        $autowiringContainer = new AutowiringContainer($container, [], $autowirableNamespaces);
-        $container->build($config->toArray(), $autowiringContainer);
+        $compiler->registerNativeExtensions();
 
-        $injectionExtensions = [];
         foreach ($modules as $module) {
-            foreach ($module->getContainerExtensionProviders($this->env) as $containerExtensionProvider) {
-                foreach ($containerExtensionProvider->getConstructorInjectionExtensions($autowiringContainer) as $extension) {
-                    $injectionExtensions[] = $extension;
-                }
-            }
-        }
-        $autowiringContainer->setInjectionExtensions($injectionExtensions);
-
-        $container->add(LoggerInterface::class, $container->get(LoggerFactory::class)->getDefaultLogger());
-        /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $autowiringContainer->get(EventDispatcherInterface::class);
-        foreach ($modules as $module) {
-            foreach ($module->getEventListeners($autowiringContainer, $this->env) as $listener) {
-                $eventDispatcher->addListener($listener);
-            }
-        }
-
-        $this->container = $autowiringContainer;
-
-        if ($this->fallbackExceptionListener instanceof LoggerAwareInterface) {
-            $this->fallbackExceptionListener
-                ->setLogger(
-                    $this->getLoggerFactory()->getDefaultErrorLogger()
+            foreach ($module->getContainerCompilerExtensions() as $priority => $extension) {
+                $compiler->addExtension(
+                    extension: $extension,
+                    id: get_class($extension),
+                    priority: $priority,
                 );
+            }
         }
+
+        $this->container = new ServiceGraphContainer(
+            $compiler->compile($builder)
+        );
     }
 
     public function handleWebRequest(

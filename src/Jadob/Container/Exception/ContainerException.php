@@ -4,14 +4,10 @@ declare(strict_types=1);
 namespace Jadob\Container\Exception;
 
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
 
 /**
- * Class ContainerException
- *
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * Base exception class for container package.
  */
-class ContainerException extends Exception implements ContainerExceptionInterface
+class ContainerException extends Exception
 {
 }

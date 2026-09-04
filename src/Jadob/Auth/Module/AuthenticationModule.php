@@ -13,19 +13,12 @@ final readonly class AuthenticationModule implements ModuleInterface
     public function getServiceProviders(string $env): array
     {
         return [
-            new AuthenticationServiceProvider(),
+            600 => new AuthenticationServiceProvider(),
         ];
     }
 
-    public function getContainerExtensionProviders(string $env): array
+    public function getContainerCompilerExtensions(): array
     {
         return [];
-    }
-
-    public function getEventListeners(ContainerInterface $container, string $env): array
-    {
-        return [
-           $container->get(AuthenticationEventListener::class),
-        ];
     }
 }

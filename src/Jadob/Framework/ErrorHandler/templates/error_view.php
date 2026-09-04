@@ -227,6 +227,7 @@ foreach ($stackTrace as $element) { ?>
                         <td class="function">
                             <?php
             $fullFunctionCall = $element['function'];
+
     if (isset($element['class'])) {
         $fullFunctionCall = $element['class'] . $element['type'] . $element['function'];
     }

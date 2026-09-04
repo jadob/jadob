@@ -13,6 +13,7 @@ use LogicException;
 use function array_filter;
 use function array_flip;
 use function array_intersect_key;
+use function array_key_exists;
 use function array_keys;
 use function count;
 use function http_build_query;
@@ -20,6 +21,8 @@ use function in_array;
 use function is_array;
 use function ltrim;
 use function preg_match;
+use function preg_match_all;
+use function preg_replace;
 use function rtrim;
 use function sprintf;
 use function str_replace;
@@ -108,13 +111,13 @@ class Router
     private function pathToExpression(string $path, array $params): string
     {
         //TODO: caching!
-        if (\preg_match('/[^-:.,\/_{}()a-zA-Z*\d]/', $path)) {
+        if (preg_match('/[^-:.,\/_{}()a-zA-Z*\d]/', $path)) {
             throw new LogicException(
                 sprintf('Unable to match route as phrase "%s" contains illegal characters.', $path)
             );
         }
 
-        \preg_match_all(
+        preg_match_all(
             '/{([a-zA-Z0-9\.\_\-]+)}/',
             $path,
             $pathParams,
@@ -123,11 +126,11 @@ class Router
 
         foreach ($pathParams as $pathParam) {
             $pathParamMatch = PathParamMatchType::DEFAULT;
-            if (\array_key_exists($pathParam[1], $params)) {
+            if (array_key_exists($pathParam[1], $params)) {
                 $pathParamMatch = $params[$pathParam[1]];
             }
 
-            $path = \preg_replace(
+            $path = preg_replace(
                 sprintf('/{(%s)}/', $pathParam[1]),
                 sprintf('(?<$1>%s)', $pathParamMatch),
                 $path

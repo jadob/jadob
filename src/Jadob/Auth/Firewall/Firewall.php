@@ -22,16 +22,15 @@ class Firewall implements FirewallInterface
      * @throws FirewallLogicException
      */
     public function __construct(
-        private string                    $name,
-        private RequestMatcherInterface   $requestMatcher,
-        private array                     $authenticators,
+        private string $name,
+        private RequestMatcherInterface $requestMatcher,
+        private array $authenticators,
         private IdentityProviderInterface $identityProvider,
-        private ?EntryPointInterface      $entryPoint = null,
-        private bool                      $stateless = false,
-        private bool                      $identityStackingEnabled = false,
-        private ?IdentityPickerInterface  $identityPicker = null
-    )
-    {
+        private ?EntryPointInterface $entryPoint = null,
+        private bool $stateless = false,
+        private bool $identityStackingEnabled = false,
+        private ?IdentityPickerInterface $identityPicker = null
+    ) {
         if ($this->stateless && $this->identityStackingEnabled) {
             throw new FirewallLogicException(
                 sprintf(

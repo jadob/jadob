@@ -4,28 +4,32 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\Logger;
 
-use Jadob\Core\BootstrapInterface;
+use Jadob\Framework\Logger\HandlerFactory\LogHandlerFactoryInterface;
 use LogicException;
-use Monolog\Handler\GroupHandler;
 use Monolog\Handler\HandlerInterface;
-use Monolog\Handler\RotatingFileHandler;
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use Sentry\Monolog\Handler;
-use Sentry\SentrySdk;
+use function array_key_exists;
+use function sprintf;
 
 class LoggerFactory
 {
     private array $loggers = [];
     private array $handlers = [];
 
+    /**
+     * @param string $defaultLoggerChannel
+     * @param string $defaultErrorLoggerChannel
+     * @param array<string> $channelsConfig
+     * @param array<string, HandlerConfiguration> $handlersConfig
+     * @param array<string, LogHandlerFactoryInterface> $handlerFactories
+     */
     public function __construct(
-        private BootstrapInterface $bootstrap,
-        private string             $defaultLoggerChannel,
-        private string             $defaultErrorLoggerChannel,
-        private array              $channelsConfig = [],
-        private array              $handlersConfig = [],
+        private readonly string $defaultLoggerChannel,
+        private readonly string $defaultErrorLoggerChannel,
+        private readonly array $channelsConfig = [],
+        private readonly array $handlersConfig = [],
+        private array $handlerFactories = [],
     ) {
     }
 
@@ -49,19 +53,13 @@ class LoggerFactory
         if (!array_key_exists($channel, $this->loggers)) {
             $logger = new Logger($channel);
 
+            foreach ($this->handlersConfig as $handlerName => $handlerConfig) {
+                if ($handlerConfig->supportsChannel($channel) === false) {
+                    continue;
+                }
 
-            if (!array_key_exists($channel, $this->channelsConfig)) {
-                throw new LogicException(
-                    sprintf(
-                        'Logger channel "%s" does not have any configuration.',
-                        $channel
-                    )
-                );
-            }
-
-            foreach ($this->channelsConfig[$channel] as $handlers) {
                 $logger->pushHandler(
-                    $this->getOrCreateHandler($handlers)
+                    $this->getOrCreateHandler($handlerName)
                 );
             }
             $this->loggers[$channel] = $logger;
@@ -74,42 +72,31 @@ class LoggerFactory
     {
         if (!array_key_exists($handlerName, $this->handlers)) {
             $config = $this->handlersConfig[$handlerName];
+            $factory = $this->getLogHandlerFactoryForType($config->type);
 
-            if ($config['type'] === 'stream' && $config['rotating']) {
-                $handler = new RotatingFileHandler(
-                    filename: $this->resolvePath($config['path']),
-                    level: $config['level'],
-                );
-            } elseif ($config['type'] === 'stream' && !$config['rotating']) {
-                $handler = new StreamHandler(
-                    stream: $this->resolvePath($config['path']),
-                    level: $config['level'],
-                );
-            } elseif ($config['type'] === 'sentry') {
-                $handler = new GroupHandler([
-                    new \Sentry\Monolog\BreadcrumbHandler(
-                        hub: SentrySdk::getCurrentHub(),
-                        level: Logger::INFO, // Take note of the level here, messages with that level or higher will be attached to future Sentry events as breadcrumbs
-                    ),
-                    new Handler(
-                        hub: SentrySdk::getCurrentHub(),
-                        level: $config['level'],
-                    ),
-                ]);
-            } else {
-                throw new LogicException(
-                    sprintf('Unsupported handler: %s', $handlerName)
-                );
-            }
-
-            $this->handlers[$handlerName] = $handler;
+            $this->handlers[$handlerName] = $factory->create(
+                parameters: $config->parameters,
+                level: $config->level
+            );
         }
 
         return $this->handlers[$handlerName];
     }
 
-    public function resolvePath(string $path): string
-    {
-        return str_replace('%log_dir%', $this->bootstrap->getLogsDir(), $path);
+    private function getLogHandlerFactoryForType(
+        string $type
+    ): LogHandlerFactoryInterface {
+        foreach ($this->handlerFactories as $handlerFactory) {
+            if ($handlerFactory->supports($type)) {
+                return $handlerFactory;
+            }
+        }
+
+        throw new LogicException(
+            sprintf(
+                'There is no log handler factory for type "%s"',
+                $type
+            )
+        );
     }
 }

@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\Module;
 
+use Jadob\Bridge\Twig\Container\Extension\TwigExtension;
 use Jadob\Bridge\Twig\Container\ExtensionProvider\TwigExtensionProvider;
 use Jadob\Bridge\Twig\ServiceProvider\TwigProvider;
 use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Psr\Container\ContainerInterface;
 
-class TwigModule implements ModuleInterface
+final readonly class TwigModule implements ModuleInterface
 {
     public function getServiceProviders(string $env): array
     {
@@ -17,15 +18,10 @@ class TwigModule implements ModuleInterface
         ];
     }
 
-    public function getContainerExtensionProviders(string $env): array
+    public function getContainerCompilerExtensions(): array
     {
         return [
-            new TwigExtensionProvider()
+            600 => new TwigExtension()
         ];
-    }
-
-    public function getEventListeners(ContainerInterface $container, string $env): array
-    {
-        return [];
     }
 }

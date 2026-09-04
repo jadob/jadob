@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\CircularServiceProviders;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 
-class BarServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
+final readonly class BarServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     public function getParentServiceProviders(): array
     {
@@ -16,17 +17,11 @@ class BarServiceProvider implements ServiceProviderInterface, ParentServiceProvi
         ];
     }
 
-    public function getConfigNode(): ?string
+    public function register(
+        ContainerBuilderInterface $builder,
+        ?ConfigNodeInterface $config = null
+    ): void
     {
-        return 'bar';
-    }
 
-    /**
-     * @param array<mixed> $config
-     * @return array<string, \Closure>
-     */
-    public function register(ContainerInterface $container, object|array|null $config = null): array
-    {
-        return [];
     }
 }

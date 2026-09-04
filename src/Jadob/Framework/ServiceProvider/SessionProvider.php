@@ -3,34 +3,33 @@ declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\Session\SessionHandlerFactory;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
-class SessionProvider implements ServiceProviderInterface
+/**
+ * @TODO: add session configuration
+ */
+final readonly class SessionProvider implements ServiceProviderInterface
 {
-    public function getConfigNode(): ?string
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        return null;
-    }
+        $builder->set(SessionHandlerFactory::class);
 
-    public function register(ContainerInterface $container, object|array|null $config = null): array
-    {
-        return [
-            SessionHandlerFactory::class => function () {
-                return new SessionHandlerFactory();
-            },
+        $builder
+            ->set(NativeSessionStorage::class)
+            ->withFactory(
+                function (SessionHandlerFactory $factory) {
+                    return new NativeSessionStorage(
+                        [],
+                        $factory->create()
+                    );
+                }
+            );
 
-            SessionStorageInterface::class => function (ContainerInterface $container) {
-                /** @var SessionHandlerFactory $sessionHandlerFactory */
-                $sessionHandlerFactory = $container->get(SessionHandlerFactory::class);
-                return new NativeSessionStorage(
-                    [],
-                    $sessionHandlerFactory->create()
-                );
-            }
-        ];
+        $builder->bind(SessionStorageInterface::class, NativeSessionStorage::class);
     }
 }

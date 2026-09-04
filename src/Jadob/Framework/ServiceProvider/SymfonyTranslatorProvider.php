@@ -1,14 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Bridge\Symfony\Translation\TranslationSource;
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\Attribute\InjectParameter;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\Logger\LoggerFactory;
-use Monolog\Logger;
-use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
 use Symfony\Component\Translation\Loader\PhpFileLoader;
@@ -23,100 +27,121 @@ use function sprintf;
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class SymfonyTranslatorProvider implements ServiceProviderInterface
+final readonly class SymfonyTranslatorProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
-    /**
-     * returns Config node name that will be passed as $config in register() method.
-     * return null if no config needed.
-     *
-     * @return string|null
-     */
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'translator';
     }
 
     /**
-     * @param string[]|array[] $config
-     * @psalm-param array{locale:string, logging:bool} $config
-     *
-     * @return array<string, callable|object>
+     * @param ContainerBuilderInterface $builder
+     * @param TranslatorConfig|null $config
+     * @return void
      */
-    public function register(ContainerInterface $container, null|object|array $config = null): array
-    {
-        return [
-            //expose this as a separate service to make it possible to override
-            MessageFormatterInterface::class => static fn(): MessageFormatterInterface => new MessageFormatter(),
+    public function register(
+        ContainerBuilderInterface $builder,
+        ?ConfigNodeInterface $config = null
+    ): void {
+        $builder->requireParameter('translations_directory');
+        $builder->addFallbackParameter(
+            'translations_directory',
+            '${config_dir}/translations'
+        );
 
-            TranslatorInterface::class => static function (
-                ContainerInterface $container,
-                LoggerFactory $loggerFactory
-            ) use ($config): TranslatorInterface {
-                /** @var BootstrapInterface $bootstrap */
-                $bootstrap = $container->get(BootstrapInterface::class);
-                /** @var TranslationSource[] $sources */
-                $sources = [];
+        $builder->set(MessageFormatter::class);
 
-                $symfonyTranslator = new Translator(
-                    $config['locale'],
-                    $container->get(MessageFormatterInterface::class)
-                );
-                $symfonyTranslator->addLoader('php', new PhpFileLoader());
+        $builder->bind(
+            MessageFormatterInterface::class,
+            MessageFormatter::class
+        );
 
+        $builder
+            ->set(Translator::class)
+            ->withFactory(
+                static function (
+                    #[InjectParameter('translations_directory')]
+                    string $translationsDirectory,
+                    MessageFormatterInterface $messageFormatter,
+                ) use ($config): TranslatorInterface {
+                    /** @var TranslationSource[] $sources */
+                    $sources = [];
 
-                /**
-                 * Adding translations automatically:
-                 *
-                 * Traverse CONFIG_DIR/translations/ * / *.php files for translations
-                 * When found any, a filename without extension will be used as a domain
-                 */
-                $sourcesPath = $bootstrap->getConfigDir() . '/translations/*/*.php';
-                $sourcesGlob = glob($sourcesPath);
+                    $symfonyTranslator = new Translator(
+                        $config->locale,
+                        $messageFormatter,
+                    );
+                    $symfonyTranslator->addLoader('php', new PhpFileLoader());
 
-                $sourcesRegexp = sprintf(
-                    '@%s\/translations\/(?<locale>[A-Za-z]{2})\/(?<domain>[_a-zA-Z]*).php@i',
-                    $bootstrap->getConfigDir()
-                );
+                    /**
+                     * Adding translations automatically:
+                     *
+                     * Traverse CONFIG_DIR/translations/ * / *.php files for translations
+                     * When found any, a filename without extension will be used as a domain
+                     */
+                    $sourcesPath = sprintf('%s/*/*.php', $translationsDirectory);
+                    $sourcesGlob = glob($sourcesPath);
 
-                foreach ($sourcesGlob as $sourcePath) {
-                    preg_match($sourcesRegexp, $sourcePath, $sourceMatch);
-                    $sources[] = new TranslationSource($sourcePath, $sourceMatch['locale'], $sourceMatch['domain']);
-                }
+                    $sourcesRegexp = sprintf(
+                        '@%s\/(?<locale>[A-Za-z]{2})\/(?<domain>[_a-zA-Z]*).php@i',
+                        $translationsDirectory
+                    );
 
-                /**
-                 * User-defined translations
-                 */
-                if (isset($config['sources'])) {
-                    foreach ($config['sources'] as $userDefinedSource) {
+                    foreach ($sourcesGlob as $sourcePath) {
+                        preg_match($sourcesRegexp, $sourcePath, $sourceMatch);
                         $sources[] = new TranslationSource(
-                            $userDefinedSource['path'],
-                            $userDefinedSource['locale'],
-                            $userDefinedSource['domain']
+                            $sourcePath,
+                            $sourceMatch['locale'],
+                            $sourceMatch['domain']
                         );
                     }
-                }
 
-                foreach ($sources as $source) {
-                    $symfonyTranslator->addResource(
-                        'php',
-                        $source->getPath(),
-                        $source->getLocale(),
-                        $source->getDomain()
-                    );
-                }
+                    foreach ($sources as $source) {
+                        $symfonyTranslator->addResource(
+                            'php',
+                            $source->path,
+                            $source->locale,
+                            $source->domain
+                        );
+                    }
 
-                /**
-                 * @TODO: make a separate logger for translator
-                 */
-                if (isset($config['logging']) && $config['logging'] === true) {
-                    return new LoggingTranslator(
-                        $symfonyTranslator,
-                        $loggerFactory->getDefaultLogger()
-                    );
+                    return $symfonyTranslator;
                 }
+            );
 
-                return $symfonyTranslator;
-            }
-        ];
+
+        $builder->bind(
+            TranslatorInterface::class,
+            Translator::class
+        );
+
+        if ($config->loggingEnabled) {
+            $builder
+                ->set('translator.logger', LoggerInterface::class)
+                ->withFactory(function (LoggerFactory $factory) {
+                    return $factory->getLoggerForChannel('translator');
+                });
+
+            $builder
+                ->set(LoggingTranslator::class)
+                ->withArgument(
+                    'translator',
+                    Reference::service(Translator::class)
+                )
+                ->withArgument(
+                    'logger',
+                    Reference::service('translator.logger')
+                );
+
+            $builder->bind(
+                TranslatorInterface::class,
+                LoggingTranslator::class
+            );
+        }
+    }
+
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
+    {
+        return new TranslatorConfig();
     }
 }

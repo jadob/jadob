@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Jadob\EventDispatcher;
 
-use Jadob\Contracts\EventDispatcher\EventDispatcherInterface;
 use Jadob\EventDispatcher\Exception\EventDispatcherException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
@@ -54,6 +54,7 @@ class EventDispatcher implements EventDispatcherInterface
 
             if ($listener instanceof ListenerProviderPriorityInterface && $eventsCount > 0) {
                 $listenerPriority = $listener->getListenerPriorityForEvent($event);
+
                 if ($listenerPriority < 0) {
                     throw EventDispatcherException::negativeListenerPriority($listener, $event);
                 }
@@ -86,6 +87,7 @@ class EventDispatcher implements EventDispatcherInterface
         }
 
         $this->log('Event ' . $className . ' has been consumed by ' . $handlersCount . ' listeners without interrupting.');
+
         return $event;
     }
 
@@ -106,9 +108,12 @@ class EventDispatcher implements EventDispatcherInterface
      * @param ListenerProviderInterface $provider
      * @return $this
      */
-    public function addListener(ListenerProviderInterface $provider): EventDispatcher
+    public function addListener(
+        ListenerProviderInterface $listener
+    ): EventDispatcher
     {
-        $this->listeners[] = $provider;
+        $this->listeners[] = $listener;
+
         return $this;
     }
 }

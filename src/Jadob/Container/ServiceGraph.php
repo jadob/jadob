@@ -1,0 +1,107 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Jadob\Container;
+
+use Jadob\Container\Exception\ContainerException;
+use Jadob\Contracts\DependencyInjection\ServiceDefinition;
+
+class ServiceGraph
+{
+    /**
+     * @var array<string, ServiceDefinition>
+     */
+    private array $definitions = [];
+
+    /**
+     * @var array<string, string> alias → target
+     */
+    private array $aliases = [];
+
+    /**
+     * @var array<string, list<string>> tag → service IDs
+     */
+    private array $tags = [];
+
+    /**
+     * @var array<string, string>
+     */
+    private array $parameters = [];
+
+    public function addParameter(string $param, string $value): void
+    {
+        $this->parameters[$param] = $value;
+    }
+
+    public function add(ServiceDefinition $def): void
+    {
+        $this->definitions[$def->id] = $def;
+
+        foreach ($def->tags as $tag) {
+            $this->tag($def->id, $tag);
+        }
+    }
+
+    /**
+     * @throws ContainerException
+     */
+    public function get(string $id): ServiceDefinition
+    {
+        if (isset($this->aliases[$id])) {
+            return $this->get($this->aliases[$id]);
+        }
+
+        if (array_key_exists($id, $this->definitions) === false) {
+            throw new ContainerException(
+                sprintf('Service "%s" not found.', $id)
+            );
+        }
+
+        return $this->definitions[$id];
+    }
+
+    public function has(string $id): bool
+    {
+        return isset($this->definitions[$id])
+            || isset($this->aliases[$id]);
+    }
+
+    public function remove(string $id): void
+    {
+        unset($this->definitions[$id]);
+    }
+
+    public function alias(string $alias, string $target): void
+    {
+        $this->aliases[$alias] = $target;
+    }
+
+    public function tag(string $id, string $tag): void
+    {
+        $this->tags[$tag][] = $id;
+    }
+
+    public function findTagged(string $tag): array
+    {
+        return $this->tags[$tag] ?? [];
+    }
+
+    /**
+     * @return ServiceDefinition[]
+     */
+    public function all(): array
+    {
+        return $this->definitions;
+    }
+
+    public function getParameter(string $name): string
+    {
+        return $this->parameters[$name];
+    }
+
+    public function hasParameter(string $name): bool
+    {
+        return array_key_exists($name, $this->parameters);
+    }
+}

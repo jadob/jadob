@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Router\ServiceProvider;
 
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Jadob\Router\RouterContext;
-use Psr\Container\ContainerInterface;
+use LogicException;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -16,19 +18,15 @@ use Psr\Container\ContainerInterface;
  */
 class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'router';
     }
 
-    /**
-     * @TODO: when aliases will be available, use router FQCN as service name and point the 'router' alias to them
-     * @param ContainerInterface $container
-     */
-    public function register(ContainerInterface $container, array|null|object $config = null): array
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         if (!($config instanceof RouterConfiguration)) {
-            throw new \LogicException(
+            throw new LogicException(
                 sprintf(
                     'Invalid configuration object passed to "%s"',
                     self::class
@@ -36,24 +34,28 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
             );
         }
 
-        return [
-            'router' => function () use ($config): Router {
-                return new Router(
-                    RouteCollection::fromArray($config->getRoutes()),
-                    new RouterContext(
-                        host: $config->getHost(),
-                        secure: $config->secure,
-                        port: $config->getPort(),
-                        basePath: $config->getBasePath(),
-                    ),
-                    $config->isCaseSensitive()
-                );
-            }
-        ];
+
+        $builder->set(Router::class)
+            ->withFactory(
+                static function () use ($config) {
+                    return new Router(
+                        RouteCollection::fromArray($config->getRoutes()),
+                        new RouterContext(
+                            host: $config->getHost(),
+                            secure: $config->secure,
+                            port: $config->getPort(),
+                            basePath: $config->getBasePath(),
+                        ),
+                        $config->isCaseSensitive()
+                    );
+                }
+            );
+
+        $builder->alias(Router::class, 'router');
     }
 
 
-    public function getDefaultConfigurationObject(): object
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
         return new RouterConfiguration();
     }
