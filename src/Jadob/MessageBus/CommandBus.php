@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\MessageBus;
 
-class CommandBus
+final readonly class CommandBus
 {
     private ReflectionMessageBus $messageBus;
 
@@ -19,6 +19,8 @@ class CommandBus
 
     public function handle(object $command): mixed
     {
-        return $this->messageBus->handle($command);
+        return $this
+            ->messageBus
+            ->handle($command);
     }
 }
