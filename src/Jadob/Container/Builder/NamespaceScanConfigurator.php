@@ -21,6 +21,8 @@ class NamespaceScanConfigurator
     private(set) array $paths = [];
 
     private(set) ?string $suffix = null;
+    
+    private(set) ?bool $autowire = null;
 
     /**
      * @var array<string>
@@ -63,6 +65,13 @@ class NamespaceScanConfigurator
     {
         $this->tags[] = $tag;
 
+        return $this;
+    }
+
+    public function autowire(): self
+    {
+        $this->autowire = true;
+        
         return $this;
     }
 }
