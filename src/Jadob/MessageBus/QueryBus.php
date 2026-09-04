@@ -6,7 +6,7 @@ namespace Jadob\MessageBus;
 /**
  * @see https://dev.to/rubenrubiob/type-hint-a-query-bus-in-php-3aik
  */
-class QueryBus
+final readonly class QueryBus
 {
     private ReflectionMessageBus $messageBus;
 
@@ -19,9 +19,10 @@ class QueryBus
         $this->messageBus = new ReflectionMessageBus($handlers);
     }
 
-
     public function query(object $command): mixed
     {
-        return $this->messageBus->handle($command);
+        return $this
+            ->messageBus
+            ->handle($command);
     }
 }
