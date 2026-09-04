@@ -10,21 +10,32 @@ use function file_get_contents;
 use function json_decode;
 
 /**
- * @see     https://www.npmjs.com/package/webpack-manifest-plugin
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @see https://www.npmjs.com/package/webpack-manifest-plugin
  */
 final class WebpackManifestAssetExtension extends AbstractExtension
 {
+
+    public static function fromFile(
+        string $manifestPath,
+    ): WebpackManifestAssetExtension
+    {
+        return new self(
+            json_decode(
+                file_get_contents(
+                   $manifestPath
+                ),
+                true
+            )
+
+        );
+
+    }
+
     /**
-     * @var string[]
+     * @param array<non-empty-string, non-empty-string> $manifest
      */
-    protected array $manifest;
-
-    private bool $loaded = false;
-
     public function __construct(
-        private string $manifestPath
+        private array $manifest
     )
     {
     }
@@ -46,28 +57,12 @@ final class WebpackManifestAssetExtension extends AbstractExtension
      */
     public function getAssetFromManifest(string $assetName): string
     {
-        $this->loadManifest();
         if (isset($this->manifest[$assetName])) {
             return $this->manifest[$assetName];
         }
 
         throw new RuntimeException(
             sprintf('Could not find "%s" in webpack manifest file', $assetName)
-        );
-    }
-
-    private function loadManifest(): void
-    {
-        if ($this->loaded) {
-            return;
-        }
-
-        $this->loaded = true;
-        $this->manifest = json_decode(
-            file_get_contents(
-                $this->manifestPath
-            ),
-            true
         );
     }
 }
