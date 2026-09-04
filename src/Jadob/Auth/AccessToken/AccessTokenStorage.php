@@ -51,6 +51,7 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
         $tokens[$tokenIdFromSession] = $accessToken;
 
         $session->set(self::TOKENS_KEY, $tokens);
+        $session->set(self::TOKENS_ID_KEY, $tokenIdFromSession);
 
         return $tokenIdFromSession;
     }
