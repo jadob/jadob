@@ -6,6 +6,7 @@ namespace Jadob\Auth\EventListener;
 use Jadob\Auth\AccessToken\AccessToken;
 use Jadob\Auth\AccessToken\AccessTokenStorageInterface;
 use Jadob\Auth\Firewall\Firewall;
+use Jadob\Auth\Firewall\FirewallInterface;
 use Jadob\Auth\Firewall\FirewallMapInterface;
 use Jadob\Contracts\Auth\AuthenticationException;
 use Jadob\Core\Event\RequestEvent;
@@ -17,10 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthenticationEventListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(
-        private FirewallMapInterface $firewallMap,
-        private ?LoggerInterface $logger,
+        private FirewallMapInterface        $firewallMap,
+        private ?LoggerInterface            $logger,
         private AccessTokenStorageInterface $accessTokenStorage,
-    ) {
+    )
+    {
     }
 
     public function getListenersForEvent(object $event): iterable
@@ -85,8 +87,6 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
             return;
         }
 
-
-
         foreach ($firewall->getAuthenticators() as $authenticator) {
             if (!$authenticator->supports($request)) {
                 $this
@@ -100,15 +100,20 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
                 continue;
             }
 
+
             try {
                 $token = $authenticator->authenticate($request);
 
                 if ($stateless === false) {
-                    $this
-                        ->accessTokenStorage
-                        ->saveToSession(
+                    $this->accessTokenStorage
+                        ->storeCurrent(
                             $request->getSession(),
-                            $token
+                            $this
+                                ->accessTokenStorage
+                                ->saveToSession(
+                                    $request->getSession(),
+                                    $token
+                                )
                         );
                 }
 
@@ -134,23 +139,22 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
                     $request,
                     $currentIdentity,
                 );
+
+                return;
             } catch (AuthenticationException $exception) {
                 $response = $authenticator->onAuthenticationFailure(
                     $request,
                     $exception
                 );
 
-                if($response !== null) {
-                    $event->setResponse(
-                        $response,
-                    );
-
+                if ($response !== null) {
+                    $event->setResponse($response);
                     return;
                 }
             }
         }
 
-        if($firewall->getEntryPoint() !== null) {
+        if ($firewall->getEntryPoint() !== null) {
             $event->setResponse(
                 $firewall
                     ->getEntryPoint()
@@ -160,9 +164,10 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
     }
 
     private function findStackedToken(
-        Firewall $firewall,
-        Request $request,
-    ): ?AccessToken {
+        FirewallInterface $firewall,
+        Request           $request,
+    ): ?AccessToken
+    {
         $accessTokens = $this
             ->accessTokenStorage
             ->getAllTokens($request->getSession());
