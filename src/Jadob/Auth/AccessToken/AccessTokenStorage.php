@@ -10,13 +10,9 @@ use function sprintf;
 
 final readonly class AccessTokenStorage implements AccessTokenStorageInterface
 {
-
+    private const string CURRENT_TOKEN_KEY = 'auth.current_token';
     private const string TOKENS_KEY = 'auth.tokens';
-    private const string TOKENS_ID_KEY = 'auth.tokens.id';
-
-    public function storeAsCurrent(AccessToken $accessToken): int
-    {
-    }
+    private const string TOKENS_ID_KEY = 'auth.tokens_seq';
 
     /**
      * @return array<AccessToken>
@@ -78,5 +74,10 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
         $session->set(self::TOKENS_ID_KEY, $tokenIdFromSession);
 
         return $tokenIdFromSession;
+    }
+
+    public function storeCurrent(SessionInterface $session, int $tokenId): void
+    {
+        $session->set(self::CURRENT_TOKEN_KEY, $tokenId);
     }
 }
