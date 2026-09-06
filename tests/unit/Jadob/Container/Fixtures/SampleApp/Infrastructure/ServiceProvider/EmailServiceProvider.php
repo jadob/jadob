@@ -32,9 +32,4 @@ final readonly class EmailServiceProvider implements ServiceProviderInterface
             UserMailerService::class
         );
     }
-
-    public function getConfigNode(): ?string
-    {
-        return null;
-    }
 }

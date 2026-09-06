@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Container\Fixtures\ServiceProviders;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Requires two random things outside of its original hierarchy.
+ * Requires two random things outside its original hierarchy.
  */
 class IOLoggerProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
@@ -20,17 +22,8 @@ class IOLoggerProvider implements ServiceProviderInterface, ParentServiceProvide
         ];
     }
 
-    public function getConfigNode(): ?string
-    {
-        return null;
-    }
+   public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
+   {
 
-    /**
-     * @param array<mixed> $config
-     * @return array<string, \Closure>
-     */
-    public function register(ContainerInterface $container, object|array|null $config = null): array
-    {
-        return [];
-    }
+   }
 }
