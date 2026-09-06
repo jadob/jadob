@@ -6,5 +6,4 @@ parameters:
         - tests
 includes:
         - resources/code-quality/phpstan-baseline.php
-        - tests/unit/Jadob/Container/phpstan.neon
         - vendor/phpstan/phpstan-strict-rules/rules.neon
