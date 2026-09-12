@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 final class ResolveFactoryArgumentsTest extends TestCase
 {
 
-    public function testResolvingClassTypeArgumentWithoutInjectHint()
+    public function testResolvingClassTypeArgumentWithoutInjectHint(): void
     {
         $definition = new ServiceDefinition('test', UserService::class);
         $definition->withFactory(
