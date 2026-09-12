@@ -8,17 +8,19 @@ use Jadob\Contracts\DependencyInjection\Reference;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionMethod;
 
 class ArgumentInjectHintsHandlerTest extends TestCase
 {
     public function testProcessingInjectServiceHint(): void
     {
         $refClass = new ReflectionClass(DynamoDbUserRepository::class);
-        $constructorInjectPropertyReflection = $refClass
-            ->getConstructor()
-            ->getParameters()[0];
 
-        $result = ArgumentInjectHintsHandler::process($constructorInjectPropertyReflection);
+        /** @var ReflectionMethod $constructorInjectPropertyReflection */
+        $constructorInjectPropertyReflection = $refClass
+            ->getConstructor();
+
+        $result = ArgumentInjectHintsHandler::process($constructorInjectPropertyReflection->getParameters()[0]);
 
         self::assertInstanceOf(Reference::class, $result);
 
@@ -27,13 +29,14 @@ class ArgumentInjectHintsHandlerTest extends TestCase
     public function testMultipleInjectServiceInOnePropertyWillThrowAnError(): void
     {
         $refClass = new ReflectionClass(TwoInjectServiceHintsInOneProperty::class);
+
+        /** @var ReflectionMethod $constructorInjectPropertyReflection */
         $constructorInjectPropertyReflection = $refClass
-            ->getConstructor()
-            ->getParameters()[0];
+            ->getConstructor();
 
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('More than one #[InjectService] attribute is attached to constructor property.');
 
-        ArgumentInjectHintsHandler::process($constructorInjectPropertyReflection);
+        ArgumentInjectHintsHandler::process($constructorInjectPropertyReflection->getParameters()[0]);
     }
 }
