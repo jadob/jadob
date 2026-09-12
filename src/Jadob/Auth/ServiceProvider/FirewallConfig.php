@@ -5,6 +5,9 @@ namespace Jadob\Auth\ServiceProvider;
 
 class FirewallConfig
 {
+    /**
+     * @var array<class-string>
+     */
     private array $authenticators = [];
     private bool $stateless = false;
     private bool $identityStackingEnabled = false;
