@@ -9,7 +9,7 @@ use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\Migrations\Configuration\MigrationsConfiguration;
-use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineOrmProvider;
+use Jadob\Bridge\Doctrine\Orm\ServiceProvider\DoctrineOrmProvider;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
