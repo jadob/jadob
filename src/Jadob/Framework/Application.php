@@ -113,8 +113,6 @@ readonly class Application
             new ConfigNodeFinder($configLocations)
         );
 
-        $compiler->registerNativeExtensions();
-
         foreach ($modules as $module) {
             foreach ($module->getContainerCompilerExtensions() as $priority => $extension) {
                 $compiler->addExtension(

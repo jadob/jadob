@@ -54,7 +54,6 @@ final class DoctrineOrmProviderTest extends TestCase
         );
 
         $compiler = new ContainerCompiler($nodeFinder);
-        $compiler->registerNativeExtensions();
 
         $container = new ServiceGraphContainer(
             $compiler->compile($builder),

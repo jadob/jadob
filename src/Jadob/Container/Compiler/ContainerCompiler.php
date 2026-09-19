@@ -41,7 +41,12 @@ final class ContainerCompiler
      */
     public function __construct(
         private ConfigNodeFinderInterface $configNodeFinder,
-    ) {
+        bool $registerNativeExtensions = true,
+    )
+    {
+        if ($registerNativeExtensions) {
+            $this->registerNativeExtensions();
+        }
     }
 
     public function addExtension(
