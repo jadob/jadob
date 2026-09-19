@@ -68,7 +68,7 @@ final class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getDefaultManagerName(): string
     {
-        // TODO: Implement getDefaultManagerName() method.
+        return $this->defaultManagerName;
     }
 
     public function getManager(?string $name = null): ObjectManager
