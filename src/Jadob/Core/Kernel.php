@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use function fastcgi_finish_request;
 use function function_exists;
 use function in_array;
-use function is_array;
 
 /**
  * @deprecated
@@ -42,7 +41,7 @@ class Kernel
      * @see https://semver.org/
      * @var string
      */
-    public const VERSION = '0.9.2';
+    public const VERSION = '0.10.0';
 
     protected RuntimeInterface $runtime;
 

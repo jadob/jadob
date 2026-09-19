@@ -6,8 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.10.0] - 2026-09-19
+
+### New
+- [Auth] new authentication component with identity stacking
+
 ### Changed
 - [BridgeDoctrineOrm] Switched to native lazy proxies
+- [Container] switched to new container architecture (builder => compiler => service graph container)
 
 ### Fixed
 - [Router] - wildcard routes now does not catch `MethodNotAllowed` exceptions on existing routes
