@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
+use Jadob\Container\Exception\ParameterNotFoundException;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ReferenceType;
 use LogicException;
@@ -89,7 +90,7 @@ final class ServiceGraphContainer implements ContainerInterface
     private function resolveArgs(array $args): array
     {
         return array_map(
-            function (string|Reference $arg): string|object|array {
+            function (string|Reference $arg): string|int|object|array {
                 if (is_string($arg)) {
                     return $arg;
                 }
@@ -111,6 +112,18 @@ final class ServiceGraphContainer implements ContainerInterface
 
                 if ($arg->type === ReferenceType::Literal) {
                     return $arg->value;
+                }
+
+                if ($arg->type === ReferenceType::Param) {
+                    $parameterName = $arg->value;
+
+                    if ($this->graph->hasParameter($parameterName) === false) {
+                        throw new ParameterNotFoundException(
+                            sprintf('Parameter "%s" was requested but was not found in service graph.', $parameterName)
+                        );
+                    }
+
+                    return $this->graph->getParameter($arg->value);
                 }
 
                 throw new LogicException('not implemented');
