@@ -110,7 +110,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
                                 rtrim($rootDir, '/'),
                                 ltrim($path, '/')
                             ),
-                            $managerConfig->paths
+                            $managerConfig->entityPaths
                         )
                     )
                 );
