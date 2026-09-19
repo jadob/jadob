@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
-use Closure;
 use Jadob\Bridge\Twig\AppContext;
 use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
 use Jadob\Bridge\Twig\Extension\DebugExtension;
@@ -11,7 +10,6 @@ use Jadob\Bridge\Twig\Extension\PathExtension;
 use Jadob\Bridge\Twig\Extension\ViteManifestAssetExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Config\ConfigNodeInterface;
-use Jadob\Container\ServiceGraphContainer;
 use Jadob\Container\ParameterStore;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
@@ -20,7 +18,6 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\ServiceProvider\SymfonyTranslatorProvider;
 use Jadob\Router\Router;
-use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
@@ -141,7 +138,7 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
         $builder->set(Environment::class)
             ->withFactory($environmentClosure);
 
-        if($config->webpackManifestExtensionConfig !== null) {
+        if ($config->webpackManifestExtensionConfig !== null) {
             $webpackManifestConfig = $config->webpackManifestExtensionConfig;
 
             $builder
@@ -155,7 +152,7 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
                             ltrim($webpackManifestConfig->manifestLocation, '/')
                         );
 
-                        return new WebpackManifestAssetExtension(
+                        return WebpackManifestAssetExtension::fromFile(
                             manifestPath: $manifestPath
                         );
                     }
@@ -185,32 +182,6 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
 //        ];
 //
 //
-//        /**
-//         * @TODO: these two extension can be probably done better, in a less copy-and-paste-based manner!
-//         */
-//        if (isset($config['extensions']['webpack_manifest'])) {
-//            $services['twig.webpack_manifest_extension'] = [
-//                'tags' => ['twig.extension'],
-//                'factory' => static function (ParameterStore $parameterStore) use ($config): WebpackManifestAssetExtension {
-//                    $webpackManifestConfig = $config['extensions']['webpack_manifest'];
-//                    $manifestJsonLocation =
-//                        sprintf('%s/%s',
-//                            $parameterStore->get('root_dir'),
-//                            ltrim((string) $webpackManifestConfig['manifest_json_location'], '/')
-//                        );
-//
-//                    $manifest = json_decode(
-//                        file_get_contents($manifestJsonLocation),
-//                        true,
-//                        512,
-//                        JSON_THROW_ON_ERROR
-//                    );
-//
-//                    return new WebpackManifestAssetExtension($manifest);
-//                }
-//            ];
-//        }
-//
 //        if (isset($config['extensions']['vite_manifest'])) {
 //            $services['twig.vite_manifest_extension'] = [
 //                'tags' => ['twig.extension'],
@@ -235,14 +206,18 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
 //        }
 //
 //
+        $builder
+            ->set(TranslationExtension::class)
+            ->withTag('twig.extension');
+
 //        $services['twig.translator_extension'] = [
 //            'tags' => ['twig.extension'],
-//            'factory' => static function (TranslatorInterface $translator): TranslationExtension {
+        ///            'factory' => static function (TranslatorInterface $translator): TranslationExtension {
 //                return new TranslationExtension(
 //                    $translator
 //                );
 //            }
-//        ];
+        ///        ];
 //
 //       // return $services;
     }

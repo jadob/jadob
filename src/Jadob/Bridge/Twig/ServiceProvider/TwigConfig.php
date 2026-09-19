@@ -61,9 +61,9 @@ final class TwigConfig implements ConfigNodeInterface
     public function withGlobal(
         string $key,
         mixed $value,
-    ): self
-    {
+    ): self {
         $this->globals[$key] = $value;
+
         return $this;
     }
 }

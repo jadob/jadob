@@ -6,9 +6,7 @@ namespace Jadob\Bridge\Twig\Container\Extension;
 use Jadob\Container\ServiceGraph;
 use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
-use ReflectionFunction;
 use Twig\Environment;
-use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 final class TwigExtension implements CompilerExtensionInterface
 {
