@@ -1,6 +1,6 @@
 <?php
 
-namespace Jadob\Bridge\Doctrine\DBAL\Configuration;
+namespace Jadob\Bridge\Doctrine\Dbal\Configuration;
 
 final class DbalConnectionConfig
 {

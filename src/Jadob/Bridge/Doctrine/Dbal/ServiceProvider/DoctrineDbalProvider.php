@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
+namespace Jadob\Bridge\Doctrine\Dbal\ServiceProvider;
 
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -32,7 +32,7 @@ use function count;
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
-class DoctrineDBALProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
+class DoctrineDbalProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
     private const CONNECTION_SERVICE_NAME_FORMAT = 'doctrine.dbal.%s';
     private const CONFIGURATION_SERVICE_NAME_FORMAT = 'doctrine.dbal.configuration.%s';

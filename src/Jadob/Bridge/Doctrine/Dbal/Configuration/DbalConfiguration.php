@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\DBAL\Configuration;
+namespace Jadob\Bridge\Doctrine\Dbal\Configuration;
 
 use Jadob\Container\Config\ConfigNodeInterface;
 
