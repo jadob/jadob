@@ -93,10 +93,10 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
                 ->set($configurationServiceName)
                 ->withFactory($configurationObjectFactory);
 
-            $factory = static function (Configuration $configuration) use ($configuration): Connection {
+            $factory = static function (Configuration $dbalConfig) use ($configuration): Connection {
                 return DriverManager::getConnection(
                     params: new DsnParser()->parse($configuration->dsn),
-                    config: $configuration,
+                    config: $dbalConfig,
                 );
             };
 
