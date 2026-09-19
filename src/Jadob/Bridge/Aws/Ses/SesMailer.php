@@ -82,9 +82,11 @@ class SesMailer
         if (isset($this->config['source_arn'])) {
             $command['SourceArn'] = $this->config['source_arn'];
         }
+
         if (isset($this->config['from_arn'])) {
             $command['FromArn'] = $this->config['from_arn'];
         }
+
         if (isset($this->config['return_path_arn'])) {
             $command['ReturnPathArn'] = $this->config['return_path_arn'];
         }
