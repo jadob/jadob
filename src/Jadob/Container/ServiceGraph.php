@@ -25,11 +25,11 @@ class ServiceGraph
     private array $tags = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, string|int>
      */
     private array $parameters = [];
 
-    public function addParameter(string $param, string $value): void
+    public function addParameter(string $param, string|int $value): void
     {
         $this->parameters[$param] = $value;
     }
@@ -95,7 +95,7 @@ class ServiceGraph
         return $this->definitions;
     }
 
-    public function getParameter(string $name): string
+    public function getParameter(string $name): string|int
     {
         return $this->parameters[$name];
     }
