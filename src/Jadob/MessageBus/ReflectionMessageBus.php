@@ -29,6 +29,7 @@ class ReflectionMessageBus
                 if (count($params) !== 1) {
                     continue;
                 }
+
                 if (array_any($params, fn($param) => $param->getType()->getName() === get_class($message))) {
                     return $handler->$methodName($message);
                 }
