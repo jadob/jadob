@@ -7,6 +7,7 @@ use ErrorException;
 use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function http_response_code;
 
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
@@ -42,6 +43,7 @@ class ProductionErrorHandler implements ErrorHandlerInterface
                         $context['line'] = $errline;
                         $context['stacktrace'] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
                         $logger->warning($message, $context);
+
                         return;
                     }
 
@@ -60,13 +62,15 @@ class ProductionErrorHandler implements ErrorHandlerInterface
     public function registerExceptionHandler()
     {
         $logger = $this->logger;
+
         if (PHP_SAPI !== 'cli') {
             set_exception_handler(
                 static function (Throwable $exception) use ($logger) {
-                    \http_response_code(500);
+                    http_response_code(500);
 
                     $logger->critical(
-                        $exception->getMessage(), [
+                        $exception->getMessage(),
+                        [
                             'file' => $exception->getFile(),
                             'line' => $exception->getLine(),
                             'trace' => $exception->getTrace(),
