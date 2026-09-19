@@ -4,7 +4,7 @@
   "description": "doctrine/orm Bridge",
   "autoload": {
     "psr-4": {
-      "Jadob\\Bridge\\Doctrine\\ORM\\": ""
+      "Jadob\\Bridge\\Doctrine\\Orm\\": ""
     }
   },
   "require": {
