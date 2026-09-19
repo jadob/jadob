@@ -20,7 +20,6 @@ use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Bridge\Doctrine\Persistence\ObjectManagerFactory;
 use Jadob\Bridge\Doctrine\Persistence\ObjectManagerFactoryInterface;
-use Jadob\Bridge\Doctrine\Persistence\ServiceProvider\DoctrinePersistenceProvider;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\Attribute\InjectParameter;
@@ -241,7 +240,6 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
     public function getParentServiceProviders(): array
     {
         return [
-            DoctrinePersistenceProvider::class,
             DoctrineDbalProvider::class
         ];
     }
