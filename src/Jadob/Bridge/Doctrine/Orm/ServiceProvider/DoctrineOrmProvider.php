@@ -16,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\Dbal\ServiceProvider\DoctrineDbalProvider;
 use Jadob\Bridge\Doctrine\Orm\Configuration\DoctrineOrmConfig;
-use Jadob\Bridge\Doctrine\ORM\Console\MultipleEntityManagerProvider;
+use Jadob\Bridge\Doctrine\Orm\Console\MultipleEntityManagerProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Bridge\Doctrine\Persistence\ObjectManagerFactory;
 use Jadob\Bridge\Doctrine\Persistence\ObjectManagerFactoryInterface;
