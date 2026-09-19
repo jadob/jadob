@@ -18,6 +18,7 @@ use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 
 final readonly class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
@@ -72,15 +73,14 @@ final readonly class DoctrineMigrationsProvider implements ServiceProviderInterf
 
     private function registerConsoleCommands(
         ContainerBuilder $builder,
-    ): void
-    {
+    ): void {
         $builder
             ->configureNamespaceScan()
             ->autowire()
             ->withTag('console.command')
             ->withClassNameSuffix('Command')
             ->in(
-                dirname((new \ReflectionClass(DoctrineCommand::class))->getFileName())
+                dirname((new ReflectionClass(DoctrineCommand::class))->getFileName())
             );
     }
 }
