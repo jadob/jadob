@@ -8,7 +8,7 @@ use function file_exists;
 use function rtrim;
 use function sprintf;
 
-class ConfigNodeFinder implements ConfigNodeFinderInterface
+final readonly class FilesystemConfigNodeFinder implements ConfigNodeFinderInterface
 {
     /**
      * @param array<non-empty-string> $paths sorted ascending by priority
