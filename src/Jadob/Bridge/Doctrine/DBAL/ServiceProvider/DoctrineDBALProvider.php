@@ -3,30 +3,27 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\ServiceProvider;
 
-use Closure;
-use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Logging\Middleware;
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ConnectionRegistry;
 use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\Common\ServiceProvider\DoctrineEventManagerServiceProvider;
 use Jadob\Bridge\Doctrine\DBAL\Configuration\DbalConfiguration;
-use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
+use Jadob\Bridge\Doctrine\Persistence\DoctrineConnectionRegistry;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
+use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Jadob\Core\BootstrapInterface;
+use Jadob\Framework\Logger\LoggerFactory;
 use LogicException;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerInterface;
 use function count;
 
 /**
@@ -38,6 +35,7 @@ use function count;
 class DoctrineDBALProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
     private const CONNECTION_SERVICE_NAME_FORMAT = 'doctrine.dbal.%s';
+    private const CONFIGURATION_SERVICE_NAME_FORMAT = 'doctrine.dbal.configuration.%s';
 
     /**
      * {@inheritdoc}
@@ -48,19 +46,15 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
     }
 
     /**
-     * @param ContainerInterface $container
-     * @phpstan-param DbalConfiguration $config
-     *
-     * @return (EventManager|Closure|Closure|Closure|Closure)[]
-     *
+     * @param ContainerBuilderInterface $builder
+     * @param DbalConfiguration $config
+     * @return void
      * @throws Exception
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
-    public function register(ContainerInterface $container, null|object|array $config = null): array
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        $this->registerTypes($config->getTypes());
-        $connections = $config->getConnections();
+        $this->registerTypes($config->types);
+        $connections = $config->connections;
 
         if (count($connections) === 0) {
             throw new LogicException(
@@ -68,67 +62,76 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
             );
         }
 
-        $services = [];
-        /** @var DoctrineManagerRegistry $managerRegistry */
-        $managerRegistry = $container->get(ConnectionRegistry::class);
+        $builder
+            ->set('doctrine.dbal.logger', LoggerInterface::class)
+            ->withFactory(static function (LoggerFactory $loggerFactory): LoggerInterface {
+                return $loggerFactory
+                    ->getLoggerForChannel('doctrine_dbal');
+            });
 
-
-        $logger = new Logger('doctrine_dbal');
-        $handler = new StreamHandler($container->get(BootstrapInterface::class)->getLogsDir() . '/dbal.log');
-        $logger->pushHandler($handler);
-
-
-        $configurationObject = new Configuration();
-        /**
-         * @TODO: this is a good place to use container tags!
-         * doctrine/dbal does not seem to have method to add single middleware, there is no better thing to do than
-         * just tag middlewares and get a collection of them here.
-         */
-        $configurationObject->setMiddlewares([
-            new Middleware($logger),
-        ]);
-
-
+        /** @var array<string, string> $connectionServiceIds */
+        $connectionServiceIds = null;
+        /** @var string|null $defaultConnectionName */
         $defaultConnectionName = null;
         foreach ($connections as $connectionName => $configuration) {
+            $configurationServiceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
             $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
+            $connectionServiceIds[$connectionName] = $serviceName;
 
-            if ($configuration['default']) {
+            if ($configuration->default) {
                 if ($defaultConnectionName !== null) {
                     throw new InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');
                 }
-
-                $defaultConnectionName = $connectionName;
-                $managerRegistry->setDefaultConnectionName($defaultConnectionName);
+                $defaultConnectionName = $serviceName;
             }
 
-            $connection = DriverManager::getConnection(
-                $this->resolveConnectionConfiguration($configuration['configuration']),
-                $configurationObject
-            );
-
-            foreach ($config->getMappingTypes() as $sqlType => $doctrineType) {
-                $connection
-                    ->getDatabasePlatform()
-                    ->registerDoctrineTypeMapping($sqlType, $doctrineType);
-            }
-
-
-            $managerRegistry->addConnection(
-                $connectionName,
-                $connection
-            );
-
-            $services[$serviceName] = function () use ($managerRegistry, $serviceName): \Doctrine\DBAL\Connection {
-                return $managerRegistry->getConnection($serviceName);
+            $configurationObjectFactory = function (): Configuration {
+                return new Configuration();
             };
+
+            $builder
+                ->set($configurationServiceName)
+                ->withFactory($configurationObjectFactory);
+
+            $factory = static function (Configuration $configuration) use ($configuration): Connection {
+                return DriverManager::getConnection(
+                    params: new DsnParser()->parse($configuration->dsn),
+                    config: $configuration,
+                );
+            };
+
+            $builder
+                ->set($serviceName)
+                ->withFactory($factory)
+                ->withArgument(
+                    'configuration', Reference::service($configurationServiceName)
+                );
+
         }
 
         if ($defaultConnectionName === null) {
             throw new InvalidArgumentException('There is no default DBAL connections defined! Check your configuration file.');
         }
 
-        return $services;
+        $builder
+            ->alias(
+                $defaultConnectionName,
+                Connection::class
+            );
+
+        $builder
+            ->set(ConnectionRegistry::class)
+            ->withFactory(function (ContainerInterface $container) use ($connectionServiceIds) {
+                return new DoctrineConnectionRegistry(
+                    connections: array_map(
+                        function (string $serviceName) use ($container): Connection {
+                            return $container->get($serviceName);
+                        },
+                        $connectionServiceIds
+                    )
+                );
+            });
+
     }
 
     public function getParentServiceProviders(): array
@@ -143,7 +146,6 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
         return new DbalConfiguration();
     }
 
-
     /**
      * @param array<string, class-string> $types
      * @return void
@@ -154,15 +156,5 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
         foreach ($types as $name => $type) {
             Type::addType($name, $type);
         }
-    }
-
-
-    private function resolveConnectionConfiguration(array $configuration): array
-    {
-        if (array_key_exists('dsn', $configuration)) {
-            return (new DsnParser())->parse($configuration['dsn']);
-        }
-
-        return $configuration;
     }
 }

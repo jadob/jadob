@@ -5,25 +5,17 @@ namespace Jadob\Bridge\Doctrine\DBAL\Configuration;
 
 use Jadob\Container\Config\ConfigNodeInterface;
 
-class DbalConfiguration implements ConfigNodeInterface
+final class DbalConfiguration implements ConfigNodeInterface
 {
     /**
      * @var array<string, class-string>
      */
-    private array $types = [];
+    private(set) array $types = [];
 
     /**
-     * @var array<string, string>
+     * @var array<string, DbalConnectionConfig>
      */
-    private array $mappingTypes = [];
-
-    /**
-     * @var array<string, array{
-     *          configuration: string[],
-     *          default: bool
-     *     }>
-     */
-    private array $connections = [];
+    private(set) array $connections = [];
 
     public function addType(string $name, string $type): self
     {
@@ -31,38 +23,12 @@ class DbalConfiguration implements ConfigNodeInterface
         return $this;
     }
 
-    public function addConnection(
+    public function configureConnection(
         string $name,
-        array  $configuration,
-        bool   $default = true
-    ): self {
-        $this->connections[$name] = [
-            'configuration' => $configuration,
-            'default' => $default,
-        ];
-
-        return $this;
-    }
-
-
-    public function addMappingType(string $name, string $type): self
+    ): DbalConnectionConfig
     {
-        $this->mappingTypes[$name] = $type;
-        return $this;
-    }
-
-    public function getTypes(): array
-    {
-        return $this->types;
-    }
-
-    public function getConnections(): array
-    {
-        return $this->connections;
-    }
-
-    public function getMappingTypes(): array
-    {
-        return $this->mappingTypes;
+        $config = new DbalConnectionConfig();
+        $this->connections[$name] = $config;
+        return $config;
     }
 }
