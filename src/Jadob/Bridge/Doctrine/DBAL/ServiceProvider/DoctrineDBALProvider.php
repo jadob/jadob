@@ -13,7 +13,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ConnectionRegistry;
 use InvalidArgumentException;
-use Jadob\Bridge\Doctrine\Common\ServiceProvider\DoctrineCommonServiceProvider;
+use Jadob\Bridge\Doctrine\Common\ServiceProvider\DoctrineEventManagerServiceProvider;
 use Jadob\Bridge\Doctrine\DBAL\Configuration\DbalConfiguration;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
@@ -133,7 +133,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
     public function getParentServiceProviders(): array
     {
         return [
-            DoctrineCommonServiceProvider::class
+            DoctrineEventManagerServiceProvider::class
         ];
     }
 
