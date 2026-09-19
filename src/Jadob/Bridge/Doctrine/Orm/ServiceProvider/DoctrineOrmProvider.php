@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Jadob\Bridge\Doctrine\Orm\ServiceProvider;
 
 use Doctrine\Common\EventManager;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\ORM\Tools\Console\Command\AbstractEntityManagerCommand;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider;
+use Doctrine\Persistence\ConnectionRegistry;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\Dbal\ServiceProvider\DoctrineDbalProvider;
@@ -144,13 +144,13 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
             $managerFactory = function (
                 #[InjectParameter('cache_dir')]
                 string $cacheDir,
-                Connection $connection,
+                ConnectionRegistry $connectionRegistry,
                 Configuration $config,
                 EventManager $eventManager,
-            ): ObjectManagerFactoryInterface {
+            ) use ($managerConfig): ObjectManagerFactoryInterface {
                 return new ObjectManagerFactory(
                     fn() => new EntityManager(
-                        conn: $connection,
+                        conn: $connectionRegistry->getConnection($managerConfig->dbalConnectionName),
                         config: $config,
                         eventManager: $eventManager,
                     )
@@ -191,7 +191,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
                             $managerServiceIds
                         ),
                         defaultManagerName: $defaultManagerName,
-                        connectionRegistry: $container->get(ManagerRegistry::class)
+                        connectionRegistry: $container->get(ConnectionRegistry::class)
                     );
                 }
             );
