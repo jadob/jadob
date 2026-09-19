@@ -102,6 +102,7 @@ class Url implements Stringable
     public function build(): string
     {
         $isHttpUrl = in_array(mb_strtolower($this->getScheme()), ['http', 'https'], true);
+
         if ($this->scheme === null) {
             throw new RuntimeException('Missing scheme in URL Object');
         }
@@ -112,6 +113,7 @@ class Url implements Stringable
 
 
         $url = $this->scheme . '://' . $this->host;
+
         if (!$isHttpUrl) {
             $url = $this->scheme . ':' . $this->host;
         }
@@ -120,6 +122,7 @@ class Url implements Stringable
         $isHttpsProtocolAndPort = $this->port === 443 && $this->scheme === 'https';
 
         $shouldIncludePortInUrl = true;
+
         if ($isHttpProtocolAndPort || $isHttpsProtocolAndPort) {
             $shouldIncludePortInUrl = false;
         }
@@ -165,6 +168,7 @@ class Url implements Stringable
     public function setHost(string $host): self
     {
         $this->host = $host;
+
         return $this;
     }
 
@@ -179,6 +183,7 @@ class Url implements Stringable
     public function setPort(?int $port): self
     {
         $this->port = $port;
+
         return $this;
     }
     /**
@@ -196,6 +201,7 @@ class Url implements Stringable
     public function setScheme(string $scheme): Url
     {
         $this->scheme = $scheme;
+
         return $this;
     }
 
@@ -222,12 +228,14 @@ class Url implements Stringable
     public function setFragment(?string $fragment): Url
     {
         $this->fragment = $fragment;
+
         return $this;
     }
 
     public function removeFragment(): Url
     {
         $this->fragment = null;
+
         return $this;
     }
 
@@ -238,6 +246,7 @@ class Url implements Stringable
     public function setPath(string $path): Url
     {
         $this->path = $path;
+
         return $this;
     }
 
