@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Dynamite\ServiceProvider;
 
-use _PHPStan_eca38da41\Nette\DI\Attributes\Inject;
-use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Dynamite\ItemManager;
 use Dynamite\ItemManagerRegistry;
@@ -26,7 +24,6 @@ use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use LogicException;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -49,9 +46,8 @@ final readonly class DynamiteProvider implements ServiceProviderInterface, Confi
      */
     public function register(
         ContainerBuilderInterface $builder,
-        ?ConfigNodeInterface      $config = null
-    ): void
-    {
+        ?ConfigNodeInterface $config = null
+    ): void {
         $builder->set('dynamite.logger', LoggerInterface::class)
             ->withFactory(
                 function (LoggerFactory $loggerFactory): LoggerInterface {
@@ -96,12 +92,12 @@ final readonly class DynamiteProvider implements ServiceProviderInterface, Confi
 
         $itemManagerRegistryFactory = static function (
             ContainerInterface $container,
-            ItemMappingReader  $itemMappingReader,
-            ItemSerializer     $itemSerializer,
+            ItemMappingReader $itemMappingReader,
+            ItemSerializer $itemSerializer,
             #[InjectService('dynamite.logger')]
-            LoggerInterface    $logger,
-            KeyFormatResolver  $keyFormatResolver,
-            Marshaler          $marshaler,
+            LoggerInterface $logger,
+            KeyFormatResolver $keyFormatResolver,
+            Marshaler $marshaler,
         ) use ($config): ItemManagerRegistry {
             $registry = new ItemManagerRegistry();
 
