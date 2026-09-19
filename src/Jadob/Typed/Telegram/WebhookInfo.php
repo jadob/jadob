@@ -31,6 +31,7 @@ class WebhookInfo
     public function setUrl(?string $url): WebhookInfo
     {
         $this->url = $url;
+
         return $this;
     }
 }
