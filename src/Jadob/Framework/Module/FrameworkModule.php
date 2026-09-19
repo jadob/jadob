@@ -34,7 +34,6 @@ final readonly class FrameworkModule implements ModuleInterface
     {
         return [
             500 => new RegisterEventListenersExtension(),
-            510 => new InjectLoggerExtension(),
         ];
     }
 }
