@@ -26,7 +26,6 @@ class ProductionExceptionListener implements ExceptionListenerInterface, LoggerA
                 $event->getException()->getMessage(),
                 $event->getException()->getFile(),
                 $event->getException()->getLine()
-
             )
         );
         $event->setResponse(new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR));
