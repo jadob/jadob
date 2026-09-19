@@ -138,7 +138,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
             };
 
             $builder
-                ->set($configurationServiceName)
+                ->set($configurationServiceName, Configuration::class)
                 ->withFactory($managerConfigFactory);
 
             $managerFactory = function (
@@ -158,7 +158,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
             };
 
             $builder
-                ->set($factoryServiceName)
+                ->set($factoryServiceName, ObjectManagerFactoryInterface::class)
                 ->withTag('doctrine.orm.entity_manager_factory')
                 ->withFactory($managerFactory)
                 ->withArgument('config', Reference::service($configurationServiceName));
@@ -180,7 +180,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
             );
 
         $builder
-            ->set(ManagerRegistry::class)
+            ->set(ManagerRegistry::class, DoctrineManagerRegistry::class)
             ->withFactory(
                 function (ContainerInterface $container) use ($defaultManagerName, $managerServiceIds) {
                     return new DoctrineManagerRegistry(
@@ -198,7 +198,7 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
 
         foreach ($managerServiceIds as $name => $serviceId) {
             $builder
-                ->set($serviceId['manager'])
+                ->set($serviceId['manager'], EntityManagerInterface::class)
                 ->withTag('doctrine.orm.entity_manager')
                 ->withFactory(
                     function (ManagerRegistry $managerRegistry) use ($name) {
