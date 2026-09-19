@@ -42,8 +42,14 @@ final readonly class ResolveFactoryArguments implements CompilerExtensionInterfa
                 /** @var ReflectionNamedType $paramType */
                 $paramType = $parameter->getType();
 
+                $parameterName = $parameter->name;
+
+                if ($definition->hasArgument($parameterName)) {
+                    continue;
+                }
+
                 $definition->withArgument(
-                    $parameter->name,
+                    $parameterName,
                     Reference::service($paramType->getName())
                 );
             }
