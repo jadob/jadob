@@ -9,23 +9,4 @@ use Psr\Container\ContainerExceptionInterface;
 
 class ContainerLogicException extends LogicException implements ContainerExceptionInterface
 {
-    public static function missingTypeHint(string $id): self
-    {
-        return new self(
-            sprintf(
-                'Unable to add service "%s" to container, as it has neither className or factory return hint defined.',
-                $id
-            )
-        );
-    }
-
-    public static function missingFactory(string $id): self
-    {
-        return new self(
-            sprintf(
-                'Service "%s" has no factory; register an explicit factory or use AutowiringContainer.',
-                $id
-            )
-        );
-    }
 }
