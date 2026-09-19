@@ -6,138 +6,81 @@ namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
-use Doctrine\Migrations\Tools\Console\Command\DiffCommand;
-use Doctrine\Migrations\Tools\Console\Command\DumpSchemaCommand;
-use Doctrine\Migrations\Tools\Console\Command\ExecuteCommand;
-use Doctrine\Migrations\Tools\Console\Command\GenerateCommand;
-use Doctrine\Migrations\Tools\Console\Command\LatestCommand;
-use Doctrine\Migrations\Tools\Console\Command\ListCommand;
-use Doctrine\Migrations\Tools\Console\Command\MigrateCommand;
-use Doctrine\Migrations\Tools\Console\Command\RollupCommand;
-use Doctrine\Migrations\Tools\Console\Command\StatusCommand;
-use Doctrine\Migrations\Tools\Console\Command\SyncMetadataCommand;
-use Doctrine\Migrations\Tools\Console\Command\VersionCommand;
+use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 use Doctrine\Persistence\ManagerRegistry;
-use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineORMProvider;
+use Jadob\Bridge\Doctrine\Migrations\Configuration\MigrationsConfiguration;
+use Jadob\Bridge\Doctrine\ORM\ServiceProvider\DoctrineOrmProvider;
+use Jadob\Container\Builder\ContainerBuilder;
+use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
+use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
 
-class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface
+final readonly class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'doctrine_migrations';
     }
 
-    public function register(ContainerInterface $container, null|object|array $config = null): array
+    /**
+     * @param ContainerBuilderInterface $builder
+     * @param MigrationsConfiguration $config
+     * @return void
+     */
+    public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
-        $output = [];
-        $output[DependencyFactory::class] = static function (
-            ContainerInterface $container,
-            ManagerRegistry    $managerRegistry,
-            LoggerFactory      $loggerFactory,
-        ) use (
-            $config
-        ): DependencyFactory {
-            $migrationConfigObj = new ConfigurationArray($config);
+        $builder
+            ->set(DependencyFactory::class)
+            ->withFactory(static function (
+                ContainerInterface $container,
+                ManagerRegistry $managerRegistry,
+                LoggerFactory $loggerFactory,
+            ) use (
+                $config
+            ): DependencyFactory {
+                $migrationConfigObj = new ConfigurationArray([]);
 
-            return DependencyFactory::fromEntityManager(
-                $migrationConfigObj,
-                ManagerRegistryEntityManager::withSimpleDefault(
-                    $managerRegistry,
-                    $managerRegistry->getDefaultManagerName()
-                ),
-                $loggerFactory->getDefaultLogger()
-            );
-        };
+                return DependencyFactory::fromEntityManager(
+                    $migrationConfigObj,
+                    ManagerRegistryEntityManager::withSimpleDefault(
+                        $managerRegistry,
+                        $managerRegistry->getDefaultManagerName()
+                    ),
+                    $loggerFactory->getDefaultLogger()
+                );
+            });
 
-        $output[DumpSchemaCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new DumpSchemaCommand($dependencyFactory);
-            }
-        ];
-
-        $output[DiffCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new DiffCommand($dependencyFactory);
-            }
-        ];
-
-        $output[ExecuteCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new ExecuteCommand($dependencyFactory);
-            }
-        ];
-
-        $output[LatestCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new LatestCommand($dependencyFactory);
-            }
-        ];
-
-        $output[ListCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new ListCommand($dependencyFactory);
-            }
-        ];
-
-        $output[MigrateCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new MigrateCommand($dependencyFactory);
-            }
-        ];
-
-        $output[RollupCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new RollupCommand($dependencyFactory);
-            }
-        ];
-
-        $output[StatusCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new StatusCommand($dependencyFactory);
-            }
-        ];
-
-        $output[SyncMetadataCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new SyncMetadataCommand($dependencyFactory);
-            }
-        ];
-
-        $output[VersionCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new VersionCommand($dependencyFactory);
-            }
-        ];
-
-        $output[GenerateCommand::class] = [
-            'tags' => ['console.command'],
-            'factory' => function (DependencyFactory $dependencyFactory) {
-                return new GenerateCommand($dependencyFactory);
-            }
-        ];
-
-        return $output;
+        $this->registerConsoleCommands($builder);
     }
 
 
     public function getParentServiceProviders(): array
     {
         return [
-            DoctrineORMProvider::class
+            DoctrineOrmProvider::class
         ];
+    }
+
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
+    {
+        return new MigrationsConfiguration();
+    }
+
+    private function registerConsoleCommands(
+        ContainerBuilder $builder,
+    ): void
+    {
+        $builder
+            ->configureNamespaceScan()
+            ->autowire()
+            ->withTag('console.command')
+            ->withClassNameSuffix('Command')
+            ->in(
+                dirname((new \ReflectionClass(DoctrineCommand::class))->getFileName())
+            );
     }
 }
