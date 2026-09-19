@@ -5,7 +5,7 @@ namespace Jadob\Framework;
 
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\ContainerCompiler;
-use Jadob\Container\Config\ConfigNodeFinder;
+use Jadob\Container\Config\FilesystemConfigNodeFinder;
 use Jadob\Container\ServiceGraphContainer;
 use Jadob\Container\ParameterStore;
 use Jadob\Core\BootstrapInterface;
@@ -114,7 +114,7 @@ readonly class Application
         ];
 
         $compiler = new ContainerCompiler(
-            new ConfigNodeFinder($configLocations)
+            new FilesystemConfigNodeFinder($configLocations)
         );
 
         foreach ($modules as $module) {
