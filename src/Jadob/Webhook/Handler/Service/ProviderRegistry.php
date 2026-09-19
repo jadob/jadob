@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Webhook\Handler\Service;
 
 use Jadob\Contracts\Webhook\WebhookProviderInterface;
+use RuntimeException;
 
 class ProviderRegistry
 {
@@ -28,7 +29,7 @@ class ProviderRegistry
             }
         }
 
-        throw new \RuntimeException(
+        throw new RuntimeException(
             sprintf('Could not find webhook provider for "%s"', $name)
         );
     }
