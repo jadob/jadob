@@ -10,10 +10,10 @@ use Jadob\Container\Config\ConfigNodeFinderInterface;
 use Jadob\Container\Fixtures\CircularServiceProviders\BarServiceProvider;
 use Jadob\Container\Fixtures\CircularServiceProviders\FooServiceProvider;
 use Jadob\Container\Fixtures\SampleApp\Domain\Repository\UserRepositoryInterface;
-use Jadob\Container\Fixtures\SampleApp\Infrastructure\Database\DynamoDbClient;
 use Jadob\Container\Fixtures\SampleApp\Infrastructure\ServiceProvider\EmailServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\AuthServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\DatabaseServiceProvider;
+use Jadob\Container\Fixtures\SimpleSampleApp\MailerService;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -135,7 +135,7 @@ final class ContainerCompilerTest extends TestCase
     {
         $builder = new ContainerBuilder();
         $builder->configureNamespaceScan()
-            ->in(__DIR__.'/../Fixtures/SampleApp')
+            ->in(__DIR__.'/../Fixtures/SimpleSampleApp')
             ->autowire();
 
         $graph = $this
@@ -144,7 +144,7 @@ final class ContainerCompilerTest extends TestCase
                 $builder,
             );
 
-        self::assertTrue($graph->get(DynamoDbClient::class)->autowired);
+        self::assertTrue($graph->get(MailerService::class)->autowired);
 
     }
 }
