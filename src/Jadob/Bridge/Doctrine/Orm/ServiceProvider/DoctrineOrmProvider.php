@@ -161,7 +161,6 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
                 ->set($factoryServiceName)
                 ->withTag('doctrine.orm.entity_manager_factory')
                 ->withFactory($managerFactory)
-                ->withArgument('connection', Reference::service($managerConfig->dbalConnectionName))
                 ->withArgument('config', Reference::service($configurationServiceName));
 
             $managerServiceIds[$managerName] = [
