@@ -1,122 +1,103 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Persistence;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\Persistence\ConnectionRegistry;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Exception;
+use LogicException;
 
-class DoctrineManagerRegistry implements ManagerRegistry
+final class DoctrineManagerRegistry implements ManagerRegistry
 {
     /**
-     * @var Connection[]
+     * @var array<string, ObjectManager>
      */
-    protected array $connections = [];
-    protected string $defaultConnection = 'default';
+    private array $instantiatedManagers = [];
+
     /**
-     * @var ObjectManager[]
+     * @param array<string, ObjectManagerFactoryInterface> $entityManagerFactories
      */
-    protected array $managers = [];
-    protected string $defaultManager = 'default';
+    public function __construct(
+        private readonly array $entityManagerFactories,
+        private readonly string $defaultManagerName,
+        private readonly ConnectionRegistry $connectionRegistry,
+    ) {
+        foreach ($entityManagerFactories as $entityManagerFactory) {
+            if (!($entityManagerFactory instanceof ObjectManagerFactoryInterface)) {
+                throw new LogicException(
+                    sprintf(
+                        'Entity manager factory must be a %s, %s given',
+                        ObjectManagerFactoryInterface::class,
+                        gettype($entityManagerFactory)
+                    )
+                );
+            }
+        }
+    }
 
     public function getDefaultConnectionName(): string
     {
-        return $this->defaultConnection;
+        return $this
+            ->connectionRegistry
+            ->getDefaultConnectionName();
     }
 
     public function getConnection($name = null): object
     {
-        if ($name === null) {
-            return $this->connections[$this->defaultConnection];
-        }
-
-        return $this->connections[$name];
+        return $this
+            ->connectionRegistry
+            ->getConnection($name);
     }
 
     public function getConnections(): array
     {
-        return $this->connections;
+        return $this
+            ->connectionRegistry
+            ->getConnections();
     }
 
     public function getConnectionNames(): array
     {
-        return array_keys($this->connections);
+        return $this
+            ->connectionRegistry
+            ->getConnectionNames();
     }
 
     public function getDefaultManagerName(): string
     {
-        return $this->defaultManager;
+        // TODO: Implement getDefaultManagerName() method.
     }
 
-    public function getManager($name = null): ObjectManager
+    public function getManager(?string $name = null): ObjectManager
     {
-        if ($name === null) {
-            return $this->managers[$this->defaultManager];
-        }
-
-        return $this->managers[$name];
+        // TODO: Implement getManager() method.
     }
 
     public function getManagers(): array
     {
-        return $this->managers;
+        // TODO: Implement getManagers() method.
     }
 
-    public function resetManager($name = null): ObjectManager
+    public function resetManager(?string $name = null): ObjectManager
     {
-        throw new Exception('resetManager NIY');
+        // TODO: Implement resetManager() method.
     }
 
     public function getManagerNames(): array
     {
-        return array_keys($this->managers);
+        // TODO: Implement getManagerNames() method.
     }
 
-    public function getRepository($persistentObject, $persistentManagerName = null): ObjectRepository
+    public function getRepository(string $persistentObject, ?string $persistentManagerName = null): ObjectRepository
     {
-        if ($persistentManagerName) {
-            return $this->getManager($persistentManagerName)->getRepository($persistentObject);
-        }
-
-        return $this->getManagerForClass($persistentObject)->getRepository($persistentObject);
+        // TODO: Implement getRepository() method.
     }
 
-    /**
-     * @TODO: rewrite it in a more more maintainable fashion - catch does not catch anything
-     * @param $class
-     * @return ObjectManager|null
-     */
-    public function getManagerForClass($class): ?ObjectManager
+    public function getManagerForClass(string $class): ObjectManager|null
     {
-        foreach ($this->managers as $manager) {
-            $manager->getClassMetadata($class);
-
-            return $manager;
-        }
-
-        return null;
-    }
-
-    public function addConnection(string $name, Connection $connection): void
-    {
-        $this->connections[$name] = $connection;
-    }
-
-    public function setDefaultConnectionName(string $defaultConnection): void
-    {
-        $this->defaultConnection = $defaultConnection;
-    }
-
-    public function addManager(string $name, ObjectManager $manager): void
-    {
-        $this->managers[$name] = $manager;
-    }
-
-    public function setDefaultManagerName(string $defaultManager): void
-    {
-        $this->defaultManager = $defaultManager;
+        // TODO: Implement getManagerForClass() method.
     }
 }
