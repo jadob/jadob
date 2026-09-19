@@ -15,18 +15,19 @@ final readonly class MessageBusServiceProvider implements ServiceProviderInterfa
     public function register(
         ContainerBuilderInterface $builder,
         ConfigNodeInterface|null $config = null,
-    ): void
-    {
+    ): void {
         $builder
             ->set(CommandBus::class)
             ->withArgument(
-                'handlers', Reference::taggedServices('command_bus_handler')
+                'handlers',
+                Reference::taggedServices('command_bus_handler')
             );
 
         $builder
             ->set(QueryBus::class)
             ->withArgument(
-                'handlers', Reference::taggedServices('query_bus_handler')
+                'handlers',
+                Reference::taggedServices('query_bus_handler')
             );
     }
 }
