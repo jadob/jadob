@@ -14,26 +14,27 @@ final readonly class DoctrineConnectionRegistry implements ConnectionRegistry
      */
     public function __construct(
         private array $connections,
+        private string $defaultConnectionName
     ) {
     }
 
     public function getDefaultConnectionName(): string
     {
-        // TODO: Implement getDefaultConnectionName() method.
+        return $this->defaultConnectionName;
     }
 
     public function getConnection(?string $name = null): object
     {
-        // TODO: Implement getConnection() method.
+        return $this->connections[$name ?? $this->getDefaultConnectionName()];
     }
 
     public function getConnections(): array
     {
-        // TODO: Implement getConnections() method.
+        return $this->connections;
     }
 
     public function getConnectionNames(): array
     {
-        // TODO: Implement getConnectionNames() method.
+        return array_keys($this->connections);
     }
 }
