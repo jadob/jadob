@@ -16,6 +16,7 @@ use InvalidArgumentException;
 use Jadob\Bridge\Doctrine\Common\ServiceProvider\DoctrineEventManagerServiceProvider;
 use Jadob\Bridge\Doctrine\DBAL\Configuration\DbalConfiguration;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineManagerRegistry;
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -137,7 +138,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
         ];
     }
 
-    public function getDefaultConfigurationObject(): object
+    public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
         return new DbalConfiguration();
     }
