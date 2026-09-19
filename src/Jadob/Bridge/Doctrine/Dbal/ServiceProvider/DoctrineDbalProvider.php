@@ -90,7 +90,7 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
             };
 
             $builder
-                ->set($configurationServiceName)
+                ->set($configurationServiceName, Configuration::class)
                 ->withFactory($configurationObjectFactory);
 
             $factory = static function (Configuration $dbalConfig) use ($configuration): Connection {
