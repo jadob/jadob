@@ -73,7 +73,12 @@ final class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getManager(?string $name = null): ObjectManager
     {
-        // TODO: Implement getManager() method.
+        if (array_key_exists($name, $this->instantiatedManagers) === false) {
+            $manager = $this->entityManagerFactories[$name]->build();
+            $this->instantiatedManagers[$name] = $manager;
+        }
+
+        return $this->instantiatedManagers[$name];
     }
 
     public function getManagers(): array
@@ -83,7 +88,10 @@ final class DoctrineManagerRegistry implements ManagerRegistry
 
     public function resetManager(?string $name = null): ObjectManager
     {
-        // TODO: Implement resetManager() method.
+        $name = $name ?? $this->getDefaultManagerName();
+        unset($this->instantiatedManagers[$name]);
+
+        return $this->getManager($name);
     }
 
     public function getManagerNames(): array
