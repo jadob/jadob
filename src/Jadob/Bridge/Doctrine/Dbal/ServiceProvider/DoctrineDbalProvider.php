@@ -74,7 +74,7 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
         /** @var string|null $defaultConnectionName */
         $defaultConnectionName = null;
         foreach ($connections as $connectionName => $configuration) {
-            $configurationServiceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
+            $configurationServiceName = sprintf(self::CONFIGURATION_SERVICE_NAME_FORMAT, $connectionName);
             $serviceName = sprintf(self::CONNECTION_SERVICE_NAME_FORMAT, $connectionName);
             $connectionServiceIds[$connectionName] = $serviceName;
 
