@@ -294,8 +294,20 @@ final class ContainerCompiler
                     continue;
                 }
 
+                $className = $classReflection->getName();
+
+                if (
+                    $namespaceScan->suffix !== null
+                    && str_ends_with(
+                        $className,
+                        $namespaceScan->suffix
+                    ) === false
+                ) {
+                    continue;
+                }
+
                 $service = $builder->set(
-                    $classReflection->getName()
+                    $className,
                 );
 
                 foreach ($namespaceScan->tags as $tag) {

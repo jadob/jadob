@@ -16,6 +16,8 @@ use Jadob\Container\Fixtures\SampleApp\Infrastructure\ServiceProvider\EmailServi
 use Jadob\Container\Fixtures\ServiceProviders\AuthServiceProvider;
 use Jadob\Container\Fixtures\ServiceProviders\DatabaseServiceProvider;
 use Jadob\Container\Fixtures\SimpleSampleApp\MailerService;
+use Jadob\Container\Fixtures\Suffixes\DoSomethingCommand;
+use Jadob\Container\Fixtures\Suffixes\SomethingHandler;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -148,5 +150,22 @@ final class ContainerCompilerTest extends TestCase
 
         self::assertTrue($graph->get(MailerService::class)->autowired);
 
+    }
+
+    public function testNamespaceScansWillRespectSettingClassNameSuffix(): void
+    {
+        $builder = new ContainerBuilder();
+        $builder->configureNamespaceScan()
+            ->in(__DIR__.'/../Fixtures/Suffixes')
+            ->withClassNameSuffix('Command');
+
+        $graph = $this
+            ->compiler
+            ->compile(
+                $builder,
+            );
+
+        self::assertFalse($graph->has(SomethingHandler::class));
+        self::assertTrue($graph->has(DoSomethingCommand::class));
     }
 }
