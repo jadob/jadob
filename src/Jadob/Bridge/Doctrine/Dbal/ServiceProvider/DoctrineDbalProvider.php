@@ -120,7 +120,7 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
             );
 
         $builder
-            ->set(ConnectionRegistry::class)
+            ->set(ConnectionRegistry::class, DoctrineConnectionRegistry::class)
             ->withFactory(function (ContainerInterface $container) use ($connectionServiceIds) {
                 return new DoctrineConnectionRegistry(
                     connections: array_map(
