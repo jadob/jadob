@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Container\Fixtures\SampleApp\Application\UseCase;
 
 use Jadob\Container\Fixtures\SampleApp\Application\Service\UserNotificationServiceInterface;
