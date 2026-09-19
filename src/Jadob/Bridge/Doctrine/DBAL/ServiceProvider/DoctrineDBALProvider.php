@@ -42,7 +42,7 @@ class DoctrineDBALProvider implements ServiceProviderInterface, ParentServicePro
     /**
      * {@inheritdoc}
      */
-    public function getConfigNode(): ?string
+    public function getConfigNode(): string
     {
         return 'doctrine_dbal';
     }
