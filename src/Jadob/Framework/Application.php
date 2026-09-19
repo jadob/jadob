@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace Jadob\Framework;
 
+use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\ContainerCompiler;
 use Jadob\Container\Config\FilesystemConfigNodeFinder;
 use Jadob\Container\ServiceGraphContainer;
-use Jadob\Container\ParameterStore;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
 use Jadob\Core\RequestContext;
 use Jadob\Core\RequestContextStore;
-use Jadob\EventDispatcher\EventDispatcher;
 use Jadob\Framework\ErrorHandler\ExceptionHandler;
 use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
@@ -21,8 +20,6 @@ use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application as CliApplication;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +28,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Throwable;
 use function array_merge;
 use function get_class;
-use function Symfony\Component\String\b;
 
 readonly class Application
 {
@@ -41,10 +37,10 @@ readonly class Application
     private RequestContextStore $requestContextStore;
 
     public function __construct(
-        private string             $env,
+        private string $env,
         private BootstrapInterface $bootstrap,
-        private array              $serviceProviders,
-        private array              $modules
+        private array $serviceProviders,
+        private array $modules
     ) {
         $this->requestContextStore = new RequestContextStore();
         $this->exceptionHandler = new ExceptionHandler(
@@ -58,6 +54,7 @@ readonly class Application
         $this->exceptionHandler->registerExceptionHandler();
 
         $servicesFile = $this->bootstrap->getConfigDir() . '/services.php';
+
         if (!file_exists($servicesFile)) {
             //TODO named exception constructors?
             throw new KernelException('There is no services.php file in your config directory.');
@@ -77,7 +74,7 @@ readonly class Application
             ->bootstrap
             ->getConfigDir();
 
-        /** @var \Closure $userspaceContainerConfig */
+        /** @var Closure $userspaceContainerConfig */
         $userspaceContainerConfig = include $servicesFile;
 
         $builder = new ContainerBuilder();
@@ -135,8 +132,7 @@ readonly class Application
     public function handleWebRequest(
         Request $request,
         ?string $requestId = null,
-    ): Response
-    {
+    ): Response {
         try {
             $this->build();
             /**
@@ -198,6 +194,7 @@ readonly class Application
     public function getConsole(): CliApplication
     {
         $this->build();
+
         return $this->container->get(CliApplication::class);
     }
 }
