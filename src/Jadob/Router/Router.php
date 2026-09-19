@@ -35,8 +35,8 @@ class Router
 {
     public function __construct(
         private RouteCollection $routeCollection,
-        private RouterContext   $context,
-        private bool            $caseSensitive = false
+        private RouterContext $context,
+        private bool $caseSensitive = false
     ) {
     }
 
@@ -76,6 +76,7 @@ class Router
                 $matchedRoutes[] = $matchedRoute;
 
                 $isWildcardRoute = $this->isWildcardRoute($route);
+
                 if (!$isWildcardRoute) {
                     $hasNonWildcardMatch = true;
                 }
@@ -126,6 +127,7 @@ class Router
 
         foreach ($pathParams as $pathParam) {
             $pathParamMatch = PathParamMatchType::DEFAULT;
+
             if (array_key_exists($pathParam[1], $params)) {
                 $pathParamMatch = $params[$pathParam[1]];
             }
@@ -139,6 +141,7 @@ class Router
 
         // Add start and end matching
         $patternAsRegex = '%^' . $path . '$%D';
+
         if (!$this->caseSensitive) {
             $patternAsRegex .= 'i';
         }
@@ -195,7 +198,8 @@ class Router
     {
         foreach ($this->routeCollection as $routeName => $route) {
             if ($routeName === $name) {
-                $path = sprintf('%s/%s',
+                $path = sprintf(
+                    '%s/%s',
                     rtrim((string) $this->context->basePath, '/'),
                     ltrim($route->path, '/')
                 );
@@ -216,6 +220,7 @@ class Router
 
                 foreach ($params as $key => $param) {
                     $isFound = 0;
+
                     if (!is_array($param)) {
                         $convertedPath = str_replace('{' . $key . '}', (string) $param, $convertedPath, $isFound);
                     }
@@ -238,6 +243,7 @@ class Router
 
                 if ($full) {
                     $host = $this->context->host;
+
                     if ($host === null) {
                         throw new UrlGenerationException(
                             sprintf(
@@ -248,6 +254,7 @@ class Router
                     }
 
                     $scheme = 'http';
+
                     if ($this->context->secure) {
                         $scheme = 'https';
                     }
@@ -260,6 +267,7 @@ class Router
 
                     return $url->build();
                 }
+
                 return $convertedPath;
             }
         }
@@ -309,6 +317,7 @@ class Router
     public function addRoute(Route $route): Router
     {
         $this->routeCollection->addRoute($route);
+
         return $this;
     }
 }

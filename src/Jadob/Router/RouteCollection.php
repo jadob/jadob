@@ -61,6 +61,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
 
         $route->attachToCollection($this);
         $this->routes[$routeName] = $route;
+
         return $this;
     }
 
@@ -165,6 +166,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     public function setHost(?string $host): RouteCollection
     {
         $this->host = $host;
+
         return $this;
     }
 
@@ -187,6 +189,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     public function setPrefix(?string $prefix): RouteCollection
     {
         $this->prefix = $prefix;
+
         return $this;
     }
 
@@ -205,6 +208,7 @@ class RouteCollection implements ArrayAccess, Iterator, Countable
     public function setParentCollection(RouteCollection $parentCollection): RouteCollection
     {
         $this->parentCollection = $parentCollection;
+
         return $this;
     }
 
