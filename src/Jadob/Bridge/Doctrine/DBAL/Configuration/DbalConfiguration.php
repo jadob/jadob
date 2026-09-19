@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\DBAL\Configuration;
 
-class DbalConfiguration
+use Jadob\Container\Config\ConfigNodeInterface;
+
+class DbalConfiguration implements ConfigNodeInterface
 {
     /**
      * @var array<string, class-string>
