@@ -71,7 +71,8 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
 
         /** @var array<string, string> $connectionServiceIds */
         $connectionServiceIds = null;
-        /** @var string|null $defaultConnectionName */
+        /** @var string|null $defaultConnectionServiceId */
+        $defaultConnectionServiceId = null;
         $defaultConnectionName = null;
         foreach ($connections as $connectionName => $configuration) {
             $configurationServiceName = sprintf(self::CONFIGURATION_SERVICE_NAME_FORMAT, $connectionName);
@@ -79,10 +80,11 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
             $connectionServiceIds[$connectionName] = $serviceName;
 
             if ($configuration->default) {
-                if ($defaultConnectionName !== null) {
+                if ($defaultConnectionServiceId !== null) {
                     throw new InvalidArgumentException('There are at least two default DBAL connections defined! Check your configuration file.');
                 }
-                $defaultConnectionName = $serviceName;
+                $defaultConnectionServiceId = $serviceName;
+                $defaultConnectionName = $connectionName;
             }
 
             $configurationObjectFactory = function (): Configuration {
@@ -109,26 +111,27 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
                 );
         }
 
-        if ($defaultConnectionName === null) {
+        if ($defaultConnectionServiceId === null) {
             throw new InvalidArgumentException('There is no default DBAL connections defined! Check your configuration file.');
         }
 
         $builder
             ->alias(
-                $defaultConnectionName,
+                $defaultConnectionServiceId,
                 Connection::class
             );
 
         $builder
             ->set(ConnectionRegistry::class, DoctrineConnectionRegistry::class)
-            ->withFactory(function (ContainerInterface $container) use ($connectionServiceIds) {
+            ->withFactory(function (ContainerInterface $container) use ($connectionServiceIds, $defaultConnectionName) {
                 return new DoctrineConnectionRegistry(
                     connections: array_map(
                         function (string $serviceName) use ($container): Connection {
                             return $container->get($serviceName);
                         },
                         $connectionServiceIds
-                    )
+                    ),
+                    defaultConnectionName: $defaultConnectionName
                 );
             });
     }
