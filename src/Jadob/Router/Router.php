@@ -180,7 +180,7 @@ class Router
         // Add start and end matching
         $patternAsRegex = '%^' . $parsedPattern . '$%D';
 
-        if (!$this->config['case_sensitive']) {
+        if (!$this->caseSensitive) {
             $patternAsRegex .= 'i';
         }
 
