@@ -170,6 +170,10 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
             ];
         }
 
+        if ($defaultManagerServiceId === null) {
+            throw new LogicException('Default entity manager is not configured.');
+        }
+
         $builder
             ->alias(
                 EntityManagerInterface::class,
