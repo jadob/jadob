@@ -92,6 +92,10 @@ readonly class Application
             $bootstrapFileFqcn
         );
 
+        $builder->addFallbackParameter('cache_dir', $this->bootstrap->getCacheDir());
+        $builder->addFallbackParameter('root_dir', $this->bootstrap->getRootDir());
+        $builder->addFallbackParameter('app_env', $this->env);
+
         $builder->loadConfiguration($userspaceContainerConfig);
         foreach ($modules as $module) {
             foreach ($module->getServiceProviders($this->env) as $serviceProvider) {
