@@ -14,10 +14,6 @@ final readonly class Reference
     ) {
     }
 
-    public static function env(string $envName): self
-    {
-    }
-
     public static function literal(mixed $value): self
     {
         return new self(
