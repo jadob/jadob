@@ -22,8 +22,7 @@ final class ServiceGraphContainer implements ContainerInterface
 
     public function __construct(
         private ServiceGraph $graph
-    )
-    {
+    ) {
     }
 
     public function get(string $id): object
@@ -41,8 +40,7 @@ final class ServiceGraphContainer implements ContainerInterface
 
     private function doInitialize(
         string $id,
-    ): object
-    {
+    ): object {
         $definition = $this->graph->get($id);
         $args = $this->resolveArgs(
             $definition->arguments
@@ -78,8 +76,7 @@ final class ServiceGraphContainer implements ContainerInterface
     private function onServiceInitialized(
         string $id,
         object $service,
-    ): object
-    {
+    ): object {
         $this->initialized[$id] = $service;
 
         return $service;
