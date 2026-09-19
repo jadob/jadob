@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Doctrine\Common\ServiceProvider;
+namespace Jadob\Bridge\Doctrine\EventManager\ServiceProvider;
 
 use Doctrine\Common\EventManager;
 use Jadob\Container\Config\ConfigNodeInterface;
