@@ -11,7 +11,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Persistence\ConnectionRegistry;
 use InvalidArgumentException;
-use Jadob\Bridge\Doctrine\DBAL\Configuration\DbalConfiguration;
+use Jadob\Bridge\Doctrine\Dbal\Configuration\DbalConfiguration;
 use Jadob\Bridge\Doctrine\EventManager\ServiceProvider\DoctrineEventManagerServiceProvider;
 use Jadob\Bridge\Doctrine\Persistence\DoctrineConnectionRegistry;
 use Jadob\Container\Config\ConfigNodeInterface;
