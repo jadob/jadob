@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Jadob\Framework\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\Kernel;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 
@@ -26,9 +26,17 @@ final readonly class ConsoleProvider implements ServiceProviderInterface
 
             $builder->set(Application::class)
                 ->withFactory(
-                    function (HelperSet $helperSet) {
+                    function (
+                        #[InjectTaggedServices('console.command')]
+                        array $commands,
+                        HelperSet $helperSet,
+                    ) {
                         $application = new Application('Jadob', Kernel::VERSION);
-                        $application->setHelperSet($helperSet);
+                        $application->setHelperSet(
+                            $helperSet
+                        );
+
+                        $application->addCommands($commands);
 
                         return $application;
                     }
