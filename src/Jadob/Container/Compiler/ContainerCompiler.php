@@ -72,7 +72,7 @@ final class ContainerCompiler
         $this->extensions[] = new CompilerExtensionEntry(
             extension: new AutowireServices(),
             id: 'autowire',
-            priority: 1,
+            priority: 2,
         );
     }
 
