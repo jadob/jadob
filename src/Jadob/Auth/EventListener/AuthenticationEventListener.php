@@ -5,7 +5,6 @@ namespace Jadob\Auth\EventListener;
 
 use Jadob\Auth\AccessToken\AccessToken;
 use Jadob\Auth\AccessToken\AccessTokenStorageInterface;
-use Jadob\Auth\Firewall\Firewall;
 use Jadob\Auth\Firewall\FirewallInterface;
 use Jadob\Auth\Firewall\FirewallMapInterface;
 use Jadob\Contracts\Auth\AuthenticationException;
@@ -18,11 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthenticationEventListener implements ListenerProviderInterface, ListenerProviderPriorityInterface
 {
     public function __construct(
-        private FirewallMapInterface        $firewallMap,
-        private ?LoggerInterface            $logger,
+        private FirewallMapInterface $firewallMap,
+        private ?LoggerInterface $logger,
         private AccessTokenStorageInterface $accessTokenStorage,
-    )
-    {
+    ) {
     }
 
     public function getListenersForEvent(object $event): iterable
@@ -53,6 +51,7 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
 
         if ($firewall === null) {
             $this->logger?->debug('No firewall matches this request.');
+
             return;
         }
 
@@ -61,6 +60,7 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
 
         /** @var null|AccessToken $currentToken */
         $currentToken = null;
+
         if ($stateless === false && $identityStackingEnabled) {
             $currentToken = $this->findStackedToken($firewall, $request);
         }
@@ -97,6 +97,7 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
                             get_class($authenticator)
                         )
                     );
+
                 continue;
             }
 
@@ -149,6 +150,7 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
 
                 if ($response !== null) {
                     $event->setResponse($response);
+
                     return;
                 }
             }
@@ -165,9 +167,8 @@ class AuthenticationEventListener implements ListenerProviderInterface, Listener
 
     private function findStackedToken(
         FirewallInterface $firewall,
-        Request           $request,
-    ): ?AccessToken
-    {
+        Request $request,
+    ): ?AccessToken {
         $accessTokens = $this
             ->accessTokenStorage
             ->getAllTokens($request->getSession());

@@ -7,7 +7,7 @@ final readonly class AccessToken
 {
     public function __construct(
         private(set) string $identityId,
-        private(set) array  $metadata = [],
+        private(set) array $metadata = [],
     ) {
     }
 }

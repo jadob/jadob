@@ -36,12 +36,11 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
     public function removeTokenFromSession(
         SessionInterface $session,
         int $tokenId
-    ): void
-    {
+    ): void {
         /** @var array<array-key, AccessToken> $tokens */
         $tokens = $session->get(self::TOKENS_KEY);
 
-        if(
+        if (
             $tokens === null
             || (is_array($tokens) && array_key_exists($tokenId, $tokens) === false)
         ) {
@@ -57,6 +56,7 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
     public function saveToSession(SessionInterface $session, AccessToken $accessToken): int
     {
         $tokenIdFromSession = $session->get(self::TOKENS_ID_KEY);
+
         if ($tokenIdFromSession === null) {
             $tokenIdFromSession = 0;
         }
@@ -64,7 +64,8 @@ final readonly class AccessTokenStorage implements AccessTokenStorageInterface
         $tokenIdFromSession++;
 
         $tokens = $session->get(self::TOKENS_KEY);
-        if($tokens === null) {
+
+        if ($tokens === null) {
             $tokens = [];
         }
 
