@@ -20,15 +20,16 @@ final class DbalConfiguration implements ConfigNodeInterface
     public function addType(string $name, string $type): self
     {
         $this->types[$name] = $type;
+
         return $this;
     }
 
     public function configureConnection(
         string $name,
-    ): DbalConnectionConfig
-    {
+    ): DbalConnectionConfig {
         $config = new DbalConnectionConfig();
         $this->connections[$name] = $config;
+
         return $config;
     }
 }

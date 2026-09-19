@@ -14,8 +14,7 @@ final readonly class DoctrineConnectionRegistry implements ConnectionRegistry
      */
     public function __construct(
         private array $connections,
-    )
-    {
+    ) {
     }
 
     public function getDefaultConnectionName(): string

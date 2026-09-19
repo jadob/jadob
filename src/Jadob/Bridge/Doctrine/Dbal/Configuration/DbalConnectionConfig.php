@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Dbal\Configuration;
 
@@ -18,29 +19,28 @@ final class DbalConnectionConfig
     public function setAsDefault(): self
     {
         $this->default = true;
+
         return $this;
     }
 
     public function withDsn(
         string $dsn,
-    ): self
-    {
+    ): self {
         $this->dsn = $dsn;
+
         return $this;
     }
 
     public function enableQueryLogger(): self
     {
         $this->queryLoggerEnabled = true;
+
         return $this;
     }
 
     public function withMappingType(
         string $dbType,
         string $doctrineType,
-
-    )
-    {
-
+    ) {
     }
 }

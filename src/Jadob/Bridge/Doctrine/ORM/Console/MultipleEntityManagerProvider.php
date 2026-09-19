@@ -26,6 +26,7 @@ final readonly class MultipleEntityManagerProvider implements EntityManagerProvi
     public function getDefaultManager(): EntityManagerInterface
     {
         $managerName = $this->managerRegistry->getDefaultManagerName();
+
         return $this->managerRegistry->getManager($managerName);
     }
 }

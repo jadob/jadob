@@ -104,9 +104,9 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
                 ->set($serviceName)
                 ->withFactory($factory)
                 ->withArgument(
-                    'configuration', Reference::service($configurationServiceName)
+                    'configuration',
+                    Reference::service($configurationServiceName)
                 );
-
         }
 
         if ($defaultConnectionName === null) {
@@ -131,7 +131,6 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
                     )
                 );
             });
-
     }
 
     public function getParentServiceProviders(): array
