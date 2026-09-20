@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Auth] new authentication component with identity stacking
 
+### Fixed
+- [Container] during autowiring, built-in types now are either resolved to null if possible (or exception is thrown when no hints passed)
+
 ### Changed
 - [BridgeDoctrineOrm] Switched to native lazy proxies
 - [Container] switched to new container architecture (builder => compiler => service graph container)
