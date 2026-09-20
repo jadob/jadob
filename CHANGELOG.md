@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- [BridgeDoctrineMigrations] Added object-oriented config for migrations
+
+
 ## [0.10.0] - 2026-09-19
 
-### New
+### Added
 - [Auth] new authentication component with identity stacking
 
 ### Changed

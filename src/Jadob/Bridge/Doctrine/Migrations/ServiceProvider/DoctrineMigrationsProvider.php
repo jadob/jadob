@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Jadob\Bridge\Doctrine\Migrations\ServiceProvider;
 
+use Doctrine\Migrations\Configuration\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ManagerRegistryEntityManager;
-use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use Doctrine\Migrations\Configuration\Migration\ExistingConfiguration;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 use Doctrine\Persistence\ManagerRegistry;
 use Jadob\Bridge\Doctrine\Migrations\Configuration\MigrationsConfiguration;
+use Jadob\Bridge\Doctrine\Migrations\Configuration\MigrationsTableStorageConfiguration;
 use Jadob\Bridge\Doctrine\Orm\ServiceProvider\DoctrineOrmProvider;
 use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Config\ConfigNodeInterface;
@@ -43,10 +45,33 @@ final readonly class DoctrineMigrationsProvider implements ServiceProviderInterf
             ) use (
                 $config
             ): DependencyFactory {
-                $migrationConfigObj = new ConfigurationArray([]);
+                $migrationConfigObj = new Configuration();
+
+                $migrationConfigObj->setMigrationOrganization(
+                    Configuration::VERSIONS_ORGANIZATION_NONE
+                );
+                
+                $migrationConfigObj->setAllOrNothing(
+                    $config->allOrNothing
+                );
+                
+                $migrationConfigObj->setCheckDatabasePlatform(
+                    $config->checkDatabasePlatform
+                );
+                
+                $migrationConfigObj->setCustomTemplate(
+                    $config->customTemplate
+                );
+                
+                foreach ($config->migrationPaths as $namespace => $path) {
+                    $migrationConfigObj->addMigrationsDirectory(
+                        namespace: $namespace,
+                        path: $path
+                    );
+                }
 
                 return DependencyFactory::fromEntityManager(
-                    $migrationConfigObj,
+                    new ExistingConfiguration($migrationConfigObj),
                     ManagerRegistryEntityManager::withSimpleDefault(
                         $managerRegistry,
                         $managerRegistry->getDefaultManagerName()
@@ -68,7 +93,9 @@ final readonly class DoctrineMigrationsProvider implements ServiceProviderInterf
 
     public function getDefaultConfigurationObject(): ConfigNodeInterface
     {
-        return new MigrationsConfiguration();
+        return new MigrationsConfiguration(
+            migrationsTable: new MigrationsTableStorageConfiguration()
+        );
     }
 
     private function registerConsoleCommands(
