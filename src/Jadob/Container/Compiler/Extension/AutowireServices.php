@@ -36,7 +36,6 @@ final readonly class AutowireServices implements CompilerExtensionInterface
                     )
                 );
             }
-
             $classConstructor = new ReflectionClass($service->className)->getConstructor();
 
             if ($classConstructor === null) {
@@ -53,6 +52,18 @@ final readonly class AutowireServices implements CompilerExtensionInterface
                 }
 
                 $nullable = $constructorArg->allowsNull();
+                $builtin = $constructorArg->getType()->isBuiltin();
+
+                if ($builtin === true && $nullable === false) {
+                    throw new ContainerCompilerException(
+                        sprintf(
+                            'Unable to autowire service "%s" as argument "%s" is a built-in and has no '.
+                            'argument/inject hints defined.',
+                            $service->id,
+                            $argumentName,
+                        )
+                    );
+                }
 
                 $argumentType = $constructorArg
                     ->getType()
