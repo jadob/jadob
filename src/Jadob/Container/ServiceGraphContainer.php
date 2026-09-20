@@ -90,7 +90,7 @@ final class ServiceGraphContainer implements ContainerInterface
     private function resolveArgs(array $args): array
     {
         return array_map(
-            function (string|Reference $arg): string|int|object|array {
+            function (string|Reference $arg): null|string|int|object|array {
                 if (is_string($arg)) {
                     return $arg;
                 }

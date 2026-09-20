@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - [Container] during autowiring, built-in types now are either resolved to null if possible (or exception is thrown when no hints passed)
+- [Container] services with nullable arguments will now receive `null` if no service/parameter will be matched.
 
 ### Changed
 - [BridgeDoctrineOrm] Switched to native lazy proxies

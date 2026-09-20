@@ -8,14 +8,13 @@ use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\ContainerCompiler;
 use Jadob\Container\Config\InMemoryConfigNodeFinder;
 use Jadob\Container\Exception\ParameterNotFoundException;
+use Jadob\Container\Fixtures\ClassWithBuiltinNullableArgument;
 use Jadob\Container\Fixtures\SampleApp\Infrastructure\Email\UserMailerService;
 use Jadob\Contracts\DependencyInjection\Reference;
 use PHPUnit\Framework\TestCase;
 
-class ServiceGraphContainerTest extends TestCase
+final class ServiceGraphContainerTest extends TestCase
 {
-
-
     public function testInstantiatingClassWithParameterRefs(): void
     {
         $builder = new ContainerBuilder();
@@ -59,5 +58,23 @@ class ServiceGraphContainerTest extends TestCase
         $this->expectExceptionMessage('Parameter "smtp_host" was requested but was not found in service graph.');
         $container->get(UserMailerService::class);
 
+    }
+
+    public function testArgumentResolverWillAllowNullValueToBePassedToService(): void
+    {
+        $builder = new ContainerBuilder();
+
+        $builder
+            ->set(ClassWithBuiltinNullableArgument::class)
+            ->autowire();
+
+        $compiler = new ContainerCompiler(new InMemoryConfigNodeFinder([]));
+
+        $container = new ServiceGraphContainer($compiler->compile($builder));
+
+        self::assertInstanceOf(
+            ClassWithBuiltinNullableArgument::class,
+            $container->get(ClassWithBuiltinNullableArgument::class)
+        );
     }
 }
