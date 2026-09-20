@@ -109,7 +109,7 @@ final readonly class AutowireServices implements CompilerExtensionInterface
                     && $nullable === true
                 ) {
                     $service->withArgument(
-                        $argumentType,
+                        $argumentName,
                         null
                     );
                 }
