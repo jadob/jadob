@@ -5,9 +5,11 @@ namespace Jadob\Container\Compiler;
 
 use Closure;
 use Jadob\Container\Builder\ContainerBuilder;
+use Jadob\Container\Builder\Exception\ContainerBuildException;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
 use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
+use Jadob\Container\Compiler\Exception\NamespaceScanException;
 use Jadob\Container\Compiler\Extension\AutowireServices;
 use Jadob\Container\Compiler\Extension\ResolveFactoryArguments;
 use Jadob\Container\Config\ConfigNodeFinderInterface;
@@ -22,6 +24,7 @@ use MJS\TopSort\ElementNotFoundException;
 use MJS\TopSort\Implementations\StringSort;
 use Roave\BetterReflection\BetterReflection;
 use Roave\BetterReflection\Reflector\DefaultReflector;
+use Roave\BetterReflection\SourceLocator\Exception\InvalidDirectory;
 use Roave\BetterReflection\SourceLocator\Type\DirectoriesSourceLocator;
 
 use function array_filter;
@@ -273,50 +276,64 @@ final class ContainerCompiler
         }
     }
 
+    /**
+     * @param ContainerBuilder $builder
+     * @return void
+     * @throws NamespaceScanException|ContainerBuildException
+     */
     private function processNamespaceScans(
         ContainerBuilder $builder
     ): void {
         foreach ($builder->getNamespaceScans() as $namespaceScan) {
-            $sourceLocator = new DirectoriesSourceLocator(
-                $namespaceScan->paths,
-                new BetterReflection()->astLocator()
-            );
-
-            $reflector = new DefaultReflector($sourceLocator);
-
-            $classReflections = $reflector->reflectAllClasses();
-
-            foreach ($classReflections as $classReflection) {
-                if ($classReflection->isInterface()
-                    || $classReflection->isAbstract()
-                    || $classReflection->isTrait()
-                ) {
-                    continue;
-                }
-
-                $className = $classReflection->getName();
-
-                if (
-                    $namespaceScan->suffix !== null
-                    && str_ends_with(
-                        $className,
-                        $namespaceScan->suffix
-                    ) === false
-                ) {
-                    continue;
-                }
-
-                $service = $builder->set(
-                    $className,
+            try {
+                $sourceLocator = new DirectoriesSourceLocator(
+                    $namespaceScan->paths,
+                    new BetterReflection()->astLocator()
                 );
 
-                foreach ($namespaceScan->tags as $tag) {
-                    $service->withTag($tag);
-                }
+                $reflector = new DefaultReflector($sourceLocator);
 
-                if ($namespaceScan->autowire) {
-                    $service->autowire();
+                $classReflections = $reflector->reflectAllClasses();
+
+                foreach ($classReflections as $classReflection) {
+                    if ($classReflection->isInterface()
+                        || $classReflection->isAbstract()
+                        || $classReflection->isTrait()
+                    ) {
+                        continue;
+                    }
+
+                    $className = $classReflection->getName();
+
+                    if (
+                        $namespaceScan->suffix !== null
+                        && str_ends_with(
+                            $className,
+                            $namespaceScan->suffix
+                        ) === false
+                    ) {
+                        continue;
+                    }
+
+                    $service = $builder->set(
+                        $className,
+                    );
+
+                    foreach ($namespaceScan->tags as $tag) {
+                        $service->withTag($tag);
+                    }
+
+                    if ($namespaceScan->autowire) {
+                        $service->autowire();
+                    }
                 }
+            } catch (InvalidDirectory $exception) {
+                throw new NamespaceScanException(
+                    sprintf(
+                        'Unable to process namespace scan: %s',
+                        $exception->getMessage()
+                    )
+                );
             }
         }
     }

@@ -8,6 +8,7 @@ use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\Exception\CircularDependencyException;
 use Jadob\Container\Compiler\Exception\MissingParentServiceProviderException;
 use Jadob\Container\Compiler\Exception\MissingRequiredParametersException;
+use Jadob\Container\Compiler\Exception\NamespaceScanException;
 use Jadob\Container\Config\ConfigNodeFinderInterface;
 use Jadob\Container\Fixtures\CircularServiceProviders\BarServiceProvider;
 use Jadob\Container\Fixtures\CircularServiceProviders\FooServiceProvider;
@@ -167,5 +168,27 @@ final class ContainerCompilerTest extends TestCase
 
         self::assertFalse($graph->has(SomethingHandler::class));
         self::assertTrue($graph->has(DoSomethingCommand::class));
+    }
+
+    public function testNamespaceScanWillCauseAnExceptionOnNonExistingDirectoryScan(): void
+    {
+        $nonExistingDirectory = __DIR__.'/../Fixtures/NonExistingDirectory';
+        $builder = new ContainerBuilder();
+        $builder->configureNamespaceScan()
+            ->in($nonExistingDirectory);
+        
+        $this->expectException(NamespaceScanException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Unable to process namespace scan: "%s" does not exist',
+                $nonExistingDirectory
+            )
+        );
+
+        $this
+            ->compiler
+            ->compile(
+                $builder,
+            );
     }
 }
