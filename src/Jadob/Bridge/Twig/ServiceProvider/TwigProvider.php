@@ -1,13 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jadob\Bridge\Twig\ServiceProvider;
 
 use Jadob\Bridge\Twig\AppContext;
-use Jadob\Bridge\Twig\Extension\AliasedAssetPathExtension;
-use Jadob\Bridge\Twig\Extension\DebugExtension;
-use Jadob\Bridge\Twig\Extension\PathExtension;
-use Jadob\Bridge\Twig\Extension\ViteManifestAssetExtension;
+use Jadob\Bridge\Twig\Configuration\TwigConfig;
+use Jadob\Bridge\Twig\Extension\TranslationExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Container\ParameterStore;
@@ -206,20 +205,12 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
 //        }
 //
 //
-        $builder
-            ->set(TranslationExtension::class)
-            ->withTag('twig.extension');
 
-//        $services['twig.translator_extension'] = [
-//            'tags' => ['twig.extension'],
-        ///            'factory' => static function (TranslatorInterface $translator): TranslationExtension {
-//                return new TranslationExtension(
-//                    $translator
-//                );
-//            }
-        ///        ];
-//
-//       // return $services;
+        if($config->translationExtensionEnabled) {
+            $builder
+                ->set(TranslationExtension::class)
+                ->withTag('twig.extension');
+        }
     }
 
     public function getParentServiceProviders(): array
