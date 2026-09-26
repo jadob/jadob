@@ -8,20 +8,19 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * @see     https://vite.dev/guide/backend-integration
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
+ * @see https://vite.dev/guide/backend-integration
+ * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
  */
 class ViteManifestAssetExtension extends AbstractExtension
 {
     /**
-     * @var string[]
+     * @var array<string, array{file: non-empty-string}>
      */
     protected array $manifest;
 
     /**
-     *
-     * @param string[] $manifest
+     * @param array<string, array{file: non-empty-string}> $manifest
      */
     public function __construct(array $manifest)
     {
