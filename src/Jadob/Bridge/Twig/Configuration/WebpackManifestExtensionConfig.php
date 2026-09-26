@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Twig\ServiceProvider;
+namespace Jadob\Bridge\Twig\Configuration;
 
 final class WebpackManifestExtensionConfig
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Jadob\Bridge\Twig\ServiceProvider;
+namespace Jadob\Bridge\Twig\Configuration;
 
 use Jadob\Container\Config\ConfigNodeInterface;
 
@@ -13,7 +13,8 @@ final class TwigConfig implements ConfigNodeInterface
         private(set) array $templatePaths,
         private(set) array $globals = [],
         private(set) ?ViteManifestExtensionConfig $viteManifestExtensionConfig = null,
-        private(set) ?WebpackManifestExtensionConfig $webpackManifestExtensionConfig = null
+        private(set) ?WebpackManifestExtensionConfig $webpackManifestExtensionConfig = null,
+        private(set) bool $translationExtensionEnabled = false,
     ) {
     }
 
@@ -56,6 +57,13 @@ final class TwigConfig implements ConfigNodeInterface
         $this->webpackManifestExtensionConfig = new WebpackManifestExtensionConfig();
 
         return $this->webpackManifestExtensionConfig;
+    }
+
+    public function enableTranslationExtension(): self
+    {
+        $this->translationExtensionEnabled = true;
+
+        return $this;
     }
 
     public function withGlobal(
