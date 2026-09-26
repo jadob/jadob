@@ -14,6 +14,14 @@ use function json_decode;
  */
 final class WebpackManifestAssetExtension extends AbstractExtension
 {
+    /**
+     * @param array<non-empty-string, non-empty-string> $manifest
+     */
+    public function __construct(
+        private array $manifest
+    ) {
+    }
+
     public static function fromFile(
         string $manifestPath,
     ): WebpackManifestAssetExtension {
@@ -25,14 +33,6 @@ final class WebpackManifestAssetExtension extends AbstractExtension
                 true
             )
         );
-    }
-
-    /**
-     * @param array<non-empty-string, non-empty-string> $manifest
-     */
-    public function __construct(
-        private array $manifest
-    ) {
     }
 
     /**
