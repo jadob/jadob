@@ -6,6 +6,7 @@ namespace Jadob\Contracts\Framework\Module;
 
 use Jadob\Contracts\DependencyInjection\CompilerExtensionInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Router\RouteCollection;
 
 interface ModuleInterface
 {
@@ -19,4 +20,7 @@ interface ModuleInterface
      * @return array<int, CompilerExtensionInterface>
      */
     public function getContainerCompilerExtensions(): array;
+
+    public function getRoutes(): ?RouteCollection;
+
 }
