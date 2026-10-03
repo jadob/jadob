@@ -5,6 +5,7 @@ namespace Jadob\Auth\Module;
 
 use Jadob\Auth\ServiceProvider\AuthenticationServiceProvider;
 use Jadob\Contracts\Framework\Module\ModuleInterface;
+use Jadob\Router\RouteCollection;
 
 final readonly class AuthenticationModule implements ModuleInterface
 {
@@ -18,5 +19,10 @@ final readonly class AuthenticationModule implements ModuleInterface
     public function getContainerCompilerExtensions(): array
     {
         return [];
+    }
+
+    public function getRoutes(): ?RouteCollection
+    {
+        return null;
     }
 }
