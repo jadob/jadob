@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Jadob\Framework\Module;
 
 use Jadob\Contracts\Framework\Module\ModuleInterface;
-use Jadob\Framework\DependencyInjection\CompilerExtension\InjectLoggerExtension;
-use Jadob\Framework\DependencyInjection\CompilerExtension\RegisterConsoleCommandsExtension;
 use Jadob\Framework\DependencyInjection\CompilerExtension\RegisterEventListenersExtension;
 use Jadob\Framework\ServiceProvider\ConsoleProvider;
 use Jadob\Framework\ServiceProvider\ErrorHandlerServiceProvider;
 use Jadob\Framework\ServiceProvider\EventDispatcherProvider;
 use Jadob\Framework\ServiceProvider\LoggerServiceProvider;
 use Jadob\Framework\ServiceProvider\SessionProvider;
+use Jadob\Router\RouteCollection;
 use Jadob\Router\ServiceProvider\RouterServiceProvider;
 
 final readonly class FrameworkModule implements ModuleInterface
@@ -36,4 +35,13 @@ final readonly class FrameworkModule implements ModuleInterface
             500 => new RegisterEventListenersExtension(),
         ];
     }
+
+
+    public function getRoutes(): ?RouteCollection
+    {
+        return null;
+    }
+
+
+
 }
