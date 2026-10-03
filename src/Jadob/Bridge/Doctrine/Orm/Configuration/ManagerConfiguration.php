@@ -34,5 +34,7 @@ final class ManagerConfiguration
     public function withEntityPath(string $path): self
     {
         $this->entityPaths[] = $path;
+
+        return $this;
     }
 }
