@@ -29,7 +29,8 @@
     "friendsofphp/proxy-manager-lts": "^1.0",
     "roave/better-reflection": "^6.71",
     "dynamite/dynamite": "^0.0.7",
-    "sentry/sentry": "^4.30"
+    "sentry/sentry": "^4.30",
+    "doctrine/migrations": "^3.9"
   },
   "require-dev": {
     "phpstan/phpstan-strict-rules": "^2.0",
