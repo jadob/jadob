@@ -8,6 +8,8 @@ use Jadob\Container\Builder\ContainerBuilder;
 use Jadob\Container\Compiler\ContainerCompiler;
 use Jadob\Container\Config\FilesystemConfigNodeFinder;
 use Jadob\Container\ServiceGraphContainer;
+use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
+use Jadob\Contracts\Framework\Module\ModuleInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Core\Dispatcher;
 use Jadob\Core\Exception\KernelException;
@@ -37,6 +39,10 @@ readonly class Application
     private ContainerInterface $container;
     private RequestContextStore $requestContextStore;
 
+    /**
+     * @param list<ServiceProviderInterface> $serviceProviders
+     * @param list<ModuleInterface> $modules
+     */
     public function __construct(
         private string $env,
         private BootstrapInterface $bootstrap,
@@ -66,6 +72,7 @@ readonly class Application
             $this->modules
         );
 
+        /** @var list<ServiceProviderInterface> $serviceProviders */
         $serviceProviders = array_merge(
             $this->bootstrap->getServiceProviders($this->env),
             $this->serviceProviders
@@ -162,11 +169,13 @@ readonly class Application
 
             /** @var LoggerFactory $loggerFactory */
             $loggerFactory = $this->container->get(LoggerFactory::class);
+            /** @var EventDispatcherInterface $eventDispatcher */
+            $eventDispatcher = $this->container->get(EventDispatcherInterface::class);
 
             $dispatcher = new Dispatcher(
                 $this->container,
                 $loggerFactory->getLoggerForChannel('dispatcher'),
-                $this->container->get(EventDispatcherInterface::class)
+                $eventDispatcher,
             );
 
             $response = $dispatcher->executeRequest($context);
@@ -201,7 +210,10 @@ readonly class Application
     {
         $this->build();
 
-        return $this->container->get(CliApplication::class);
+        /** @var CliApplication $console */
+        $console = $this->container->get(CliApplication::class);
+
+        return $console;
     }
 
     private function registerNativeServices(
