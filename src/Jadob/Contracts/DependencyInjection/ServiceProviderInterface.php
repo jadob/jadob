@@ -9,7 +9,7 @@ use Jadob\Container\Config\ConfigNodeInterface;
 /**
  * Groups related build-time service registrations behind a reusable,
  * stateless package extension point.
- * @template TConfigNode of ConfigNodeInterface|null = null
+ * @template TConfigNode of ConfigNodeInterface|null = ConfigNodeInterface|null
  */
 interface ServiceProviderInterface
 {
