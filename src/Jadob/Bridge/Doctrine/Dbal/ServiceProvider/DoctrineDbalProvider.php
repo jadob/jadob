@@ -27,10 +27,7 @@ use Psr\Log\LoggerInterface;
 use function count;
 
 /**
- * Class DoctrineDBALProvider
- *
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @implements ServiceProviderInterface<DbalConfiguration>
  */
 class DoctrineDbalProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
@@ -45,12 +42,6 @@ class DoctrineDbalProvider implements ServiceProviderInterface, ParentServicePro
         return 'doctrine_dbal';
     }
 
-    /**
-     * @param ContainerBuilderInterface $builder
-     * @param DbalConfiguration $config
-     * @return void
-     * @throws Exception
-     */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         $this->registerTypes($config->types);

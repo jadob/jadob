@@ -22,6 +22,9 @@ use Jadob\Framework\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 
+/**
+ * @implements ServiceProviderInterface<MigrationsConfiguration>
+ */
 final readonly class DoctrineMigrationsProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
     public function getConfigNode(): string
@@ -29,11 +32,6 @@ final readonly class DoctrineMigrationsProvider implements ServiceProviderInterf
         return 'doctrine_migrations';
     }
 
-    /**
-     * @param ContainerBuilderInterface $builder
-     * @param MigrationsConfiguration $config
-     * @return void
-     */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         $builder
