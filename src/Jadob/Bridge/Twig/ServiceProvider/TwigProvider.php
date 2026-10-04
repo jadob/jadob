@@ -209,7 +209,8 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
         if($config->translationExtensionEnabled) {
             $builder
                 ->set(TranslationExtension::class)
-                ->withTag('twig.extension');
+                ->withTag('twig.extension')
+                ->autowire();
         }
     }
 
