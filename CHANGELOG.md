@@ -6,11 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.10.1] - 2026-10-04
+
 ### Added
 - [BridgeDoctrineMigrations] Added object-oriented config for migrations
+- Modules now have the possibility to register their own routes
+- [Container] built-in types without defined argument are now throwing an exception, preventing container from invalid build
+- [Container] dedicated exception is now thrown when namespace scanning is performed on missing directory
+- [TwigBridge] `TranslationExtension` is now possible to enable in `TwigProvider` configuration
 
 ### Changed
 - [Container] non existing paths in namespace scan are now throwing `NamespaceScanException`
+- [Container] null is now possible to be passed as an argument
+- Some of the config classes have been moved to separate namespaces
+
+### Fixed
+- [DoctrineOrmBridge] added missing return statement in `ManagerConfiguration::withEntityPath`
 
 ## [0.10.0] - 2026-09-19
 
