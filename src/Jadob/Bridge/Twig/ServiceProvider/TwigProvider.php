@@ -9,24 +9,18 @@ use Jadob\Bridge\Twig\Configuration\TwigConfig;
 use Jadob\Bridge\Twig\Extension\TranslationExtension;
 use Jadob\Bridge\Twig\Extension\WebpackManifestAssetExtension;
 use Jadob\Container\Config\ConfigNodeInterface;
-use Jadob\Container\ParameterStore;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Core\BootstrapInterface;
 use Jadob\Framework\ServiceProvider\SymfonyTranslatorProvider;
-use Jadob\Router\Router;
 use ReflectionClass;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
-use function file_get_contents;
 use function is_int;
-use function json_decode;
 use function ltrim;
 use function sprintf;
 
@@ -88,13 +82,10 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
                 }
             );
 
-
         $builder->bind(
             LoaderInterface::class,
             FilesystemLoader::class
         );
-
-
 
         $environmentClosure = static function (
             LoaderInterface $loader,
@@ -157,54 +148,6 @@ final readonly class TwigProvider implements ServiceProviderInterface, ParentSer
                     }
                 );
         }
-//
-//
-//        $services[PathExtension::class] = [
-//            'tags' => ['twig.extension'],
-//            'factory' => static function (Router $router): PathExtension {
-//                return new PathExtension($router);
-//            }
-//        ];
-//
-//        $services[DebugExtension::class] = [
-//            'tags' => ['twig.extension'],
-//            'factory' => static function (): DebugExtension {
-//                return new DebugExtension();
-//            }
-//        ];
-//
-//        $services[AliasedAssetPathExtension::class] = [
-//            'tags' => ['twig.extension'],
-//            'factory' => static function () use ($config): AliasedAssetPathExtension {
-//                return new AliasedAssetPathExtension($config['extensions']['aliased_paths'] ?? []);
-//            }
-//        ];
-//
-//
-//        if (isset($config['extensions']['vite_manifest'])) {
-//            $services['twig.vite_manifest_extension'] = [
-//                'tags' => ['twig.extension'],
-//                'factory' => static function (ParameterStore $parameterStore) use ($config): ViteManifestAssetExtension {
-//                    $webpackManifestConfig = $config['extensions']['vite_manifest'];
-//                    $manifestJsonLocation =
-//                        sprintf('%s/%s',
-//                            $parameterStore->get('root_dir'),
-//                            ltrim((string) $webpackManifestConfig['manifest_json_location'], '/')
-//                        );
-//
-//                    $manifest = json_decode(
-//                        file_get_contents($manifestJsonLocation),
-//                        true,
-//                        512,
-//                        JSON_THROW_ON_ERROR
-//                    );
-//
-//                    return new ViteManifestAssetExtension($manifest);
-//                }
-//            ];
-//        }
-//
-//
 
         if($config->translationExtensionEnabled) {
             $builder
