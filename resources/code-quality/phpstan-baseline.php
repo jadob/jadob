@@ -2,6 +2,186 @@
 
 $ignoreErrors = [];
 $ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Auth\\\\AccessToken\\\\AccessToken\\:\\:__construct\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#',
+	'identifier' => 'missingType.iterableValue',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/AccessToken/AccessToken.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to function is_array\\(\\) with array\\<Jadob\\\\Auth\\\\AccessToken\\\\AccessToken\\> will always evaluate to true\\.$#',
+	'identifier' => 'function.alreadyNarrowedType',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/AccessToken/AccessTokenStorage.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access offset \\(float\\|int\\) on mixed\\.$#',
+	'identifier' => 'offsetAccess.nonOffsetAccessible',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/AccessToken/AccessTokenStorage.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot use \\+\\+ on mixed\\.$#',
+	'identifier' => 'postInc.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/AccessToken/AccessTokenStorage.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Strict comparison using \\=\\=\\= between array\\<Jadob\\\\Auth\\\\AccessToken\\\\AccessToken\\> and null will always evaluate to false\\.$#',
+	'identifier' => 'identical.alwaysFalse',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/AccessToken/AccessTokenStorage.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Auth\\\\EventListener\\\\AuthenticationEventListener\\:\\:getListenersForEvent\\(\\) return type has no value type specified in iterable type iterable\\.$#',
+	'identifier' => 'missingType.iterableValue',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/EventListener/AuthenticationEventListener.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Auth\\\\Firewall\\\\Firewall\\:\\:getIdentityPicker\\(\\) should return Jadob\\\\Auth\\\\Identity\\\\IdentityPickerInterface but returns Jadob\\\\Auth\\\\Identity\\\\IdentityPickerInterface\\|null\\.$#',
+	'identifier' => 'return.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/Firewall/Firewall.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Auth\\\\Module\\\\AuthenticationModule\\:\\:getServiceProviders\\(\\) should return list\\<Jadob\\\\Contracts\\\\DependencyInjection\\\\ServiceProviderInterface\\> but returns array\\{600\\: Jadob\\\\Auth\\\\ServiceProvider\\\\AuthenticationServiceProvider\\}\\.$#',
+	'identifier' => 'return.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/Module/AuthenticationModule.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
+	'identifier' => 'foreach.nonIterable',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$entryPointServiceId on mixed\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$firewalls on Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$identityPickerServiceId on mixed\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 2,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$identityProviderServiceId on mixed\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$requestMatcherServiceId on mixed\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot call method getAuthenticators\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot call method isIdentityStackingEnabled\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot call method isStateless\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, Closure\\(string\\)\\: mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$id of method Psr\\\\Container\\\\ContainerInterface\\:\\:get\\(\\) expects string, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 4,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$entryPoint of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects Jadob\\\\Auth\\\\EntryPointInterface\\|null, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$identityPicker of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects Jadob\\\\Auth\\\\Identity\\\\IdentityPickerInterface\\|null, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$identityProvider of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects Jadob\\\\Auth\\\\Identity\\\\IdentityProviderInterface, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$identityStackingEnabled of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects bool, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$name of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects string, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$requestMatcher of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects Symfony\\\\Component\\\\HttpFoundation\\\\RequestMatcherInterface, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$stateless of class Jadob\\\\Auth\\\\Firewall\\\\Firewall constructor expects bool, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Possibly invalid array key type mixed\\.$#',
+	'identifier' => 'offsetAccess.invalidOffset',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/AuthenticationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Auth\\\\ServiceProvider\\\\FirewallConfig\\:\\:\\$authenticators \\(array\\<class\\-string\\>\\) does not accept array\\<string\\>\\.$#',
+	'identifier' => 'assign.propertyType',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/FirewallConfig.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Auth\\\\ServiceProvider\\\\FirewallConfig\\:\\:\\$name is never read, only written\\.$#',
+	'identifier' => 'property.onlyWritten',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Auth/ServiceProvider/FirewallConfig.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Cannot access offset \'AccessKeyId\' on mixed\\.$#',
 	'identifier' => 'offsetAccess.nonOffsetAccessible',
 	'count' => 1,
@@ -68,496 +248,202 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Aws/Ses/SesMailer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Common\\\\ServiceProvider\\\\DoctrineCommonServiceProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Common/ServiceProvider/DoctrineCommonServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Common\\\\ServiceProvider\\\\DoctrineCommonServiceProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Common/ServiceProvider/DoctrineCommonServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:addConnection\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:getConnections\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:getMappingTypes\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:getTypes\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:\\$connections \\(array\\<string, array\\{configuration\\: array\\<string\\>, default\\: bool\\}\\>\\) does not accept non\\-empty\\-array\\<string, array\\{configuration\\: array, default\\: bool\\}\\>\\.$#',
+	'message' => '#^Property Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\Configuration\\\\DbalConfiguration\\:\\:\\$types \\(array\\<string, class\\-string\\>\\) does not accept array\\<string, string\\>\\.$#',
 	'identifier' => 'assign.propertyType',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/Configuration/DbalConfiguration.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\:\\:\\$types \\(array\\<string, class\\-string\\>\\) does not accept array\\<string, string\\>\\.$#',
-	'identifier' => 'assign.propertyType',
+	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\Configuration\\\\DbalConnectionConfig\\:\\:withMappingType\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/Configuration/DbalConfiguration.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/Configuration/DbalConnectionConfig.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function should return Doctrine\\\\DBAL\\\\Connection but returns object\\.$#',
+	'message' => '#^Anonymous function should return Doctrine\\\\DBAL\\\\Connection but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Binary operation "\\." between mixed and \'/dbal\\.log\' results in an error\\.$#',
-	'identifier' => 'binaryOp.invalid',
+	'message' => '#^Cannot access property \\$connections on Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\Configuration\\\\DbalConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'configuration\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
+	'message' => '#^Cannot access property \\$types on Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\Configuration\\\\DbalConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'default\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
+	'message' => '#^PHPDoc tag @var with type array\\<string, string\\> is not subtype of native type null\\.$#',
+	'identifier' => 'varTag.nativeType',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getConnections\\(\\) on array\\|Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\|null\\.$#',
-	'identifier' => 'method.nonObject',
+	'message' => '#^Parameter \\#2 \\$config \\(Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\Configuration\\\\DbalConfiguration\\|null\\) of method Jadob\\\\Bridge\\\\Doctrine\\\\Dbal\\\\ServiceProvider\\\\DoctrineDbalProvider\\:\\:register\\(\\) should be contravariant with parameter \\$config \\(Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\) of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ServiceProviderInterface\\:\\:register\\(\\)$#',
+	'identifier' => 'method.childParameterType',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getLogsDir\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getMappingTypes\\(\\) on array\\|Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\|null\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getTypes\\(\\) on array\\|Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\Configuration\\\\DbalConfiguration\\|null\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\ServiceProvider\\\\DoctrineDBALProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\ServiceProvider\\\\DoctrineDBALProvider\\:\\:resolveConnectionConfiguration\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\ServiceProvider\\\\DoctrineDBALProvider\\:\\:resolveConnectionConfiguration\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$configuration of method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\ServiceProvider\\\\DoctrineDBALProvider\\:\\:resolveConnectionConfiguration\\(\\) expects array, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$dsn of method Doctrine\\\\DBAL\\\\Tools\\\\DsnParser\\:\\:parse\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$params of static method Doctrine\\\\DBAL\\\\DriverManager\\:\\:getConnection\\(\\) expects array\\{application_name\\?\\: string, charset\\?\\: string, dbname\\?\\: string, defaultTableOptions\\?\\: array\\<string, mixed\\>, driver\\?\\: \'ibm_db2\'\\|\'mysqli\'\\|\'oci8\'\\|\'pdo_mysql\'\\|\'pdo_oci\'\\|\'pdo_pgsql\'\\|\'pdo_sqlite\'\\|\'pdo_sqlsrv\'\\|\'pgsql\'\\|\'sqlite3\'\\|\'sqlsrv\', driverClass\\?\\: class\\-string\\<Doctrine\\\\DBAL\\\\Driver\\>, driverOptions\\?\\: array\\<mixed\\>, host\\?\\: string, \\.\\.\\.\\}, array given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$types of method Jadob\\\\Bridge\\\\Doctrine\\\\DBAL\\\\ServiceProvider\\\\DoctrineDBALProvider\\:\\:registerTypes\\(\\) expects array\\<string, class\\-string\\>, array given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$doctrineType of method Doctrine\\\\DBAL\\\\Platforms\\\\AbstractPlatform\\:\\:registerDoctrineTypeMapping\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#2 \\$type of static method Doctrine\\\\DBAL\\\\Types\\\\Type\\:\\:addType\\(\\) expects class\\-string\\<Doctrine\\\\DBAL\\\\Types\\\\Type\\>\\|Doctrine\\\\DBAL\\\\Types\\\\Type, class\\-string given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/DBAL/ServiceProvider/DoctrineDBALProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function has invalid return type Doctrine\\\\Migrations\\\\DependencyFactory\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Parameter \\$defaultConnectionName of class Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineConnectionRegistry constructor expects string, string\\|null given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Dbal/ServiceProvider/DoctrineDbalProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$allOrNothing on Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\Configuration\\\\MigrationsConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function should return Doctrine\\\\Migrations\\\\DependencyFactory but returns mixed\\.$#',
-	'identifier' => 'return.type',
+	'message' => '#^Cannot access property \\$checkDatabasePlatform on Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\Configuration\\\\MigrationsConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to static method fromEntityManager\\(\\) on an unknown class Doctrine\\\\Migrations\\\\DependencyFactory\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Cannot access property \\$customTemplate on Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\Configuration\\\\MigrationsConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to static method withSimpleDefault\\(\\) on an unknown class Doctrine\\\\Migrations\\\\Configuration\\\\EntityManager\\\\ManagerRegistryEntityManager\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Cannot access property \\$migrationPaths on Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\Configuration\\\\MigrationsConfiguration\\|null\\.$#',
+	'identifier' => 'property.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\DependencyFactory not found\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Parameter \\#1 \\$builder of method Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\ServiceProvider\\\\DoctrineMigrationsProvider\\:\\:registerConsoleCommands\\(\\) expects Jadob\\\\Container\\\\Builder\\\\ContainerBuilder, Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerBuilderInterface given\\.$#',
+	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\DiffCommand not found\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Parameter \\#1 \\$path of function dirname expects string, string\\|false given\\.$#',
+	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\DumpSchemaCommand not found\\.$#',
-	'identifier' => 'class.notFound',
+	'message' => '#^Parameter \\#2 \\$config \\(Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\Configuration\\\\MigrationsConfiguration\\|null\\) of method Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\ServiceProvider\\\\DoctrineMigrationsProvider\\:\\:register\\(\\) should be contravariant with parameter \\$config \\(Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\) of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ServiceProviderInterface\\:\\:register\\(\\)$#',
+	'identifier' => 'method.childParameterType',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\ExecuteCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\GenerateCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\LatestCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\ListCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\MigrateCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\RollupCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\StatusCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\SyncMetadataCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\VersionCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Configuration\\\\Migration\\\\ConfigurationArray not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\DiffCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\DumpSchemaCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\ExecuteCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\GenerateCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\LatestCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\ListCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\MigrateCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\RollupCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\StatusCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\SyncMetadataCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Instantiated class Doctrine\\\\Migrations\\\\Tools\\\\Console\\\\Command\\\\VersionCommand not found\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\ServiceProvider\\\\DoctrineMigrationsProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Migrations\\\\ServiceProvider\\\\DoctrineMigrationsProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$dependencyFactory of anonymous function has invalid type Doctrine\\\\Migrations\\\\DependencyFactory\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 11,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Migrations/ServiceProvider/DoctrineMigrationsProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\Console\\\\MultipleEntityManagerProvider\\:\\:getDefaultManager\\(\\) should return Doctrine\\\\ORM\\\\EntityManagerInterface but returns Doctrine\\\\Persistence\\\\ObjectManager\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/Console/MultipleEntityManagerProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/Console/MultipleEntityManagerProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\Console\\\\MultipleEntityManagerProvider\\:\\:getManager\\(\\) should return Doctrine\\\\ORM\\\\EntityManagerInterface but returns Doctrine\\\\Persistence\\\\ObjectManager\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/Console/MultipleEntityManagerProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/Console/MultipleEntityManagerProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function should return Doctrine\\\\ORM\\\\EntityManager but returns Doctrine\\\\Persistence\\\\ObjectManager\\.$#',
+	'message' => '#^Anonymous function should return Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\ObjectManagerFactoryInterface but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#',
-	'identifier' => 'foreach.nonIterable',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'message' => '#^Call to function is_string\\(\\) with string will always evaluate to true\\.$#',
+	'identifier' => 'function.alreadyNarrowedType',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Binary operation "\\." between mixed and \'/\' results in an error\\.$#',
-	'identifier' => 'binaryOp.invalid',
+	'message' => '#^Class Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\Console\\\\MultipleEntityManagerProvider referenced with incorrect case\\: Jadob\\\\Bridge\\\\Doctrine\\\\Orm\\\\Console\\\\MultipleEntityManagerProvider\\.$#',
+	'identifier' => 'class.nameCase',
 	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'default\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'entity_paths\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'managers\' on array\\|Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'string_functions\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getCacheDir\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getRootDir\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\ServiceProvider\\\\DoctrineORMProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\ServiceProvider\\\\DoctrineORMProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Closure is incompatible with native type array\\.$#',
-	'identifier' => 'return.phpDocType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$conn of class Doctrine\\\\ORM\\\\EntityManager constructor expects Doctrine\\\\DBAL\\\\Connection, object given\\.$#',
+	'message' => '#^Parameter \\#1 \\$builder of method Jadob\\\\Bridge\\\\Doctrine\\\\Orm\\\\ServiceProvider\\\\DoctrineOrmProvider\\:\\:registerOrmConsoleCommands\\(\\) expects Jadob\\\\Container\\\\Builder\\\\ContainerBuilder, Jadob\\\\Contracts\\\\DependencyInjection\\\\ContainerBuilderInterface given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$name of method Doctrine\\\\ORM\\\\Configuration\\:\\:addCustomStringFunction\\(\\) expects string, mixed given\\.$#',
+	'message' => '#^Parameter \\#1 \\$path of function dirname expects string, string\\|false given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$string of function ltrim expects string, mixed given\\.$#',
+	'message' => '#^Parameter \\#2 \\$config \\(Jadob\\\\Bridge\\\\Doctrine\\\\Orm\\\\Configuration\\\\DoctrineOrmConfig\\|null\\) of method Jadob\\\\Bridge\\\\Doctrine\\\\Orm\\\\ServiceProvider\\\\DoctrineOrmProvider\\:\\:register\\(\\) should be contravariant with parameter \\$config \\(Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\) of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ServiceProviderInterface\\:\\:register\\(\\)$#',
+	'identifier' => 'method.childParameterType',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$conn of class Doctrine\\\\ORM\\\\EntityManager constructor expects Doctrine\\\\DBAL\\\\Connection, object given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$className of method Doctrine\\\\ORM\\\\Configuration\\:\\:addCustomStringFunction\\(\\) expects \\(callable\\(string\\)\\: Doctrine\\\\ORM\\\\Query\\\\AST\\\\Functions\\\\FunctionNode\\)\\|class\\-string\\<Doctrine\\\\ORM\\\\Query\\\\AST\\\\Functions\\\\FunctionNode\\>, mixed given\\.$#',
+	'message' => '#^Parameter \\$connectionRegistry of class Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry constructor expects Doctrine\\\\Persistence\\\\ConnectionRegistry, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#3 \\$eventManager of class Doctrine\\\\ORM\\\\EntityManager constructor expects Doctrine\\\\Common\\\\EventManager\\|null, mixed given\\.$#',
+	'message' => '#^Parameter \\$defaultManagerName of class Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry constructor expects string, string\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Return type \\(array\\<class\\-string\\>\\) of method Jadob\\\\Bridge\\\\Doctrine\\\\ORM\\\\ServiceProvider\\\\DoctrineORMProvider\\:\\:getParentServiceProviders\\(\\) should be covariant with return type \\(list\\<class\\-string\\>\\) of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ParentServiceProviderInterface\\:\\:getParentServiceProviders\\(\\)$#',
+	'message' => '#^Return type \\(array\\<class\\-string\\>\\) of method Jadob\\\\Bridge\\\\Doctrine\\\\Orm\\\\ServiceProvider\\\\DoctrineOrmProvider\\:\\:getParentServiceProviders\\(\\) should be covariant with return type \\(list\\<class\\-string\\>\\) of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ParentServiceProviderInterface\\:\\:getParentServiceProviders\\(\\)$#',
 	'identifier' => 'method.childReturnType',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/ORM/ServiceProvider/DoctrineORMProvider.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Orm/ServiceProvider/DoctrineOrmProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot call method getRepository\\(\\) on Doctrine\\\\Persistence\\\\ObjectManager\\|null\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry\\:\\:getConnectionNames\\(\\) should return array\\<string, string\\> but returns list\\<\\(int\\|string\\)\\>\\.$#',
+	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineConnectionRegistry\\:\\:getConnectionNames\\(\\) should return array\\<string, string\\> but returns list\\<string\\>\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineConnectionRegistry.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Instanceof between Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\ObjectManagerFactoryInterface and Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\ObjectManagerFactoryInterface will always evaluate to true\\.$#',
+	'identifier' => 'instanceof.alwaysTrue',
+	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry\\:\\:getConnections\\(\\) should return array\\<string, object\\> but returns array\\<Doctrine\\\\DBAL\\\\Connection\\>\\.$#',
+	'message' => '#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, string\\|null given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Possibly invalid array key type string\\|null\\.$#',
+	'identifier' => 'offsetAccess.invalidOffset',
+	'count' => 3,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\ObjectManagerFactory\\:\\:build\\(\\) should return Doctrine\\\\Persistence\\\\ObjectManager but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry\\:\\:getManagerNames\\(\\) should return array\\<string, string\\> but returns list\\<\\(int\\|string\\)\\>\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\DoctrineManagerRegistry\\:\\:getManagers\\(\\) should return array\\<string, Doctrine\\\\Persistence\\\\ObjectManager\\> but returns array\\<Doctrine\\\\Persistence\\\\ObjectManager\\>\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Only booleans are allowed in an if condition, string\\|null given\\.$#',
-	'identifier' => 'if.condNotBoolean',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/ObjectManagerFactory.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$dynamoDbClientId on Jadob\\\\Bridge\\\\Dynamite\\\\ServiceProvider\\\\DynamiteConfig\\|null\\.$#',
@@ -614,30 +500,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Dynamite/ServiceProvider/DynamiteProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\ProxyManager\\\\ServiceProvider\\\\ProxyManagerProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/ProxyManager/ServiceProvider/ProxyManagerProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\ProxyManager\\\\ServiceProvider\\\\ProxyManagerProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/ProxyManager/ServiceProvider/ProxyManagerProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$callback of function spl_autoload_register expects \\(callable\\(string\\)\\: void\\)\\|null, ProxyManager\\\\Autoloader\\\\AutoloaderInterface given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/ProxyManager/ServiceProvider/ProxyManagerProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/ProxyManager/ServiceProvider/ProxyManagerProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Bridge\\\\Symfony\\\\Form\\\\ServiceProvider\\\\FormsConfig\\:\\:__construct\\(\\) has parameter \\$formThemes with no value type specified in iterable type array\\.$#',
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
@@ -666,6 +528,18 @@ $ignoreErrors[] = [
 	'identifier' => 'method.childParameterType',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Symfony/Form/ServiceProvider/SymfonyFormProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Configuration\\\\TwigConfig\\:\\:__construct\\(\\) has parameter \\$globals with no value type specified in iterable type array\\.$#',
+	'identifier' => 'missingType.iterableValue',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Configuration/TwigConfig.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Configuration\\\\TwigConfig\\:\\:__construct\\(\\) has parameter \\$templatePaths with no value type specified in iterable type array\\.$#',
+	'identifier' => 'missingType.iterableValue',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Configuration/TwigConfig.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$serviceId of static method Jadob\\\\Contracts\\\\DependencyInjection\\\\Reference\\:\\:service\\(\\) expects string, mixed given\\.$#',
@@ -734,16 +608,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/PathExtension.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\ViteManifestAssetExtension\\:\\:getAssetFromManifest\\(\\) should return string but returns mixed\\.$#',
-	'identifier' => 'return.type',
+	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\Extension\\\\TranslationExtension\\:\\:translate\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#',
+	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/ViteManifestAssetExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Offset \'file\' does not exist on string\\.$#',
-	'identifier' => 'offsetAccess.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/ViteManifestAssetExtension.php',
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/TranslationExtension.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#',
@@ -756,18 +624,6 @@ $ignoreErrors[] = [
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/Extension/WebpackManifestAssetExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\ServiceProvider\\\\TwigConfig\\:\\:__construct\\(\\) has parameter \\$globals with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigConfig.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Bridge\\\\Twig\\\\ServiceProvider\\\\TwigConfig\\:\\:__construct\\(\\) has parameter \\$templatePaths with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigConfig.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Anonymous function has an unused use \\$builder\\.$#',
@@ -807,6 +663,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$templatePaths on Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\.$#',
+	'identifier' => 'property.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigProvider.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Cannot access property \\$translationExtensionEnabled on Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\|null\\.$#',
 	'identifier' => 'property.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Twig/ServiceProvider/TwigProvider.php',
@@ -1028,7 +890,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/ContainerCompiler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$value of method Jadob\\\\Container\\\\ServiceGraph\\:\\:addParameter\\(\\) expects string, mixed given\\.$#',
+	'message' => '#^Parameter \\#2 \\$value of method Jadob\\\\Container\\\\ServiceGraph\\:\\:addParameter\\(\\) expects int\\|string, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/ContainerCompiler.php',
@@ -1040,13 +902,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/Extension/AutowireServices.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$id of method Jadob\\\\Container\\\\ServiceGraph\\:\\:has\\(\\) expects string, mixed given\\.$#',
-	'identifier' => 'argument.type',
+	'message' => '#^Cannot call method isBuiltin\\(\\) on ReflectionType\\|null\\.$#',
+	'identifier' => 'method.nonObject',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/Extension/AutowireServices.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$name of method Jadob\\\\Contracts\\\\DependencyInjection\\\\ServiceDefinition\\:\\:withArgument\\(\\) expects string, mixed given\\.$#',
+	'message' => '#^Parameter \\#1 \\$id of method Jadob\\\\Container\\\\ServiceGraph\\:\\:has\\(\\) expects string, mixed given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/Extension/AutowireServices.php',
@@ -1070,10 +932,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/Compiler/Extension/AutowireServices.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Container\\\\Config\\\\ConfigNodeFinder\\:\\:find\\(\\) should return array\\<Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\> but returns list\\<object\\>\\.$#',
+	'message' => '#^Method Jadob\\\\Container\\\\Config\\\\FilesystemConfigNodeFinder\\:\\:find\\(\\) should return array\\<Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\> but returns list\\<object\\>\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Container/Config/ConfigNodeFinder.php',
+	'path' => __DIR__ . '/../../src/Jadob/Container/Config/FilesystemConfigNodeFinder.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Jadob\\\\Container\\\\Config\\\\InMemoryConfigNodeFinder\\:\\:find\\(\\) should return array\\<Jadob\\\\Container\\\\Config\\\\ConfigNodeInterface\\> but returns array\\<Closure\\>\\.$#',
+	'identifier' => 'return.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/Config/InMemoryConfigNodeFinder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Container\\\\Config\\\\ParameterStore\\:\\:__construct\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#',
@@ -1130,7 +998,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraph.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Anonymous function should return array\\|object\\|string but returns mixed\\.$#',
+	'message' => '#^Anonymous function should return array\\|int\\|object\\|string\\|null but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
@@ -1166,6 +1034,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$name of method Jadob\\\\Container\\\\ServiceGraph\\:\\:getParameter\\(\\) expects string, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$name of method Jadob\\\\Container\\\\ServiceGraph\\:\\:hasParameter\\(\\) expects string, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
@@ -1180,6 +1060,24 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#2 \\$service of method Jadob\\\\Container\\\\ServiceGraphContainer\\:\\:onServiceInitialized\\(\\) expects object, mixed given\\.$#',
 	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Strict comparison using \\=\\=\\= between Jadob\\\\Contracts\\\\DependencyInjection\\\\ReferenceType\\:\\:Param and Jadob\\\\Contracts\\\\DependencyInjection\\\\ReferenceType\\:\\:Param will always evaluate to true\\.$#',
+	'identifier' => 'identical.alwaysTrue',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Unreachable statement \\- code above always terminates\\.$#',
+	'identifier' => 'deadCode.unreachable',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Container/ServiceGraphContainer.php',
 ];
@@ -1760,6 +1658,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Cannot call method getRoutes\\(\\) on mixed\\.$#',
+	'identifier' => 'method.nonObject',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Cannot call method getServiceProviders\\(\\) on mixed\\.$#',
 	'identifier' => 'method.nonObject',
 	'count' => 1,
@@ -1816,11 +1720,11 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$object of function get_class expects object, mixed given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$paths of class Jadob\\\\Container\\\\Config\\\\ConfigNodeFinder constructor expects array\\<non\\-empty\\-string\\>, array\\{string, non\\-falsy\\-string, non\\-falsy\\-string\\} given\\.$#',
+	'message' => '#^Parameter \\#1 \\$paths of class Jadob\\\\Container\\\\Config\\\\FilesystemConfigNodeFinder constructor expects array\\<int, non\\-empty\\-string\\>, array\\{string, non\\-falsy\\-string, non\\-falsy\\-string\\} given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
@@ -1866,54 +1770,6 @@ $ignoreErrors[] = [
 	'identifier' => 'property.readOnlyAssignNotInConstructor',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Application.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Jadob\\\\Framework\\\\DependencyInjection\\\\CompilerExtension\\\\InjectLoggerExtension\\:\\:\\$loggerFactory\\.$#',
-	'identifier' => 'property.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getDefaultLogger\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method getLoggerForChannel\\(\\) on mixed\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\DependencyInjection\\\\CompilerExtension\\\\InjectLoggerExtension\\:\\:injectConstructorArgument\\(\\) has parameter \\$argumentAttributes with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\DependencyInjection\\\\CompilerExtension\\\\InjectLoggerExtension\\:\\:injectConstructorArgument\\(\\) should return object but returns mixed\\.$#',
-	'identifier' => 'return.type',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\DependencyInjection\\\\CompilerExtension\\\\InjectLoggerExtension\\:\\:supportsConstructorInjectionFor\\(\\) has parameter \\$argumentAttributes with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Unreachable statement \\- code above always terminates\\.$#',
-	'identifier' => 'deadCode.unreachable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/InjectLoggerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Unreachable statement \\- code above always terminates\\.$#',
-	'identifier' => 'deadCode.unreachable',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/DependencyInjection/CompilerExtension/RegisterConsoleCommandsExtension.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#2 \\$haystack of function in_array expects array, array\\<string, class\\-string\\>\\|false given\\.$#',
@@ -2246,34 +2102,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Framework/Logger/LoggerFactory.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$commands of method Symfony\\\\Component\\\\Console\\\\Application\\:\\:addCommands\\(\\) expects array\\<\\(callable\\(\\)\\: mixed\\)\\|Symfony\\\\Component\\\\Console\\\\Command\\\\Command\\>, array given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/ConsoleProvider.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\CsrfProvider\\:\\:getConfigNode\\(\\) never returns string so it can be removed from the return type\\.$#',
 	'identifier' => 'return.unusedType',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/CsrfProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$requestStack of class Symfony\\\\Component\\\\Security\\\\Csrf\\\\TokenStorage\\\\SessionTokenStorage constructor expects Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack, object given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/CsrfProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$tokenManager of class Symfony\\\\Component\\\\Form\\\\Extension\\\\Csrf\\\\CsrfExtension constructor expects Symfony\\\\Component\\\\Security\\\\Csrf\\\\CsrfTokenManagerInterface, object given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/CsrfProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\FrameworkServiceProvider\\:\\:register\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/FrameworkServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\FrameworkServiceProvider\\:\\:register\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Framework/ServiceProvider/FrameworkServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Framework\\\\ServiceProvider\\\\LoggerConfig\\:\\:configureStreamHandler\\(\\) has parameter \\$channels with no value type specified in iterable type array\\.$#',
@@ -2414,90 +2252,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/MessageBus/ReflectionMessageBus.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\Annotation\\\\Field\\:\\:__construct\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/Annotation/Field.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\Annotation\\\\Field\\:\\:getContext\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/Annotation/Field.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\Annotation\\\\Translate\\:\\:__construct\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/Annotation/Translate.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\Annotation\\\\Translate\\:\\:getContext\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/Annotation/Translate.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot cast mixed to string\\.$#',
-	'identifier' => 'cast.string',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Comparison operation "\\>" between int\\<2, max\\> and 1 is always true\\.$#',
-	'identifier' => 'greater.alwaysTrue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\ItemProcessor\\:\\:__construct\\(\\) has parameter \\$itemTransformers with no value type specified in iterable type iterable\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\ItemProcessor\\:\\:extractItemValues\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$item of method Jadob\\\\Objectable\\\\ItemProcessor\\:\\:extractItemValues\\(\\) expects object, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 2,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$object of function get_class expects object, mixed given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Objectable\\\\ItemProcessor\\:\\:\\$itemTransformers \\(array\\<Jadob\\\\Objectable\\\\Transformer\\\\ItemTransformerInterface\\>\\) does not accept array\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable method call on object\\.$#',
-	'identifier' => 'method.dynamicName',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ItemProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Jadob\\\\Objectable\\\\ResultRow\\:\\:\\$actionFields has unknown class Jadob\\\\Objectable\\\\Annotation\\\\ActionField as its type\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/ResultRow.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Jadob\\\\Objectable\\\\Transformer\\\\ItemTransformerInterface\\:\\:process\\(\\) return type has no value type specified in iterable type array\\.$#',
-	'identifier' => 'missingType.iterableValue',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Objectable/Transformer/ItemTransformerInterface.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Router\\\\Route\\:\\:__construct\\(\\) has parameter \\$handler with no value type specified in iterable type array\\.$#',
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
@@ -2624,18 +2378,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Router/RouteCollection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Jadob\\\\Router\\\\Router\\:\\:\\$config\\.$#',
-	'identifier' => 'property.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Router/Router.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access offset \'case_sensitive\' on mixed\\.$#',
-	'identifier' => 'offsetAccess.nonOffsetAccessible',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Router/Router.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot cast mixed to string\\.$#',
 	'identifier' => 'cast.string',
 	'count' => 1,
@@ -2760,6 +2502,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.iterableValue',
 	'count' => 1,
 	'path' => __DIR__ . '/../../src/Jadob/Router/ServiceProvider/RouterConfiguration.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$collection of method Jadob\\\\Router\\\\RouteCollection\\:\\:merge\\(\\) expects Jadob\\\\Router\\\\RouteCollection, mixed given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/../../src/Jadob/Router/ServiceProvider/RouterServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$data of static method Jadob\\\\Router\\\\RouteCollection\\:\\:fromArray\\(\\) expects array\\<array\\>, array given\\.$#',
@@ -3164,6 +2912,30 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../tests/unit/Jadob/Auth/Firewall/FirewallMapTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:createStub\\(\\)\\.$#',
+	'identifier' => 'staticMethod.dynamicCall',
+	'count' => 3,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Bridge/Doctrine/Persistence/DoctrineConnectionRegistryTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Dynamic call to static method PHPUnit\\\\Framework\\\\TestCase\\:\\:createStub\\(\\)\\.$#',
+	'identifier' => 'staticMethod.dynamicCall',
+	'count' => 2,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistryTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Container\\\\Fixtures\\\\ClassWithBuiltinNonNullableArgument\\:\\:\\$name is never read, only written\\.$#',
+	'identifier' => 'property.onlyWritten',
+	'count' => 1,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Container/Fixtures/ClassWithBuiltinNonNullableArgument.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Container\\\\Fixtures\\\\ClassWithBuiltinNullableArgument\\:\\:\\$name is never read, only written\\.$#',
+	'identifier' => 'property.onlyWritten',
+	'count' => 1,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Container/Fixtures/ClassWithBuiltinNullableArgument.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Attribute class Jadob\\\\Contracts\\\\DependencyInjection\\\\Attribute\\\\InjectService is not repeatable but is already present above the parameter or property\\.$#',
 	'identifier' => 'attribute.nonRepeatable',
 	'count' => 1,
@@ -3258,6 +3030,18 @@ $ignoreErrors[] = [
 	'identifier' => 'property.onlyWritten',
 	'count' => 1,
 	'path' => __DIR__ . '/../../tests/unit/Jadob/Container/Fixtures/SampleApp/Infrastructure/Persistence/PostgresUserRepository.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Container\\\\Fixtures\\\\SimpleSampleApp\\\\SendHappyBirthdayEmail\\:\\:\\$mailerService is never read, only written\\.$#',
+	'identifier' => 'property.onlyWritten',
+	'count' => 1,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Container/Fixtures/SimpleSampleApp/SendHappyBirthdayEmail.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Jadob\\\\Container\\\\Fixtures\\\\SimpleSampleApp\\\\SendHappyBirthdayEmail\\:\\:\\$userService is never read, only written\\.$#',
+	'identifier' => 'property.onlyWritten',
+	'count' => 1,
+	'path' => __DIR__ . '/../../tests/unit/Jadob/Container/Fixtures/SimpleSampleApp/SendHappyBirthdayEmail.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
