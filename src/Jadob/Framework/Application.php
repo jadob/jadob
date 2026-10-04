@@ -31,7 +31,7 @@ use Throwable;
 use function array_merge;
 use function get_class;
 
-readonly class Application
+class Application
 {
     private ExceptionHandler $exceptionHandler;
     private ExceptionListenerInterface $fallbackExceptionListener;
