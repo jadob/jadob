@@ -28,6 +28,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
+/**
+ * @implements ServiceProviderInterface<DynamiteConfig>
+ */
 final readonly class DynamiteProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
     /**
@@ -41,7 +44,6 @@ final readonly class DynamiteProvider implements ServiceProviderInterface, Confi
 
     /**
      * @param ContainerBuilderInterface $builder
-     * @param DynamiteConfig|null $config
      * @return void
      */
     public function register(

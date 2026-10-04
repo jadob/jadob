@@ -35,7 +35,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
- * @license MIT
+ * @implements ServiceProviderInterface<DoctrineOrmConfig>
  */
 final readonly class DoctrineOrmProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
@@ -53,11 +53,6 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
         return 'doctrine_orm';
     }
 
-    /**
-     * @param ContainerBuilderInterface $builder
-     * @param DoctrineOrmConfig|null $config
-     * @return void
-     */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         if (!($config instanceof DoctrineOrmConfig)) {

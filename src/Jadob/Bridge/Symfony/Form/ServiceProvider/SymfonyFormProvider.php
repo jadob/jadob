@@ -27,8 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
 
 /**
- * @author pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @implements ServiceProviderInterface<FormsConfig>
  */
 final readonly class SymfonyFormProvider implements ServiceProviderInterface, ParentServiceProviderInterface, ConfigObjectProviderInterface
 {
@@ -37,11 +36,6 @@ final readonly class SymfonyFormProvider implements ServiceProviderInterface, Pa
         return 'forms';
     }
 
-    /**
-     * @param ContainerBuilderInterface $builder
-     * @param FormsConfig|null $config
-     * @return void
-     */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {
         if (!($config instanceof FormsConfig)) {
