@@ -79,16 +79,7 @@ readonly class Application
         $userspaceContainerConfig = include $servicesFile;
 
         $builder = new ContainerBuilder();
-
-        $bootstrapFileFqcn = get_class($this->bootstrap);
-        $builder
-            ->set($bootstrapFileFqcn)
-            ->withFactory(fn (): BootstrapInterface => $this->bootstrap);
-
-        $builder->bind(
-            BootstrapInterface::class,
-            $bootstrapFileFqcn
-        );
+        $this->registerNativeServices($builder);
 
         $builder->addFallbackParameter('cache_dir', $this->bootstrap->getCacheDir());
         $builder->addFallbackParameter('root_dir', $this->bootstrap->getRootDir());
@@ -210,5 +201,24 @@ readonly class Application
         $this->build();
 
         return $this->container->get(CliApplication::class);
+    }
+
+    private function registerNativeServices(
+        ContainerBuilder $builder,
+    ): void
+    {
+        $bootstrapFileFqcn = get_class($this->bootstrap);
+        $builder
+            ->set($bootstrapFileFqcn)
+            ->withFactory(fn (): BootstrapInterface => $this->bootstrap);
+
+        $builder->bind(
+            BootstrapInterface::class,
+            $bootstrapFileFqcn
+        );
+
+        $builder
+            ->set(ExceptionHandler::class)
+            ->withFactory(fn(): ExceptionHandler => $this->exceptionHandler);
     }
 }
