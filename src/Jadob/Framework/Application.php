@@ -17,6 +17,7 @@ use Jadob\Framework\ErrorHandler\ExceptionHandler;
 use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
 use Jadob\Framework\Logger\LoggerFactory;
+use Jadob\Router\RouteCollection;
 use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -121,6 +122,19 @@ readonly class Application
                     id: get_class($extension),
                     priority: $priority,
                 );
+            }
+
+            $moduleRoutes = $module->getRoutes();
+            if($moduleRoutes instanceof RouteCollection) {
+                $routeCollectionServiceId = sprintf(
+                    '%s_routes',
+                    get_class($module)
+                );
+
+                $builder
+                    ->set($routeCollectionServiceId, RouteCollection::class)
+                    ->withFactory(fn(): RouteCollection => $moduleRoutes)
+                    ->withTag('router.collection');
             }
         }
 
