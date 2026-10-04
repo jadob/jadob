@@ -20,7 +20,6 @@ use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\RouteCollection;
-use Jadob\Router\Router;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Application as CliApplication;
@@ -186,17 +185,6 @@ readonly class Application
                 ->exceptionHandler
                 ->handleException($exception);
         }
-    }
-
-
-    private function getLoggerFactory(): LoggerFactory
-    {
-        return $this->container->get(LoggerFactory::class);
-    }
-
-    private function getRouter(): Router
-    {
-        return $this->container->get(Router::class);
     }
 
     public function terminate(): void
