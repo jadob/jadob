@@ -3,22 +3,35 @@ declare(strict_types=1);
 
 namespace Jadob\Container;
 
-class ParameterStore
+/**
+ * @phpstan-type ParameterType int|string|bool|array<array-key,mixed>
+ */
+final class ParameterStore
 {
+    /**
+     * @param array<string, ParameterType> $parameters
+     */
     public function __construct(
-        /**
-         * @var array<string, int|string|bool|array>
-         */
         private array $parameters,
     ) {
     }
 
-    public function set(string $key, $value): void
+    /**
+     * @param string $key
+     * @param ParameterType $value
+     * @return void
+     */
+    public function set(string $key, int|string|bool|array $value): void
     {
         $this->parameters[$key] = $value;
     }
 
-    public function get(string $key)
+
+    /**
+     * @param string $key
+     * @return ParameterType
+     */
+    public function get(string $key): int|string|bool|array
     {
         return $this->parameters[$key];
     }
