@@ -39,7 +39,8 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
         $builder->set(Router::class)
             ->withFactory(
                 static function (
-                    #[InjectTaggedServices('router.collection')] array $routeCollections
+                    #[InjectTaggedServices('router.collection')]
+                    array $routeCollections
                 ) use ($config) {
                     $globalRouteCollection = new RouteCollection();
                     foreach ($routeCollections as $routeCollection) {

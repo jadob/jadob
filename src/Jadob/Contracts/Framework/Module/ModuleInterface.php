@@ -22,5 +22,4 @@ interface ModuleInterface
     public function getContainerCompilerExtensions(): array;
 
     public function getRoutes(): ?RouteCollection;
-
 }

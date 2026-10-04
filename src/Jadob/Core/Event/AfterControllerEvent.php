@@ -45,6 +45,7 @@ class AfterControllerEvent
     public function setResponse(Response $response): self
     {
         $this->response = $response;
+
         return $this;
     }
 

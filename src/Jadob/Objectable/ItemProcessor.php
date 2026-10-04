@@ -66,17 +66,20 @@ class ItemProcessor
 
                         if ($val === $translationAttr->getWhen()) {
                             $output[$instance->getName()] = $translationAttr->getThen();
+
                             continue 2;
                         }
                     }
 
                     if ($val instanceof DateTimeInterface) {
                         $dateFormat = $instance->getDateFormat();
+
                         if ($dateFormat === null) {
                             throw new LogicException('Could not process DateTime object as there is no dateFormat passed in Field.');
                         }
 
                         $output[$instance->getName()] = $val->format($dateFormat);
+
                         continue;
                     }
 
@@ -96,12 +99,14 @@ class ItemProcessor
 
                     if ($instance->isStringable()) {
                         $output[$instance->getName()] = (string) $val;
+
                         continue;
                     }
 
                     if ($instance->isFlat()) {
                         if ($val === null) {
                             $output[$instance->getName()] = null;
+
                             continue;
                         }
 
@@ -113,6 +118,7 @@ class ItemProcessor
 
                         if (count($flattenedVal) === 1) {
                             $output[$instance->getName()] = reset($flattenedVal);
+
                             continue;
                         }
 

@@ -12,8 +12,7 @@ final class TranslationExtension extends AbstractExtension
 {
     public function __construct(
         private TranslatorInterface $translator,
-    )
-    {
+    ) {
     }
 
     public function getFilters(): array
@@ -28,8 +27,7 @@ final class TranslationExtension extends AbstractExtension
         array $parameters = [],
         ?string $domain = null,
         ?string $locale = null
-    ): string
-    {
+    ): string {
         return $this
             ->translator
             ->trans(

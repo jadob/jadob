@@ -116,7 +116,8 @@ readonly class Application
             }
 
             $moduleRoutes = $module->getRoutes();
-            if($moduleRoutes instanceof RouteCollection) {
+
+            if ($moduleRoutes instanceof RouteCollection) {
                 $routeCollectionServiceId = sprintf(
                     '%s_routes',
                     get_class($module)
@@ -205,8 +206,7 @@ readonly class Application
 
     private function registerNativeServices(
         ContainerBuilder $builder,
-    ): void
-    {
+    ): void {
         $bootstrapFileFqcn = get_class($this->bootstrap);
         $builder
             ->set($bootstrapFileFqcn)
