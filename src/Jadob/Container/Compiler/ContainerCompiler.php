@@ -112,8 +112,8 @@ final class ContainerCompiler
     }
 
     /**
-     * @param array<ServiceProviderInterface> $providers
-     * @return array<ServiceProviderInterface> Topological sorted list of providers
+     * @param list<ServiceProviderInterface> $providers
+     * @return list<ServiceProviderInterface> Topological sorted list of providers
      * @throws CircularDependencyException
      * @throws MissingParentServiceProviderException
      */

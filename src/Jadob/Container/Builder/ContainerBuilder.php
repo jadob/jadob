@@ -22,6 +22,9 @@ final class ContainerBuilder implements ContainerBuilderInterface
      */
     private array $configurations = [];
 
+    /**
+     * @var list<ServiceProviderInterface>
+     */
     private array $serviceProviders = [];
 
     private array $requiredParameters = [];
@@ -129,6 +132,9 @@ final class ContainerBuilder implements ContainerBuilderInterface
         $this->fallbackParameters[$name] = $value;
     }
 
+    /**
+     * @return list<ServiceProviderInterface>
+     */
     public function getServiceProviders(): array
     {
         return $this->serviceProviders;
