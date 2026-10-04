@@ -7,6 +7,9 @@ use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 
+/**
+ * @implements ServiceProviderInterface<ConfigNodeInterface>
+ */
 class HttpClientProvider implements ServiceProviderInterface
 {
     public function getConfigNode(): ?string

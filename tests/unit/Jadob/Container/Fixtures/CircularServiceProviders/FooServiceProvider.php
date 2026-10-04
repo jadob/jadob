@@ -8,6 +8,9 @@ use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 
+/**
+ * @implements ServiceProviderInterface<ConfigNodeInterface>
+ */
 final readonly class FooServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     public function getParentServiceProviders(): array

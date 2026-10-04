@@ -10,6 +10,9 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\EventDispatcher\EventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface as PsrEventDispatcherInterface;
 
+/**
+ * @implements ServiceProviderInterface<null>
+ */
 final readonly class EventDispatcherProvider implements ServiceProviderInterface
 {
     public function register(
@@ -18,7 +21,6 @@ final readonly class EventDispatcherProvider implements ServiceProviderInterface
     ): void {
         $builder
             ->set(EventDispatcher::class);
-
 
         $builder
             ->bind(PsrEventDispatcherInterface::class, EventDispatcher::class);

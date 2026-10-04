@@ -10,6 +10,9 @@ use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\MessageBus\CommandBus;
 use Jadob\MessageBus\QueryBus;
 
+/**
+ * @implements ServiceProviderInterface<null>
+ */
 final readonly class MessageBusServiceProvider implements ServiceProviderInterface
 {
     public function register(

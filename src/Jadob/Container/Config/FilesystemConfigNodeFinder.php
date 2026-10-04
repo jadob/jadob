@@ -11,7 +11,7 @@ use function sprintf;
 final readonly class FilesystemConfigNodeFinder implements ConfigNodeFinderInterface
 {
     /**
-     * @param array<non-empty-string> $paths sorted ascending by priority
+     * @param array<int, non-empty-string> $paths sorted ascending by priority
      */
     public function __construct(
         private array $paths = []

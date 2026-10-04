@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 /**
  * @TODO: add session configuration
+ * @implements ServiceProviderInterface<null>
  */
 final readonly class SessionProvider implements ServiceProviderInterface
 {

@@ -174,7 +174,7 @@ final class ContainerCompiler
 
     /**
      * @param ContainerBuilder $builder
-     * @param array<ServiceProviderInterface|(ServiceProviderInterface&ConfigObjectProviderInterface)> $providers
+     * @param list<ServiceProviderInterface<covariant ConfigNodeInterface|null>> $providers
      * @return void
      * @throws CircularDependencyException
      * @throws MissingParentServiceProviderException

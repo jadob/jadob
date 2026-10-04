@@ -64,14 +64,14 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                     $entryPointServiceId = $firewallConfig->entryPointServiceId;
                     $requestMatcherServiceId = $firewallConfig->requestMatcherServiceId;
 
-                    if ($entryPointServiceId === null) {
-                        throw new LogicException(
-                            sprintf(
-                                'Entry point service id is not defined for firewall "%s".',
-                                $name
-                            )
-                        );
-                    }
+//                    if ($entryPointServiceId === null) {
+//                        throw new LogicException(
+//                            sprintf(
+//                                'Entry point service id is not defined for firewall "%s".',
+//                                $name
+//                            )
+//                        );
+//                    }
 
                     /** @var AuthenticatorInterface[] $authenticators */
                     $authenticators = array_map(
@@ -92,7 +92,7 @@ final readonly class AuthenticationServiceProvider implements ServiceProviderInt
                         requestMatcher: $container->get($requestMatcherServiceId),
                         authenticators: $authenticators,
                         identityProvider: $container->get($firewallConfig->identityProviderServiceId),
-                        entryPoint: $container->get($entryPointServiceId),
+                        entryPoint: $entryPointServiceId !== null ? $container->get($entryPointServiceId): null,
                         stateless: $firewallConfig->isStateless(),
                         identityStackingEnabled: $firewallConfig->isIdentityStackingEnabled(),
                         identityPicker: $identityPicker,

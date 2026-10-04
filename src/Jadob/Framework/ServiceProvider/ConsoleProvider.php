@@ -14,8 +14,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * @see    https://symfony.com/doc/current/components/console.html
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @implements ServiceProviderInterface<null>
  */
 final readonly class ConsoleProvider implements ServiceProviderInterface
 {

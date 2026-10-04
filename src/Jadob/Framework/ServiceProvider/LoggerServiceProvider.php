@@ -17,6 +17,9 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use function in_array;
 
+/**
+ * @implements ServiceProviderInterface<LoggerConfig>
+ */
 final readonly class LoggerServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
     private const string HANDLER_FACTORY_TAG = 'logger.handler_factory';
@@ -28,7 +31,6 @@ final readonly class LoggerServiceProvider implements ServiceProviderInterface, 
 
     /**
      * @param ContainerBuilderInterface $builder
-     * @param LoggerConfig $config
      * @return void
      */
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void

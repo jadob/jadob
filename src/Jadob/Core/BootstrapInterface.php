@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Jadob\Core;
 
+use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Contracts\Framework\Module\ModuleInterface;
 
@@ -53,7 +54,7 @@ interface BootstrapInterface
      * Returns array of Service providers that will be load while framework bootstrapping.
      *
      * @param string $env
-     * @return list<ServiceProviderInterface>
+     * @return list<ServiceProviderInterface<covariant ConfigNodeInterface|null>>
      */
     public function getServiceProviders(string $env): array;
 

@@ -16,6 +16,7 @@ use LogicException;
 /**
  * @author  pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
+ * @implements ServiceProviderInterface<RouterConfiguration>
  */
 class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {

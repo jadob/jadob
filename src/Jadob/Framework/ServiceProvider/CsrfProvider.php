@@ -12,8 +12,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 /**
- * @author  pizzaminded <mikolajczajkowsky@gmail.com>
- * @license MIT
+ * @implements ServiceProviderInterface<null>
  */
 final readonly class CsrfProvider implements ServiceProviderInterface
 {

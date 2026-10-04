@@ -7,10 +7,10 @@ use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 
 /**
  * Requires two random things outside its original hierarchy.
+ * @implements ServiceProviderInterface<ConfigNodeInterface>
  */
 class IOLoggerProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {

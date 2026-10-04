@@ -7,8 +7,10 @@ use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
-use Psr\Container\ContainerInterface;
 
+/**
+ * @implements ServiceProviderInterface<ConfigNodeInterface>
+ */
 class ApiServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     public function getParentServiceProviders(): array

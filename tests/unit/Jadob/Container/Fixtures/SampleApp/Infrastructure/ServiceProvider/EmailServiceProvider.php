@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jadob\Container\Fixtures\SampleApp\Infrastructure\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
@@ -9,6 +11,9 @@ use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 
+/**
+ * @implements ServiceProviderInterface<ConfigNodeInterface>
+ */
 final readonly class EmailServiceProvider implements ServiceProviderInterface
 {
     public function register(

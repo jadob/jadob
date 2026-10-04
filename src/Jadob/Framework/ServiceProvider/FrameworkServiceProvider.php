@@ -8,6 +8,9 @@ use Jadob\Container\Config\ConfigNodeInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 
+/**
+ * @implements ServiceProviderInterface<null>
+ */
 class FrameworkServiceProvider implements ServiceProviderInterface
 {
     public function getConfigNode(): ?string

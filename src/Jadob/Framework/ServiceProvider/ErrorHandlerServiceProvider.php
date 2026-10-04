@@ -12,12 +12,14 @@ use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
 use Jadob\Framework\Logger\LoggerFactory;
 
-class ErrorHandlerServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
+/**
+ * @implements ServiceProviderInterface<null>
+ */
+final readonly class ErrorHandlerServiceProvider implements ServiceProviderInterface, ParentServiceProviderInterface
 {
     public function __construct(private string $env)
     {
     }
-
 
     public function register(ContainerBuilderInterface $builder, ?ConfigNodeInterface $config = null): void
     {

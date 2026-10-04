@@ -9,6 +9,7 @@ use Jadob\Container\Config\ConfigNodeInterface;
 /**
  * Groups related build-time service registrations behind a reusable,
  * stateless package extension point.
+ * @template TConfigNode of ConfigNodeInterface|null
  */
 interface ServiceProviderInterface
 {
@@ -16,7 +17,7 @@ interface ServiceProviderInterface
      * Configure and register your services here.
      *
      * @param ContainerBuilderInterface $builder
-     * @param ConfigNodeInterface|null $config
+     * @param TConfigNode $config
      */
     public function register(
         ContainerBuilderInterface $builder,

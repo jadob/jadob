@@ -12,6 +12,7 @@ use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\Reference;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Framework\Logger\LoggerFactory;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Formatter\MessageFormatterInterface;
@@ -26,6 +27,7 @@ use function sprintf;
 /**
  * @author pizzaminded <mikolajczajkowsky@gmail.com>
  * @license MIT
+ * @implements ServiceProviderInterface<TranslatorConfig>
  */
 final readonly class SymfonyTranslatorProvider implements ServiceProviderInterface, ConfigObjectProviderInterface
 {
@@ -43,6 +45,25 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
         ContainerBuilderInterface $builder,
         ?ConfigNodeInterface $config = null
     ): void {
+        if (!($config instanceof TranslatorConfig)) {
+            throw new LogicException(
+                sprintf(
+                    'Invalid configuration object passed to %s::%s()',
+                    self::class,
+                    __METHOD__
+                )
+            );
+        }
+
+        if ($config->locale === null) {
+            throw new LogicException(
+                sprintf(
+                    'Locale must be passed in order to use %s',
+                    self::class
+                )
+            );
+        }
+
         $builder->requireParameter('translations_directory');
         $builder->addFallbackParameter(
             'translations_directory',
@@ -82,18 +103,20 @@ final readonly class SymfonyTranslatorProvider implements ServiceProviderInterfa
                     $sourcesPath = sprintf('%s/*/*.php', $translationsDirectory);
                     $sourcesGlob = glob($sourcesPath);
 
-                    $sourcesRegexp = sprintf(
-                        '@%s\/(?<locale>[A-Za-z]{2})\/(?<domain>[_a-zA-Z]*).php@i',
-                        $translationsDirectory
-                    );
-
-                    foreach ($sourcesGlob as $sourcePath) {
-                        preg_match($sourcesRegexp, $sourcePath, $sourceMatch);
-                        $sources[] = new TranslationSource(
-                            $sourcePath,
-                            $sourceMatch['locale'],
-                            $sourceMatch['domain']
+                    if ($sourcesGlob !== false) {
+                        $sourcesRegexp = sprintf(
+                            '@%s\/(?<locale>[A-Za-z]{2})\/(?<domain>[_a-zA-Z]*).php@i',
+                            $translationsDirectory
                         );
+
+                        foreach ($sourcesGlob as $sourcePath) {
+                            preg_match($sourcesRegexp, $sourcePath, $sourceMatch);
+                            $sources[] = new TranslationSource(
+                                $sourcePath,
+                                $sourceMatch['locale'],
+                                $sourceMatch['domain']
+                            );
+                        }
                     }
 
                     foreach ($sources as $source) {

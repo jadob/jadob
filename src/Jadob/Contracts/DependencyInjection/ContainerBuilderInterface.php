@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Jadob\Contracts\DependencyInjection;
 
+use Jadob\Container\Config\ConfigNodeInterface;
+
 interface ContainerBuilderInterface
 {
     public function set(
@@ -30,6 +32,10 @@ interface ContainerBuilderInterface
         string $alias,
     ): void;
 
+    /**
+     * @param ServiceProviderInterface<covariant ConfigNodeInterface|null> $serviceProvider
+     * @return void
+     */
     public function registerServiceProvider(
         ServiceProviderInterface $serviceProvider
     ): void;
