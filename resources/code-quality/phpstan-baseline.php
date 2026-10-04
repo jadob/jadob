@@ -428,18 +428,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, string\\|null given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Possibly invalid array key type string\\|null\\.$#',
-	'identifier' => 'offsetAccess.invalidOffset',
-	'count' => 3,
-	'path' => __DIR__ . '/../../src/Jadob/Bridge/Doctrine/Persistence/DoctrineManagerRegistry.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Jadob\\\\Bridge\\\\Doctrine\\\\Persistence\\\\ObjectManagerFactory\\:\\:build\\(\\) should return Doctrine\\\\Persistence\\\\ObjectManager but returns mixed\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,

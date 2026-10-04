@@ -147,13 +147,14 @@ final readonly class DoctrineOrmProvider implements ServiceProviderInterface, Pa
                 ConnectionRegistry $connectionRegistry,
                 Configuration $config,
                 EventManager $eventManager,
-            ) use ($managerConfig): ObjectManagerFactoryInterface {
+            ) use ($managerConfig, $managerServiceName): ObjectManagerFactoryInterface {
                 return new ObjectManagerFactory(
-                    fn() => new EntityManager(
+                    factory: fn() => new EntityManager(
                         conn: $connectionRegistry->getConnection($managerConfig->dbalConnectionName),
                         config: $config,
                         eventManager: $eventManager,
-                    )
+                    ),
+                    serviceId: $managerServiceName
                 );
             };
 

@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use LogicException;
+use Throwable;
 
 final class DoctrineManagerRegistry implements ManagerRegistry
 {
@@ -73,17 +74,22 @@ final class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getManager(?string $name = null): ObjectManager
     {
-        if (array_key_exists($name, $this->instantiatedManagers) === false) {
-            $manager = $this->entityManagerFactories[$name]->build();
-            $this->instantiatedManagers[$name] = $manager;
+        if ($name === null) {
+            $name = $this->defaultManagerName;
         }
+        $this->ensureManagerInstantiated($name);
 
         return $this->instantiatedManagers[$name];
     }
 
+    /**
+     * @return array<string, ObjectManager>
+     */
     public function getManagers(): array
     {
-        // TODO: Implement getManagers() method.
+        $this->ensureAllManagersAreInstantiated();
+
+        return $this->instantiatedManagers;
     }
 
     public function resetManager(?string $name = null): ObjectManager
@@ -96,16 +102,50 @@ final class DoctrineManagerRegistry implements ManagerRegistry
 
     public function getManagerNames(): array
     {
-        // TODO: Implement getManagerNames() method.
+        return array_map(
+            static fn (ObjectManagerFactoryInterface $factory) => $factory->getServiceId(),
+            $this->entityManagerFactories
+        );
     }
 
     public function getRepository(string $persistentObject, ?string $persistentManagerName = null): ObjectRepository
     {
-        // TODO: Implement getRepository() method.
+        return $this
+            ->getManager($persistentManagerName ?? $this->getDefaultManagerName())
+            ->getRepository($persistentObject);
     }
 
     public function getManagerForClass(string $class): ObjectManager|null
     {
-        // TODO: Implement getManagerForClass() method.
+        foreach ($this->getManagers() as $manager) {
+            try {
+                $manager->getClassMetadata($class);
+
+                return $manager;
+            } catch (Throwable) {
+            }
+        }
+
+        return null;
+    }
+
+    private function ensureAllManagersAreInstantiated(): void
+    {
+        foreach ($this->getManagerNames() as $name) {
+            $this->ensureManagerInstantiated($name);
+        }
+    }
+
+    private function ensureManagerInstantiated(string $name): void
+    {
+        if (array_key_exists($name, $this->instantiatedManagers) === false) {
+            $this->instantiatedManagers[$name] = $this->instantiate($this->entityManagerFactories[$name]);
+        }
+    }
+
+    private function instantiate(
+        ObjectManagerFactoryInterface $factory,
+    ): ObjectManager {
+        return $factory->build();
     }
 }

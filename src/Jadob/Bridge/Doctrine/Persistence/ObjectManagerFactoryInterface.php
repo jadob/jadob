@@ -7,4 +7,9 @@ use Doctrine\Persistence\ObjectManager;
 interface ObjectManagerFactoryInterface
 {
     public function build(): ObjectManager;
+
+    /**
+     * @return string|class-string
+     */
+    public function getServiceId(): string;
 }

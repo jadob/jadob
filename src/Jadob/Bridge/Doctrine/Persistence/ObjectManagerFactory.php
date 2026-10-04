@@ -11,11 +11,17 @@ final readonly class ObjectManagerFactory implements ObjectManagerFactoryInterfa
 {
     public function __construct(
         private Closure $factory,
+        private string $serviceId
     ) {
     }
 
     public function build(): ObjectManager
     {
         return ($this->factory)();
+    }
+
+    public function getServiceId(): string
+    {
+        return $this->serviceId;
     }
 }
