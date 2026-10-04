@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Jadob\Router\ServiceProvider;
 
 use Jadob\Container\Config\ConfigNodeInterface;
+use Jadob\Contracts\DependencyInjection\Attribute\InjectTaggedServices;
 use Jadob\Contracts\DependencyInjection\ConfigObjectProviderInterface;
 use Jadob\Contracts\DependencyInjection\ContainerBuilderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
@@ -37,16 +38,27 @@ class RouterServiceProvider implements ServiceProviderInterface, ConfigObjectPro
 
         $builder->set(Router::class)
             ->withFactory(
-                static function () use ($config) {
-                    return new Router(
+                static function (
+                    #[InjectTaggedServices('router.collection')] array $routeCollections
+                ) use ($config) {
+                    $globalRouteCollection = new RouteCollection();
+                    foreach ($routeCollections as $routeCollection) {
+                        $globalRouteCollection->merge($routeCollection);
+                    }
+
+                    $globalRouteCollection->merge(
                         RouteCollection::fromArray($config->getRoutes()),
-                        new RouterContext(
+                    );
+
+                    return new Router(
+                        routeCollection: $globalRouteCollection,
+                        context: new RouterContext(
                             host: $config->getHost(),
                             secure: $config->secure,
                             port: $config->getPort(),
                             basePath: $config->getBasePath(),
                         ),
-                        $config->isCaseSensitive()
+                        caseSensitive: $config->isCaseSensitive()
                     );
                 }
             );
