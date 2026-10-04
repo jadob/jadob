@@ -41,6 +41,8 @@ final class MigrationsConfiguration implements ConfigNodeInterface
         string $template,
     ): self {
         $this->customTemplate = $template;
+
+        return $this;
     }
 
     public function withAllOrNothing(bool $allOrNothing = true): self
