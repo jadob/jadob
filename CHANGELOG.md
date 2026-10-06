@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- [Container] Service definitions now can have attributes defined
+- [Framework] Exception events are now dispatched through an event dispatcher and can be processed in userspace
+
 ## [0.10.1] - 2026-10-04
 
 ### Added
