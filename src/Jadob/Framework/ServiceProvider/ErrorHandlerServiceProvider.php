@@ -10,6 +10,7 @@ use Jadob\Contracts\DependencyInjection\ParentServiceProviderInterface;
 use Jadob\Contracts\DependencyInjection\ServiceProviderInterface;
 use Jadob\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Jadob\Debug\ErrorHandler\HandlerFactory;
+use Jadob\Framework\EventListener\ExceptionLoggerEventListener;
 use Jadob\Framework\Logger\LoggerFactory;
 
 /**
@@ -34,6 +35,11 @@ final readonly class ErrorHandlerServiceProvider implements ServiceProviderInter
             );
 
         $builder->bind(ErrorHandlerInterface::class, HandlerFactory::class);
+        
+        $builder
+            ->set(ExceptionLoggerEventListener::class)
+            ->withTag('event_listener')
+            ->autowire();
     }
 
     public function getParentServiceProviders(): array
