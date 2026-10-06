@@ -21,6 +21,11 @@ final class ServiceDefinition
 
     private(set) bool $autowired = false;
 
+    /**
+     * @var array<string, scalar>
+     */
+    private(set) array $attributes = [];
+
     public function __construct(
         private(set) readonly string $id,
         private(set) readonly string $className,
@@ -109,5 +114,15 @@ final class ServiceDefinition
         string $name,
     ): bool {
         return array_key_exists($name, $this->arguments);
+    }
+
+    public function withAttribute(
+        string $name,
+        string|int|bool $argument,
+    ): self
+    {
+        $this->attributes[$name] = $argument;
+        
+        return $this;
     }
 }
