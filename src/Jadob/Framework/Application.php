@@ -147,6 +147,17 @@ class Application
     ): Response {
         try {
             $this->build();
+
+            /** @var EventDispatcherInterface $eventDispatcher */
+            $eventDispatcher = $this
+                ->container
+                ->get(EventDispatcherInterface::class);
+
+            $this
+                ->exceptionHandler
+                ->setEventDispatcher(
+                    $eventDispatcher
+                );
             /**
              * An unique ID for each given Request.
              * It can be useful during e.g. debugging.
@@ -168,8 +179,7 @@ class Application
 
             /** @var LoggerFactory $loggerFactory */
             $loggerFactory = $this->container->get(LoggerFactory::class);
-            /** @var EventDispatcherInterface $eventDispatcher */
-            $eventDispatcher = $this->container->get(EventDispatcherInterface::class);
+
 
             $dispatcher = new Dispatcher(
                 $this->container,
