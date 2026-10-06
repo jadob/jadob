@@ -119,8 +119,7 @@ final class ServiceDefinition
     public function withAttribute(
         string $name,
         string|int|bool $argument,
-    ): self
-    {
+    ): self {
         $this->attributes[$name] = $argument;
         
         return $this;
