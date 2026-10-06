@@ -18,7 +18,7 @@ class ProductionExceptionListener implements ExceptionListenerInterface, LoggerA
         $this->logger = $logger;
     }
 
-    public function handleExceptionEvent(ExceptionEvent $event): void
+    public function handleExceptionEvent(ExceptionEvent $event): object
     {
         error_log(
             sprintf(
@@ -35,5 +35,7 @@ class ProductionExceptionListener implements ExceptionListenerInterface, LoggerA
             $event->getException(),
             $event->getException()->getTrace()
         );
+        
+        return $event;
     }
 }

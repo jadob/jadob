@@ -10,5 +10,5 @@ interface ExceptionListenerInterface
 {
     public function handleExceptionEvent(
         ExceptionEvent $event
-    ): void;
+    ): object;
 }

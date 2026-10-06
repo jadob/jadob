@@ -14,7 +14,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
 {
     private ?LoggerInterface $logger = null;
 
-    public function handleExceptionEvent(ExceptionEvent $event): void
+    public function handleExceptionEvent(ExceptionEvent $event): object
     {
         $this->logger?->critical(
             $event->getException(),
@@ -44,7 +44,7 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
             $template = str_replace('${stack_trace}', implode(PHP_EOL, $stack), $template);
             render($template);
 
-            return;
+            return $event;
         }
 
         ob_start();
@@ -53,14 +53,15 @@ class DevelopmentExceptionListener implements ExceptionListenerInterface, Logger
         ob_end_clean();
         $event->setResponse(new Response($content, status: Response::HTTP_INTERNAL_SERVER_ERROR));
         $event->stopPropagation();
+        
+        return $event;
     }
 
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
     }
-
-
+    
     /**
      * TODO Move to another class
      * @param $variable
