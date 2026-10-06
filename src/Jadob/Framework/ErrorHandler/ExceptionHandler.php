@@ -5,16 +5,25 @@ namespace Jadob\Framework\ErrorHandler;
 
 use ErrorException;
 use Jadob\Framework\Event\ExceptionEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-readonly class ExceptionHandler
+final class ExceptionHandler
 {
+    private ?EventDispatcherInterface $eventDispatcher = null;
+
     public function __construct(
         private ExceptionListenerInterface $fallbackListener
     ) {
     }
 
+    public function setEventDispatcher(
+        EventDispatcherInterface $eventDispatcher
+    ): void {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+    
     public function registerErrorHandler(): void
     {
         set_error_handler($this->handleError(...));
@@ -44,9 +53,20 @@ readonly class ExceptionHandler
     public function handleException(Throwable $exception): Response
     {
         $event = new ExceptionEvent($exception);
-        $this->fallbackListener->handleExceptionEvent(
-            $event,
-        );
+
+        if ($this->eventDispatcher !== null) {
+            $event = $this
+                ->eventDispatcher
+                ->dispatch($event);
+        }
+
+        if ($event->isPropagationStopped() === false) {
+            $this
+                ->fallbackListener
+                ->handleExceptionEvent(
+                    $event,
+                );
+        }
         
         return $event->getResponse();
     }
