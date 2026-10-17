@@ -20,6 +20,7 @@ use Jadob\Framework\ErrorHandler\ExceptionListenerFactory;
 use Jadob\Framework\ErrorHandler\ExceptionListenerInterface;
 use Jadob\Framework\Logger\LoggerFactory;
 use Jadob\Router\RouteCollection;
+use LogicException;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Application as CliApplication;
@@ -81,15 +82,23 @@ class Application
             ->bootstrap
             ->getConfigDir();
 
-        /** @var Closure $userspaceContainerConfig */
-        $userspaceContainerConfig = include $servicesFile;
-
         $builder = new ContainerBuilder();
         $this->registerNativeServices($builder);
 
         $builder->addFallbackParameter('cache_dir', $this->bootstrap->getCacheDir());
         $builder->addFallbackParameter('root_dir', $this->bootstrap->getRootDir());
         $builder->addFallbackParameter('app_env', $this->env);
+
+        $userspaceContainerConfig = include $servicesFile;
+
+        if ($userspaceContainerConfig instanceof Closure) {
+            throw new LogicException(
+                sprintf(
+                    'Container definitions file at %s must return a Closure.',
+                    $servicesFile
+                )
+            );
+        }
 
         $builder->loadConfiguration($userspaceContainerConfig);
         foreach ($modules as $module) {
